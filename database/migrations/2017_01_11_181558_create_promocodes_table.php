@@ -15,6 +15,11 @@ class CreatePromocodesTable extends Migration
     {
         Schema::create('promocodes', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('promo_code');
+            $table->integer('offer');
+            $table->integer('is_valid');
+            $table->integer('total');
+            $table->integer('status');
             $table->timestamps();
         });
     }

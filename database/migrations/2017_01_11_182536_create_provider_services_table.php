@@ -15,6 +15,10 @@ class CreateProviderServicesTable extends Migration
     {
         Schema::create('provider_services', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('provider_id');
+            $table->integer('service_type_id');
+            $table->integer('is_available');
+            $table->integer('status');
             $table->timestamps();
         });
     }

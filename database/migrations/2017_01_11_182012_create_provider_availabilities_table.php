@@ -15,6 +15,11 @@ class CreateProviderAvailabilitiesTable extends Migration
     {
         Schema::create('provider_availabilities', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('provider_id');
+            $table->date('available_date');
+            $table->time('start_time');
+            $table->time('end_time');
+            $table->integer('status');
             $table->timestamps();
         });
     }

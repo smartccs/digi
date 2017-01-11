@@ -15,6 +15,9 @@ class CreateFavouriteProvidersTable extends Migration
     {
         Schema::create('favourite_providers', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id');
+            $table->integer('provider_id');
+            $table->integer('status');
             $table->timestamps();
         });
     }

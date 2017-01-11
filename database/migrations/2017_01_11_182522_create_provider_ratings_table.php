@@ -15,6 +15,12 @@ class CreateProviderRatingsTable extends Migration
     {
         Schema::create('provider_ratings', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id');
+            $table->integer('provider_id');
+            $table->integer('request_id');
+            $table->integer('rating');
+            $table->string('comment');
+            $table->integer('status');
             $table->timestamps();
         });
     }

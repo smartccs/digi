@@ -15,6 +15,9 @@ class CreateProviderDocumentsTable extends Migration
     {
         Schema::create('provider_documents', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('provider_id');
+            $table->string('document_id');
+            $table->string('document_url');
             $table->timestamps();
         });
     }

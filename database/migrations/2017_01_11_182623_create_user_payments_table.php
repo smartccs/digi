@@ -15,6 +15,20 @@ class CreateUserPaymentsTable extends Migration
     {
         Schema::create('user_payments', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('request_id');
+            $table->string('payment_id');
+            $table->string('payment_mode');
+            $table->integer('total_time');
+            $table->float('base_price');
+            $table->float('time_price');
+            $table->float('tax_price');
+            $table->float('commission_price');
+            $table->float('total');
+            $table->integer('status');
+            $table->integer('promo_code_id');
+            $table->float('trip_fare');
+            $table->string('promo_code');
+            $table->float('offer_amount');
             $table->timestamps();
         });
     }
