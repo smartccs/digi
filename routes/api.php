@@ -35,7 +35,37 @@ Route::group(['prefix' => 'user'], function () {
 
 		Route::post('/send/request' , 'UserApiController@send_request');
 
+		Route::post('/cancel/request' , 'UserApiController@cancel_request');
+
 		Route::post('/manual/request' , 'UserApiController@manual_create_request');
+
+		Route::post('/manual/scheduled/request' , 'UserApiController@manual_scheduled_request');
+
+		Route::get('/request/check' , 'UserApiController@request_status_check');
+
+		Route::post('/pay/now' , 'UserApiController@paynow');
+
+		Route::post('/rate/provider' , 'UserApiController@rate_provider');
+
+		Route::post('/add/provider' , 'UserApiController@add_fav_provider');
+
+		Route::get('/fav/provider' , 'UserApiController@fav_providers');
+
+		Route::get('/delete/provider' , 'UserApiController@delete_fav_provider');
+
+		Route::get('/history' , 'UserApiController@history');
+
+		Route::get('/request' , 'UserApiController@single_request');
+
+		Route::get('/payment/modes' , 'UserApiController@get_payment_modes');
+
+		Route::post('/change/modes' , 'UserApiController@payment_mode_update');
+
+		Route::post('/add/card' , 'UserApiController@add_card');
+
+		Route::post('/delete/card' , 'UserApiController@delete_card');
+
+		Route::post('/default/card' , 'UserApiController@default_card');
 
 
 	});

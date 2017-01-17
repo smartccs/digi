@@ -24,8 +24,8 @@ class FavouriteProvider extends Model
         'created_at', 'updated_at'
     ];
 
-    public function scope($query, $user_id, $provider_id)
+    public function scopeIsFavCount($query, $user_id, $provider_id)
     {
-        return $query->where('provider_id', $provider_id)->where('user_id', $user_id);
+        return $query->where('provider_id', $provider_id)->where('user_id', $user_id)->where('status',1);
     }
 }

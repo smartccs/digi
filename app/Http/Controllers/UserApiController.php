@@ -76,6 +76,7 @@ use App\UserRating;
 use App\ProviderRating;
 use App\ProviderAvailability;
 use App\Cards;
+use App\UserPayment;
 use App\ChatMessage;
 use App\Helpers\Helper;
 
@@ -316,7 +317,7 @@ class UserApiController extends Controller
 
                     $providers[$i]->rating = UserRating::Average($providers[$i]->id) ?: 0;
                     $providers[$i]->availablity = ProviderAvailability::Providers($providers[$i]->id)->get()->toArray();
-                    $providers[$i]->favorite = FavouriteProvider::Nos($request->id, $providers[$i]->id)->count();
+                    $providers[$i]->favorite = FavouriteProvider::Nos(Auth::user()->id, $providers[$i]->id)->count();
                 }
 
                 return response()->json($providers , 200);
@@ -567,7 +568,6 @@ class UserApiController extends Controller
     // Manual request
     public function manual_create_request(Request $request) {
 
-
          $this->validate($request, [
                     's_latitude' => 'required|numeric',
                     's_longitude' => 'required|numeric',
@@ -577,7 +577,7 @@ class UserApiController extends Controller
                 ]);
 
 
-                $user = User::find($request->id);
+                $user = User::find(Auth::user()->id);
             
             if($provider = Provider::CheckAvailability($request->provider_id)->first()) {
 
@@ -653,6 +653,743 @@ class UserApiController extends Controller
         }
   
     }
+
+    public function manual_scheduled_request(Request $request) {
+        
+        $this->validate($request, [
+                    'provider_id' => 'required|exists:providers,id',
+                    's_latitude' => 'required|numeric',
+                    's_longitude' => 'required|numeric',
+                    'service_type' => 'required|integer|exists:service_types,id',
+                    'service_start' => 'date',
+            ]);
+
+            $user = User::find(Auth::user()->id);
+
+            if(!$user->payment_mode) {
+                return response()->json(['error' => 'Please Fill the Payment Details!']); 
+            } 
+
+
+
+
+            $allow = DEFAULT_FALSE;
+            if($user->payment_mode == CARD) {
+                if($user_card = Cards::find($user->default_card)) {
+                    $allow = DEFAULT_TRUE;
+                }
+            } else {
+                $allow = DEFAULT_TRUE;
+            }
+
+            if($allow == DEFAULT_FALSE) {
+                return response()->json(
+                    ['error' => 'Default card is not available. Please add a card or change the payment mode']); 
+            }
+
+
+
+            $check_requests = UserRequests::PendingRequest(Auth::user()->id)->count();
+
+            if($check_requests > 0) {
+                return response()->json(['error' => 'Already request is in progress. Try again later']);
+            }
+
+
+
+        
+            $check_later_requests = Helper::check_later_request(Auth::user()->id, $request->service_start, DEFAULT_TRUE);
+
+            if($check_later_requests) {
+                return response()->json(['error' => 'Request is already scheduled on this time']);
+            }
+
+
+
+
+            $request->service_start = \Carbon\Carbon::parse($request->service_start);
+
+            $provider_available_check = ProviderAvailability::where('status' , DEFAULT_TRUE)
+                        ->whereIn('start_time', [
+                                $request->service_start->toTimeString(),
+                                $request->service_start->subHour()->toTimeString(),
+                            ])
+                        ->where('available_date', $request->service_start->toDateString())
+                        ->where('provider_id', $request->provider_id)
+                        ->leftJoin('providers' , 'provider_availabilities.provider_id' ,'=' ,'providers.id')
+                        ->select('provider_id', 'providers.waiting_to_respond as waiting')
+                        ->get();
+
+            if(!$provider_available_check) {
+                return response()->json(['error' => 'No provider found for the selected service in your area currently.']);
+            }
+
+
+
+
+            try{
+                // Create Requests
+                $requests = new UserRequests;
+                $requests->user_id = Auth::user()->id;
+                $requests->request_type = $request->service_type;
+                $requests->status = REQUEST_WAITING;
+                $requests->confirmed_provider = NONE;
+                $requests->request_start_time = \Carbon\Carbon::now();
+                $requests->s_address = $request->s_address;
+                $requests->provider_id = $request->provider_id;
+                $requests->current_provider = $request->provider_id;
+                $requests->start_time = $request->service_start;
+
+                //Later Details
+                $requests->later = DEFAULT_TRUE;
+                $requests->requested_time = $request->service_start;
+                
+                $requests->s_latitude = $request->s_latitude;
+                $requests->s_longitude = $request->s_longitude;
+                    
+                $requests->save();
+
+                $current_provider = Provider::find($request->provider_id);
+                $current_provider->waiting_to_respond = WAITING_TO_RESPOND;
+                $current_provider->save();
+
+                // $title = Helper::get_push_message(604);
+                // $message = "You got a new request from ".$user->name;
+                // $this->dispatch(new sendPushNotification($request->provider_id, PROVIDER, $requests->id, $title, $message)); 
+
+                $request_meta = new RequestsFilter;
+                $request_meta->status = REQUEST_META_OFFERED;  // Request status change
+                $request_meta->request_id = $requests->id;
+                $request_meta->provider_id = $request->provider_id;
+                $request_meta->service_id = $request->service_type;
+                $request_meta->save();
+
+                return response()->json(['message' => 'New request Scheduled!',
+                        'request_id' => $requests->id,
+                        'current_provider' => $request->provider_id]);
+            }
+
+            catch (ModelNotFoundException $e) {
+                return response()->json(['error' => 'Something went wrong while sending request. Please try again.']);
+            }
+
+    }
+
+
+    public function cancel_request(Request $request) {
+    
+        $user_id = Auth::user()->id;
+
+        $this->validate($request, [
+                'request_id' => 'required|numeric|exists:user_requests,id,user_id,'.$user_id,
+            ]);
+
+            $request_id = $request->request_id;
+            $requests = UserRequests::find($request_id);
+
+            if($requests->status == REQUEST_CANCELLED)
+            {
+                 return response()->json(['error' => 'Request is Already Cancelled!']); 
+            }
+
+                if(in_array($requests->provider_status, [PROVIDER_NONE,PROVIDER_ACCEPTED,PROVIDER_STARTED])) {
+
+                    $requests->status = REQUEST_CANCELLED;
+                    $requests->save();
+
+                    if($requests->confirmed_provider != DEFAULT_FALSE){
+
+                        $provider = Provider::find( $requests->confirmed_provider );
+                        $provider->is_available = PROVIDER_AVAILABLE;
+                        $provider->waiting_to_respond = WAITING_TO_RESPOND_NORMAL;
+                        $provider->save();
+
+                        // $title = Helper::tr('cancel_by_user_title');
+                        // $message = Helper::tr('cancel_by_user_message');
+                        
+                        // $this->dispatch(new sendPushNotification($requests->confirmed_provider,PROVIDER,$requests->id,$title,$message));
+
+                        // Log::info("Cancelled request by user");
+                        // $email_data = array();
+
+                        // $subject = Helper::tr('request_cancel_user');
+
+                        // $email_data['provider_name'] = $email_data['username'] = "";
+
+                        // if($user = User::find($requests->user_id)) {
+                        //     $email_data['username'] = $user->first_name." ".$user->last_name;    
+                        // }
+                        
+                        // if($provider = Provider::find($requests->confirmed_provider)) {
+                        //     $email_data['provider_name'] = $provider->first_name. " " . $provider->last_name;
+                        // }
+
+                        // $page = "emails.user.request_cancel";
+                        // $email_send = Helper::send_email($page,$subject,$provider->email,$email_data);
+                    }
+
+                    RequestsFilter::where('request_id', '=', $request_id)->delete();
+
+                    return response()->json(['message' => 'Request Cancelled Successfully']); 
+
+                } else {
+                    return response()->json(['error' => 'Service Already Started!']); 
+                }
+    }
+
+
+    public function request_status_check() {
+
+        $user = User::find(Auth::user()->id);
+
+        try{
+
+            $check_status = [REQUEST_COMPLETED,REQUEST_CANCELLED,REQUEST_NO_PROVIDER_AVAILABLE,REQUEST_TIME_EXCEED_CANCELLED];
+
+            $requests = UserRequests::RequestStatusCheck(Auth::user()->id,$check_status)->get()->toArray();
+
+            $requests_data = [];$invoice = [];
+
+                foreach ($requests as  $req) {
+
+                    $req['rating'] = UserRating::Average($req['provider_id']) ?: 0;
+                    $req['is_fav_provider'] = FavouriteProvider::IsFavCount($req['provider_id'],Auth::user()->id)->count() ? 1 : 0;
+
+                    $requests_data[] = $req;
+
+                    $allowed_status = [REQUEST_COMPLETE_PENDING,REQUEST_COMPLETED,REQUEST_RATING];
+
+                    if( in_array($req['status'], $allowed_status)) {
+
+                        $invoice_query = UserPayment::where('request_id' , $req['request_id'])
+                                        ->leftJoin('requests' , 'request_payments.request_id' , '=' , 'requests.id')
+                                        ->leftJoin('users' , 'requests.user_id' , '=' , 'users.id')
+                                        ->leftJoin('cards' , 'users.default_card' , '=' , 'cards.id');
+
+                        if($user->payment_mode == CARD) {
+                            $invoice_query = $invoice_query->where('cards.is_default' , DEFAULT_TRUE) ;  
+                        }
+
+                        $invoice = $invoice_query->select(
+                                            'requests.confirmed_provider as provider_id' , 
+                                            'request_payments.total_time',
+                                            'request_payments.payment_mode as payment_mode' , 
+                                            'request_payments.base_price',
+                                            'request_payments.time_price' ,
+                                            'request_payments.tax_price' , 
+                                            'request_payments.total',
+                                            'cards.card_token',
+                                            'cards.customer_id',
+                                            'cards.last_four',
+                                            'requests.promo_code',
+                                            'requests.promo_code_id',
+                                            'requests.offer_amount',
+                                            'request_payments.trip_fare')
+                                            ->get()->toArray();
+                    }
+                }
+
+            return response()->json(['data' => $requests_data, 'invoice' => $invoice]);
+
+        }
+
+        catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Something went wrong while sending request. Please try again.']);
+        }
+
+    } 
+
+
+
+    public function paynow(Request $request) {
+
+        $this->validate($request, [
+            'request_id' => 'required|exists:requests,id,user_id,'.Auth::user()->id,
+            'payment_mode' => 'required|in:'.COD.','.PAYPAL.','.CARD.'|exists:settings,key,value,1',
+            'is_paid' => 'required',
+        ]);
+
+
+        $requests = UserRequests::where('id',$request->request_id)
+                    ->where('status' , REQUEST_COMPLETE_PENDING)->first();
+
+        $user = User::find(Auth::user()->id);
+
+        if(!$requests && intval($requests->status) == REQUEST_RATING ) {
+
+            return response()->json(['error' => 'Service is Already Paid']);
+        }
+
+
+            $total = 0;
+
+            if($request_payment = UserPayment::where('request_id' , $request->request_id)->first()) {
+                $request_payment->payment_mode = $request->payment_mode;
+                $request_payment->save();
+                $total = $request_payment->total;
+            }
+
+            if($request->payment_mode == COD) {
+
+                $requests->status = WAITING_FOR_PROVIDER_CONFRIMATION_COD;
+                $request_payment->payment_id = uniqid();
+                $request_payment->status = DEFAULT_TRUE;
+
+            } elseif($request->payment_mode == CARD) {
+
+
+
+
+                $check_card_exists = User::where('users.id' , Auth::user()->id)
+                            ->leftJoin('cards' , 'users.id','=','cards.user_id')
+                            ->where('cards.id' , $user->default_card)
+                            ->where('cards.is_default' , DEFAULT_TRUE);
+
+                if($check_card_exists->count() == 0) {
+                     return response()->json(['error' => 'No default card is available. Please add a card']);
+                }
+
+
+
+                $user_card = $check_card_exists->first();
+
+                // Get the key from settings table
+                $settings = Settings::where('key' , 'stripe_secret_key')->first();
+                $stripe_secret_key = $settings->value;
+
+                $customer_id = $user_card->customer_id;
+            
+                \Stripe\Stripe::setApiKey($stripe_secret_key);
+
+                try{
+
+                   $user_charge =  \Stripe\Charge::create(array(
+                      "amount" => $total * 100,
+                      "currency" => "usd",
+                      "customer" => $customer_id,
+                    ));
+
+                   $payment_id = $user_charge->id;
+                   $amount = $user_charge->amount/100;
+                   $paid_status = $user_charge->paid;
+
+                   $request_payment->payment_id = $payment_id;
+                   $request_payment->status = 1;
+
+                   if($paid_status) {
+                        $requests->is_paid =  DEFAULT_TRUE;
+                   }
+                    $requests->status = REQUEST_RATING;
+                    $requests->amount = $amount;
+                
+                } catch (\Stripe\StripeInvalidRequestError $e) {
+                    return response()->json(['error' => 'Something Went Wrong While Paying']);
+                }
+
+
+            }  
+
+        $requests->save();
+        $request_payment->save();
+
+
+        // // Send notification to the provider Start
+        // if($user)
+        //     $title =  "The"." ".$user->first_name.' '.$user->last_name." done the payment";
+        // else
+        //     $title = Helper::tr('request_completed_user_title');
+
+        // $message = Helper::get_push_message(603);
+        // $this->dispatch(new sendPushNotification($requests->confirmed_provider,PROVIDER,$requests->id,$title,$message));
+        // // Send notification end
+
+        // // Send invoice notification to the user, provider and admin
+        // $subject = Helper::tr('request_completed_bill');
+        // $email = Helper::get_emails(3,Auth::user()->id,$requests->confirmed_provider);
+        // $page = "emails.user.invoice";
+        // Helper::send_invoice($requests->id,$page,$subject,$email);
+
+        return response()->json(['message' => 'Paid Successfully']); 
+
+    }
+
+
+
+    public function rate_provider(Request $request) {
+
+        $user = User::find(Auth::user()->id);
+
+        $this->validate($request, [
+                'request_id' => 'required|integer|exists:requests,id,user_id,'.$user->id.'|unique:user_ratings,request_id',
+                'rating' => 'required|integer|in:'.RATINGS,
+                'comments' => 'max:255',
+                'is_favorite' => 'in:'.DEFAULT_TRUE.','.DEFAULT_FALSE,
+            ]);
+    
+            $req = Requests::where('id' ,$request->request_id)
+                    ->where('status' ,REQUEST_RATING)
+                    ->first();
+
+            if (!$req && intval($req->status) == REQUEST_COMPLETED) {
+                 return response()->json(['error' => 'Request is already Completed']);
+            }
+
+            try{
+                //Save Rating
+                $rev_user = new UserRating();
+                $rev_user->provider_id = $req->confirmed_provider;
+                $rev_user->user_id = $req->user_id;
+                $rev_user->request_id = $req->id;
+                $rev_user->rating = $request->rating;
+                $rev_user->comment = $request->comment ? $request->comment: '';
+                $rev_user->save();
+
+                $req->status = REQUEST_COMPLETED;
+                $req->save();
+
+                // Save favourite provider details
+                if($request->is_favorite ==  DEFAULT_TRUE) {
+                    $fav_provider = FavouriteProvider::IsFavCount(Auth::user()->id,$req->confirmed_provider )->count();
+                    if($fav_provider == 0){
+                        $favProvider = new FavouriteProvider;
+                        $favProvider->provider_id = $req->confirmed_provider;
+                        $favProvider->user_id = Auth::user()->id;
+                        $favProvider->status = DEFAULT_TRUE;
+                        $favProvider->save();
+                    }
+                }
+
+                // Send Push Notification to Provider
+                // $title = Helper::tr('provider_rated_by_user_title');
+                // $messages = Helper::tr('provider_rated_by_user_message');
+                // $this->dispatch( new sendPushNotification($req->confirmed_provider, PROVIDER,$req->id,$title, $messages,''));     
+
+                return response()->json(['message' => 'Provider Rated Successfully']); 
+            }
+
+        catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Something went wrong']);
+        }
+
+    } 
+
+    public function add_fav_provider(Request $request) {
+
+         $this->validate($request, [
+                'fav_provider' => 'exists:providers,id'
+            ]);
+    
+
+            $fav_provider = FavouriteProvider::IsFavCount(Auth::user()->id,$request->fav_provider)->count();
+            if($fav_provider == 0){
+
+                $favProvider = new FavouriteProvider;
+                $favProvider->provider_id = $request->fav_provider;
+                $favProvider->user_id = Auth::user()->id;
+                $favProvider->status = DEFAULT_TRUE;
+                $favProvider->save();
+
+                return response()->json(['message' => 'Provider Favorited Successfully']); 
+
+            } else {
+                return response()->json(['error' => 'Something went wrong']);
+            }
+    }
+
+    public function fav_providers() {
+
+        $fav_providers = FavouriteProvider::where('favourite_providers.user_id' , Auth::user()->id)
+                            ->leftJoin('providers' , 'favourite_providers.provider_id' , '=' ,'providers.id')
+                            ->leftJoin('provider_services' , 'provider_services.provider_id' , '=' ,'providers.id')
+                            ->select(
+                                'favourite_providers.id as favourite_id',
+                                'providers.id as provider_id',
+                                'provider_services.id as service_id',
+                                DB::raw('CONCAT(providers.first_name, " ", providers.last_name) as provider_name'),
+                                'providers.picture'
+                                )
+                            ->get()
+                            ->toArray();
+
+        $providers = [];$data = [];
+
+        if($fav_providers) {
+
+            foreach ($fav_providers as $f => $fav_provider) {
+                $fav_provider['user_rating'] = Average($fav_provider['provider_id']) ? : 0;
+                $providers[] = $fav_provider;
+            }
+
+            return $providers;
+
+        } else {
+            return response()->json(['error' => 'No Providers Found']);
+        }
+
+    }
+
+    public function delete_fav_provider(Request $request) {
+
+        $this->validate($request, [
+                'favourite_id' => "required|exists:favourite_providers,id",
+            ]);
+
+        try{
+
+            $favourite = FavouriteProvider::find($request->favourite_id);
+
+            if($provider = Provider::find($favourite->provider_id)) {
+
+                $fav_delete = $favourite->delete();
+
+                return response()->json(['message' => 'Provider Deleted Successfully']); 
+            }
+        }
+
+        catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Something went wrong']);
+        }
+
+    }
+
+    public function history() {
+    
+        $requests = Requests::where('requests.user_id', '=', Auth::user()->id)
+                    ->where('requests.status', '=', REQUEST_COMPLETED)
+                    ->leftJoin('providers', 'providers.id', '=', 'requests.confirmed_provider')
+                    ->leftJoin('users', 'users.id', '=', 'requests.user_id')
+                    ->leftJoin('request_payments', 'requests.id', '=', 'request_payments.request_id')
+                    ->orderBy('request_start_time','desc')
+                    ->select('requests.id as request_id', 'requests.request_type as request_type', 'request_start_time as date',
+                            DB::raw('CONCAT(providers.first_name, " ", providers.last_name) as provider_name'), 'providers.picture',
+                            DB::raw('ROUND(request_payments.total) as total'))
+                            ->get()
+                            ->toArray();
+
+        return $requests;
+    }
+
+    public function single_request(Request $request) {
+
+        $user = User::find(Auth::user()->id);
+
+        $this->validate($request, [
+                'request_id' => 'required|integer|exists:requests,id,user_id,'.$user->id,
+            ]);
+
+
+        try{
+
+            $requests = Requests::where('requests.id' , $request->request_id)
+                            ->leftJoin('providers' , 'requests.confirmed_provider','=' , 'providers.id')
+                            ->leftJoin('users' , 'requests.user_id','=' , 'users.id')
+                            ->leftJoin('user_ratings' , 'requests.id','=' , 'user_ratings.request_id')
+                            ->leftJoin('request_payments' , 'requests.id','=' , 'request_payments.request_id')
+                            ->leftJoin('cards','users.default_card','=' , 'cards.id')
+                            ->select('providers.id as provider_id' , 'providers.picture as provider_picture', 'requests.s_address as s_address','requests.requested_time as requested_time','requests.status as status','requests.s_latitude as s_latitude','requests.s_longitude as s_longitude',
+                                DB::raw('CONCAT(providers.first_name, " ", providers.last_name) as provider_name'),'user_ratings.rating','user_ratings.comment',
+                                 DB::raw('ROUND(request_payments.base_price) as base_price'), DB::raw('ROUND(request_payments.tax_price) as tax_price'),
+                                 DB::raw('ROUND(request_payments.time_price) as time_price'), DB::raw('ROUND(request_payments.total) as total'),
+                                'cards.id as card_id','cards.customer_id as customer_id',
+                                'cards.card_token','cards.last_four',
+                                'requests.id as request_id','requests.before_image','requests.after_image',
+                                'requests.user_id as user_id',
+                                DB::raw('CONCAT(users.first_name, " ", users.last_name) as user_name'))
+                            ->get()->toArray();
+            return $requests;
+        }
+
+        catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Something went wrong']);
+        }
+    
+    }
+
+    public function get_payment_modes() {
+
+        $payment_modes = [];
+
+        try{
+
+            $modes = Settings::whereIn('key' , array('cod','paypal','card'))->where('value' , 1)->get();
+            if($modes) {
+                foreach ($modes as $key => $mode) {
+                    $payment_modes[$mode->key] = $mode->key;
+                }            
+            }
+
+            return $payment_modes;
+        }
+
+        catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Something went wrong']);
+        }
+    }
+
+    public function get_user_payment_modes() {
+
+        try{
+
+            $user = User::find(Auth::user()->id);
+
+            $payment_data = $data = $card_data = array();
+
+            if($user_cards = Cards::where('user_id' , Auth::user()->id)->get()) {
+                foreach ($user_cards as $c => $card) {
+                    $data['id'] = $card->id;
+                    $data['customer_id'] = $card->customer_id;
+                    $data['card_id'] = $card->card_token;
+                    $data['last_four'] = $card->last_four;
+                    $data['is_default']= $card->is_default;
+
+                    array_push($card_data, $data);
+                }
+            } 
+
+            return ['payment_mode' => $user->payment_mode , 'card' => $card_data];
+        }
+
+        catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Something went wrong']);
+        }
+    
+    }
+    
+    public function payment_mode_update(Request $request) {
+        
+        $this->validate($request, [
+                'payment_mode' => 'required|in:'.COD.','.PAYPAL.','.CARD,
+         ]);
+
+        try{
+
+            $user = User::where('id', '=', Auth::user()->id)->update( ['payment_mode' => $request->payment_mode]);
+            return response()->json(['message' => 'Payment Mode Updated']);
+        }
+
+        catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Something went wrong']);
+        }
+
+    }
+
+    public function add_card(Request $request) {
+
+        $this->validate($request, [
+                        'last_four' => 'required',
+                        'payment_token' => 'required',
+            ]);
+
+            $user = User::find(Auth::user()->id);
+
+            try{
+
+                $settings = Settings::where('key' , 'stripe_secret_key')->first();
+
+                $stripe_secret_key = $settings->value;
+                
+                \Stripe\Stripe::setApiKey($stripe_secret_key);
+
+                $customer = \Stripe\Customer::create(array(
+                              "card" => $request->payment_token,
+                              "description" => $user->email)
+                            );
+
+                Log::info('customer = '.print_r($customer, true));
+
+                if($customer){
+
+                    $customer_id = $customer->id;
+
+                    $cards = new Cards;
+                    $cards->user_id = Auth::user()->id;
+                    $cards->customer_id = $customer_id;
+                    $cards->last_four = $request->last_four;
+                    $cards->card_token = $customer->sources->data[0]->id;
+
+                    // Check is any default is available
+                    $check_card = Cards::where('user',Auth::user()->id)->first();
+
+                    if($check_card ) 
+                        $cards->is_default = 0;
+                    else
+                        $cards->is_default = 1;
+                    
+                    $cards->save();
+
+                    if($user) {
+                        $user->payment_mode = CARD;
+                        $user->default_card = $cards->id;
+                        $user->save();
+                    }
+                
+                    return response()->json(['message' => 'Card Added']);
+
+                } else {
+                    return response()->json(['error' => 'Could not create client ID']);
+                }
+            
+            } catch(Exception $e) {
+                    return response()->json(['error' => $e]);
+            }
+    }
+
+    public function delete_card(Request $request) {
+    
+        $this->validate($request, [
+                'card_id' => 'required|integer|exists:cards,id,user_id,'.Auth::user()->id,
+            ]);
+
+        try{
+
+            Cards::where('id',$request->card_id)->delete();
+
+            $user = User::find(Auth::user()->id);
+
+            if($user) {
+                $user->payment_mode = CARD;
+                $user->default_card = DEFAULT_FALSE;
+                $user->save();
+            }
+            return response()->json(['message' => 'Card Deleted']);
+        }
+
+        catch(Exception $e) {
+                return response()->json(['error' => $e]);
+        }
+    }
+
+    public function default_card(Request $request) {
+
+         $this->validate($request, [
+                'card_id' => 'required|integer|exists:cards,id,user_id,'.Auth::user()->id,
+            ]);
+
+        try{
+
+            $user = User::find(Auth::user()->id);
+            
+            $old_default = Cards::where('user_id' , Auth::user()->id)
+                            ->where('is_default', DEFAULT_TRUE)
+                            ->update(['is_default' => DEFAULT_FALSE]);
+
+            $card = Cards::where('id' , $request->card_id)
+                    ->update(['is_default' => DEFAULT_TRUE ]);
+
+                if($user) {
+                    $user->payment_mode = CARD;
+                    $user->default_card = $request->card_id;
+                    $user->save();
+                }
+                return response()->json(['message' => 'Successfully Done']);
+        }
+
+        catch(Exception $e) {
+                return response()->json(['error' => $e]);
+        }
+    
+    }
+
 
 
 }
