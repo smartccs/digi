@@ -17,10 +17,10 @@ class CreateAdminsTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('picture');
+            $table->string('picture')->nullable();
             $table->enum('gender',array('male','female','others'));
-            $table->string('mobile');
-            $table->string('paypal_email');
+            $table->string('mobile')->nullable();
+            $table->string('paypal_email')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

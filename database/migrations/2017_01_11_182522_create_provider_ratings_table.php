@@ -19,7 +19,7 @@ class CreateProviderRatingsTable extends Migration
             $table->integer('provider_id');
             $table->integer('request_id');
             $table->integer('rating');
-            $table->string('comment');
+            $table->string('comment')->nullable();
             $table->integer('status');
             $table->timestamps();
         });

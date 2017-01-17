@@ -52,9 +52,15 @@ return [
         ],
 
         'api' => [
-            'driver' => 'token',
+            'driver' => 'passport',
             'provider' => 'users',
         ],
+
+        'providerapi' => [
+            'driver' => 'passport',
+            'provider' => 'providers',
+        ],
+
     ],
 
     /*

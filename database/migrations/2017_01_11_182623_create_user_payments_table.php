@@ -27,7 +27,7 @@ class CreateUserPaymentsTable extends Migration
             $table->integer('status');
             $table->integer('promo_code_id');
             $table->float('trip_fare');
-            $table->string('promo_code');
+            $table->string('promo_code')->nullable();
             $table->float('offer_amount');
             $table->timestamps();
         });

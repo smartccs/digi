@@ -16,7 +16,7 @@ class Provider extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'first_name' ,'last_name', 'email', 'password',
     ];
 
     /**
@@ -25,7 +25,7 @@ class Provider extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'updated_at', 'created_at'
     ];
 
     /**
@@ -37,5 +37,10 @@ class Provider extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ProviderResetPassword($token));
+    }
+
+    public function scopeCheckAvailability($query, $provider_id)
+    {
+        return $query->where('id' , $provider_id)->where('is_available' , DEFAULT_TRUE)->where('is_activated' , DEFAULT_TRUE)->where('is_approved' , DEFAULT_TRUE)->where('waiting_to_respond' ,DEFAULT_FALSE);
     }
 }
