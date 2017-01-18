@@ -36,6 +36,8 @@ Route::group(['prefix' => 'user'], function () {
 		Route::post('/send/request' , 'UserApiController@send_request');
 
 		Route::post('/cancel/request' , 'UserApiController@cancel_request');
+		
+		Route::post('/later/request' , 'UserApiController@request_later');
 
 		Route::post('/manual/request' , 'UserApiController@manual_create_request');
 
@@ -66,6 +68,12 @@ Route::group(['prefix' => 'user'], function () {
 		Route::post('/delete/card' , 'UserApiController@delete_card');
 
 		Route::post('/default/card' , 'UserApiController@default_card');
+
+		Route::get('/message' , 'UserApiController@message');
+		
+		Route::get('/upcoming' , 'UserApiController@get_upcoming_request');
+
+		Route::post('/add/money' , 'UserApiController@add_money');
 
 
 	});
