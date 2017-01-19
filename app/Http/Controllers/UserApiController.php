@@ -66,12 +66,11 @@ use App\ProviderLocation;
 use App\UserRequests;
 use App\Promocode;
 use App\Admin;
-use App\RequestsMeta;
+use App\RequestsFilter;
 use App\ServiceType;
 use App\Provider;
 use App\Settings;
 use App\FavouriteProvider;
-use App\RequestPayment;
 use App\UserRating;
 use App\ProviderRating;
 use App\ProviderAvailability;
@@ -104,17 +103,24 @@ class UserApiController extends Controller
                 'picture' => 'required|mimes:jpeg,jpg,bmp,png',
             ]);
 
-        $User = $request->all();
+        try{
+            
+            $User = $request->all();
 
-        $User['payment_mode'] = 'cod';
-        $User['password'] = bcrypt($request->password);
-        if($request->hasFile('picture')) {
-            $User['picture'] = Helper::upload_picture($request->avatar);
+            $User['payment_mode'] = 'cod';
+            $User['password'] = bcrypt($request->password);
+            if($request->hasFile('picture')) {
+                $User['picture'] = Helper::upload_picture($request->avatar);
+            }
+
+            $User = User::create($User);
+
+            return $User;
         }
 
-        $User = User::create($User);
-
-        return $User;
+        catch (ModelNotFoundException $e) {
+             return response()->json(['error' => 'Something Went Wrong']);
+        }
     }
 
 
@@ -563,7 +569,11 @@ class UserApiController extends Controller
 
     }
 
-
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
     // Manual request
     public function manual_create_request(Request $request) {
@@ -653,6 +663,12 @@ class UserApiController extends Controller
         }
   
     }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
     public function manual_scheduled_request(Request $request) {
         
@@ -775,6 +791,11 @@ class UserApiController extends Controller
 
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
     public function cancel_request(Request $request) {
     
@@ -837,6 +858,11 @@ class UserApiController extends Controller
                 }
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
     public function request_status_check() {
 
@@ -900,6 +926,11 @@ class UserApiController extends Controller
     } 
 
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
     public function paynow(Request $request) {
 
@@ -1013,6 +1044,11 @@ class UserApiController extends Controller
 
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
 
     public function rate_provider(Request $request) {
@@ -1073,6 +1109,12 @@ class UserApiController extends Controller
 
     } 
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
     public function add_fav_provider(Request $request) {
 
          $this->validate($request, [
@@ -1095,6 +1137,12 @@ class UserApiController extends Controller
                 return response()->json(['error' => 'Something went wrong']);
             }
     }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
     public function fav_providers() {
 
@@ -1128,6 +1176,12 @@ class UserApiController extends Controller
 
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
     public function delete_fav_provider(Request $request) {
 
         $this->validate($request, [
@@ -1152,6 +1206,12 @@ class UserApiController extends Controller
 
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
     public function history() {
     
         $requests = UserRequests::where('requests.user_id', '=', Auth::user()->id)
@@ -1168,6 +1228,12 @@ class UserApiController extends Controller
 
         return $requests;
     }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
     public function single_request(Request $request) {
 
@@ -1205,6 +1271,12 @@ class UserApiController extends Controller
     
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
     public function get_payment_modes() {
 
         $payment_modes = [];
@@ -1225,6 +1297,12 @@ class UserApiController extends Controller
             return response()->json(['error' => 'Something went wrong']);
         }
     }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
     public function get_user_payment_modes() {
 
@@ -1254,7 +1332,13 @@ class UserApiController extends Controller
         }
     
     }
-    
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
     public function payment_mode_update(Request $request) {
         
         $this->validate($request, [
@@ -1272,6 +1356,12 @@ class UserApiController extends Controller
         }
 
     }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
     public function add_card(Request $request) {
 
@@ -1334,6 +1424,12 @@ class UserApiController extends Controller
             }
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
     public function delete_card(Request $request) {
     
         $this->validate($request, [
@@ -1358,6 +1454,12 @@ class UserApiController extends Controller
                 return response()->json(['error' => $e]);
         }
     }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
     public function default_card(Request $request) {
 
@@ -1390,6 +1492,12 @@ class UserApiController extends Controller
     
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
 
     public function message(Request $request)
     {
@@ -1412,6 +1520,13 @@ class UserApiController extends Controller
         }
     }
 
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
     public function get_upcoming_request() {
 
         try{
@@ -1433,6 +1548,12 @@ class UserApiController extends Controller
                 return response()->json(['error' => "Something Went Wrong"]);
         }        
     }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
     public function add_money(Request $request){
         $this->validate($request, [
@@ -1493,7 +1614,11 @@ class UserApiController extends Controller
         }  
     }
 
-
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
     
     public function request_later(Request $request) {
 

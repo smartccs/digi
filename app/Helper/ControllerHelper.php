@@ -49,6 +49,20 @@
             return url('/');
         }
 
+        public static function save_provider_service($provider_id,$service_type,$update = null) {
+
+            if($update) {
+                $provider_service = ProviderService::where('provider_id' , $provider_id)->where('service_type_id' , $service_type)->first();
+            } else {
+                $provider_service = new ProviderService;
+            }   
+            $provider_service->provider_id = $provider_id;
+            $provider_service->service_type_id = $service_type;
+            $provider_service->is_available = 1;
+            $provider_service->save();
+
+        }
+
         // Note: $error is passed by reference
         public static function is_token_valid($entity, $id, $token, &$error)
         {
@@ -250,188 +264,6 @@
                 return Helper::get_error_message(123);
 
             }
-        }
-
-        public static function get_error_message($code)
-        {
-            switch($code) {
-                case 101:
-                    $string = "Invalid input.";
-                    break;
-                case 102:
-                    $string = "Email address is already in use.";
-                    break;
-                case 103:
-                    $string = "Token expired.";
-                    break;
-                case 104:
-                    $string = "Invalid token.";
-                    break;
-                case 105:
-                    $string = "Invalid email or password.";
-                    break;
-                case 106:
-                    $string = "All fields are required.";
-                    break;
-                case 107:
-                    $string = "The current password is incorrect.";
-                    break;
-                case 108:
-                    $string = "The passwords do not match.";
-                    break;
-                case 109:
-                    $string = "There was a problem with the server. Please try again.";
-                    break;
-                case 110:
-                    $string = "There is a service already in progress.";
-                    break;
-                case 111:
-                    $string = "Email is not activated.";
-                    break;
-                case 112:
-                    $string = "No provider found for the selected service in your area currently.";
-                    break;
-                case 113:
-                    $string = "The service is already cancelled.";
-                    break;
-                case 114:
-                    $string = "The service cancellation is not allowed at this point.";
-                    break;
-                case 115:
-                    $string = "Invalid refresh token.";
-                    break;
-                case 116:
-                    $string = "No provider assigned to this request id.";
-                    break;
-                case 117:
-                    $string = "The service is cancelled by user.";
-                    break;
-                case 118:
-                    $string = "The service is not completed.";
-                    break;
-                case 119:
-                    $string = "You have pending payments of completed deliveries.";
-                    break;
-                case 120:
-                    $string = "You should have at least one added card or minimum wallet balance.";
-                    break;
-                case 121:
-                    $string = "You can use the referral code only once.";
-                    break;
-                case 122:
-                    $string = "You can't use your own referral code.";
-                    break;
-                case 123:
-                    $string = "Something went wrong in mail configuration";
-                    break;
-                case 124:
-                    $string = "This Email is not registered";
-                    break;
-                case 125:
-                    $string = "Not a valid social registration User";
-                    break;
-                case 126:
-                    $string = "Something went wrong while sending request. Please try again.";
-                    break;
-                case 127;
-                    $string = "Already request is in progress. Try again later";
-                    break;
-                case 128:
-                    $string = "Request is not Completed. So you can't do the payment now.";
-                    break;
-                case 129:
-                    $string = "Request Service ID and User ID are mismatched";
-                    break;
-                case 130:
-                    $string = "No results found";
-                    break;
-                case 131:
-                    $string = 'Password doesn\'t match';
-                    break;
-                case 132:
-                    $string = 'Provider ID not found';
-                    break;
-                case 133:
-                    $string = 'User ID not found';
-                    break;
-                case 134:
-                    $string = 'Payment details is not filled';
-                    break;
-                case 135:
-                    $string = "Request Service ID and Provider ID are mismatched";
-                    break;
-                case 136:
-                    $string = "Request already completed";
-                    break;
-                case 137:
-                    $string = "The service payment is not allowed at this point.";
-                    break;
-                case 138:
-                    $string = "The service already paid or previous status mismatched.";
-                    break;
-                case 139:
-                    $string = "The selected payment is disabled by admin";
-                    break;
-                case 140:
-                    $string = "No default card is available. Please add a card";
-                    break;
-                case 141:
-                    $string = "Something went wrong while paying amount.";
-                    break;
-                case 142:
-                    $string = "Default card is not available. Please add a card or change the payment mode";
-                    break;
-                case 143:
-                    $string = "The selected provider is already in favourite list.";
-                    break;
-                case 144:
-                    $string = "Account is disabled by admin";
-                    break;
-                case 145:
-                    $string = "Already provider started or previous status is mismatched";
-                    break;
-                case 146:
-                    $string = "Already provider arrived or previous status is mismatched";
-                    break;
-                case 147:
-                    $string = "Service already started or previous status is mismatched";
-                    break;
-                case 148:
-                    $string = "Service already completed or previous status is mismatched";
-                    break;
-                case 149:
-                    $string = "Request has not been offered to this provider. Abort.";
-                    break;
-                case 150:
-                    $string = "Request is already scheduled on this time";
-                    break;
-                case 151:
-                    $string = "You can't start now. Still you have time to start";
-                    break;
-                case 152:
-                    $string = "user rating already done or previous status is mismatched";
-                    break;
-                case 153:
-                    $string = "Provider is not available at this time.";
-                    break;
-                case 154:
-                    $string = "provider rating already done or previous status is mismatched";
-                    break;
-                case 155:
-                    $string = "Something went wrong while deleting the availability. Please try again...!!";
-                    break;
-                case 156:
-                    $string = "Already confirmed the payment or previous state is mismatched.";
-                    break;
-                case 157:
-                    $string = "You are not allowed to delete the availability at this time.Because you have request on this time";
-                case 158:
-                    $string = "Adding cards is not enabled on this application. Please contact administrator.";
-                    break;
-                default:
-                    $string = "Unknown error occurred.";
-            }
-            return $string;
         }
 
         public static function get_message($code)
