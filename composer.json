@@ -11,7 +11,8 @@
         "hesto/multi-auth": "^1.0",
         "laravel/framework": "5.3.*",
         "laravel/passport": "^1.0",
-        "laravel/socialite": "^2.0"
+        "laravel/socialite": "^2.0",
+        "tymon/jwt-auth": "0.5.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

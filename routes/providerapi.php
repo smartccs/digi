@@ -15,4 +15,13 @@ Route::group(['prefix' => 'provider'], function () {
 
     Route::post('/signup' , 'ProviderApiController@signup');
 
+    Route::post('/oauth/token' , 'ProviderApiController@authenticate');
+
+
+    Route::group(['middleware' => ['ProviderApiMiddleware']], function () {
+
+    	// Route::get('/sample' , 'ProviderApiController@sample');
+
+    });
+
 });
