@@ -208,7 +208,6 @@ class UserApiController extends Controller
     {
 
         $this->validate($request, [
-                'id' => 'required',
                 'first_name' => 'required|max:255',
                 'last_name' => 'max:255',
                 'email' => 'email|unique:users,email,'.Auth::user()->id,
@@ -376,7 +375,7 @@ class UserApiController extends Controller
 
             $Provider = Provider::find($request->provider_id);
             $Provider->rating = UserRating::Average($request->provider_id) ? : 0;
-            $Provider->availability = ProviderAvailability::AvilableProviders($request->provider_id)->get();
+            $Provider->availability = ProviderAvailability::AvailableProviders($request->provider_id)->get();
 
             return $Provider;
 

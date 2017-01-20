@@ -39,6 +39,14 @@ class UserRequests extends Model
                 ->whereNotIn('status' , [REQUEST_NO_PROVIDER_AVAILABLE,REQUEST_CANCELLED,REQUEST_TIME_EXCEED_CANCELLED,REQUEST_COMPLETED]);
     }
 
+    public function scopeCheckRequestProvider($query, $request_id, $provider_id, $status)
+    {
+        return $query->where('id', '=', $request_id)
+                    ->where('confirmed_provider', '=', $provider_id)
+                    ->where('provider_status' , $status)
+                    ->where('status', REQUEST_INPROGRESS);
+    }
+
     public function scopeRequestStatusCheck($query, $user_id, $check_status)
     {
         return $query->where('user_requests.user_id', '=', $user_id)
