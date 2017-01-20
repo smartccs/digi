@@ -30,7 +30,8 @@
         },
         "files": [
             "app/Helper/Controllerhelper.php",
-            "app/Helper/ViewHelper.php"
+            "app/Helper/ViewHelper.php",
+            "app/Helper/constants.php"
         ]
     },
     "autoload-dev": {

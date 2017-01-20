@@ -4,61 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-
-define('USER', 0);
-define('PROVIDER',1);
-define('NONE', 0);
-
-define('DEFAULT_FALSE', 0);
-define('DEFAULT_TRUE', 1);
-
-define('COD',   'cod');
-define('PAYPAL', 'paypal');
-define('CARD',  'card');
-
-define('REQUEST_NEW',        0);
-define('REQUEST_WAITING',      1);
-define('REQUEST_INPROGRESS',    2);
-define('REQUEST_COMPLETE_PENDING',  3);
-define('REQUEST_RATING',      4);
-define('REQUEST_COMPLETED',      5);
-define('REQUEST_CANCELLED',      6);
-define('REQUEST_NO_PROVIDER_AVAILABLE',7);
-define('WAITING_FOR_PROVIDER_CONFRIMATION_COD',  8);
-define('REQUEST_TIME_EXCEED_CANCELLED', 10);
-
-define('REQUEST_REJECTED_BY_PROVIDER', 9);
-
-define('PROVIDER_NOT_AVAILABLE', 0);
-define('PROVIDER_AVAILABLE', 1);
-
-define('PROVIDER_NONE', 0);
-define('PROVIDER_ACCEPTED', 1);
-define('PROVIDER_STARTED', 2);
-define('PROVIDER_ARRIVED', 3);
-define('PROVIDER_SERVICE_STARTED', 4);
-define('PROVIDER_SERVICE_COMPLETED', 5);
-define('PROVIDER_RATED', 6);
-
-define('REQUEST_META_NONE',   0);
-define('REQUEST_META_OFFERED',   1);
-define('REQUEST_META_TIMEDOUT', 2);
-define('REQUEST_META_DECLINED', 3);
-define('WAITING_TO_RESPOND', 1);
-define('WAITING_TO_RESPOND_NORMAL',0);
-
-define('RATINGS', '0,1,2,3,4,5');
-define('DEVICE_ANDROID', 'android');
-define('DEVICE_IOS', 'ios');
-
-
 use Log;
 use Hash;
 use Validator;
 use File;
 use DB;
 use Auth;
-
 
 use App\User;
 use App\ProviderService;
@@ -871,7 +822,7 @@ class UserApiController extends Controller
 
             $check_status = [REQUEST_COMPLETED,REQUEST_CANCELLED,REQUEST_NO_PROVIDER_AVAILABLE,REQUEST_TIME_EXCEED_CANCELLED];
 
-            $requests = UserRequests::RequestStatusCheck(Auth::user()->id,$check_status)->get()->toArray();
+            $requests = UserRequests::UserRequestStatusCheck(Auth::user()->id,$check_status)->get()->toArray();
 
             $requests_data = [];$invoice = [];
 
@@ -1213,19 +1164,14 @@ class UserApiController extends Controller
 
     public function history() {
     
-        $requests = UserRequests::where('requests.user_id', '=', Auth::user()->id)
-                    ->where('requests.status', '=', REQUEST_COMPLETED)
-                    ->leftJoin('providers', 'providers.id', '=', 'requests.confirmed_provider')
-                    ->leftJoin('users', 'users.id', '=', 'requests.user_id')
-                    ->leftJoin('request_payments', 'requests.id', '=', 'request_payments.request_id')
-                    ->orderBy('request_start_time','desc')
-                    ->select('requests.id as request_id', 'requests.request_type as request_type', 'request_start_time as date',
-                            DB::raw('CONCAT(providers.first_name, " ", providers.last_name) as provider_name'), 'providers.picture',
-                            DB::raw('ROUND(request_payments.total) as total'))
-                            ->get()
-                            ->toArray();
+        try{
+            $requests = UserRequests::GetUserHistory(Auth::user()->id)->get()->toArray();
+            return $requests;
+        }
 
-        return $requests;
+        catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Something went wrong']);
+        }
     }
 
     /**
@@ -1276,7 +1222,7 @@ class UserApiController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function get_payment_modes() {
+    public function payment_modes() {
 
         $payment_modes = [];
 
@@ -1526,19 +1472,11 @@ class UserApiController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function get_upcoming_request() {
+    public function upcoming_request() {
 
         try{
 
-            $requests = UserRequests::where('user_requests.user_id' , Auth::user()->id)
-                        ->where('user_requests.later' , DEFAULT_TRUE)
-                        ->where('user_requests.status' , REQUEST_INPROGRESS)
-                        ->where('user_requests.provider_status' , '<',PROVIDER_STARTED)
-                        ->leftJoin('users', 'users.id', '=', 'user_requests.user_id')
-                        ->leftJoin('providers', 'providers.id', '=', 'user_requests.confirmed_provider')
-                        ->leftJoin('service_types', 'service_types.id', '=', 'user_requests.request_type')
-                        ->select('user_requests.id as request_id','user_requests.later','user_requests.requested_time', 'user_requests.request_type as request_type', 'service_types.name as service_type_name', 'request_start_time as request_start_time', 'user_requests.status','user_requests.confirmed_provider as provider_id', DB::raw('CONCAT(providers.first_name, " ", providers.last_name) as provider_name'),'providers.picture as provider_picture','user_requests.provider_status', 'user_requests.amount', DB::raw('CONCAT(users.first_name, " ", users.last_name) as user_name'), 'users.picture as user_picture', 'users.id as user_id','user_requests.s_latitude', 'user_requests.s_longitude','user_requests.s_address')
-                        ->get()->toArray();
+            $requests = UserRequests::UserUpcomingRequest(Auth::user()->id)->get()->toArray();
 
             return $requests;
         }

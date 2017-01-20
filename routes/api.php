@@ -59,7 +59,7 @@ Route::group(['prefix' => 'user'], function () {
 
 		Route::get('/request' , 'UserApiController@single_request');
 
-		Route::get('/payment/modes' , 'UserApiController@get_payment_modes');
+		Route::get('/payment/modes' , 'UserApiController@payment_modes');
 
 		Route::post('/change/modes' , 'UserApiController@payment_mode_update');
 
@@ -71,7 +71,7 @@ Route::group(['prefix' => 'user'], function () {
 
 		Route::get('/message' , 'UserApiController@message');
 		
-		Route::get('/upcoming' , 'UserApiController@get_upcoming_request');
+		Route::get('/upcoming' , 'UserApiController@upcoming_request');
 
 		Route::post('/add/money' , 'UserApiController@add_money');
 

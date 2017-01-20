@@ -25,7 +25,7 @@ Route::group(['prefix' => 'provider'], function () {
 
 		Route::post('/update/location' , 'ProviderApiController@update_location');
 
-		Route::post('/update/profile' , 'UserApiController@update_profile');
+		Route::post('/update/profile' , 'ProviderApiController@update_profile');
 
 		Route::get('/available' , 'ProviderApiController@available');
 
@@ -40,9 +40,28 @@ Route::group(['prefix' => 'provider'], function () {
 		Route::post('/arrived' , 'ProviderApiController@arrived');
 
 		Route::post('/start/service' , 'ProviderApiController@start_service');
-		
+
 		Route::post('/end/service' , 'ProviderApiController@end_service');
 
+		Route::post('/rate/user' , 'ProviderApiController@rate_user');
+
+		Route::post('/cancel/request' , 'ProviderApiController@cancel_request');
+
+		Route::get('/history' , 'ProviderApiController@history');
+
+		Route::get('/incoming/request' , 'ProviderApiController@incoming_request');
+
+		Route::get('/request/check' , 'ProviderApiController@request_status_check');
+
+		Route::get('/message' , 'ProviderApiController@message');
+
+		Route::post('/cod/paid' , 'ProviderApiController@cod_paid');
+
+		Route::get('/upcoming/request' , 'ProviderApiController@upcoming_request');
+
+		Route::get('/availabilities' , 'ProviderApiController@availabilities');
+		
+		Route::post('/request/details' , 'ProviderApiController@request_details');
 
     });
 
