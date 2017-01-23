@@ -34,7 +34,7 @@ class CreateUsersTable extends Migration
             $table->string('address')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
-            $table->string('pincode')->nullable();
+            $table->string('zipcode')->nullable();
             $table->string('country')->nullable();
             $table->float('wallet_balance')->default(0);
             $table->rememberToken();

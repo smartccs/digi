@@ -61,7 +61,7 @@ class UserApiController extends Controller
             $User['payment_mode'] = 'cod';
             $User['password'] = bcrypt($request->password);
             if($request->hasFile('picture')) {
-                $User['picture'] = Helper::upload_picture($request->avatar);
+                $User['picture'] = Helper::upload_picture($request->picture);
             }
 
             $User = User::create($User);

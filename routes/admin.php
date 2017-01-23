@@ -10,3 +10,6 @@ Route::get('/home', function () {
     return view('admin.home');
 })->name('home');
 
+Route::resource('user', 'Resource\UserResource');
+
+

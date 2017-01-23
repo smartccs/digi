@@ -19,7 +19,7 @@ class User extends Authenticatable
         'first_name', 'last_name', 'email',
          'mobile', 'picture', 'password',
          'device_type','device_token','login_by',
-         'payment_mode','social_unique_id'
+         'payment_mode','social_unique_id','address', 'zipcode'
     ];
 
     /**
