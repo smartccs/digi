@@ -26,7 +26,7 @@ class AdminController extends Controller
      */
     public function user_map()
     {
-        $Users = User::where('latitude', '!=', '0')->where('longitude', '!=', '0')->get();
+        $Users = User::where('latitude', '!=', 0)->where('longitude', '!=', 0)->get();
         return view('admin.map.user_map', compact('Users'));
     }
 
@@ -38,7 +38,7 @@ class AdminController extends Controller
      */
     public function provider_map()
     {
-        $Providers = Provider::where('latitude', '!=', '0')->where('longitude', '!=', '0')->get();
+        $Providers = Provider::where('latitude', '!=', 0)->where('longitude', '!=', 0)->get();
         return view('admin.map.provider_map', compact('Providers'));
     }
 

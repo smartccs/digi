@@ -39,7 +39,7 @@
                                     <input type="hidden" name="_method" value="DELETE">
                                     <a href="{{ route('admin.user.show', $user->id) }}" class="btn btn-info"><i class="fa fa-search"></i> History</a>
                                     <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-info"><i class="fa fa-pencil"></i> Edit</a>
-                                    <button class="btn btn-danger" onclick="return confirm('Are you sure?')}}')"><i class="fa fa-trash"></i> Delete</button>
+                                    <button class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class="fa fa-trash"></i> Delete</button>
                                 </form>
                             </td>
                         </tr>
