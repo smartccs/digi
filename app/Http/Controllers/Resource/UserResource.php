@@ -165,4 +165,5 @@ class UserResource extends Controller
             return back()->with('flash_errors', 'User Not Found');
         }
     }
+
 }

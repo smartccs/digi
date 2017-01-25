@@ -1364,10 +1364,10 @@ class ProviderApiController extends Controller
                     if(ProviderAvailability::where('id',$request->availability_id)->delete()) {
                         $response_array = array('success' => true);
                     } else {
-                        $response_array = array('success' => false );
+                        $response_array = array('success' => false);
                     }
                 } else {
-                    $response_array = array('success' => false  );
+                    $response_array = array('success' => false);
                 }
 
             } else {

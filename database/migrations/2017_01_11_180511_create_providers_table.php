@@ -36,7 +36,7 @@ class CreateProvidersTable extends Migration
             $table->string('address')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
-            $table->string('pincode')->nullable();
+            $table->string('zipcode')->nullable();
             $table->string('country')->nullable();
             $table->string('email_activation_code')->nullable();
             $table->rememberToken();
