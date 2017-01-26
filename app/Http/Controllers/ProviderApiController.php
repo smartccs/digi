@@ -1130,10 +1130,10 @@ class ProviderApiController extends Controller
     public function provider_testimonial(){
 
         $testimonial = UserRating::where('provider_id',Auth::user()->id)
-                                ->leftJoin('users', 'users.id', '=', 'user_ratings.user_id')
-                                ->select('user_ratings.rating','users.first_name','user_ratings.comment','user_ratings.request_id','users.last_name','user_ratings.created_at')
-                                ->orderBy('user_ratings.created_at')
-                                ->get();
+                        ->leftJoin('users', 'users.id', '=', 'user_ratings.user_id')
+                        ->select('user_ratings.*','users.first_name','users.last_name')
+                        ->orderBy('user_ratings.created_at')
+                        ->get();
 
         return $testimonial;
     }

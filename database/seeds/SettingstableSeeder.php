@@ -43,8 +43,8 @@ class SettingstableSeeder extends Seeder
 		        'value' => 50
 		    ],
 		    [
-		        'key' => 'tax_price',
-		        'value' => 50
+		        'key' => 'tax_percentage',
+		        'value' => 0
 		    ],  
 		    [
 		        'key' => 'stripe_secret_key',
@@ -89,6 +89,14 @@ class SettingstableSeeder extends Seeder
 		   	[
 		        'key' => 'price_per_kilometer',
 		        'value' => 10
+		    ],
+		    [
+		        'key' => 'commission_percentage',
+		        'value' => 0
+		    ],
+		    [
+		        'key' => 'email_logo',
+		        'value' => ''
 		    ],
 		]);
     }
