@@ -51,9 +51,11 @@ class ServiceResource extends Controller
 
             $service = $request->all();
 
-            if ($request->is_default == 1) {
+            if ($request->is_default === 'yes') {
                 ServiceType::where('status', 1)->update(['status' => 0]);
                 $service['status'] = 1;
+            }else{
+                $service['status'] = 0;
             }
 
             if($request->hasFile('image')) {
@@ -129,7 +131,7 @@ class ServiceResource extends Controller
                 $service->image = Helper::upload_picture($request->image);
             }
 
-            if ($request->is_default == 1) {
+            if ($request->is_default === 'yes') {
                 ServiceType::where('status', 1)->update(['status' => 0]);
                 $service->status = 1;
             }

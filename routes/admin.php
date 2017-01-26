@@ -14,6 +14,7 @@ Route::resource('user', 'Resource\UserResource');
 Route::resource('provider', 'Resource\ProviderResource');
 Route::resource('document', 'Resource\DocumentResource');
 Route::resource('service', 'Resource\ServiceResource');
+Route::resource('promocode', 'Resource\PromocodeResource');
 Route::get('provider/{id}/approve', 'Resource\ProviderResource@approve')->name('provider.approve');
 Route::get('provider/{id}/decline', 'Resource\ProviderResource@decline')->name('provider.decline');
 
