@@ -20,7 +20,6 @@
                             <th>Date & Time</th>
                             <th>Status</th>
                             <th>Amount</th>
-                            <th>Payment Mode</th>
                             <th>Payment Status</th>
                             <th>Action</th>
                         </tr>
@@ -79,7 +78,6 @@
                                   @endif
                             </td>
                             <td>{{currency($request->amount)}}</td>
-                            <td>{{$request->payment_mode}}</td>
                             <td>
                                 @if($request->payment_status == 0)
                                     Not Paid
@@ -116,7 +114,6 @@
                             <th>Date & Time</th>
                             <th>Status</th>
                             <th>Amount</th>
-                            <th>Payment Mode</th>
                             <th>Payment Status</th>
                             <th>Action</th>
                         </tr>

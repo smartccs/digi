@@ -39,6 +39,18 @@ class UserRequests extends Model
                 ->whereNotIn('status' , [REQUEST_NO_PROVIDER_AVAILABLE,REQUEST_CANCELLED,REQUEST_TIME_EXCEED_CANCELLED,REQUEST_COMPLETED]);
     }
 
+    public function scopeRequestHistory($query)
+    {
+        return $query->leftJoin('providers', 'user_requests.confirmed_provider', '=', 'providers.id')
+                    ->leftJoin('users', 'user_requests.user_id', '=', 'users.id')
+                    ->leftJoin('user_payments', 'user_requests.id', '=', 'user_payments.request_id')
+                    ->select('user_requests.*','users.first_name as user_first_name', 'users.last_name as user_last_name',
+                             'providers.first_name as provider_first_name', 'providers.last_name as provider_last_name', 
+                             'users.id as user_id', 'providers.id as provider_id', 'user_payments.total as amount',
+                            'user_payments.payment_mode as payment_mode', 'user_payments.status as payment_status')
+                    ->orderBy('user_requests.created_at', 'desc');
+    }
+
     public function scopeCheckRequestProvider($query, $request_id, $provider_id, $status)
     {
         return $query->where('id', '=', $request_id)

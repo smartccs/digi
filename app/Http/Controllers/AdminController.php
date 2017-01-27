@@ -320,15 +320,7 @@ class AdminController extends Controller
 
         try{
 
-            $requests = UserRequests::leftJoin('providers', 'user_requests.confirmed_provider', '=', 'providers.id')
-                    ->leftJoin('users', 'user_requests.user_id', '=', 'users.id')
-                    ->leftJoin('user_payments', 'user_requests.id', '=', 'user_payments.request_id')
-                    ->select('user_requests.*','users.first_name as user_first_name', 'users.last_name as user_last_name',
-                             'providers.first_name as provider_first_name', 'providers.last_name as provider_last_name', 
-                             'users.id as user_id', 'providers.id as provider_id', 'user_payments.total as amount',
-                            'user_payments.payment_mode as payment_mode', 'user_payments.status as payment_status')
-                    ->orderBy('user_requests.created_at', 'desc')
-                    ->get();
+            $requests = UserRequests::RequestHistory()->get();
 
             return view('admin.request.request-history', compact('requests'));
 
@@ -397,15 +389,7 @@ class AdminController extends Controller
         try{
 
             $requests = UserRequests::where('later' , DEFAULT_TRUE)
-                ->leftJoin('providers', 'user_requests.confirmed_provider', '=', 'providers.id')
-                ->leftJoin('users', 'user_requests.user_id', '=', 'users.id')
-                ->leftJoin('user_payments', 'user_requests.id', '=', 'user_payments.request_id')
-                ->select('users.first_name as user_first_name', 'users.last_name as user_last_name', 
-                        'providers.first_name as provider_first_name', 'providers.last_name as provider_last_name',
-                        'users.id as user_id', 'providers.id as provider_id','user_requests.*', 
-                        'user_payments.total as amount', 'user_payments.payment_mode as payment_mode', 
-                        'user_payments.status as payment_status')
-                ->orderBy('user_requests.created_at', 'DESC')
+                ->RequestHistory()
                 ->get();
 
             return view('admin.request.scheduled-request', compact('requests'));
@@ -416,6 +400,5 @@ class AdminController extends Controller
         }
 
     }
-
 
 }

@@ -100,8 +100,9 @@ class ProviderResource extends Controller
     public function show($id)
     {
         try {
-            return Provider::findOrFail($id);
-        } catch (ModelNotFoundException $e) {
+            $provider = Provider::findOrFail($id);
+            return view('admin.providers.provider-details', compact('provider'));
+        } catch (Execption $e) {
             return $e;
         }
     }
@@ -207,5 +208,28 @@ class ProviderResource extends Controller
     {
         Provider::where('id',$id)->update(['is_approved' => 0]);
         return back()->with('flash_success', "Provider Declined");
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function provider_request_details($id){
+
+        try{
+
+            $requests = UserRequests::where('user_requests.confirmed_provider',$id)
+                    ->RequestHistory()
+                    ->get();
+
+            return view('admin.request.request-history', compact('requests'));
+        }
+
+        catch (ModelNotFoundException $e) {
+             return back()->with('flash_error','Something Went Wrong!');
+        }
+
     }
 }

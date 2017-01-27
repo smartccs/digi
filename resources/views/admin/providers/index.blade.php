@@ -57,7 +57,7 @@
                                       </button>
                                       <ul class="dropdown-menu">
                                         <li>
-                                            <a href="{{ route('admin.provider.show', $provider->id) }}" class="btn btn-default"><i class="fa fa-search"></i> History</a>
+                                            <a href="{{ route('admin.provider.request', $provider->id) }}" class="btn btn-default"><i class="fa fa-search"></i> History</a>
                                         </li>
                                         <li>
                                             <a href="{{ route('admin.provider.edit', $provider->id) }}" class="btn btn-default"><i class="fa fa-pencil"></i> Edit</a>

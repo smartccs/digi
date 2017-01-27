@@ -19,6 +19,8 @@ Route::resource('user-review', 'Resource\UserReviewResource');
 Route::resource('provider-review', 'Resource\ProviderReviewResource');
 Route::get('provider/{id}/approve', 'Resource\ProviderResource@approve')->name('provider.approve');
 Route::get('provider/{id}/decline', 'Resource\ProviderResource@decline')->name('provider.decline');
+Route::get('provider/{id}/request', 'Resource\ProviderResource@provider_request_details')->name('provider.request');
+Route::get('user/{id}/request', 'Resource\UserResource@user_request_details')->name('user.request');
 
 Route::get('user-map', 'AdminController@user_map')->name('user.map');
 Route::get('provider-map', 'AdminController@provider_map')->name('provider.map');

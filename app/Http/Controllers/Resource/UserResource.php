@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Resource;
 
 use App\User;
+use App\UserRequests;
 use Illuminate\Http\Request;
 use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -81,7 +82,8 @@ class UserResource extends Controller
     public function show($id)
     {
         try {
-            return User::findOrFail($id);
+            $user = User::findOrFail($id);
+            return view('admin.users.user-details', compact('user'));
         } catch (ModelNotFoundException $e) {
             return $e;
         }
@@ -164,6 +166,29 @@ class UserResource extends Controller
         catch (ModelNotFoundException $e) {
             return back()->with('flash_errors', 'User Not Found');
         }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function user_request_details($id){
+
+        try{
+
+            $requests = UserRequests::where('user_requests.user_id',$id)
+                    ->RequestHistory()
+                    ->get();
+
+            return view('admin.request.request-history', compact('requests'));
+        }
+
+        catch (ModelNotFoundException $e) {
+             return back()->with('flash_error','Something Went Wrong!');
+        }
+
     }
 
 }
