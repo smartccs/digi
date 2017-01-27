@@ -41,6 +41,7 @@
 					<label for="zipcode" class="col-xs-2 col-form-label"></label>
 					<div class="col-xs-10">
 						<button type="submit" class="btn btn-primary">Add Promocode</button>
+						<a href="{{route('admin.document.index')}}" class="btn btn-default">Cancel</a>
 					</div>
 				</div>
 			</form>

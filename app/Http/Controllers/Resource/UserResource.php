@@ -174,7 +174,7 @@ class UserResource extends Controller
      * @param  \App\Provider  $provider
      * @return \Illuminate\Http\Response
      */
-    public function user_request_details($id){
+    public function request($id){
 
         try{
 

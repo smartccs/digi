@@ -62,6 +62,7 @@
 					<label for="zipcode" class="col-xs-2 col-form-label"></label>
 					<div class="col-xs-10">
 						<button type="submit" class="btn btn-primary">Update Service Type</button>
+						<a href="{{route('admin.service.index')}}" class="btn btn-default">Cancel</a>
 					</div>
 				</div>
 			</form>
