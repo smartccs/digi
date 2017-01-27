@@ -1,6 +1,6 @@
 @extends('admin.layout.base')
 
-@section('title', 'Update Users ')
+@section('title', 'Update User ')
 
 @section('content')
 

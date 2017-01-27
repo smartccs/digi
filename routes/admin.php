@@ -24,5 +24,16 @@ Route::get('user-map', 'AdminController@user_map')->name('user.map');
 Route::get('provider-map', 'AdminController@provider_map')->name('provider.map');
 Route::get('setting', 'AdminController@setting')->name('setting');
 Route::post('setting/store', 'AdminController@setting_store')->name('setting.store');
+Route::get('profile', 'AdminController@profile')->name('profile');
+Route::post('profile/update', 'AdminController@profile_update')->name('profile.update');
+Route::get('password', 'AdminController@password')->name('password');
+Route::post('password/update', 'AdminController@password_update')->name('password.update');
+Route::get('payment', 'AdminController@payment')->name('payment');
+Route::get('payment/setting', 'AdminController@payment_setting')->name('payment.setting');
+Route::get('help', 'AdminController@help')->name('help');
+Route::get('request', 'AdminController@request_history')->name('request.history');
+Route::get('scheduled/request', 'AdminController@scheduled_request')->name('scheduled.request');
+Route::get('request/{id}/details', 'AdminController@request_details')->name('request.details');
+Route::get('chat/{id}', 'AdminController@chat')->name('chat');
 
 
