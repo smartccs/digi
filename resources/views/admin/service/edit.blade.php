@@ -35,7 +35,7 @@
 					@if(isset($service->image))
                     	<img style="height: 90px; margin-bottom: 15px; border-radius:2em;" src="{{$service->image}}">
                     @endif
-						<input type="file" accept="image/*" name="image" class="form-control-file" id="image" aria-describedby="fileHelp">
+						<input type="file" accept="image/*" name="image" class="dropify form-control-file" id="image" aria-describedby="fileHelp">
 					</div>
 				</div>
 

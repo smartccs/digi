@@ -25,7 +25,7 @@
 						@if(Setting::get('site_logo')!='')
 	                    <img style="height: 90px; margin-bottom: 15px; border-radius:2em;" src="{{Setting::get('site_logo')}}">
 	                    @endif
-						<input type="file" accept="image/*" name="site_logo" class="form-control-file" id="site_logo" aria-describedby="fileHelp">
+						<input type="file" accept="image/*" name="site_logo" class="dropify form-control-file" id="site_logo" aria-describedby="fileHelp">
 					</div>
 				</div>
 
@@ -36,7 +36,7 @@
 						@if(Setting::get('site_icon')!='')
 	                    <img style="height: 90px; margin-bottom: 15px; border-radius:2em;" src="{{Setting::get('site_icon')}}">
 	                    @endif
-						<input type="file" accept="image/*" name="site_icon" class="form-control-file" id="site_icon" aria-describedby="fileHelp">
+						<input type="file" accept="image/*" name="site_icon" class="dropify form-control-file" id="site_icon" aria-describedby="fileHelp">
 					</div>
 				</div>
 
@@ -46,7 +46,7 @@
 						@if(Setting::get('email_logo')!='')
 	                    <img style="height: 90px; margin-bottom: 15px; border-radius:2em;" src="{{Setting::get('email_logo')}}">
 	                    @endif
-						<input type="file" accept="image/*" name="email_logo" class="form-control-file" id="email_logo" aria-describedby="fileHelp">
+						<input type="file" accept="image/*" name="email_logo" class="dropify form-control-file" id="email_logo" aria-describedby="fileHelp">
 					</div>
 				</div>
 

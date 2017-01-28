@@ -27,6 +27,18 @@ class AdminController extends Controller
         $this->middleware('admin');  
     }
 
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function dashboard()
+    {
+        return view('admin.dashboard');
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -196,8 +208,11 @@ class AdminController extends Controller
             $admin->name = $request->name;
             $admin->email = $request->email;
             $admin->mobile = $request->mobile;
-            if($request->has('picture')){
-                $admin->picture = Helper::upload_picture($request->picture);
+            if($request->hasFile('picture')){
+                if($admin->picture != ""){
+                    Helper::delete_avatar($admin->picture);
+                }
+                $admin->picture = Helper::upload_avatar($request->picture);
             }
             $admin->gender = $request->gender;
             $admin->paypal_email = $request->paypal_email;

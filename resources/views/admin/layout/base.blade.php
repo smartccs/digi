@@ -24,6 +24,7 @@
 		<link rel="stylesheet" href="{{asset('admin/vendor/DataTables/Buttons/css/buttons.dataTables.min.css')}}">
 		<link rel="stylesheet" href="{{asset('admin/vendor/DataTables/Buttons/css/buttons.bootstrap4.min.css')}}">
 		<link rel="stylesheet" href="{{asset('admin/vendor/switchery/dist/switchery.min.css')}}">
+		<link rel="stylesheet" href="{{asset('admin/vendor/dropify/dist/css/dropify.min.css')}}">
 		<link rel="stylesheet" href="{{asset('admin/assets/css/core.css')}}">
 
 		<!-- HTML5 Shiv and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -87,10 +88,14 @@
 			<script type="text/javascript" src="{{asset('admin/vendor/DataTables/Buttons/js/buttons.colVis.min.js')}}"></script>
 
 			<script type="text/javascript" src="{{asset('admin/vendor/switchery/dist/switchery.min.js')}}"></script>
+			<script type="text/javascript" src="{{asset('admin/vendor/dropify/dist/js/dropify.min.js')}}"></script>
+
 			<!-- Neptune JS -->
 			<script type="text/javascript" src="{{asset('admin/assets/js/app.js')}}"></script>
 			<script type="text/javascript" src="{{asset('admin/assets/js/demo.js')}}"></script>
 			<script type="text/javascript" src="{{asset('admin/assets/js/tables-datatable.js')}}"></script>
+			<script type="text/javascript" src="{{asset('admin/assets/js/forms-upload.js')}}"></script>
+
 
 			@yield('scripts')
 		</body>

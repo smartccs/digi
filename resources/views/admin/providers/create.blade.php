@@ -75,7 +75,7 @@
 				<div class="form-group row">
 					<label for="picture" class="col-xs-2 col-form-label">Picture</label>
 					<div class="col-xs-10">
-						<input type="file" accept="image/*" name="picture" class="form-control-file" id="picture" aria-describedby="fileHelp">
+						<input type="file" accept="image/*" name="picture" class="dropify form-control-file" id="picture" aria-describedby="fileHelp">
 					</div>
 				</div>
 
