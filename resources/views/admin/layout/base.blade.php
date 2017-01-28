@@ -52,7 +52,7 @@
 
 				<div class="site-content">
 
-					@include('layouts.notify')
+					@include('common.notify')
 
 					@yield('content')
 

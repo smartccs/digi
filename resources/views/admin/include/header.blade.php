@@ -20,6 +20,14 @@
 						<div class="toggle-button light sidebar-toggle-second float-xs-left hidden-sm-down">
 							<span class="hamburger"></span>
 						</div>
+
+						<ul class="nav navbar-nav">
+							<li class="nav-item hidden-sm-down">
+								<a class="nav-link toggle-fullscreen" href="#">
+									<i class="ti-fullscreen"></i>
+								</a>
+							</li>
+						</ul>
 						
 						<ul class="nav navbar-nav float-md-right">
 							<li class="nav-item dropdown hidden-sm-down">

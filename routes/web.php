@@ -12,7 +12,15 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
+});
+
+Route::get('/ride', function () {
+    return view('ride');
+});
+
+Route::get('/drive', function () {
+    return view('drive');
 });
 
 Auth::routes();
