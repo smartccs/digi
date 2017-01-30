@@ -1311,8 +1311,8 @@ class UserApiController extends Controller
     public function add_card(Request $request) {
 
         $this->validate($request, [
-                        'last_four' => 'required',
-                        'payment_token' => 'required',
+                'last_four' => 'required',
+                'payment_token' => 'required',
             ]);
 
             $user = User::find(Auth::user()->id);

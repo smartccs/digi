@@ -17,6 +17,8 @@ Route::group(['prefix' => 'provider'], function () {
 
     Route::post('/oauth/token' , 'ProviderApiController@authenticate');
 
+	Route::get('/services' , 'ProviderApiController@services');
+
     Route::group(['middleware' => ['ProviderApiMiddleware']], function () {
 
 		Route::post('/change/password' , 'ProviderApiController@change_password');

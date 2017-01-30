@@ -1379,6 +1379,22 @@ class ProviderApiController extends Controller
     }
 
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function services() {
+
+        if($serviceList = ServiceType::Approved()->get()) {
+            return $serviceList;
+        } else {
+            return response()->json(['error' => 'Services Not Found!']);
+        }
+
+    }
+
 
 
 }
