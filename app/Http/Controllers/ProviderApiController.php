@@ -49,7 +49,7 @@ class ProviderApiController extends Controller
                 'email' => 'required|email|max:255|unique:providers',
                 'mobile' => 'required|digits_between:6,13',
                 'password' => 'required|min:6',
-                'picture' => 'required|mimes:jpeg,jpg,bmp,png',
+                'picture' => 'mimes:jpeg,jpg,bmp,png',
             ]);
 
         try{

@@ -926,7 +926,8 @@ dl.left-right dd {
   margin-bottom: 10px;
 }
 dl.left-right dd.big,dl.left-right dt.big{
-  font-size: 14px;
+  font-size: 16px;
+    color: #37b38b;
 }
 .provider-info{
   margin-bottom: 15px;
@@ -963,4 +964,33 @@ select.form-control{
 
 .reg-btn:hover,.reg-btn:active,.reg-btn:focus{
   background-color: #e90016;
+}
+.full-input{
+  width: 100%;
+}
+.full-input input{
+  display: block;
+  width: 100%;
+  line-height: 10px;
+  padding: 16px 15px 12px 12px;
+  height: 45px;
+  box-shadow: none!important;
+}
+.wallet{
+  text-align: center;
+  margin-top: 20px;
+}
+.wallet .amount{
+  display: inline-block;
+  
+}
+.wallet .amount .price{
+  font-size: 5em;
+}
+.wallet .amount span.txt{
+    display: block;
+    font-size: 1em;
+    text-align: right;
+    margin-right: 0.5em;
+    color: #999;
 }
