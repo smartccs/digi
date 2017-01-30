@@ -889,7 +889,7 @@ class ProviderApiController extends Controller
         	return response()->json(['error' => 'Request Already Cancelled']);
     	}
 
-        if( in_array($requests->provider_status, PROVIDER_NONE,PROVIDER_ACCEPTED,PROVIDER_STARTED]) )
+        if( in_array($requests->provider_status, [PROVIDER_NONE,PROVIDER_ACCEPTED,PROVIDER_STARTED]) )
         {
         	return response()->json(['error' => 'Service Already in Progress']);
         }
