@@ -18,7 +18,6 @@ use App\RequestsFilter;
 use App\ServiceType;
 use App\Provider;
 use App\Settings;
-use App\FavouriteProvider;
 use App\UserRating;
 use App\ProviderAvailability;
 use App\Cards;
@@ -229,45 +228,21 @@ class UserApiController extends Controller
 
         try {
 
-            $latitude = $request->latitude;
-            $longitude = $request->longitude;
+                $latitude = $request->latitude;
+                $longitude = $request->longitude;
 
-            $distance = \Setting::get('search_radius');
+                $distance = \Setting::get('search_radius');
 
-            $service_type_id = $request->service_id;
-
-           $query = "SELECT 
-                        providers.id,
-                        providers.first_name,
-                        providers.last_name,
-                        providers.picture,
-                        providers.address,
-                        providers.latitude,
-                        providers.longitude,
-                        provider_services.service_type_id,
-                        1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) AS distance
-                    FROM providers
-                    LEFT JOIN provider_services ON providers.id = provider_services.provider_id
-                    WHERE provider_services.service_type_id = $service_type_id 
-                        AND providers.is_available = 1 
-                        AND providers.waiting_to_respond = 0
-                        AND is_activated = 1
-                        AND is_approved = 1
-                        AND (1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance
-                        ORDER BY distance";
-
-
-                $providers = DB::select(DB::raw($query));
+                $providers = Provider::GuestProviderList($latitude, $longitude, $request->service_id, $distance);
 
                 for($i = 0; $i < sizeof($providers); $i++) {
 
                     $providers[$i]->rating = UserRating::Average($providers[$i]->id) ?: 0;
                     $providers[$i]->availablity = ProviderAvailability::Providers($providers[$i]->id)->get()->toArray();
-                    $providers[$i]->favorite = FavouriteProvider::Nos(Auth::user()->id, $providers[$i]->id)->count();
                 }
 
                 return response()->json($providers);
-            }
+        }
 
         catch (Exception $e) {
              return response()->json(['error' => 'No Providers Found!'], 500);
@@ -352,7 +327,7 @@ class UserApiController extends Controller
 
             if($check_requests > 0) {
 
-                return response()->json(['error' => 'Already request is in progress. Try again later']);
+                return response()->json(['error' => 'Already request is in progress. Try again later'], 500);
 
             }
 
@@ -781,7 +756,6 @@ class UserApiController extends Controller
                 foreach ($requests as  $req) {
 
                     $req['rating'] = UserRating::Average($req['provider_id']) ?: 0;
-                    $req['is_fav_provider'] = FavouriteProvider::IsFavCount($req['provider_id'],Auth::user()->id)->count() ? 1 : 0;
 
                     $requests_data[] = $req;
 
@@ -985,18 +959,6 @@ class UserApiController extends Controller
                 $req->status = REQUEST_COMPLETED;
                 $req->save();
 
-                // Save favourite provider details
-                if($request->is_favorite ==  DEFAULT_TRUE) {
-                    $fav_provider = FavouriteProvider::IsFavCount(Auth::user()->id,$req->confirmed_provider )->count();
-                    if($fav_provider == 0){
-                        $favProvider = new FavouriteProvider;
-                        $favProvider->provider_id = $req->confirmed_provider;
-                        $favProvider->user_id = Auth::user()->id;
-                        $favProvider->status = DEFAULT_TRUE;
-                        $favProvider->save();
-                    }
-                }
-
                 // Send Push Notification to Provider
                 // $title = Helper::tr('provider_rated_by_user_title');
                 // $messages = Helper::tr('provider_rated_by_user_message');
@@ -1011,102 +973,6 @@ class UserApiController extends Controller
 
     } 
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function add_fav_provider(Request $request) {
-
-         $this->validate($request, [
-                'fav_provider' => 'exists:providers,id'
-            ]);
-    
-
-            $fav_provider = FavouriteProvider::IsFavCount(Auth::user()->id,$request->fav_provider)->count();
-            if($fav_provider == 0){
-
-                $favProvider = new FavouriteProvider;
-                $favProvider->provider_id = $request->fav_provider;
-                $favProvider->user_id = Auth::user()->id;
-                $favProvider->status = DEFAULT_TRUE;
-                $favProvider->save();
-
-                return response()->json(['message' => 'Provider Favorited Successfully']); 
-
-            } else {
-                return response()->json(['error' => 'Something went wrong'], 500);
-            }
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function fav_providers() {
-
-        $fav_providers = FavouriteProvider::where('favourite_providers.user_id' , Auth::user()->id)
-                            ->leftJoin('providers' , 'favourite_providers.provider_id' , '=' ,'providers.id')
-                            ->leftJoin('provider_services' , 'provider_services.provider_id' , '=' ,'providers.id')
-                            ->select(
-                                'favourite_providers.id as favourite_id',
-                                'providers.id as provider_id',
-                                'provider_services.id as service_id',
-                                DB::raw('CONCAT(providers.first_name, " ", providers.last_name) as provider_name'),
-                                'providers.picture'
-                                )
-                            ->get()
-                            ->toArray();
-
-        $providers = [];$data = [];
-
-        if($fav_providers) {
-
-            foreach ($fav_providers as $f => $fav_provider) {
-                $fav_provider['user_rating'] = Average($fav_provider['provider_id']) ? : 0;
-                $providers[] = $fav_provider;
-            }
-
-            return $providers;
-
-        } else {
-            return response()->json(['error' => 'No Providers Found'], 500);
-        }
-
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function delete_fav_provider(Request $request) {
-
-        $this->validate($request, [
-                'favourite_id' => "required|exists:favourite_providers,id",
-            ]);
-
-        try{
-
-            $favourite = FavouriteProvider::find($request->favourite_id);
-
-            if($provider = Provider::find($favourite->provider_id)) {
-
-                $fav_delete = $favourite->delete();
-
-                return response()->json(['message' => 'Provider Deleted Successfully']); 
-            }
-        }
-
-        catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong'], 500);
-        }
-
-    }
 
     /**
      * Show the application dashboard.
@@ -1569,8 +1435,7 @@ class UserApiController extends Controller
                 $request_start_time = time();
 
 
-                $settings = Settings::where('key', 'search_radius')->first();
-                $distance = $settings->value;
+                $distance = \Setting::get('search_radius');
 
                 $providers = array();   // Initialize providers variable
 

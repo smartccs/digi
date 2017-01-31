@@ -11,70 +11,72 @@
 |
 */
 
-Route::group(['prefix' => 'user'], function () {
+Route::post('/signup' , 'UserApiController@signup');
 
-    Route::post('/signup' , 'UserApiController@signup');
+Route::group(['middleware' => ['auth:api']], function () {
 
-	Route::group(['middleware' => ['auth:api']], function () {
+	// user profile
 
-		Route::post('/change/password' , 'UserApiController@change_password');
+	Route::post('/change/password' , 'UserApiController@change_password');
 
-		Route::post('/update/location' , 'UserApiController@update_location');
+	Route::post('/update/location' , 'UserApiController@update_location');
 
-		Route::get('/details' , 'UserApiController@details');
+	Route::get('/details' , 'UserApiController@details');
 
-		Route::get('/services' , 'UserApiController@services');
+	Route::post('/update/profile' , 'UserApiController@update_profile');
 
-		Route::get('/guest/provider/list' , 'UserApiController@guest_provider_list');
+	// services
 
-		Route::get('/guest/provider/availability' , 'UserApiController@guest_provider_availability');
+	Route::get('/services' , 'UserApiController@services');
 
-		Route::get('/provider/details' , 'UserApiController@provider_details');
+	// provider
 
-		Route::post('/update/profile' , 'UserApiController@update_profile');
+	Route::get('/guest/provider/list' , 'UserApiController@guest_provider_list');
 
-		Route::post('/send/request' , 'UserApiController@send_request');
+	Route::get('/guest/provider/availability' , 'UserApiController@guest_provider_availability');
 
-		Route::post('/cancel/request' , 'UserApiController@cancel_request');
-		
-		Route::post('/later/request' , 'UserApiController@request_later');
+	Route::get('/provider/details' , 'UserApiController@provider_details');
 
-		Route::post('/manual/request' , 'UserApiController@manual_create_request');
+	Route::post('/rate/provider' , 'UserApiController@rate_provider');
 
-		Route::post('/manual/scheduled/request' , 'UserApiController@manual_scheduled_request');
+	// request
 
-		Route::get('/request/check' , 'UserApiController@request_status_check');
+	Route::post('/send/request' , 'UserApiController@send_request');
 
-		Route::post('/pay/now' , 'UserApiController@paynow');
+	Route::post('/cancel/request' , 'UserApiController@cancel_request');
+	
+	Route::post('/later/request' , 'UserApiController@request_later');
 
-		Route::post('/rate/provider' , 'UserApiController@rate_provider');
+	Route::post('/manual/request' , 'UserApiController@manual_create_request');
 
-		Route::post('/add/provider' , 'UserApiController@add_fav_provider');
+	Route::post('/manual/scheduled/request' , 'UserApiController@manual_scheduled_request');
 
-		Route::get('/fav/provider' , 'UserApiController@fav_providers');
+	Route::get('/request/check' , 'UserApiController@request_status_check');
 
-		Route::get('/delete/provider' , 'UserApiController@delete_fav_provider');
+	Route::get('/request' , 'UserApiController@single_request');
 
-		Route::get('/history' , 'UserApiController@history');
+	Route::get('/upcoming' , 'UserApiController@upcoming_request');
 
-		Route::get('/request' , 'UserApiController@single_request');
+	Route::get('/history' , 'UserApiController@history');
 
-		Route::get('/payment/modes' , 'UserApiController@payment_modes');
+	// payment
 
-		Route::post('/change/modes' , 'UserApiController@payment_mode_update');
+	Route::post('/pay/now' , 'UserApiController@paynow');
 
-		Route::post('/add/card' , 'UserApiController@add_card');
+	Route::get('/payment/modes' , 'UserApiController@payment_modes');
 
-		Route::post('/delete/card' , 'UserApiController@delete_card');
+	Route::post('/change/modes' , 'UserApiController@payment_mode_update');
 
-		Route::post('/default/card' , 'UserApiController@default_card');
+	Route::post('/add/card' , 'UserApiController@add_card');
 
-		Route::get('/message' , 'UserApiController@message');
-		
-		Route::get('/upcoming' , 'UserApiController@upcoming_request');
+	Route::post('/delete/card' , 'UserApiController@delete_card');
 
-		Route::post('/add/money' , 'UserApiController@add_money');
+	Route::post('/default/card' , 'UserApiController@default_card');
 
+	Route::post('/add/money' , 'UserApiController@add_money');
 
-	});
+	// chat
+
+	Route::get('/message' , 'UserApiController@message');
+	
 });
