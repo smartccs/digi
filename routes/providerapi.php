@@ -14,8 +14,8 @@
 Route::get('/services' , 'Resources/ServiceResource@index');
 
 // Authentication
-Route::post('/signup' , 'ProviderAuth/TokenController@signup');
-Route::post('/oauth/token' , 'ProviderAuth/TokenController@authenticate');
+Route::post('/register' , 'ProviderAuth\TokenController@register');
+Route::post('/oauth/token' , 'ProviderAuth\TokenController@authenticate');
 
 Route::group(['middleware' => ['provider.api']], function () {
 

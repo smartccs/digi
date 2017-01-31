@@ -3,7 +3,15 @@
 namespace App\Http\Controllers\ProviderAuth;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 use App\Http\Controllers\Controller;
+
+use Tymon\JWTAuth\Exceptions\JWTException;
+
+use Config;
+use JWTAuth;
+
+use App\Provider;
 
 class TokenController extends Controller
 {
@@ -13,70 +21,59 @@ class TokenController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function signup(Request $request)
+    public function register(Request $request)
     {
         $this->validate($request, [
                 'social_unique_id' => ['required_if:login_by,facebook,google','unique:providers'],
+                'device_id' => 'required',
                 'device_type' => 'required|in:android,ios',
                 'device_token' => 'required',
-                'login_by' => 'required|in:manual,facebook,google',
                 'first_name' => 'required|max:255',
                 'last_name' => 'required|max:255',
                 'email' => 'required|email|max:255|unique:providers',
                 'mobile' => 'required|digits_between:6,13',
-                'password' => 'required|min:6',
-                'picture' => 'required|mimes:jpeg,jpg,bmp,png',
+                'password' => 'required|min:6|confirmed',
             ]);
 
         try{
 
             $Provider = $request->all();
-
-            $Provider['is_available'] = 1;
-            $Provider['is_activated'] = 1;
-            $Provider['is_email_activated'] = 1;
-            $Provider['email_activation_code'] = uniqid();
-
             $Provider['password'] = bcrypt($request->password);
-            if($request->hasFile('picture')) {
-                $Provider['picture'] = Helper::upload_picture($request->avatar);
-            }
 
             $Provider = Provider::create($Provider);
+            
+            if($request->has('service_type')) {
 
-                if($Provider) {
+                $provider_services = ProviderService::where('provider_id' , $Provider->id)->get();
 
-                    if($request->has('service_type')) {
+                ProviderService::where('provider_id' , $Provider->id)->update(['is_available' => 0]);
 
-                        $provider_services = ProviderService::where('provider_id' , $Provider->id)->get();
+                $services =  array($request->service_type);
 
-                        ProviderService::where('provider_id' , $Provider->id)->update(['is_available' => 0]);
-
-                        $services =  array($request->service_type);
-
-                        if(!is_array($request->service_type)) {
-                            $services = explode(',',$request->service_type );
-                        }
-
-                        if($services) {
-                            foreach ($services as $key => $service) {
-                                $check_provider_service = ProviderService::where('provider_id' , $Provider->id)->where('service_type_id' , $service)->count();
-
-                                if($check_provider_service) {
-                                    Helper::save_provider_service($Provider->id,$service , 1);    
-                                } else {
-                                    Helper::save_provider_service($Provider->id,$service);
-                                }
-                            }    
-                        
-                        }
-                    }
+                if(!is_array($request->service_type)) {
+                    $services = explode(',',$request->service_type );
                 }
+
+                if($services) {
+                    foreach ($services as $key => $service) {
+                        $check_provider_service = ProviderService::where('provider_id' , $Provider->id)->where('service_type_id' , $service)->count();
+
+                        if($check_provider_service) {
+                            Helper::save_provider_service($Provider->id,$service , 1);    
+                        } else {
+                            Helper::save_provider_service($Provider->id,$service);
+                        }
+                    }    
+                }
+            }
 
             return $Provider;
 
-        } catch (\Exception $e) {
-             return response()->json(['error' => 'Something Went Wrong!']);
+        } catch (QueryException $e) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['error' => 'Something went wrong, Please try again later!'], 500);
+            }
+            return abort(500);
         }
         
     }

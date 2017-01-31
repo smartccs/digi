@@ -12,7 +12,7 @@ class ProviderService extends Model
      * @var array
      */
     protected $fillable = [
-        'service_type_id','provider_id','is_available','status'
+        'service_type_id', 'provider_id', 'available', 'status'
     ];
 
     /**
