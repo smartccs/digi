@@ -46,7 +46,6 @@ class UserApiController extends Controller
                 'email' => 'required|email|max:255|unique:users',
                 'mobile' => 'required|digits_between:6,13',
                 'password' => 'required|min:6',
-                'picture' => 'mimes:jpeg,jpg,bmp,png',
             ]);
 
         try{
@@ -55,10 +54,6 @@ class UserApiController extends Controller
 
             $User['payment_mode'] = 'cod';
             $User['password'] = bcrypt($request->password);
-            if($request->hasFile('picture')) {
-                $User['picture'] = Helper::upload_picture($request->picture);
-            }
-
             $User = User::create($User);
 
             return $User;
@@ -157,34 +152,33 @@ class UserApiController extends Controller
                 'email' => 'email|unique:users,email,'.Auth::user()->id,
                 'mobile' => 'required|digits_between:6,13',
                 'picture' => 'mimes:jpeg,bmp,png',
-                'gender' => 'in:male,female,others',
-                'device_token' => 'required',
             ]);
 
          try {
 
             $user = User::findOrFail(Auth::user()->id);
 
-            if($request->has('first_name')) 
+            if($request->has('first_name')){ 
                 $user->first_name = $request->first_name;
+            }
             
-            if($request->has('last_name')) 
+            if($request->has('last_name')){
                 $user->last_name = $request->last_name;
+            }
             
-            if($request->has('email')) 
-                $user->email = $email;
+            if($request->has('email')){
+                $user->email = $request->email;
+            }
             
-            if ($mobile != "")
-                $user->mobile = $mobile;
-
-            if ($picture != "") {
-                Helper::delete_picture($user->picture); 
-                $user->picture = Helper::upload_picture($picture);
+            if ($mobile != ""){
+                $user->mobile = $request->mobile;
             }
 
-            if($request->has('gender')) 
-                $user->gender = $request->gender;
-            
+            if ($picture != "") {
+                Helper::delete_avatar($user->picture); 
+                $user->picture = Helper::upload_avatar($picture);
+            }
+
             $user->save();
 
             return response()->json(['message' => 'Profile Updated successfully!']);
@@ -204,7 +198,7 @@ class UserApiController extends Controller
 
     public function services() {
 
-        if($serviceList = ServiceType::Approved()->get()) {
+        if($serviceList = ServiceType::all()) {
             return $serviceList;
         } else {
             return response()->json(['error' => 'Services Not Found!'], 500);

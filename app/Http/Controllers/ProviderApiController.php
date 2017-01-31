@@ -1387,7 +1387,7 @@ class ProviderApiController extends Controller
 
     public function services() {
 
-        if($serviceList = ServiceType::Approved()->get()) {
+        if($serviceList = ServiceType::all()) {
             return $serviceList;
         } else {
             return response()->json(['error' => 'Services Not Found!']);
