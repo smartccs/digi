@@ -27,7 +27,7 @@ class ProviderApiMiddleware
             if (! $user = JWTAuth::parseToken()->authenticate()) {
                 return response()->json(['user_not_found'], 404);
             }else{
-                \Auth::loginUsingId($user->id);
+                \Auth::guard('provider')->loginUsingId($user->id);
             }
 
         } catch (TokenExpiredException $e) {

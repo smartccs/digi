@@ -133,7 +133,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::group([
             'namespace' => $this->namespace,
-            'prefix' => 'api',
+            'prefix' => 'api/provider',
         ], function ($router) {
             require base_path('routes/providerapi.php');
         });

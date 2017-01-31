@@ -11,59 +11,53 @@
 |
 */
 
-Route::group(['prefix' => 'provider'], function () {
+Route::get('/services' , 'Resources/ServiceResource@index');
 
-    Route::post('/signup' , 'ProviderApiController@signup');
+// Authentication
+Route::post('/signup' , 'ProviderAuth/TokenController@signup');
+Route::post('/oauth/token' , 'ProviderAuth/TokenController@authenticate');
 
-    Route::post('/oauth/token' , 'ProviderApiController@authenticate');
+Route::group(['middleware' => ['provider.api']], function () {
 
-	Route::get('/services' , 'ProviderApiController@services');
+    Route::group(['prefix' => 'profile'], function () {
 
-    Route::group(['middleware' => ['ProviderApiMiddleware']], function () {
+        Route::get ('/' , 'ProviderApiController@details');
+        Route::post('/' , 'ProviderApiController@update_profile');
+        Route::post('/password' , 'ProviderApiController@change_password');
+        Route::post('/location' , 'ProviderApiController@update_location');
+        Route::get('/available' , 'ProviderApiController@available');
+        Route::post('/available' , 'ProviderApiController@update_available');
 
-		Route::post('/change/password' , 'ProviderApiController@change_password');
+    });
 
-		Route::get('/details' , 'ProviderApiController@details');
+    Route::group(['prefix' => 'trip'], function () {
 
-		Route::post('/update/location' , 'ProviderApiController@update_location');
+        Route::post('/started', 'ProviderApiController@started');
+        Route::post('/arrived', 'ProviderApiController@arrived');
+        Route::post('/start', 'ProviderApiController@start_service');
+        Route::post('/finish', 'ProviderApiController@end_service');
+        Route::post('/rating', 'ProviderApiController@rate_user');
+        Route::post('/cancel', 'ProviderApiController@cancel_request');
+        Route::post('/paid' , 'ProviderApiController@cod_paid');
+        Route::post('/message' , 'ProviderApiController@message');
 
-		Route::post('/update/profile' , 'ProviderApiController@update_profile');
+    });
 
-		Route::get('/available' , 'ProviderApiController@available');
+    Route::group(['prefix' => 'requests'], function () {
 
-		Route::post('/update/available' , 'ProviderApiController@update_available');
+        Route::get('/incoming', 'ProviderApiController@incoming_request');
+        Route::post('/accept', 'ProviderApiController@accept');
+        Route::post('/reject', 'ProviderApiController@reject');
 
-		Route::post('/accept' , 'ProviderApiController@accept');
+        Route::get('/status', 'ProviderApiController@request_status_check');
+        Route::get('/history', 'ProviderApiController@history');
+        Route::post('/show', 'ProviderApiController@request_details');
 
-		Route::post('/reject' , 'ProviderApiController@reject');
+    });
 
-		Route::post('/started' , 'ProviderApiController@started');
+    Route::group(['prefix' => 'scheduled'], function () {
 
-		Route::post('/arrived' , 'ProviderApiController@arrived');
-
-		Route::post('/start/service' , 'ProviderApiController@start_service');
-
-		Route::post('/end/service' , 'ProviderApiController@end_service');
-
-		Route::post('/rate/user' , 'ProviderApiController@rate_user');
-
-		Route::post('/cancel/request' , 'ProviderApiController@cancel_request');
-
-		Route::get('/history' , 'ProviderApiController@history');
-
-		Route::get('/incoming/request' , 'ProviderApiController@incoming_request');
-
-		Route::get('/request/check' , 'ProviderApiController@request_status_check');
-
-		Route::get('/message' , 'ProviderApiController@message');
-
-		Route::post('/cod/paid' , 'ProviderApiController@cod_paid');
-
-		Route::get('/upcoming/request' , 'ProviderApiController@upcoming_request');
-
-		Route::get('/availabilities' , 'ProviderApiController@availabilities');
-		
-		Route::post('/request/details' , 'ProviderApiController@request_details');
+        Route::get('/upcoming' , 'ProviderApiController@upcoming_request');
 
     });
 
