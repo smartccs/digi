@@ -51,6 +51,20 @@
 				</div>
 
 				<div class="form-group row">
+					<label for="play_store_link" class="col-xs-2 col-form-label">Playstore link</label>
+					<div class="col-xs-10">
+						<input class="form-control" type="text" value="{{ Setting::get('play_store_link', '')  }}" name="play_store_link" required id="play_store_link" placeholder="Playstore linke">
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label for="app_store_link" class="col-xs-2 col-form-label">Appstore Name</label>
+					<div class="col-xs-10">
+						<input class="form-control" type="text" value="{{ Setting::get('app_store_link', '')  }}" name="app_store_link" required id="app_store_link" placeholder="Appstore link">
+					</div>
+				</div>
+
+				<div class="form-group row">
 					<label for="provider_select_timeout" class="col-xs-2 col-form-label">Provider Timout</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="number" value="{{ Setting::get('provider_select_timeout', '')  }}" name="provider_select_timeout" required id="provider_select_timeout" placeholder="Provider Timout">

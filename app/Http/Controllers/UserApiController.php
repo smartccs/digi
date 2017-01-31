@@ -170,18 +170,23 @@ class UserApiController extends Controller
                 $user->email = $request->email;
             }
             
-            if ($mobile != ""){
+            if ($request->mobile != ""){
                 $user->mobile = $request->mobile;
             }
 
-            if ($picture != "") {
+            if ($request->picture != "") {
                 Helper::delete_avatar($user->picture); 
                 $user->picture = Helper::upload_avatar($picture);
             }
 
             $user->save();
 
-            return response()->json(['message' => 'Profile Updated successfully!']);
+            return response()->json([
+                        'message' => 'Profile Updated successfully!'
+                        'first_name' => $user->first_name,
+                        'last_name' => $user->last_name,
+                        'picture' => $user->picture
+                    ]);
         }
 
         catch (ModelNotFoundException $e) {

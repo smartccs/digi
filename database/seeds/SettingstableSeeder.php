@@ -98,6 +98,14 @@ class SettingstableSeeder extends Seeder
 		        'key' => 'email_logo',
 		        'value' => ''
 		    ],
+		    [
+		        'key' => 'play_store_link',
+		        'value' => ''
+		    ],
+		   	[
+		        'key' => 'app_store_link',
+		        'value' => ''
+		    ],
 		]);
     }
 }

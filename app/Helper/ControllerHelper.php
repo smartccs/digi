@@ -18,7 +18,7 @@
    use File;
    use Log;
 
-    class Helper 
+    class Helper
     {
 
         public static function upload_avatar($avatar) {
@@ -72,7 +72,7 @@
             return "";
         }
 
-        
+
         public static function delete_picture($picture) {
             File::delete( public_path() . "/uploads/" . basename($picture));
             return true;
