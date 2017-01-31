@@ -6,24 +6,20 @@ use Illuminate\Http\Request;
 
 use Log;
 use Hash;
-use Validator;
-use File;
 use DB;
 use Auth;
+use Exception;
 
 use App\User;
 use App\ProviderService;
-use App\ProviderLocation;
 use App\UserRequests;
 use App\Promocode;
-use App\Admin;
 use App\RequestsFilter;
 use App\ServiceType;
 use App\Provider;
 use App\Settings;
 use App\FavouriteProvider;
 use App\UserRating;
-use App\ProviderRating;
 use App\ProviderAvailability;
 use App\Cards;
 use App\UserPayment;
@@ -67,10 +63,8 @@ class UserApiController extends Controller
             $User = User::create($User);
 
             return $User;
-        }
-
-        catch (ModelNotFoundException $e) {
-             return response()->json(['error' => 'Something Went Wrong']);
+        } catch (Exception $e) {
+             return response()->json(['error' => 'Something Went Wrong'], 500);
         }
     }
 
@@ -88,16 +82,16 @@ class UserApiController extends Controller
                 'old_password' => 'required',
             ]);
 
-        $User = \Auth::user();
+        $User = Auth::user();
 
-        if(\Hash::check($request->old_password, $User->password))
+        if(Hash::check($request->old_password, $User->password))
         {
             $User->password = bcrypt($request->password);
             $User->save();
 
             return response()->json(['message' => 'Password changed successfully!']);
         } else {
-            return response()->json(['error' => 'Please enter correct password']);
+            return response()->json(['error' => 'Please enter correct password'], 500);
         }
 
     }
@@ -116,7 +110,7 @@ class UserApiController extends Controller
                 'address' => 'required',
             ]);
 
-        if($user = User::find(\Auth::user()->id)){
+        if($user = User::find(Auth::user()->id)){
 
             $user->latitude = $request->latitude;
             $user->longitude = $request->longitude;
@@ -127,7 +121,7 @@ class UserApiController extends Controller
 
         }else{
 
-            return response()->json(['error' => 'User Not Found!']);
+            return response()->json(['error' => 'User Not Found!'], 500);
 
         }
 
@@ -141,10 +135,10 @@ class UserApiController extends Controller
 
     public function details(){
 
-        if($user = User::find(\Auth::user()->id)){
+        if($user = User::find(Auth::user()->id)){
             return $user;
         }else{
-            return response()->json(['error' => 'User Not Found!']);
+            return response()->json(['error' => 'User Not Found!'], 500);
         }
 
     }
@@ -184,9 +178,8 @@ class UserApiController extends Controller
             if ($mobile != "")
                 $user->mobile = $mobile;
 
-            // Upload picture
             if ($picture != "") {
-                Helper::delete_picture($user->picture); // Delete the old pic
+                Helper::delete_picture($user->picture); 
                 $user->picture = Helper::upload_picture($picture);
             }
 
@@ -199,7 +192,7 @@ class UserApiController extends Controller
         }
 
         catch (ModelNotFoundException $e) {
-             return response()->json(['error' => 'User Not Found!']);
+             return response()->json(['error' => 'User Not Found!'], 500);
         }
 
     }
@@ -215,7 +208,7 @@ class UserApiController extends Controller
         if($serviceList = ServiceType::Approved()->get()) {
             return $serviceList;
         } else {
-            return response()->json(['error' => 'Services Not Found!']);
+            return response()->json(['error' => 'Services Not Found!'], 500);
         }
 
     }
@@ -239,12 +232,9 @@ class UserApiController extends Controller
             $latitude = $request->latitude;
             $longitude = $request->longitude;
 
-            /*Get default search radius*/
-            $settings = Settings::where('key', 'search_radius')->first();
-            $distance = $settings->value;
+            $distance = \Setting::get('search_radius');
 
             $service_type_id = $request->service_id;
-
 
            $query = "SELECT 
                         providers.id,
@@ -276,11 +266,11 @@ class UserApiController extends Controller
                     $providers[$i]->favorite = FavouriteProvider::Nos(Auth::user()->id, $providers[$i]->id)->count();
                 }
 
-                return response()->json($providers , 200);
+                return response()->json($providers);
             }
 
-        catch (ModelNotFoundException $e) {
-             return response()->json(['error' => 'No Providers Found!']);
+        catch (Exception $e) {
+             return response()->json(['error' => 'No Providers Found!'], 500);
         }
     }
 
@@ -298,10 +288,10 @@ class UserApiController extends Controller
 
         try{
 
-            $provider = Provider::find($request->provider_id);
+            $provider = Provider::findOrFail($request->provider_id);
             $provider['rating'] = UserRating::Average($request->provider_id) ? : 0;
 
-            return $provider;
+            return response()->json($provider);
         }
 
         catch (ModelNotFoundException $e) {
@@ -324,12 +314,11 @@ class UserApiController extends Controller
 
         try{
 
-            $Provider = Provider::find($request->provider_id);
+            $Provider = Provider::findOrFail($request->provider_id);
             $Provider->rating = UserRating::Average($request->provider_id) ? : 0;
             $Provider->availability = ProviderAvailability::AvailableProviders($request->provider_id)->get();
 
             return $Provider;
-
         }
 
         catch (ModelNotFoundException $e) {
@@ -354,10 +343,6 @@ class UserApiController extends Controller
         ]);
 
             Log::info('Create request start');
-            $service_type = $request->service_type; 
-            $latitude = $request->s_latitude;
-            $longitude = $request->s_longitude;
-
             $user = User::find(Auth::user()->id);
             $user->latitude = $request->s_latitude;
             $user->longitude = $request->s_longitude;
@@ -371,19 +356,11 @@ class UserApiController extends Controller
 
             }
 
+                $distance = \Setting::get('search_radius');
 
+                $list_service_ids = [];  
 
-                $settings = Settings::where('key', 'search_radius')->first();
-                $distance = $settings->value;
-
-                $list_service_ids = array();$providers = array();  
-
-                $service_providers = ProviderService::where('service_type_id' , $service_type)
-                                        ->where('is_available' , 1)
-                                        ->select('provider_id')
-                                        ->get();
-
-                if($service_providers) {
+                if($service_providers = ProviderService::AvailableServiceProvider($request->service_type)->get()) {
                     foreach ($service_providers as $sp => $service_provider) {
                         $list_service_ids[] = $service_provider->provider_id;
                     }
@@ -391,35 +368,19 @@ class UserApiController extends Controller
                 }
 
                 if($list_service_ids) {
-                    $query = "SELECT providers.id,providers.waiting_to_respond as waiting, 1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) AS distance FROM providers
+                    $query = "SELECT providers.id,providers.waiting_to_respond as waiting, 1.609344 * 3956 * acos( cos( radians('$request->s_latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$request->s_longitude') ) + sin( radians('$request->s_latitude') ) * sin( radians(latitude) ) ) AS distance FROM providers
                             WHERE id IN ($list_service_ids) AND is_available = 1 AND is_activated = 1 AND is_approved = 1
-                            AND (1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance
+                            AND (1.609344 * 3956 * acos( cos( radians('$request->s_latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$request->s_longitude') ) + sin( radians('$request->s_latitude') ) * sin( radians(latitude) ) ) ) <= $distance
                             ORDER BY distance";
 
                     $providers = DB::select(DB::raw($query));
-                    Log::info("Search query: " . $query);
                 } 
                 
 
-                $list_fav_providers = array(); $first_provider_id = 0; $list_fav_provider = array();
-                $favProviders = Helper::get_fav_providers($service_type,Auth::user()->id);
-                if($favProviders) {
-                    foreach ($favProviders as $key => $favProvider) {
-                        $list_fav_provider['id'] = $favProvider->provider_id;
-                        $list_fav_provider['waiting'] = $favProvider->waiting;
-                        $list_fav_provider['distance'] = 0;
-
-                        array_push($list_fav_providers, $list_fav_provider);
-                    }            
-
-                }
-
-
-
-                $merge_providers = array();$search_providers = array();
+                $search_providers = array();
 
                 if ($providers) {
-                    $search_provider = array();
+                    $search_provider = [];
                     foreach ($providers as $provider) {
                         $search_provider['id'] = $provider->id;
                         $search_provider['waiting'] = $provider->waiting;
@@ -430,22 +391,18 @@ class UserApiController extends Controller
 
                 } else {
 
-                    if(!$list_fav_providers) {
-                        Log::info("No Provider Found");
-                        // Send push notification to User
+                    Log::info("No Provider Found");
+                    // Send push notification to User
 
-                        // $title = Helper::get_push_message(601);
-                        // $messages = Helper::get_push_message(602);
-                        // $this->dispatch( new NormalPushNotification($user->id, USER,$title, $messages));     
-                        // $response_array = array('success' => false, 'error' => Helper::get_error_message(112), 'error_code' => 112);
-                        return response()->json(['error' => 'No Providers Found!']); 
-                    }
+                    // $title = Helper::get_push_message(601);
+                    // $messages = Helper::get_push_message(602);
+                    // $this->dispatch( new NormalPushNotification($user->id, USER,$title, $messages));     
+                    // $response_array = array('success' => false, 'error' => Helper::get_error_message(112), 'error_code' => 112);
+                    return response()->json(['error' => 'No Providers Found!'], 500); 
                 }
 
-                $merge_providers = array_merge($list_fav_providers,$search_providers);
-                $sort_waiting_providers = Helper::sort_waiting_providers($merge_providers);  
+                $sort_waiting_providers = Helper::sort_waiting_providers($search_providers);  
                 $final_providers = $sort_waiting_providers['providers'];    
-                $check_waiting_provider_count = $sort_waiting_providers['check_waiting_provider_count'];
 
             try{
 
@@ -458,8 +415,8 @@ class UserApiController extends Controller
                 $requests->request_start_time = date("Y-m-d H:i:s", time());
                 $requests->s_address = $request->s_address ? $request->s_address : "";
                     
-                if($latitude){ $requests->s_latitude = $latitude; }
-                if($longitude){ $requests->s_longitude = $longitude; }
+                if($request->s_latitude){ $requests->s_latitude = $request->s_latitude; }
+                if($request->s_longitude){ $requests->s_longitude = $request->s_longitude; }
 
                 $promo_code = Promocode::where('promo_code' , $request->promo_code)->where('is_valid' , 1)->first();
 
@@ -472,7 +429,6 @@ class UserApiController extends Controller
                     
                 $requests->save();
 
-                // Save all the final providers
                 $first_provider_id = 0;
 
                 if($final_providers) {
@@ -486,7 +442,6 @@ class UserApiController extends Controller
 
                             $request_meta->status = REQUEST_META_OFFERED;  // Request status change
 
-                            // Availablity status change
                             if($current_provider = Provider::find($first_provider_id)) {
                                 $current_provider->waiting_to_respond = WAITING_TO_RESPOND;
                                 $current_provider->save();
@@ -513,8 +468,8 @@ class UserApiController extends Controller
                     'current_provider' => $first_provider_id]);
             }
 
-            catch (ModelNotFoundException $e) {
-                return response()->json(['error' => 'Something went wrong while sending request. Please try again.']);
+            catch (Exception $e) {
+                return response()->json(['error' => 'Something went wrong while sending request. Please try again.'], 500);
             }
 
     }
@@ -603,13 +558,13 @@ class UserApiController extends Controller
 
                 }
 
-            catch (ModelNotFoundException $e) {
-                return response()->json(['error' => 'Something went wrong while sending request. Please try again.']);
+            catch (Exception $e) {
+                return response()->json(['error' => 'Something went wrong while sending request. Please try again.'], 500);
             }
   
 
         } else {
-            return response()->json(['error' => 'No Providers Found!']); 
+            return response()->json(['error' => 'No Providers Found!'], 500); 
         }
   
     }
@@ -633,10 +588,8 @@ class UserApiController extends Controller
             $user = User::find(Auth::user()->id);
 
             if(!$user->payment_mode) {
-                return response()->json(['error' => 'Please Fill the Payment Details!']); 
+                return response()->json(['error' => 'Please Fill the Payment Details!'], 500); 
             } 
-
-
 
 
             $allow = DEFAULT_FALSE;
@@ -650,7 +603,7 @@ class UserApiController extends Controller
 
             if($allow == DEFAULT_FALSE) {
                 return response()->json(
-                    ['error' => 'Default card is not available. Please add a card or change the payment mode']); 
+                    ['error' => 'Default card is not available. Please add a card or change the payment mode'], 500); 
             }
 
 
@@ -658,7 +611,7 @@ class UserApiController extends Controller
             $check_requests = UserRequests::PendingRequest(Auth::user()->id)->count();
 
             if($check_requests > 0) {
-                return response()->json(['error' => 'Already request is in progress. Try again later']);
+                return response()->json(['error' => 'Already request is in progress. Try again later'], 500);
             }
 
 
@@ -667,9 +620,8 @@ class UserApiController extends Controller
             $check_later_requests = Helper::check_later_request(Auth::user()->id, $request->service_start, DEFAULT_TRUE);
 
             if($check_later_requests) {
-                return response()->json(['error' => 'Request is already scheduled on this time']);
+                return response()->json(['error' => 'Request is already scheduled on this time'], 500);
             }
-
 
 
 
@@ -687,7 +639,7 @@ class UserApiController extends Controller
                         ->get();
 
             if(!$provider_available_check) {
-                return response()->json(['error' => 'No provider found for the selected service in your area currently.']);
+                return response()->json(['error' => 'No provider found for the selected service in your area currently.'], 500);
             }
 
 
@@ -735,8 +687,8 @@ class UserApiController extends Controller
                         'current_provider' => $request->provider_id]);
             }
 
-            catch (ModelNotFoundException $e) {
-                return response()->json(['error' => 'Something went wrong while sending request. Please try again.']);
+            catch (Exception $e) {
+                return response()->json(['error' => 'Something went wrong while sending request. Please try again.'], 500);
             }
 
     }
@@ -760,7 +712,7 @@ class UserApiController extends Controller
 
             if($requests->status == REQUEST_CANCELLED)
             {
-                 return response()->json(['error' => 'Request is Already Cancelled!']); 
+                 return response()->json(['error' => 'Request is Already Cancelled!'], 500); 
             }
 
                 if(in_array($requests->provider_status, [PROVIDER_NONE,PROVIDER_ACCEPTED,PROVIDER_STARTED])) {
@@ -804,7 +756,7 @@ class UserApiController extends Controller
                     return response()->json(['message' => 'Request Cancelled Successfully']); 
 
                 } else {
-                    return response()->json(['error' => 'Service Already Started!']); 
+                    return response()->json(['error' => 'Service Already Started!'], 500); 
                 }
     }
 
@@ -869,8 +821,8 @@ class UserApiController extends Controller
 
         }
 
-        catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Something went wrong while sending request. Please try again.']);
+        catch (Exception $e) {
+            return response()->json(['error' => 'Something went wrong while sending request. Please try again.'], 500);
         }
 
     } 
@@ -964,7 +916,7 @@ class UserApiController extends Controller
                     $requests->amount = $amount;
                 
                 } catch (\Stripe\StripeInvalidRequestError $e) {
-                    return response()->json(['error' => 'Something Went Wrong While Paying']);
+                    return response()->json(['error' => 'Something Went Wrong While Paying'], 500);
                 }
 
 
@@ -1017,7 +969,7 @@ class UserApiController extends Controller
                     ->first();
 
             if (!$req && intval($req->status) == REQUEST_COMPLETED) {
-                 return response()->json(['error' => 'Request is already Completed']);
+                 return response()->json(['error' => 'Request is already Completed'], 500);
             }
 
             try{
@@ -1053,8 +1005,8 @@ class UserApiController extends Controller
                 return response()->json(['message' => 'Provider Rated Successfully']); 
             }
 
-        catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Something went wrong']);
+        catch (Exception $e) {
+            return response()->json(['error' => 'Something went wrong'], 500);
         }
 
     } 
@@ -1084,7 +1036,7 @@ class UserApiController extends Controller
                 return response()->json(['message' => 'Provider Favorited Successfully']); 
 
             } else {
-                return response()->json(['error' => 'Something went wrong']);
+                return response()->json(['error' => 'Something went wrong'], 500);
             }
     }
 
@@ -1121,7 +1073,7 @@ class UserApiController extends Controller
             return $providers;
 
         } else {
-            return response()->json(['error' => 'No Providers Found']);
+            return response()->json(['error' => 'No Providers Found'], 500);
         }
 
     }
@@ -1150,8 +1102,8 @@ class UserApiController extends Controller
             }
         }
 
-        catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Something went wrong']);
+        catch (Exception $e) {
+            return response()->json(['error' => 'Something went wrong'], 500);
         }
 
     }
@@ -1169,7 +1121,7 @@ class UserApiController extends Controller
             return $requests;
         }
 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
             return response()->json(['error' => 'Something went wrong']);
         }
     }
@@ -1210,8 +1162,8 @@ class UserApiController extends Controller
             return $requests;
         }
 
-        catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Something went wrong']);
+        catch (Exception $e) {
+            return response()->json(['error' => 'Something went wrong'], 500);
         }
     
     }
@@ -1238,8 +1190,8 @@ class UserApiController extends Controller
             return $payment_modes;
         }
 
-        catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Something went wrong']);
+        catch (Exception $e) {
+            return response()->json(['error' => 'Something went wrong'], 500);
         }
     }
 
@@ -1253,9 +1205,7 @@ class UserApiController extends Controller
 
         try{
 
-            $user = User::find(Auth::user()->id);
-
-            $payment_data = $data = $card_data = array();
+            $data = $card_data = array();
 
             if($user_cards = Cards::where('user_id' , Auth::user()->id)->get()) {
                 foreach ($user_cards as $c => $card) {
@@ -1269,11 +1219,11 @@ class UserApiController extends Controller
                 }
             } 
 
-            return ['payment_mode' => $user->payment_mode , 'card' => $card_data];
+            return ['payment_mode' => Auth::user()->payment_mode , 'card' => $card_data];
         }
 
-        catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Something went wrong']);
+        catch (Exception $e) {
+            return response()->json(['error' => 'Something went wrong'], 500);
         }
     
     }
@@ -1296,7 +1246,7 @@ class UserApiController extends Controller
             return response()->json(['message' => 'Payment Mode Updated']);
         }
 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
             return response()->json(['error' => 'Something went wrong']);
         }
 
@@ -1361,11 +1311,11 @@ class UserApiController extends Controller
                     return response()->json(['message' => 'Card Added']);
 
                 } else {
-                    return response()->json(['error' => 'Could not create client ID']);
+                    return response()->json(['error' => 'Could not create client ID'], 500);
                 }
             
             } catch(Exception $e) {
-                    return response()->json(['error' => $e]);
+                    return response()->json(['error' => $e], 500);
             }
     }
 
@@ -1396,7 +1346,7 @@ class UserApiController extends Controller
         }
 
         catch(Exception $e) {
-                return response()->json(['error' => $e]);
+                return response()->json(['error' => $e], 500);
         }
     }
 
@@ -1432,7 +1382,7 @@ class UserApiController extends Controller
         }
 
         catch(Exception $e) {
-                return response()->json(['error' => "Something Went Wrong"]);
+                return response()->json(['error' => "Something Went Wrong"], 500);
         }
     
     }
@@ -1461,7 +1411,7 @@ class UserApiController extends Controller
         }
 
         catch(Exception $e) {
-                return response()->json(['error' => "Something Went Wrong"]);
+                return response()->json(['error' => "Something Went Wrong"], 500);
         }
     }
 
@@ -1482,7 +1432,7 @@ class UserApiController extends Controller
         }
 
         catch(Exception $e) {
-                return response()->json(['error' => "Something Went Wrong"]);
+                return response()->json(['error' => "Something Went Wrong"], 500);
         }        
     }
 
@@ -1547,7 +1497,7 @@ class UserApiController extends Controller
         }
 
         catch(Exception $e) {
-                return response()->json(['error' => "Something Went Wrong"]);
+                return response()->json(['error' => "Something Went Wrong"], 500);
         }  
     }
 
@@ -1626,9 +1576,7 @@ class UserApiController extends Controller
 
                 if($service_type) {
 
-                    $service_providers = ProviderService::where('service_type_id' , $service_type)
-                                ->where('is_available' , 1)
-                                ->select('provider_id')->get();
+                    $service_providers = ProviderService::AvailableServiceProvider($service_type)->get();
 
                     $list_service_ids = array();   
                     if($service_providers) {
@@ -1787,7 +1735,7 @@ class UserApiController extends Controller
         }
 
         catch(Exception $e) {
-                return response()->json(['error' => "Something Went Wrong"]);
+                return response()->json(['error' => "Something Went Wrong"], 500);
         }  
     
     }

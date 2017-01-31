@@ -28,4 +28,9 @@ class ProviderService extends Model
     {
         return $query->where('provider_id' , $provider_id)->where('service_type_id' , $service_id);
     }
+
+    public function scopeAvailableServiceProvider($query, $service_id)
+    {
+        return $query->where('service_type_id', $service_id)->where('is_available' , 1)->select('provider_id');
+    }
 }
