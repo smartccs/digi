@@ -4,7 +4,8 @@
 				<nav class="navbar navbar-light">
 					<div class="navbar-left">
 						<a class="navbar-brand" href="{{url('admin/home')}}">
-							<div class="logo"></div>
+							<?php $site_logo = Setting::get('site_logo'); ?>
+							<div class="logo" style="background: url({{$site_logo}}) no-repeat"></div>
 						</a>
 						<div class="toggle-button dark sidebar-toggle-first float-xs-left hidden-md-up">
 							<span class="hamburger"></span>

@@ -182,7 +182,7 @@ class UserApiController extends Controller
             $user->save();
 
             return response()->json([
-                        'message' => 'Profile Updated successfully!'
+                        'message' => 'Profile Updated successfully!',
                         'first_name' => $user->first_name,
                         'last_name' => $user->last_name,
                         'picture' => $user->picture

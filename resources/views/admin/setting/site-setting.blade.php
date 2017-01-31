@@ -11,6 +11,7 @@
 			<h5 style="margin-bottom: 2em;">Site Settings</h5>
 
             <form class="form-horizontal" action="{{route('admin.setting.store')}}" method="POST" enctype="multipart/form-data" role="form">
+            
             	{{csrf_field()}}
 				<div class="form-group row">
 					<label for="site_name" class="col-xs-2 col-form-label">Site Name</label>
@@ -53,12 +54,12 @@
 				<div class="form-group row">
 					<label for="play_store_link" class="col-xs-2 col-form-label">Playstore link</label>
 					<div class="col-xs-10">
-						<input class="form-control" type="text" value="{{ Setting::get('play_store_link', '')  }}" name="play_store_link" required id="play_store_link" placeholder="Playstore linke">
+						<input class="form-control" type="text" value="{{ Setting::get('play_store_link', '')  }}" name="play_store_link" required id="play_store_link" placeholder="Playstore link">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="app_store_link" class="col-xs-2 col-form-label">Appstore Name</label>
+					<label for="app_store_link" class="col-xs-2 col-form-label">Appstore Link</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="text" value="{{ Setting::get('app_store_link', '')  }}" name="app_store_link" required id="app_store_link" placeholder="Appstore link">
 					</div>
