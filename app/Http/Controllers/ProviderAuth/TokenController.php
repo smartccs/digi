@@ -106,7 +106,10 @@ class TokenController extends Controller
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
 
+        $User = \Auth::user();
+        $User->access_token = $token;
+
         // all good so return the token
-        return response()->json(compact('token'));
+        return response()->json($User);
     }
 }
