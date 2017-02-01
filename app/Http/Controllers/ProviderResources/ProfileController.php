@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Auth;
+use Storage;
 
 class ProfileController extends Controller
 {
@@ -114,9 +115,9 @@ class ProfileController extends Controller
             // if ($request->has('pincode')) 
             //     $provider->pincode = $request->pincode;
 
-            if ($request->has('avatar')) {
-                Storage::delete($provider->picture);
-                $provider->picture = $provider->picture->move('provider/profile');
+            if ($request->hasFile('avatar')) {
+                Storage::delete($provider->avatar);
+                $provider->avatar = 'storage/'.$request->avatar->store('provider/profile');
             }
 
             $provider->save();
