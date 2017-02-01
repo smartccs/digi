@@ -150,20 +150,20 @@ class ProfileController extends Controller
     /**
      * Toggle service availability of the provider.
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function available()
+    public function available(Request $request)
     {
         $this->validate($request, [
-                'service_status' => 'required|in:available,offline'
+                'service_status' => 'required|in:active,offline',
             ]);
 
-        if(Provider::where('id', Auth::user()->id)->update(['is_available' => $request->status])) {
-            return response()->json(['message' => 'Availability Updated successfully!']);
-        } else {
-            return response()->json(['error' => 'Provider Not Found!']);
-        }
+        $User = Auth::user();
+        $User->service_status = $request->service_status;
+        $User->save();
+
+        return $User;
     }
 
     /**
@@ -176,7 +176,7 @@ class ProfileController extends Controller
     {
         $this->validate($request, [
                 'password' => 'required|confirmed',
-                'old_password' => 'required',
+                'password_old' => 'required',
             ]);
 
         $Provider = \Auth::user();
