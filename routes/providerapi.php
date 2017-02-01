@@ -11,22 +11,28 @@
 |
 */
 
-Route::get('/services' , 'Resources/ServiceResource@index');
+Route::get('/services' , 'Resources\ServiceResource@index');
 
 // Authentication
 Route::post('/register' , 'ProviderAuth\TokenController@register');
 Route::post('/oauth/token' , 'ProviderAuth\TokenController@authenticate');
 
+// Route::post('/oauth/token', 'AccessTokenController@issueToken');
+
+// Route::post('/oauth/token/refresh', [
+//     'middleware' => ['web', 'auth'],
+//     'uses' => 'TransientTokenController@refresh',
+// ]);
+
 Route::group(['middleware' => ['provider.api']], function () {
 
     Route::group(['prefix' => 'profile'], function () {
 
-        Route::get ('/' , 'ProviderApiController@details');
-        Route::post('/' , 'ProviderApiController@update_profile');
-        Route::post('/password' , 'ProviderApiController@change_password');
-        Route::post('/location' , 'ProviderApiController@update_location');
-        Route::get('/available' , 'ProviderApiController@available');
-        Route::post('/available' , 'ProviderApiController@update_available');
+        Route::get ('/' , 'ProviderResources\ProfileController@index');
+        Route::post('/' , 'ProviderResources\ProfileController@update');
+        Route::post('/password' , 'ProviderResources\ProfileController@password');
+        Route::post('/location' , 'ProviderResources\ProfileController@location');
+        Route::post('/available' , 'ProviderResources\ProfileController@available');
 
     });
 

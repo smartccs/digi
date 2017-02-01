@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Config;
 use Closure;
 
 use JWTAuth;
@@ -20,14 +21,14 @@ class ProviderApiMiddleware
      */
     public function handle($request, Closure $next)
     {
-        // Config::set('auth.providers.users.model','App\Provider');
+        Config::set('auth.providers.users.model', 'App\Provider');
 
         try {
 
-            if (! $user = JWTAuth::parseToken()->authenticate()) {
+            if (! $user = JWTAuth::parseToken()->authenticate(false, 'provider')) {
                 return response()->json(['user_not_found'], 404);
-            }else{
-                \Auth::guard('provider')->loginUsingId($user->id);
+            } else {
+                \Auth::loginUsingId($user->id);
             }
 
         } catch (TokenExpiredException $e) {

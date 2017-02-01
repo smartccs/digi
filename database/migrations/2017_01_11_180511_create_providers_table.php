@@ -20,8 +20,8 @@ class CreateProvidersTable extends Migration
             $table->string('mobile')->nullable();
             $table->string('password');
             $table->string('avatar')->nullable();
-            $table->enum('gender', ['male', 'female', 'others']);
-            $table->enum('status', ['active', 'approved', 'banned']);
+            $table->enum('service_status', ['active', 'offline']);
+            $table->enum('account_status', ['new', 'approved', 'banned']);
             $table->double('latitude', 15, 8)->nullable();
             $table->double('longitude', 15, 8)->nullable();
             $table->rememberToken();
