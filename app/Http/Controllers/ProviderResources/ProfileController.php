@@ -28,9 +28,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $User = Auth::user();
-        $User->avatar = asset($User->avatar);
-        return $User;
+        return Auth::user();
     }
 
     /**
@@ -71,38 +69,37 @@ class ProfileController extends Controller
 
         try {
 
-            $provider = Auth::user();
+            $Provider = Auth::user();
 
             if($request->has('first_name')) 
-                $provider->first_name = $request->first_name;
+                $Provider->first_name = $request->first_name;
 
             if($request->has('last_name')) 
-                $provider->last_name = $request->last_name;
+                $Provider->last_name = $request->last_name;
 
             if ($request->has('mobile'))
-                $provider->mobile = $request->mobile;
+                $Provider->mobile = $request->mobile;
 
             // if ($request->has('address')) 
-            //     $provider->address = $request->address;
+            //     $Provider->address = $request->address;
 
             // if ($request->has('city')) 
-            //     $provider->city = $request->city;
+            //     $Provider->city = $request->city;
 
             // if ($request->has('state')) 
-            //     $provider->state = $request->state;
+            //     $Provider->state = $request->state;
 
             // if ($request->has('pincode')) 
-            //     $provider->pincode = $request->pincode;
+            //     $Provider->pincode = $request->pincode;
 
             if ($request->hasFile('avatar')) {
-                Storage::delete($provider->avatar);
-                $provider->avatar = 'storage/'.$request->avatar->store('provider/profile');
+                Storage::delete($Provider->avatar);
+                $Provider->avatar = $request->avatar->store('provider/profile');
             }
 
-            $provider->save();
-            $provider->avatar = asset($provider->avatar);
+            $Provider->save();
 
-            return $provider;
+            return $Provider;
         }
 
         catch (ModelNotFoundException $e) {
@@ -134,11 +131,11 @@ class ProfileController extends Controller
                 'longitude' => 'required|numeric',
             ]);
 
-        if($provider = \Auth::user()){
+        if($Provider = \Auth::user()){
 
-            $provider->latitude = $request->latitude;
-            $provider->longitude = $request->longitude;
-            $provider->save();
+            $Provider->latitude = $request->latitude;
+            $Provider->longitude = $request->longitude;
+            $Provider->save();
 
             return response()->json(['message' => 'Location Updated successfully!']);
 
@@ -159,11 +156,11 @@ class ProfileController extends Controller
                 'service_status' => 'required|in:active,offline',
             ]);
 
-        $User = Auth::user();
-        $User->service_status = $request->service_status;
-        $User->save();
+        $Provider = Auth::user();
+        $Provider->service_status = $request->service_status;
+        $Provider->save();
 
-        return $User;
+        return $Provider;
     }
 
     /**
@@ -181,9 +178,7 @@ class ProfileController extends Controller
 
         $Provider = \Auth::user();
 
-        dd($Provider);
-
-        if(password_verify($request->old_password, $Provider->password))
+        if(password_verify($request->password_old, $Provider->password))
         {
             $Provider->password = bcrypt($request->password);
             $Provider->save();
