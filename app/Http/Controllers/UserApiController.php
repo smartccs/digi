@@ -204,6 +204,9 @@ class UserApiController extends Controller
     public function services() {
 
         if($serviceList = ServiceType::all()) {
+            foreach ($serviceList as $key => $value) {
+                $serviceList[$key]->grey_image = url('/').\Image::url($value->image,array('grayscale'));
+            }
             return $serviceList;
         } else {
             return response()->json(['error' => 'Services Not Found!'], 500);
