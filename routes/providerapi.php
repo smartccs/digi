@@ -40,8 +40,8 @@ Route::group(['middleware' => ['provider.api']], function () {
 
         Route::post('/started', 'ProviderApiController@started');
         Route::post('/arrived', 'ProviderApiController@arrived');
-        Route::post('/start', 'ProviderApiController@start_service');
-        Route::post('/finish', 'ProviderApiController@end_service');
+        Route::post('/moving', 'ProviderApiController@start_service');
+        Route::post('/reached', 'ProviderApiController@end_service');
         Route::post('/rating', 'ProviderApiController@rate_user');
         Route::post('/cancel', 'ProviderApiController@cancel_request');
         Route::post('/paid' , 'ProviderApiController@cod_paid');
@@ -52,18 +52,13 @@ Route::group(['middleware' => ['provider.api']], function () {
     Route::group(['prefix' => 'requests'], function () {
 
         Route::get('/incoming', 'ProviderApiController@incoming_request');
+        Route::get('/upcoming' , 'ProviderApiController@upcoming_request');
         Route::post('/accept', 'ProviderApiController@accept');
         Route::post('/reject', 'ProviderApiController@reject');
 
         Route::get('/status', 'ProviderApiController@request_status_check');
         Route::get('/history', 'ProviderApiController@history');
         Route::post('/show', 'ProviderApiController@request_details');
-
-    });
-
-    Route::group(['prefix' => 'scheduled'], function () {
-
-        Route::get('/upcoming' , 'ProviderApiController@upcoming_request');
 
     });
 
