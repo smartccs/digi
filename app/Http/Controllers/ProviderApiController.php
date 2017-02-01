@@ -9,6 +9,7 @@ use DB;
 use Log;
 use Auth;
 use Config;
+use Setting;
 
 use App\Admin;
 use App\User;
@@ -16,7 +17,7 @@ use App\Provider;
 use App\ProviderService;
 use App\ServiceType;
 use App\UserRequests;
-use App\RequestsFilter;
+use App\RequestFilter;
 use App\UserPayment;
 use App\Settings;
 use App\ProviderRating;
@@ -47,14 +48,13 @@ class ProviderApiController extends Controller
         }
 
 
-        $request_filter = RequestsFilter::CheckWaitingFilter($request->request_id,$provider->id)->first();
+        $request_filter = RequestFilter::CheckWaitingFilter($request->request_id,$provider->id)->first();
 
         if (!$request_filter) {
         	return response()->json(['error' => 'Request has not been offered to this provider. Abort.']);
         } 
 
-
-        try{
+        try {
 
             $requests->confirmed_provider = $provider->id;
             $requests->status = REQUEST_INPROGRESS;
@@ -82,7 +82,7 @@ class ProviderApiController extends Controller
 
 
             // No longer need request specific rows from RequestMeta
-            RequestsFilter::where('request_id', '=', $request->request_id)->delete();
+            RequestFilter::where('request_id', '=', $request->request_id)->delete();
 
             $user = User::find($requests->user_id);
             $services = ServiceType::find($requests->request_type);
@@ -133,7 +133,7 @@ class ProviderApiController extends Controller
     	}
 
 
-        $request_filter = RequestsFilter::CheckOfferedFilter($request->request_id, $provider->id)->first();
+        $request_filter = RequestFilter::CheckOfferedFilter($request->request_id, $provider->id)->first();
 
         if (!$request_filter) {
     		return response()->json(['error' => 'Request has not been offered to this provider. Abort.']);
@@ -153,7 +153,7 @@ class ProviderApiController extends Controller
                  UserRequests::where('id', '=', $requests->id)->update(['status' => REQUEST_REJECTED_BY_PROVIDER]);
             }
 
-            $FindNextProvider = RequestsFilter::FindNextProvider($request->request_id)->first();
+            $FindNextProvider = RequestFilter::FindNextProvider($request->request_id)->first();
 
             if($FindNextProvider){
 
@@ -167,7 +167,7 @@ class ProviderApiController extends Controller
                 
                 // Change status as no providers available in request table
                 UserRequests::where('id', '=', $requests->id)->update( ['status' => REQUEST_CANCELLED] );
-                RequestsFilter::where('request_id', '=', $requests->id)->delete();
+                RequestFilter::where('request_id', '=', $requests->id)->delete();
 
             }
 
@@ -564,7 +564,7 @@ class ProviderApiController extends Controller
                 Provider::where('id',$requests->confirmed_provider)->update(['is_available' => PROVIDER_AVAILABLE]);
             }
 
-            RequestsFilter::where('request_id', '=', $request->request_id)->delete();
+            RequestFilter::where('request_id', '=', $request->request_id)->delete();
 
             // $email_data = array();
             // $email_data['provider_name'] = $email_data['username'] = "";
@@ -621,23 +621,21 @@ class ProviderApiController extends Controller
 
     	try{
 
-	        $request_meta = RequestsFilter::IncomingRequest(Auth::user()->id)->get()->toArray();
+	        $request_meta = Auth::user()->incoming_requests;
 
-	        $settings = Settings::where('key', 'provider_select_timeout')->first();
-	        $provider_timeout = $settings->value;
+	        $provider_timeout = Setting::get('provider_select_timeout', 10);
 
 	        $request_meta_data = array();
-	        foreach($request_meta as $each_request_meta){
-	            $each_request_meta['user_rating'] = ProviderRating::Average($each_request_meta['user_id']) ?: 0;
-	            $time_left_to_respond = $provider_timeout - (time() - strtotime($each_request_meta['request_start_time']) );
-	            $each_request_meta['time_left_to_respond'] = $time_left_to_respond;
-	            if($time_left_to_respond < 0) {
-	                Helper::assign_next_provider($each_request_meta['request_id'],Auth::user()->id);
-	            }
-	            $request_meta_data[] = $each_request_meta;
-	        }
 
-	        return $request_meta_data;
+            for ($i=0; $i < sizeof($request_meta); $i++) { 
+                $request_meta[$i]->user_rating = ProviderRating::Average($request_meta[$i]->user_id) ? : 0;
+                $request_meta[$i]->time_left_to_respond = $provider_timeout - (time() - strtotime($request_meta[$i]->request_start_time));
+	            if($request_meta[$i]->time_left_to_respond < 0) {
+	                Helper::assign_next_provider($request_meta[$i]->request_id, Auth::user()->id);
+	            }
+            }
+
+	        return $request_meta;
  		}
             
         catch (ModelNotFoundException $e) {

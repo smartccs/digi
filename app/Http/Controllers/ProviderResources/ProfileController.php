@@ -94,7 +94,7 @@ class ProfileController extends Controller
 
             if ($request->hasFile('avatar')) {
                 Storage::delete($Provider->avatar);
-                $Provider->avatar = $request->avatar->store('public/provider/profile');
+                $Provider->avatar = $request->avatar->store('provider/profile');
             }
 
             $Provider->save();

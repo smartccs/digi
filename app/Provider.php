@@ -30,13 +30,20 @@ class Provider extends Authenticatable
         'password', 'remember_token', 'updated_at', 'created_at'
     ];
 
-
     /**
      * The services that belong to the user.
      */
     public function services()
     {
         return $this->hasMany('App\ProviderService');
+    }
+
+    /**
+     * The services that belong to the user.
+     */
+    public function incoming_requests()
+    {
+        return $this->hasMany('App\RequestFilter');
     }
 
     /**
