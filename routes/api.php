@@ -78,5 +78,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 	// chat
 
 	Route::get('/message' , 'UserApiController@message');
+
+	Route::get('/estimated/fare' , 'UserApiController@estimated_fare');
 	
 });

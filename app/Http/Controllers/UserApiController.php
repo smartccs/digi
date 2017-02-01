@@ -176,7 +176,7 @@ class UserApiController extends Controller
 
             if ($request->picture != "") {
                 Helper::delete_avatar($user->picture); 
-                $user->picture = Helper::upload_avatar($picture);
+                $user->picture = Helper::upload_avatar($request->picture);
             }
 
             $user->save();
@@ -388,9 +388,12 @@ class UserApiController extends Controller
                 $requests->confirmed_provider = NONE;
                 $requests->request_start_time = date("Y-m-d H:i:s", time());
                 $requests->s_address = $request->s_address ? $request->s_address : "";
-                    
+                $requests->d_address = $request->d_address ? $request->d_address : "";
+
                 if($request->s_latitude){ $requests->s_latitude = $request->s_latitude; }
                 if($request->s_longitude){ $requests->s_longitude = $request->s_longitude; }
+                if($request->d_latitude){ $requests->d_latitude = $request->d_latitude; }
+                if($request->d_longitude) { $requests->d_longitude = $request->d_longitude; }
 
                 $promo_code = Promocode::where('promo_code' , $request->promo_code)->where('is_valid' , 1)->first();
 
@@ -1604,6 +1607,68 @@ class UserApiController extends Controller
     
     }
 
+    public function forgot_password(Request $request){
 
+        $this->validate($request, [
+                'email' => 'required|email|exists:users,email',
+            ]);
+
+        try{  
+
+            // $user = User::where('email' , $email)->first();
+            // $new_password = uniqid();
+            // $user->password = Hash::make($new_password);
+
+            // send mail
+
+            return response()->json(['message' => 'New Password Sent to your mail!']);
+
+        }
+
+        catch(Exception $e){
+                return response()->json(['error' => "Something Went Wrong"], 500);
+        }
+    }
+
+
+    public function estimated_fare(Request $request){
+
+        $this->validate($request,[
+                's_latitude' => 'required|numeric',
+                's_longitude' => 'required|numeric',
+                'd_latitude' => 'required|numeric',
+                'd_longitude' => 'required|numeric',
+            ]);
+
+        try{
+
+
+            $details = "http://maps.googleapis.com/maps/api/distancematrix/json?origins=".$request->s_latitude.",".$request->s_longitude."&destinations=".$request->d_latitude.",".$request->d_longitude."&mode=driving&sensor=false";
+
+            $json = file_get_contents($details);
+
+            $details = json_decode($json, TRUE);
+
+            $meter = $details['rows'][0]['elements'][0]['distance']['value'];
+
+            $kilometer = round($meter/1000);
+
+            $base_price = \Setting::get('base_price');
+
+            $per_kilometer_price = \Setting::get('price_per_kilometer');
+
+            $kilometer_price = $kilometer * $per_kilometer_price;
+
+            $total = $base_price + $kilometer_price;
+
+            return response()->json(['message' => 'Estimated Amount','estimated_fare' => currency($total)]);
+
+        }
+
+        catch(Exception $e){
+                return response()->json(['error' => "Something Went Wrong"], 500);
+        }
+
+    }
 
 }
