@@ -28,37 +28,17 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        return Auth::user();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        $User = Auth::user();
+        $User->avatar = asset($User->avatar);
+        return $User;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
         //
     }
@@ -66,10 +46,9 @@ class ProfileController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit()
     {
         //
     }
@@ -121,8 +100,9 @@ class ProfileController extends Controller
             }
 
             $provider->save();
+            $provider->avatar = asset($provider->avatar);
 
-            return response()->json(['message' => 'Profile Updated successfully!']);
+            return $provider;
         }
 
         catch (ModelNotFoundException $e) {
