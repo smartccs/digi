@@ -309,12 +309,13 @@ class UserApiController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    // Automated Request
     public function send_request(Request $request) {
 
         $this->validate($request, [
             's_latitude' => 'required|numeric',
+            'd_latitude' => 'required|numeric',
             's_longitude' => 'required|numeric',
+            'd_longitude' => 'required|numeric',
             'service_type' => 'required|numeric|exists:service_types,id',
             'promo_code' => 'exists:promocodes,promo_code',
         ]);
@@ -335,7 +336,7 @@ class UserApiController extends Controller
 
                 $distance = \Setting::get('search_radius');
 
-                $list_service_ids = [];  
+                $list_service_ids = $providers = []; 
 
                 if($service_providers = ProviderService::AvailableServiceProvider($request->service_type)->get()) {
                     foreach ($service_providers as $sp => $service_provider) {
@@ -362,14 +363,12 @@ class UserApiController extends Controller
                         $search_provider['id'] = $provider->id;
                         $search_provider['waiting'] = $provider->waiting;
                         $search_provider['distance'] = $provider->distance;
-                        
                         array_push($search_providers, $search_provider);
                     }
 
                 } else {
 
                     Log::info("No Provider Found");
-                    // Send push notification to User
 
                     // $title = Helper::get_push_message(601);
                     // $messages = Helper::get_push_message(602);
@@ -383,7 +382,6 @@ class UserApiController extends Controller
 
             try{
 
-                // Create Requests
                 $requests = new UserRequests;
                 $requests->user_id = Auth::user()->id;
                 $requests->request_type = $request->service_type;
@@ -396,11 +394,11 @@ class UserApiController extends Controller
                 if($request->s_latitude){ $requests->s_latitude = $request->s_latitude; }
                 if($request->s_longitude){ $requests->s_longitude = $request->s_longitude; }
                 if($request->d_latitude){ $requests->d_latitude = $request->d_latitude; }
-                if($request->d_longitude) { $requests->d_longitude = $request->d_longitude; }
+                if($request->d_longitude){ $requests->d_longitude = $request->d_longitude; }
+                if($request->km){ $requests->km = $request->km; }
 
-                $promo_code = Promocode::where('promo_code' , $request->promo_code)->where('is_valid' , 1)->first();
-
-                if($promo_code) {
+                
+                if($promo_code = Promocode::where('promo_code' , $request->promo_code)->where('is_valid' , 1)->first()) {
                     $requests->promo_code_id = $promo_code->id;
                     $requests->promo_code = $request->promo_code;
                     $requests->offer_amount = $promo_code->offer;  
@@ -414,13 +412,13 @@ class UserApiController extends Controller
                 if($final_providers) {
                     foreach ($final_providers as $key => $final_provider) {
 
-                        $request_meta = new RequestsFilter;
+                        $request_filter = new RequestsFilter;
 
                         if($first_provider_id == 0) {
 
                             $first_provider_id = $final_provider;
 
-                            $request_meta->status = REQUEST_META_OFFERED;  // Request status change
+                            $request_filter->status = REQUEST_META_OFFERED;  // Request status change
 
                             if($current_provider = Provider::find($first_provider_id)) {
                                 $current_provider->waiting_to_respond = WAITING_TO_RESPOND;
@@ -434,7 +432,6 @@ class UserApiController extends Controller
                             // Log::info('Push initiated');
                             // $this->dispatch(new sendPushNotification($first_provider_id,PROVIDER,$requests->id,$title,$message));
 
-
                             // Push End
                         }
 
@@ -444,8 +441,11 @@ class UserApiController extends Controller
                     }
                 }
 
-                return response()->json(['message' => 'New request Created!','request_id' => $requests->id,
-                    'current_provider' => $first_provider_id]);
+                return response()->json([
+                        'message' => 'New request Created!',
+                        'request_id' => $requests->id,
+                        'current_provider' => $first_provider_id
+                    ]);
             }
 
             catch (Exception $e) {
@@ -1664,7 +1664,11 @@ class UserApiController extends Controller
 
             $total = $base_price + $kilometer_price;
 
-            return response()->json(['message' => 'Estimated Amount','estimated_fare' => currency($total)]);
+            return response()->json([
+                    'message' => 'Estimated Amount',
+                    'estimated_fare' => currency($total), 
+                    'km' => $kilometer
+                ]);
 
         }
 
