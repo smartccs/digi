@@ -20,6 +20,7 @@ define('REQUEST_COMPLETED',      5);
 define('REQUEST_CANCELLED',      6);
 define('REQUEST_NO_PROVIDER_AVAILABLE',7);
 define('WAITING_FOR_PROVIDER_CONFRIMATION_COD',  8);
+define('REQUEST_TIME_EXCEED_CANCELLED', 10);
 
 
 // Only when manual request

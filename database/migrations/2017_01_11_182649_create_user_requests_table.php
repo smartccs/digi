@@ -21,12 +21,11 @@ class CreateUserRequestsTable extends Migration
             $table->integer('confirmed_provider')->default(0);
             $table->dateTime('request_start_time');
             $table->integer('later')->default(0);
-            $table->integer('later_status')->default(0);
             $table->integer('user_later_status')->default(0);
             $table->dateTime('requested_time')->nullable();
             $table->integer('request_type');
-            $table->integer('request_meta_id')->default(0);
             $table->integer('provider_status')->default(0);
+            $table->integer('km')->default(0);
             $table->string('after_image')->nullable();
             $table->string('before_image')->nullable();
             $table->double('s_latitude',15,8);

@@ -23,9 +23,4 @@ class ServiceType extends Model
     protected $hidden = [
          'created_at', 'updated_at'
     ];
-
-    public function scopeApproved($query)
-    {
-        return $query->where('status', 1);
-    }
 }

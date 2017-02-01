@@ -46,7 +46,6 @@ class UserApiController extends Controller
                 'email' => 'required|email|max:255|unique:users',
                 'mobile' => 'required|digits_between:6,13',
                 'password' => 'required|min:6',
-                'picture' => 'mimes:jpeg,jpg,bmp,png',
             ]);
 
         try{
@@ -55,10 +54,6 @@ class UserApiController extends Controller
 
             $User['payment_mode'] = 'cod';
             $User['password'] = bcrypt($request->password);
-            if($request->hasFile('picture')) {
-                $User['picture'] = Helper::upload_picture($request->picture);
-            }
-
             $User = User::create($User);
 
             return $User;
@@ -157,37 +152,41 @@ class UserApiController extends Controller
                 'email' => 'email|unique:users,email,'.Auth::user()->id,
                 'mobile' => 'required|digits_between:6,13',
                 'picture' => 'mimes:jpeg,bmp,png',
-                'gender' => 'in:male,female,others',
-                'device_token' => 'required',
             ]);
 
          try {
 
             $user = User::findOrFail(Auth::user()->id);
 
-            if($request->has('first_name')) 
+            if($request->has('first_name')){ 
                 $user->first_name = $request->first_name;
+            }
             
-            if($request->has('last_name')) 
+            if($request->has('last_name')){
                 $user->last_name = $request->last_name;
+            }
             
-            if($request->has('email')) 
-                $user->email = $email;
+            if($request->has('email')){
+                $user->email = $request->email;
+            }
             
-            if ($mobile != "")
-                $user->mobile = $mobile;
-
-            if ($picture != "") {
-                Helper::delete_picture($user->picture); 
-                $user->picture = Helper::upload_picture($picture);
+            if ($request->mobile != ""){
+                $user->mobile = $request->mobile;
             }
 
-            if($request->has('gender')) 
-                $user->gender = $request->gender;
-            
+            if ($request->picture != "") {
+                Helper::delete_avatar($user->picture); 
+                $user->picture = Helper::upload_avatar($request->picture);
+            }
+
             $user->save();
 
-            return response()->json(['message' => 'Profile Updated successfully!']);
+            return response()->json([
+                        'message' => 'Profile Updated successfully!',
+                        'first_name' => $user->first_name,
+                        'last_name' => $user->last_name,
+                        'picture' => $user->picture
+                    ]);
         }
 
         catch (ModelNotFoundException $e) {
@@ -204,7 +203,10 @@ class UserApiController extends Controller
 
     public function services() {
 
-        if($serviceList = ServiceType::Approved()->get()) {
+        if($serviceList = ServiceType::all()) {
+            foreach ($serviceList as $key => $value) {
+                $serviceList[$key]->grey_image = url('/').\Image::url($value->image,array('grayscale'));
+            }
             return $serviceList;
         } else {
             return response()->json(['error' => 'Services Not Found!'], 500);
@@ -307,12 +309,13 @@ class UserApiController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    // Automated Request
     public function send_request(Request $request) {
 
         $this->validate($request, [
             's_latitude' => 'required|numeric',
+            'd_latitude' => 'required|numeric',
             's_longitude' => 'required|numeric',
+            'd_longitude' => 'required|numeric',
             'service_type' => 'required|numeric|exists:service_types,id',
             'promo_code' => 'exists:promocodes,promo_code',
         ]);
@@ -333,7 +336,7 @@ class UserApiController extends Controller
 
                 $distance = \Setting::get('search_radius');
 
-                $list_service_ids = [];  
+                $list_service_ids = $providers = []; 
 
                 if($service_providers = ProviderService::AvailableServiceProvider($request->service_type)->get()) {
                     foreach ($service_providers as $sp => $service_provider) {
@@ -360,14 +363,12 @@ class UserApiController extends Controller
                         $search_provider['id'] = $provider->id;
                         $search_provider['waiting'] = $provider->waiting;
                         $search_provider['distance'] = $provider->distance;
-                        
                         array_push($search_providers, $search_provider);
                     }
 
                 } else {
 
                     Log::info("No Provider Found");
-                    // Send push notification to User
 
                     // $title = Helper::get_push_message(601);
                     // $messages = Helper::get_push_message(602);
@@ -381,7 +382,6 @@ class UserApiController extends Controller
 
             try{
 
-                // Create Requests
                 $requests = new UserRequests;
                 $requests->user_id = Auth::user()->id;
                 $requests->request_type = $request->service_type;
@@ -389,13 +389,16 @@ class UserApiController extends Controller
                 $requests->confirmed_provider = NONE;
                 $requests->request_start_time = date("Y-m-d H:i:s", time());
                 $requests->s_address = $request->s_address ? $request->s_address : "";
-                    
+                $requests->d_address = $request->d_address ? $request->d_address : "";
+
                 if($request->s_latitude){ $requests->s_latitude = $request->s_latitude; }
                 if($request->s_longitude){ $requests->s_longitude = $request->s_longitude; }
+                if($request->d_latitude){ $requests->d_latitude = $request->d_latitude; }
+                if($request->d_longitude){ $requests->d_longitude = $request->d_longitude; }
+                if($request->km){ $requests->km = $request->km; }
 
-                $promo_code = Promocode::where('promo_code' , $request->promo_code)->where('is_valid' , 1)->first();
-
-                if($promo_code) {
+                
+                if($promo_code = Promocode::where('promo_code' , $request->promo_code)->where('is_valid' , 1)->first()) {
                     $requests->promo_code_id = $promo_code->id;
                     $requests->promo_code = $request->promo_code;
                     $requests->offer_amount = $promo_code->offer;  
@@ -409,13 +412,13 @@ class UserApiController extends Controller
                 if($final_providers) {
                     foreach ($final_providers as $key => $final_provider) {
 
-                        $request_meta = new RequestsFilter;
+                        $request_filter = new RequestsFilter;
 
                         if($first_provider_id == 0) {
 
                             $first_provider_id = $final_provider;
 
-                            $request_meta->status = REQUEST_META_OFFERED;  // Request status change
+                            $request_filter->status = REQUEST_META_OFFERED;  // Request status change
 
                             if($current_provider = Provider::find($first_provider_id)) {
                                 $current_provider->waiting_to_respond = WAITING_TO_RESPOND;
@@ -429,7 +432,6 @@ class UserApiController extends Controller
                             // Log::info('Push initiated');
                             // $this->dispatch(new sendPushNotification($first_provider_id,PROVIDER,$requests->id,$title,$message));
 
-
                             // Push End
                         }
 
@@ -439,8 +441,11 @@ class UserApiController extends Controller
                     }
                 }
 
-                return response()->json(['message' => 'New request Created!','request_id' => $requests->id,
-                    'current_provider' => $first_provider_id]);
+                return response()->json([
+                        'message' => 'New request Created!',
+                        'request_id' => $requests->id,
+                        'current_provider' => $first_provider_id
+                    ]);
             }
 
             catch (Exception $e) {
@@ -1605,6 +1610,72 @@ class UserApiController extends Controller
     
     }
 
+    public function forgot_password(Request $request){
 
+        $this->validate($request, [
+                'email' => 'required|email|exists:users,email',
+            ]);
+
+        try{  
+
+            // $user = User::where('email' , $email)->first();
+            // $new_password = uniqid();
+            // $user->password = Hash::make($new_password);
+
+            // send mail
+
+            return response()->json(['message' => 'New Password Sent to your mail!']);
+
+        }
+
+        catch(Exception $e){
+                return response()->json(['error' => "Something Went Wrong"], 500);
+        }
+    }
+
+
+    public function estimated_fare(Request $request){
+
+        $this->validate($request,[
+                's_latitude' => 'required|numeric',
+                's_longitude' => 'required|numeric',
+                'd_latitude' => 'required|numeric',
+                'd_longitude' => 'required|numeric',
+            ]);
+
+        try{
+
+
+            $details = "http://maps.googleapis.com/maps/api/distancematrix/json?origins=".$request->s_latitude.",".$request->s_longitude."&destinations=".$request->d_latitude.",".$request->d_longitude."&mode=driving&sensor=false";
+
+            $json = file_get_contents($details);
+
+            $details = json_decode($json, TRUE);
+
+            $meter = $details['rows'][0]['elements'][0]['distance']['value'];
+
+            $kilometer = round($meter/1000);
+
+            $base_price = \Setting::get('base_price');
+
+            $per_kilometer_price = \Setting::get('price_per_kilometer');
+
+            $kilometer_price = $kilometer * $per_kilometer_price;
+
+            $total = $base_price + $kilometer_price;
+
+            return response()->json([
+                    'message' => 'Estimated Amount',
+                    'estimated_fare' => currency($total), 
+                    'km' => $kilometer
+                ]);
+
+        }
+
+        catch(Exception $e){
+                return response()->json(['error' => "Something Went Wrong"], 500);
+        }
+
+    }
 
 }
