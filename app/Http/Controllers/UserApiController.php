@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-use Log;
-use Hash;
 use DB;
+use Log;
 use Auth;
+use Hash;
 use Setting;
 use Exception;
+use Carbon\Carbon;
 
 use App\User;
 use App\ProviderService;
@@ -357,7 +359,9 @@ class UserApiController extends Controller
             $UserRequest->user_id = Auth::user()->id;
             $UserRequest->current_provider_id = $Providers[0]->id;
             $UserRequest->service_type_id = $request->service_type;
+            
             $UserRequest->status = 'CREATED';
+
             $UserRequest->s_address = $request->s_address ? : "";
             $UserRequest->d_address = $request->d_address ? : "";
 
@@ -366,8 +370,9 @@ class UserApiController extends Controller
 
             $UserRequest->d_latitude = $request->d_latitude;
             $UserRequest->d_longitude = $request->d_longitude;
-            
             $UserRequest->distance = $request->distance;
+            
+            $UserRequest->assigned_at = Carbon::now();
 
             $UserRequest->save();
 

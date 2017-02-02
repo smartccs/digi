@@ -1,22 +1,25 @@
 <?php 
 
-   namespace App\Helpers;
+namespace App\Helpers;
 
-   use Hash;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-   use App\User;
-   use App\Provider;
-   use App\Cards;
-   use App\ProviderService;
-   use App\UserRequests;
-   use App\RequestFilter;
-   use App\RequestPayment;
-   use App\ServiceType;
-   use App\ProviderAvailability;
+use Carbon\Carbon;
 
-   use Mail;
-   use File;
-   use Log;
+use App\User;
+use App\Cards;
+use App\Provider;
+use App\ServiceType;
+use App\UserRequests;
+use App\RequestFilter;
+use App\RequestPayment;
+use App\ProviderService;
+use App\ProviderAvailability;
+
+use Log;
+use File;
+use Hash;
+use Mail;
 
     class Helper
     {
@@ -301,64 +304,28 @@
             if($requests = UserRequests::find($request_id)) {
 
                 RequestFilter::where('provider_id',$provider_id)
-                ->where('request_id',$request_id)
-                ->where('status', REQUEST_META_OFFERED)
-                ->update(['status' => REQUEST_META_TIMEDOUT]);
+                    ->where('request_id', $request_id)
+                    ->where('status', 0)
+                    ->update(['status' => 1]);
 
-                Provider::where('id',$provider_id)
-                ->update(['waiting_to_respond' => WAITING_TO_RESPOND_NORMAL]);
+                try {
+                    $next_provider = RequestFilter::where('request_id', $request_id)
+                        ->where('status', 0)
+                        ->orderBy('id')
+                        ->firstOrFail();
 
-                $next_provider = RequestFilter::where('request_id', $request_id)
-                                ->leftJoin('providers', 'providers.id', '=', 'requests_filter.provider_id')
-                                ->where('status', REQUEST_META_NONE)
-                                ->where('providers.is_activated',DEFAULT_TRUE)
-                                ->where('providers.is_available',DEFAULT_TRUE)
-                                ->where('providers.is_approved',DEFAULT_TRUE)
-                                ->where('providers.waiting_to_respond',WAITING_TO_RESPOND_NORMAL)
-                                ->select('requests_filter.*')
-                                ->orderBy('requests_filter.created_at')
-                                ->first();
-
-                if($next_provider){
-
-                    Provider::where('id',$next_provider->provider_id)
-                    ->update(['waiting_to_respond' => WAITING_TO_RESPOND]);
-
-                    $next_provider->status = REQUEST_META_OFFERED;
-                    $next_provider->save();
-
-                    UserRequests::where('id', '=', $request_id)
-                    ->update(['request_start_time' => date("Y-m-d H:i:s")] );
-
-                    // Push Start
+                    UserRequests::where('id', $request_id)->update([
+                            'current_provider_id' => $next_provider->provider_id,
+                            'assigned_at' => Carbon::now(),
+                        ]);
                     
-                    // $service = ServiceType::find($requests->request_type);
-                    // $user = User::find($requests->user_id);
-                    // $request_data = UserRequests::find($request_id);
-
-                    // Push notification has to add
-                    // $title = Helper::get_push_message(604);
-                    // $message = "You got a new request from".$user->first_name." ".$user->last_name;
-                    // Send Push Notification to Provider 
-
-                    // dispatch(new sendPushNotification($next_provider->provider_id,PROVIDER,$request_id,$title,$message));
-
-                } else {
-                    //End the request
-                    //Update the request status to no provider available
-                    UserRequests::where('id', '=', $request_id)->update( ['status' => REQUEST_NO_PROVIDER_AVAILABLE] );
+                } catch (ModelNotFoundException $e) {
+                    UserRequests::where('id', $request_id)->update(['status' => 'CANCELLED']);
 
                     // No longer need request specific rows from RequestMeta
                     RequestFilter::where('request_id', '=', $request_id)->delete();
-
-                    // Send Push Notification to User
-                    // $title = Helper::tr('cron_no_provider_title');
-                    // $message = Helper::tr('cron_no_provider_message');
-
-                    // dispatch(new NormalPushNotification($requests->user_id,USER,$title,$message));
-                
                 }
-            }
-        
+
+            }        
         }
     }
