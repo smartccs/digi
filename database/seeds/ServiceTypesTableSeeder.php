@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 
 use Carbon\Carbon;
 
-class ServiceTypeSeeder extends Seeder
+class ServiceTypesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

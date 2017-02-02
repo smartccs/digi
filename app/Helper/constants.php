@@ -11,16 +11,16 @@ define('COD',   'cod');
 define('PAYPAL', 'paypal');
 define('CARD',  'card');
 
-define('REQUEST_NEW',        0);
-define('REQUEST_WAITING',      1);
-define('REQUEST_INPROGRESS',    2);
-define('REQUEST_COMPLETE_PENDING',  3);
-define('REQUEST_RATING',      4);   
-define('REQUEST_COMPLETED',      5);
-define('REQUEST_CANCELLED',      6);
-define('REQUEST_NO_PROVIDER_AVAILABLE',7);
-define('WAITING_FOR_PROVIDER_CONFRIMATION_COD',  8);
-define('REQUEST_TIME_EXCEED_CANCELLED', 10);
+define('REQUEST_NEW',                           0);
+define('REQUEST_WAITING',                       1);
+define('REQUEST_INPROGRESS',                    2);
+define('REQUEST_COMPLETE_PENDING',              3);
+define('REQUEST_RATING',                        4);   
+define('REQUEST_COMPLETED',                     5);
+define('REQUEST_CANCELLED',                     6);
+define('REQUEST_NO_PROVIDER_AVAILABLE',         7); // Delete Request in this state.
+define('WAITING_FOR_PROVIDER_CONFRIMATION_COD', 8);
+define('REQUEST_TIME_EXCEED_CANCELLED',         10); // Delete Request in this state.
 
 
 // Only when manual request
@@ -37,8 +37,8 @@ define('PROVIDER_SERVICE_STARTED', 4);
 define('PROVIDER_SERVICE_COMPLETED', 5);
 define('PROVIDER_RATED', 6);
 
-define('REQUEST_META_NONE',   0);
-define('REQUEST_META_OFFERED',   1);
+define('REQUEST_META_NONE',     0);
+define('REQUEST_META_OFFERED',  1);
 define('REQUEST_META_TIMEDOUT', 2);
 define('REQUEST_META_DECLINED', 3);
 

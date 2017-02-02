@@ -12,7 +12,7 @@ class ServiceType extends Model
      * @var array
      */
     protected $fillable = [
-        'status','name','provider_name','image','price', 'description'
+        'name', 'provider_name', 'image', 'price', 'description', 'status'
     ];
 
     /**

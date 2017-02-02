@@ -8,13 +8,14 @@ use Log;
 use Hash;
 use DB;
 use Auth;
+use Setting;
 use Exception;
 
 use App\User;
 use App\ProviderService;
 use App\UserRequests;
 use App\Promocode;
-use App\RequestsFilter;
+use App\RequestFilter;
 use App\ServiceType;
 use App\Provider;
 use App\Settings;
@@ -312,148 +313,82 @@ class UserApiController extends Controller
     public function send_request(Request $request) {
 
         $this->validate($request, [
-            's_latitude' => 'required|numeric',
-            'd_latitude' => 'required|numeric',
-            's_longitude' => 'required|numeric',
-            'd_longitude' => 'required|numeric',
-            'service_type' => 'required|numeric|exists:service_types,id',
-            'promo_code' => 'exists:promocodes,promo_code',
-        ]);
+                's_latitude' => 'required|numeric',
+                'd_latitude' => 'required|numeric',
+                's_longitude' => 'required|numeric',
+                'd_longitude' => 'required|numeric',
+                'service_type' => 'required|numeric|exists:service_types,id',
+                'promo_code' => 'exists:promocodes,promo_code',
+            ]);
 
-            Log::info('Create request start');
-            $user = User::find(Auth::user()->id);
-            $user->latitude = $request->s_latitude;
-            $user->longitude = $request->s_longitude;
-            $user->save();
+        Log::info('New Request: ', $request->all());
 
-            $check_requests = UserRequests::PendingRequest(Auth::user()->id)->count();
+        $ActiveRequests = UserRequests::PendingRequest(Auth::user()->id)->count();
 
-            if($check_requests > 0) {
+        if($ActiveRequests > 0) {
+            return response()->json(['error' => 'Already request is in progress. Try again later'], 500);
+        }
 
-                return response()->json(['error' => 'Already request is in progress. Try again later'], 500);
+        $ActiveProviders = ProviderService::AvailableServiceProvider($request->service_type)->get()->pluck('provider_id');
 
+        /*Get default search radius*/
+        $distance = Setting::get('search_radius', '10');
+        $latitude = $request->s_latitude;
+        $longitude = $request->s_longitude;
+
+        $Providers = Provider::whereIn('id', $ActiveProviders)
+            ->where('account_status', 'approved')
+            ->whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
+            ->get();
+
+        // dd($Providers->toArray());
+        // List Providers who are currently busy and add them to the filter list.
+
+        if(count($Providers) == 0) {
+            // Push Notification to User
+            return response()->json(['error' => 'No Providers Found!'], 500); 
+        }
+
+        try{
+
+            $UserRequest = new UserRequests;
+            $UserRequest->user_id = Auth::user()->id;
+            $UserRequest->current_provider_id = $Providers[0]->id;
+            $UserRequest->service_type_id = $request->service_type;
+            $UserRequest->status = 'CREATED';
+            $UserRequest->s_address = $request->s_address ? : "";
+            $UserRequest->d_address = $request->d_address ? : "";
+
+            $UserRequest->s_latitude = $request->s_latitude;
+            $UserRequest->s_longitude = $request->s_longitude;
+
+            $UserRequest->d_latitude = $request->d_latitude;
+            $UserRequest->d_longitude = $request->d_longitude;
+            
+            $UserRequest->distance = $request->distance;
+
+            $UserRequest->save();
+
+            foreach ($Providers as $key => $Provider) {
+
+                $Filter = new RequestFilter;
+                // Send push notifications to the first provider
+                // $title = Helper::get_push_message(604);
+                // $message = "You got a new request from".$user->name;
+
+                $Filter->request_id = $UserRequest->id;
+                $Filter->provider_id = $Provider->id; 
+                $Filter->save();
             }
 
-                $distance = \Setting::get('search_radius');
-
-                $list_service_ids = $providers = []; 
-
-                if($service_providers = ProviderService::AvailableServiceProvider($request->service_type)->get()) {
-                    foreach ($service_providers as $sp => $service_provider) {
-                        $list_service_ids[] = $service_provider->provider_id;
-                    }
-                    $list_service_ids = implode(',', $list_service_ids);
-
-                }
-
-                if($list_service_ids) {
-                    $query = "SELECT providers.id,providers.waiting_to_respond as waiting, 1.609344 * 3956 * acos( cos( radians('$request->s_latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$request->s_longitude') ) + sin( radians('$request->s_latitude') ) * sin( radians(latitude) ) ) AS distance FROM providers
-                            WHERE id IN ($list_service_ids) AND providers.is_available = 1 AND providers.is_activated = 1 AND providers.is_approved = 1
-                            AND (1.609344 * 3956 * acos( cos( radians('$request->s_latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$request->s_longitude') ) + sin( radians('$request->s_latitude') ) * sin( radians(latitude) ) ) ) <= $distance
-                            ORDER BY distance";
-
-                    $providers = DB::select(DB::raw($query));
-
-                } 
-                
-
-                $search_providers = array();
-
-                if ($providers) {
-                    $search_provider = [];
-                    foreach ($providers as $provider) {
-                        $search_provider['id'] = $provider->id;
-                        $search_provider['waiting'] = $provider->waiting;
-                        $search_provider['distance'] = $provider->distance;
-                        array_push($search_providers, $search_provider);
-                    }
-
-                } else {
-
-                    Log::info("No Provider Found");
-
-                    // $title = Helper::get_push_message(601);
-                    // $messages = Helper::get_push_message(602);
-                    // $this->dispatch( new NormalPushNotification($user->id, USER,$title, $messages));     
-                    // $response_array = array('success' => false, 'error' => Helper::get_error_message(112), 'error_code' => 112);
-                    return response()->json(['error' => 'No Providers Found!'], 500); 
-                }
-
-                $sort_waiting_providers = Helper::sort_waiting_providers($search_providers);  
-                $final_providers = $sort_waiting_providers['providers'];    
-
-            // try{
-
-                $requests = new UserRequests;
-                $requests->user_id = Auth::user()->id;
-                $requests->request_type = $request->service_type;
-                $requests->status = REQUEST_WAITING;
-                $requests->confirmed_provider = NONE;
-                $requests->request_start_time = date("Y-m-d H:i:s", time());
-                $requests->s_address = $request->s_address ? $request->s_address : "";
-                $requests->d_address = $request->d_address ? $request->d_address : "";
-
-                if($request->s_latitude){ $requests->s_latitude = $request->s_latitude; }
-                if($request->s_longitude){ $requests->s_longitude = $request->s_longitude; }
-                if($request->d_latitude){ $requests->d_latitude = $request->d_latitude; }
-                if($request->d_longitude){ $requests->d_longitude = $request->d_longitude; }
-                if($request->km){ $requests->km = $request->km; }
-
-                
-                if($promo_code = Promocode::where('promo_code' , $request->promo_code)->where('is_valid' , 1)->first()) {
-                    $requests->promo_code_id = $promo_code->id;
-                    $requests->promo_code = $request->promo_code;
-                    $requests->offer_amount = $promo_code->offer;  
-                    $requests->is_promo_code = DEFAULT_TRUE;  
-                }   
-                    
-                $requests->save();
-
-                $first_provider_id = 0;
-
-                if($final_providers) {
-                    foreach ($final_providers as $key => $final_provider) {
-
-                        $request_filter = new RequestsFilter;
-
-                        if($first_provider_id == 0) {
-
-                            $first_provider_id = $final_provider;
-
-                            $request_filter->status = REQUEST_META_OFFERED;  // Request status change
-
-                            if($current_provider = Provider::find($first_provider_id)) {
-                                $current_provider->waiting_to_respond = WAITING_TO_RESPOND;
-                                $current_provider->save();
-                            }
-
-                            // Send push notifications to the first provider
-                            // $title = Helper::get_push_message(604);
-                            // $message = "You got a new request from".$user->name;
-
-                            // Log::info('Push initiated');
-                            // $this->dispatch(new sendPushNotification($first_provider_id,PROVIDER,$requests->id,$title,$message));
-
-                            // Push End
-                        }
-
-                        $request_meta->request_id = $requests->id;
-                        $request_meta->provider_id = $final_provider; 
-                        $request_meta->save();
-                    }
-                }
-
-                return response()->json([
-                        'message' => 'New request Created!',
-                        'request_id' => $requests->id,
-                        'current_provider' => $first_provider_id
-                    ]);
-            // }
-
-            // catch (Exception $e) {
-            //     return response()->json(['error' => 'Something went wrong while sending request. Please try again.'], 500);
-            // }
-
+            return response()->json([
+                    'message' => 'New request Created!',
+                    'request_id' => $UserRequest->id,
+                    'current_provider' => $UserRequest->current_provider_id,
+                ]);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Something went wrong while sending request. Please try again.'], 500);
+        }
     }
 
     /**
@@ -516,7 +451,7 @@ class UserApiController extends Controller
                         
                     $requests->save();
 
-                    $request_meta = new RequestsFilter;
+                    $request_meta = new RequestFilter;
                     $request_meta->status = REQUEST_META_OFFERED;
 
                     $provider->waiting_to_respond = WAITING_TO_RESPOND;
@@ -657,7 +592,7 @@ class UserApiController extends Controller
                 // $message = "You got a new request from ".$user->name;
                 // $this->dispatch(new sendPushNotification($request->provider_id, PROVIDER, $requests->id, $title, $message)); 
 
-                $request_meta = new RequestsFilter;
+                $request_meta = new RequestFilter;
                 $request_meta->status = REQUEST_META_OFFERED;  // Request status change
                 $request_meta->request_id = $requests->id;
                 $request_meta->provider_id = $request->provider_id;
@@ -683,23 +618,22 @@ class UserApiController extends Controller
 
     public function cancel_request(Request $request) {
     
-        $user_id = Auth::user()->id;
-
         $this->validate($request, [
-                'request_id' => 'required|numeric|exists:user_requests,id,user_id,'.$user_id,
+                'request_id' => 'required|numeric|exists:user_requests,id,user_id,'.Auth::user()->id,
             ]);
 
-            $request_id = $request->request_id;
-            $requests = UserRequests::find($request_id);
+        try{
+            
+            $requests = UserRequests::findOrFail($request->request_id);
 
-            if($requests->status == REQUEST_CANCELLED)
+            if($requests->status == 'CANCELLED')
             {
                  return response()->json(['error' => 'Request is Already Cancelled!'], 500); 
             }
 
-                if(in_array($requests->provider_status, [PROVIDER_NONE,PROVIDER_ACCEPTED,PROVIDER_STARTED])) {
+                if(in_array($requests->status, ['ASSIGNED','STARTED','ARRIVED'])) {
 
-                    $requests->status = REQUEST_CANCELLED;
+                    $requests->status = 'CANCELLED';
                     $requests->save();
 
                     if($requests->confirmed_provider != DEFAULT_FALSE){
@@ -709,31 +643,10 @@ class UserApiController extends Controller
                         $provider->waiting_to_respond = WAITING_TO_RESPOND_NORMAL;
                         $provider->save();
 
-                        // $title = Helper::tr('cancel_by_user_title');
-                        // $message = Helper::tr('cancel_by_user_message');
-                        
-                        // $this->dispatch(new sendPushNotification($requests->confirmed_provider,PROVIDER,$requests->id,$title,$message));
-
-                        // Log::info("Cancelled request by user");
-                        // $email_data = array();
-
-                        // $subject = Helper::tr('request_cancel_user');
-
-                        // $email_data['provider_name'] = $email_data['username'] = "";
-
-                        // if($user = User::find($requests->user_id)) {
-                        //     $email_data['username'] = $user->first_name." ".$user->last_name;    
-                        // }
-                        
-                        // if($provider = Provider::find($requests->confirmed_provider)) {
-                        //     $email_data['provider_name'] = $provider->first_name. " " . $provider->last_name;
-                        // }
-
-                        // $page = "emails.user.request_cancel";
-                        // $email_send = Helper::send_email($page,$subject,$provider->email,$email_data);
+                        // send push and email
                     }
 
-                    RequestsFilter::where('request_id', '=', $request_id)->delete();
+                    RequestFilter::where('request_id', '=', $request->request_id)->delete();
 
                     return response()->json(['message' => 'Request Cancelled Successfully']); 
 

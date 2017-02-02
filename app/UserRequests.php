@@ -32,11 +32,20 @@ class UserRequests extends Model
          'created_at', 'updated_at'
     ];
 
+    /**
+     * The services that belong to the user.
+     */
+    public function service_type()
+    {
+        return $this->hasOne('App\ServiceType');
+    }
+
+
     public function scopePendingRequest($query, $user_id)
     {
-        return $query->where('user_id' , $user_id)
-                ->where('later' , 0)
-                ->whereNotIn('status' , [REQUEST_NO_PROVIDER_AVAILABLE,REQUEST_CANCELLED,REQUEST_TIME_EXCEED_CANCELLED,REQUEST_COMPLETED]);
+        return $query->where('user_id', $user_id)
+                // ->where('later', 0) // Schedule - schedule_at != null
+                ->whereNotIn('status' , ['CANCELLED', 'PAID']);
     }
 
     public function scopeRequestHistory($query)

@@ -16,10 +16,14 @@ class ServiceResource extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $services = ServiceType::orderBy('created_at' , 'desc')->get();
-        return view('admin.service.index', compact('services'));
+        $services = ServiceType::all();
+        if($request->ajax()) {
+            return $services;
+        } else {
+            return view('admin.service.index', compact('services'));
+        }
     }
 
     /**

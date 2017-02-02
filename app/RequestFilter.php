@@ -38,13 +38,6 @@ class RequestFilter extends Model
                 ->where('status', '=', REQUEST_META_OFFERED);
     }
 
-    public function scopeCheckOfferedFilter($query, $request_id, $provider_id)
-    {
-        return $query->where('request_id', '=', $request_id)
-                ->where('provider_id', '=', $provider_id)
-                ->where('status', '=', REQUEST_META_OFFERED);
-    }
-
     public function scopeIncomingRequest($query, $user_id)
     {
         return $query->where('requests_meta.provider_id',$user_id)

@@ -3,16 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Helpers\Helper;
 
-use Log;
-use Hash;
-use Validator;
 use DB;
+use Log;
 use Auth;
 use Config;
+use Setting;
 
 use App\Admin;
 use App\User;
@@ -20,7 +17,7 @@ use App\Provider;
 use App\ProviderService;
 use App\ServiceType;
 use App\UserRequests;
-use App\RequestsFilter;
+use App\RequestFilter;
 use App\UserPayment;
 use App\Settings;
 use App\ProviderRating;
@@ -31,345 +28,6 @@ use App\ProviderAvailability;
 
 class ProviderApiController extends Controller
 {
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function signup(Request $request)
-    {
-        $this->validate($request, [
-                'social_unique_id' => ['required_if:login_by,facebook,google','unique:providers'],
-                'device_type' => 'required|in:android,ios',
-                'device_token' => 'required',
-                'login_by' => 'required|in:manual,facebook,google',
-                'first_name' => 'required|max:255',
-                'last_name' => 'required|max:255',
-                'email' => 'required|email|max:255|unique:providers',
-                'mobile' => 'required|digits_between:6,13',
-                'password' => 'required|min:6',
-                'picture' => 'mimes:jpeg,jpg,bmp,png',
-            ]);
-
-        try{
-
-	        $Provider = $request->all();
-
-	        $Provider['is_available'] = 1;
-	        $Provider['is_activated'] = 1;
-	        $Provider['is_email_activated'] = 1;
-	        $Provider['email_activation_code'] = uniqid();
-
-	        $Provider['password'] = bcrypt($request->password);
-	        if($request->hasFile('picture')) {
-	            $Provider['picture'] = Helper::upload_picture($request->avatar);
-	        }
-
-	        $Provider = Provider::create($Provider);
-
-	            if($Provider) {
-
-	                if($request->has('service_type')) {
-
-	                    $provider_services = ProviderService::where('provider_id' , $Provider->id)->get();
-
-	                    ProviderService::where('provider_id' , $Provider->id)->update(['is_available' => 0]);
-
-	                    $services =  array($request->service_type);
-
-	                    if(!is_array($request->service_type)) {
-	                        $services = explode(',',$request->service_type );
-	                    }
-
-	                    if($services) {
-	                        foreach ($services as $key => $service) {
-	                            $check_provider_service = ProviderService::where('provider_id' , $Provider->id)->where('service_type_id' , $service)->count();
-
-	                            if($check_provider_service) {
-	                                Helper::save_provider_service($Provider->id,$service , 1);    
-	                            } else {
-	                                Helper::save_provider_service($Provider->id,$service);
-	                            }
-	                        }    
-	                    
-	                    }
-	                }
-	            }
-
-	        return $Provider;
-
-    	}
-
-    	catch (ModelNotFoundException $e) {
-             return response()->json(['error' => 'Something Went Wrong!']);
-        }
-        
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-
-
-    public function authenticate(Request $request)
-    {
-    	$this->validate($request, [
-                'email' => 'required|email',
-                'password' => 'required|min:6',
-            ]);
-
-        Config::set('auth.providers.users.model','App\Provider');
-
-        // grab credentials from the request
-        $credentials = $request->only('email', 'password');
-
-        try {
-            // attempt to verify the credentials and create a token for the user
-            if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'invalid_credentials'], 401);
-            }
-        } catch (JWTException $e) {
-            // something went wrong whilst attempting to encode the token
-            return response()->json(['error' => 'could_not_create_token'], 500);
-        }
-
-        // all good so return the token
-        return response()->json(compact('token'));
-    }
-
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function change_password(Request $request){
-
-        $this->validate($request, [
-                'password' => 'required|confirmed',
-                'old_password' => 'required',
-            ]);
-
-        $Provider = \Auth::user();
-
-        if(\Hash::check($request->old_password, $Provider->password))
-        {
-            $Provider->password = bcrypt($request->password);
-            $Provider->save();
-
-            return response()->json(['message' => 'Password changed successfully!']);
-        } else {
-            return response()->json(['error' => 'Please enter correct password']);
-        }
-
-    }
-
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function details(){
-
-        try{
-
-        	$provider = Provider::where('providers.id' ,Auth::user()->id)
-                        ->leftJoin('provider_services' , 'providers.id' , '=' , 'provider_services.provider_id')
-                        ->leftJoin('service_types' , 'provider_services.service_type_id' , '=' , 'service_types.id')
-                        ->select('providers.*' , 'service_types.id as service_type' , 'service_types.provider_name' , 'service_types.name as service_name')
-                        ->first();
-
-            return $provider;
-
-        }
-
-        catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Provider Not Found!']);
-        }
-
-    }
-
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function update_profile(Request $request)
-    {
-
-        $this->validate($request, [
-                'first_name' => 'required|max:255',
-                'last_name' => 'max:255',
-                'email' => 'email|unique:users,email,'.Auth::user()->id,
-                'mobile' => 'required|digits_between:6,13',
-                'picture' => 'mimes:jpeg,bmp,png',
-                'gender' => 'in:male,female,others',
-                'device_token' => 'required',
-            ]);
-
-         try {
-
-            $provider = Provider::findOrFail(Auth::user()->id);
-
-            if($request->has('first_name')) 
-                $provider->first_name = $request->first_name;
-            
-            if($request->has('last_name')) 
-                $provider->last_name = $request->last_name;
-            
-            if($request->has('email')) 
-                $provider->email = $email;
-            
-            if ($request->has('mobile'))
-                $provider->mobile = $mobile;
-
-            if ($request->has('address')) 
-                $provider->address = $request->address;
-            
-            if ($request->has('city')) 
-                $provider->city = $request->city;
-            
-            if ($request->has('state')) 
-                $provider->state = $request->state;
-            
-            if ($request->has('pincode')) 
-                $provider->pincode = $request->pincode;
-            
-            if ($request->has('about')) 
-                $provider->description = $request->about;
-            
-
-            if ($picture != "") {
-                Helper::delete_picture($provider->picture);
-                $provider->picture = Helper::upload_picture($picture);
-            }
-
-            if($request->has('gender')) 
-                $provider->gender = $request->gender;
-            
-            $provider->save();
-
-
-            if($request->has('service_type')) {
-
-                ProviderService::where('provider_id' , Auth::user()->id)->update(['is_available' => 0]);
-
-                if(!is_array($request->service_type)) {
-                    $services = explode(',',$request->service_type );
-                }
-
-
-                foreach ($services as $key => $service) {
-
-                    $check_provider_service = ProviderService::CheckService(Auth::user()->id,$service)->count();
-
-                    if($check_provider_service > 0) {
-                    	// update service type
-                        save_provider_service(Auth::user()->id,$service , 1);    
-                    } else {
-                    	// create new service type
-                        save_provider_service(Auth::user()->id,$service);
-                    }
-                }    
-            
-            }
-
-
-            return response()->json(['message' => 'Profile Updated successfully!']);
-        }
-
-        catch (ModelNotFoundException $e) {
-             return response()->json(['error' => 'Provider Not Found!']);
-        }
-
-    }
-
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function update_location(Request $request){
-
-        $this->validate($request, [
-                'latitude' => 'required|numeric',
-                'longitude' => 'required|numeric',
-                'address' => 'required',
-            ]);
-
-        if($provider = Provider::find(\Auth::user()->id)){
-
-            $provider->latitude = $request->latitude;
-            $provider->longitude = $request->longitude;
-            $provider->address = $request->address;
-            $provider->save();
-
-            return response()->json(['message' => 'Location Updated successfully!']);
-
-        }else{
-
-            return response()->json(['error' => 'Provider Not Found!']);
-
-        }
-
-    }
-
-
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function available(){
-
-    	try{
-    		return Auth::user();
-    	}
-
-    	catch (ModelNotFoundException $e) {
-             return response()->json(['error' => 'Provider Not Found!']);
-        }
-
-    }
-
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function update_available(Request $request){
-
-        $this->validate($request, [
-                'status' => 'required|in:1,0'
-            ]);
-
-        if(Provider::where('id',Auth::user()->id)->update(['is_available' => $request->status])){
-
-            return response()->json(['message' => 'Availability Updated successfully!']);
-
-        }else{
-
-            return response()->json(['error' => 'Provider Not Found!']);
-
-        }
-
-    }
-
     /**
      * Show the application dashboard.
      *
@@ -390,14 +48,13 @@ class ProviderApiController extends Controller
         }
 
 
-        $request_filter = RequestsFilter::CheckWaitingFilter($request->request_id,$provider->id)->first();
+        $request_filter = RequestFilter::CheckWaitingFilter($request->request_id,$provider->id)->first();
 
         if (!$request_filter) {
         	return response()->json(['error' => 'Request has not been offered to this provider. Abort.']);
         } 
 
-
-        try{
+        try {
 
             $requests->confirmed_provider = $provider->id;
             $requests->status = REQUEST_INPROGRESS;
@@ -425,7 +82,7 @@ class ProviderApiController extends Controller
 
 
             // No longer need request specific rows from RequestMeta
-            RequestsFilter::where('request_id', '=', $request->request_id)->delete();
+            RequestFilter::where('request_id', '=', $request->request_id)->delete();
 
             $user = User::find($requests->user_id);
             $services = ServiceType::find($requests->request_type);
@@ -476,7 +133,7 @@ class ProviderApiController extends Controller
     	}
 
 
-        $request_filter = RequestsFilter::CheckOfferedFilter($request->request_id, $provider->id)->first();
+        $request_filter = RequestFilter::CheckOfferedFilter($request->request_id, $provider->id)->first();
 
         if (!$request_filter) {
     		return response()->json(['error' => 'Request has not been offered to this provider. Abort.']);
@@ -496,7 +153,7 @@ class ProviderApiController extends Controller
                  UserRequests::where('id', '=', $requests->id)->update(['status' => REQUEST_REJECTED_BY_PROVIDER]);
             }
 
-            $FindNextProvider = RequestsFilter::FindNextProvider($request->request_id)->first();
+            $FindNextProvider = RequestFilter::FindNextProvider($request->request_id)->first();
 
             if($FindNextProvider){
 
@@ -510,7 +167,7 @@ class ProviderApiController extends Controller
                 
                 // Change status as no providers available in request table
                 UserRequests::where('id', '=', $requests->id)->update( ['status' => REQUEST_CANCELLED] );
-                RequestsFilter::where('request_id', '=', $requests->id)->delete();
+                RequestFilter::where('request_id', '=', $requests->id)->delete();
 
             }
 
@@ -907,7 +564,7 @@ class ProviderApiController extends Controller
                 Provider::where('id',$requests->confirmed_provider)->update(['is_available' => PROVIDER_AVAILABLE]);
             }
 
-            RequestsFilter::where('request_id', '=', $request->request_id)->delete();
+            RequestFilter::where('request_id', '=', $request->request_id)->delete();
 
             // $email_data = array();
             // $email_data['provider_name'] = $email_data['username'] = "";
@@ -964,23 +621,21 @@ class ProviderApiController extends Controller
 
     	try{
 
-	        $request_meta = RequestsFilter::IncomingRequest(Auth::user()->id)->get()->toArray();
+	        $request_meta = Auth::user()->incoming_requests;
 
-	        $settings = Settings::where('key', 'provider_select_timeout')->first();
-	        $provider_timeout = $settings->value;
+	        $provider_timeout = Setting::get('provider_select_timeout', 10);
 
 	        $request_meta_data = array();
-	        foreach($request_meta as $each_request_meta){
-	            $each_request_meta['user_rating'] = ProviderRating::Average($each_request_meta['user_id']) ?: 0;
-	            $time_left_to_respond = $provider_timeout - (time() - strtotime($each_request_meta['request_start_time']) );
-	            $each_request_meta['time_left_to_respond'] = $time_left_to_respond;
-	            if($time_left_to_respond < 0) {
-	                Helper::assign_next_provider($each_request_meta['request_id'],Auth::user()->id);
-	            }
-	            $request_meta_data[] = $each_request_meta;
-	        }
 
-	        return $request_meta_data;
+            for ($i=0; $i < sizeof($request_meta); $i++) { 
+                $request_meta[$i]->user_rating = ProviderRating::Average($request_meta[$i]->user_id) ? : 0;
+                $request_meta[$i]->time_left_to_respond = $provider_timeout - (time() - strtotime($request_meta[$i]->request_start_time));
+	            if($request_meta[$i]->time_left_to_respond < 0) {
+	                Helper::assign_next_provider($request_meta[$i]->request_id, Auth::user()->id);
+	            }
+            }
+
+	        return $request_meta;
  		}
             
         catch (ModelNotFoundException $e) {

@@ -18,10 +18,7 @@ class Provider extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name' ,'last_name', 'email',
-        'password','is_available','is_activated',
-        'is_approved','mobile','address',
-        'zipcode','picture','gender'
+        'first_name' ,'last_name', 'email', 'password', 'mobile', 'address', 'picture', 'gender'
     ];
 
     /**
@@ -32,6 +29,22 @@ class Provider extends Authenticatable
     protected $hidden = [
         'password', 'remember_token', 'updated_at', 'created_at'
     ];
+
+    /**
+     * The services that belong to the user.
+     */
+    public function services()
+    {
+        return $this->hasMany('App\ProviderService');
+    }
+
+    /**
+     * The services that belong to the user.
+     */
+    public function incoming_requests()
+    {
+        return $this->hasMany('App\RequestFilter');
+    }
 
     /**
      * Send the password reset notification.
