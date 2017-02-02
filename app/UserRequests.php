@@ -33,12 +33,28 @@ class UserRequests extends Model
     ];
 
     /**
-     * The services that belong to the user.
+     * User Model Linked
+     */
+    public function users()
+    {
+        return $this->belongsTo('App\User', 'user_id');
+    } 
+
+    /**
+     * ServiceType Model Linked
      */
     public function service_type()
     {
-        return $this->hasOne('App\ServiceType');
-    }
+        return $this->belongsTo('App\ServiceType', 'service_type_id');
+    }   
+
+    /**
+     * Provider Model Linked
+     */
+    public function providers()
+    {
+        return $this->belongsTo('App\Provider', 'confirmed_provider');
+    }  
 
 
     public function scopePendingRequest($query, $user_id)
@@ -100,38 +116,7 @@ class UserRequests extends Model
     {
         return $query->where('user_requests.user_id', '=', $user_id)
                             ->whereNotIn('user_requests.status', $check_status)
-                            ->leftJoin('users', 'users.id', '=', 'user_requests.user_id')
-                            ->leftJoin('providers', 'providers.id', '=', 'user_requests.confirmed_provider')
-                            ->leftJoin('service_types', 'service_types.id', '=', 'user_requests.request_type')
-                            ->select(
-                                'user_requests.id as request_id',
-                                'user_requests.request_type as request_type',
-                                'user_requests.later as later',
-                                'user_requests.user_later_status as user_later_status',
-                                'service_types.name as service_type_name',
-                                'service_types.provider_name as service_provider_name',
-                                'user_requests.after_image as after_image',
-                                'user_requests.before_image as before_image',
-                                'user_requests.end_time as end_time',
-                                'request_start_time as request_start_time',
-                                'user_requests.status','providers.id as provider_id',
-                                DB::raw('CONCAT(providers.first_name, " ", providers.last_name) as provider_name'),
-                                'providers.picture as provider_picture',
-                                'providers.mobile as provider_mobile',
-                                'user_requests.provider_status',
-                                'user_requests.amount',
-                                DB::raw('CONCAT(users.first_name, " ", users.last_name) as user_name'),
-                                'users.picture as user_picture',
-                                'users.id as user_id',
-                                'user_requests.s_latitude',
-                                'user_requests.s_longitude',
-                                'user_requests.s_address',
-                                'user_requests.d_address',
-                                'user_requests.promo_code_id',
-                                'user_requests.promo_code',
-                                'user_requests.offer_amount',
-                                'user_requests.is_promo_code'
-                            );
+                            ->select('user_requests.*')->with('users','providers','service_type');
     }
 
 

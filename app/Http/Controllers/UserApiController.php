@@ -319,6 +319,7 @@ class UserApiController extends Controller
                 'd_longitude' => 'required|numeric',
                 'service_type' => 'required|numeric|exists:service_types,id',
                 'promo_code' => 'exists:promocodes,promo_code',
+                'distance' => 'required|numeric'
             ]);
 
         Log::info('New Request: ', $request->all());
@@ -389,6 +390,7 @@ class UserApiController extends Controller
                     'request_id' => $UserRequest->id,
                     'current_provider' => $UserRequest->current_provider_id,
                 ]);
+
         } catch (Exception $e) {
             return response()->json(['error' => 'Something went wrong while sending request. Please try again.'], 500);
         }
@@ -634,7 +636,7 @@ class UserApiController extends Controller
                  return response()->json(['error' => 'Request is Already Cancelled!'], 500); 
             }
 
-                if(in_array($UserRequests->status, ['ASSIGNED','STARTED','ARRIVED'])) {
+                if(in_array($UserRequests->status, ['CREATED','ASSIGNED','STARTED','ARRIVED'])) {
 
                     $UserRequests->status = 'CANCELLED';
                     $UserRequests->save();
@@ -672,11 +674,9 @@ class UserApiController extends Controller
 
     public function request_status_check() {
 
-        $user = User::find(Auth::user()->id);
-
         try{
 
-            $check_status = [REQUEST_COMPLETED,REQUEST_CANCELLED,REQUEST_NO_PROVIDER_AVAILABLE,REQUEST_TIME_EXCEED_CANCELLED];
+            $check_status = ['COMPLETED','CANCELLED','SEARCHING'];
 
             $requests = UserRequests::UserRequestStatusCheck(Auth::user()->id,$check_status)->get()->toArray();
 
@@ -684,39 +684,22 @@ class UserApiController extends Controller
 
                 foreach ($requests as  $req) {
 
-                    $req['rating'] = UserRating::Average($req['provider_id']) ?: 0;
-
                     $requests_data[] = $req;
 
-                    $allowed_status = [REQUEST_COMPLETE_PENDING,REQUEST_COMPLETED,REQUEST_RATING];
+                    $allowed_status = ['DROPPED','COMPLETED'];
 
                     if( in_array($req['status'], $allowed_status)) {
 
-                        $invoice_query = UserPayment::where('request_id' , $req['request_id'])
-                                        ->leftJoin('requests' , 'request_payments.request_id' , '=' , 'requests.id')
-                                        ->leftJoin('users' , 'requests.user_id' , '=' , 'users.id')
-                                        ->leftJoin('cards' , 'users.default_card' , '=' , 'cards.id');
+                        // $invoice_query = UserPayment::where('request_id' , $req['request_id'])
+                        //                 ->leftJoin('requests' , 'request_payments.request_id' , '=' , 'requests.id')
+                        //                 ->leftJoin('users' , 'requests.user_id' , '=' , 'users.id')
+                        //                 ->leftJoin('cards' , 'users.default_card' , '=' , 'cards.id');
 
-                        if($user->payment_mode == CARD) {
-                            $invoice_query = $invoice_query->where('cards.is_default' , DEFAULT_TRUE) ;  
-                        }
+                        // if(Auth::user()->payment_mode == CARD) {
+                        //     $invoice_query = $invoice_query->where('cards.is_default' , DEFAULT_TRUE) ;  
+                        // }
 
-                        $invoice = $invoice_query->select(
-                                            'requests.confirmed_provider as provider_id' , 
-                                            'request_payments.total_time',
-                                            'request_payments.payment_mode as payment_mode' , 
-                                            'request_payments.base_price',
-                                            'request_payments.time_price' ,
-                                            'request_payments.tax_price' , 
-                                            'request_payments.total',
-                                            'cards.card_token',
-                                            'cards.customer_id',
-                                            'cards.last_four',
-                                            'requests.promo_code',
-                                            'requests.promo_code_id',
-                                            'requests.offer_amount',
-                                            'request_payments.trip_fare')
-                                            ->get()->toArray();
+                        // $invoice = []
                     }
                 }
 
