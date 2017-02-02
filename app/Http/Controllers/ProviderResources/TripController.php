@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ProviderResources;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Auth;
 use Setting;
@@ -46,6 +47,22 @@ class TripController extends Controller
     }
 
     /**
+     * Cancel given request.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function cancel($id)
+    {
+        $Cancellable = ['SEARCHING', 'ACCEPTED', 'ARRIVED', 'STARTED', 'CREATED'];
+
+        if(!in_array($UserRequest->status, $Cancellable)) {
+            return response()->json(['error' => 'Cannot cancel request at this stage!']);
+        }
+
+
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -85,23 +102,29 @@ class TripController extends Controller
      */
     public function accept($id)
     {
-        $UserRequest = UserRequests::find($id);
-
-        if($UserRequest->status == "ACCEPTED") {
-            return response()->json(['error' => 'Request already accepted!']);
-        }
-
         try {
-            
+
+            $UserRequest = UserRequests::findOrFail($id);
+
+            if($UserRequest->status != "SEARCHING") {
+                return response()->json(['error' => 'Request already under progress!']);
+            }
+
             $UserRequest->provider_id = Auth::user()->id;
-            $UserRequest->status = "ACCEPTED";
+            $UserRequest->status = "STARTED";
+            // dd($UserRequest->toArray());
             $UserRequest->save();
+
+            $Filters = RequestFilter::where('request_id', $UserRequest->id)->where('provider_id', '!=', Auth::user()->id)->get();
+            // dd($Filters->toArray());
+            foreach ($Filters as $Filter) {
+                $Filter->delete();
+            }
 
             // Send Push Notification to User
 
-            RequestFilter::where('request_id', $UserRequest->id)->where('provider_id', Auth::user()->id)->delete();
+            return $UserRequest->with('user')->get();
 
-            return $UserRequest->with('user', 'service_type')->get();
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Unable to accept, Please try again later']);
         } catch (Exception $e) {
@@ -125,17 +148,17 @@ class TripController extends Controller
         try{
 
             $UserRequest = UserRequests::findOrFail($id);
-            $UserRequest->status = REQUEST_INPROGRESS;
+            $UserRequest->status = $request->status;
             $UserRequest->save();
 
             // Send Push Notification to User
        
-            return response()->json(['message' => 'Provider Started', 'current_status' => 'PROVIDER_STARTED' ]);
+            return $UserRequest->with('user')->get();
 
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Unable to make the request, Please try again later']);
+            return response()->json(['error' => 'Unable to update, Please try again later']);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Unable to Update, Please try again later']);
+            return response()->json(['error' => 'Connection Error']);
         }
     }
 
@@ -149,25 +172,14 @@ class TripController extends Controller
     {
         $UserRequest = UserRequests::find($id);
 
-        $Cancellable = ['ACCEPTED', 'ARRIVED', 'SEARCHING', 'STARTED', 'CREATED'];
-
-        if(!in_array($UserRequest->status, $Cancellable)) {
-            return response()->json(['error' => 'Cannot cancel request at this stage!']);
-        }
-
         try {
 
-            $UserRequest->provider_id = 0;
-            $UserRequest->status = 'SEARCHING';
-            $UserRequest->save();
-
             // Send Push Notification to User
-
             RequestFilter::where('request_id', $UserRequest->id)->where('provider_id', Auth::user()->id)->delete();
+            return $UserRequest->with('user')->get();
 
-            return $UserRequest->with('user', 'service_type')->get();
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Unable to accept, Please try again later']);
+            return response()->json(['error' => 'Unable to reject, Please try again later']);
         } catch (Exception $e) {
             return response()->json(['error' => 'Connection Error']);
         }
