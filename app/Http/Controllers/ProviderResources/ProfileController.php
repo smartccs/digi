@@ -113,7 +113,7 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy()
     {
         //
     }
@@ -124,7 +124,7 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function location($id)
+    public function location()
     {
         $this->validate($request, [
                 'latitude' => 'required|numeric',
