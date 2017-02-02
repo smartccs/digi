@@ -85,77 +85,27 @@ class TripController extends Controller
      */
     public function accept($id)
     {
-        $this->validate($request, [
-              'request_id' => 'required|integer|exists:user_requests,id'
-          ]);
+        $UserRequest = UserRequests::find($id);
 
-        $provider = Provider::find(Auth::user()->id);
-        $requests = UserRequests::find($request->request_id);
-
-        if($requests->status == REQUEST_CANCELLED) {
-            return response()->json(['error' => 'Request has not been offered to this provider. Abort.']);
+        if($UserRequest->status == "ACCEPTED") {
+            return response()->json(['error' => 'Request already accepted!']);
         }
-
-
-        $request_filter = RequestFilter::CheckWaitingFilter($request->request_id,$provider->id)->first();
-
-        if (!$request_filter) {
-            return response()->json(['error' => 'Request has not been offered to this provider. Abort.']);
-        } 
 
         try {
-
-            $requests->confirmed_provider = $provider->id;
-            $requests->status = REQUEST_INPROGRESS;
-            $requests->provider_status = PROVIDER_ACCEPTED;
-            $requests->save();
-
-            if($requests->later == '1')
-            {
-                $provider->waiting_to_respond = WAITING_TO_RESPOND_NORMAL;
-                $provider->is_available = PROVIDER_AVAILABLE;
-                $provider->save();
-            }
-            else
-            {
-                $provider->waiting_to_respond = WAITING_TO_RESPOND_NORMAL;
-                $provider->is_available = PROVIDER_NOT_AVAILABLE;
-                $provider->save();
-            }
             
+            $UserRequest->provider_id = Auth::user()->id;
+            $UserRequest->status = "ACCEPTED";
+            $UserRequest->save();
+
             // Send Push Notification to User
-            // $title = Helper::tr('request_accepted_title');
-            // $message = Helper::tr('request_accepted_message');
 
-            // $this->dispatch( new sendPushNotification($requests->user_id, USER,$requests->id,$title, $message));     
+            RequestFilter::where('request_id', $UserRequest->id)->where('provider_id', Auth::user()->id)->delete();
 
-
-            // No longer need request specific rows from RequestMeta
-            RequestFilter::where('request_id', '=', $request->request_id)->delete();
-
-            $user = User::find($requests->user_id);
-            $services = ServiceType::find($requests->request_type);
-
-            if($requests->later == 1)
-            {
-                $message = "Request is Scheduled on time";
-            }
-            else
-            {
-                $message = Helper::get_message(111);
-            }
-
-            return response()->json([
-                    'message' => $message,
-                    'user' => $user,
-                    'request' => $requests,
-                    'service' => $services
-                ]);                
- 
-        }
-
-        catch (ModelNotFoundException $e) {
-             return response()->json(['error' => 'Unable to make the request, Please try again later']);
+            return $UserRequest->with('user', 'service_type')->get();
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Unable to accept, Please try again later']);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Connection Error']);
         }
     }
 
@@ -179,10 +129,6 @@ class TripController extends Controller
             $UserRequest->save();
 
             // Send Push Notification to User
-            // $title = Helper::tr('provider_started_title');
-            // $message = Helper::tr('provider_started_message');
-
-            // $this->dispatch( new sendPushNotification($requests->user_id, USER,$requests->id,$title, $message));     
        
             return response()->json(['message' => 'Provider Started', 'current_status' => 'PROVIDER_STARTED' ]);
 
@@ -201,63 +147,29 @@ class TripController extends Controller
      */
     public function destroy($id)
     {
-        $this->validate($request, [
-                'request_id' => 'required|integer|exists:user_requests,id'
-            ]);
+        $UserRequest = UserRequests::find($id);
 
-        $provider = Auth::user();
-        $requests = UserRequests::find($request->request_id);
+        $Cancellable = ['ACCEPTED', 'ARRIVED', 'SEARCHING', 'STARTED', 'CREATED'];
 
-        if($requests->status == REQUEST_CANCELLED) {
-            return response()->json(['error' => 'Request has not been offered to this provider. Abort.']);
+        if(!in_array($UserRequest->status, $Cancellable)) {
+            return response()->json(['error' => 'Cannot cancel request at this stage!']);
         }
 
+        try {
 
-        $request_filter = RequestFilter::CheckOfferedFilter($request->request_id, $provider->id)->first();
+            $UserRequest->provider_id = 0;
+            $UserRequest->status = 'SEARCHING';
+            $UserRequest->save();
 
-        if (!$request_filter) {
-            return response()->json(['error' => 'Request has not been offered to this provider. Abort.']);
-        }else{
-             $request_filter->status = REQUEST_CANCELLED;
-             $request_filter->save();
-        } 
+            // Send Push Notification to User
 
-        try{
+            RequestFilter::where('request_id', $UserRequest->id)->where('provider_id', Auth::user()->id)->delete();
 
-            $provider->waiting_to_respond = WAITING_TO_RESPOND_NORMAL;
-            $provider->save();
-
-            $manual_request = Settings::where('key','manual_request')->first();
-
-            if($manual_request->manual_request == 1){
-                 UserRequests::where('id', '=', $requests->id)->update(['status' => REQUEST_REJECTED_BY_PROVIDER]);
-            }
-
-            $FindNextProvider = RequestFilter::FindNextProvider($request->request_id)->first();
-
-            if($FindNextProvider){
-
-                //assigning to next provider
-                Provider::where('id',$FindNextProvider->provider_id)
-                ->update(['waiting_to_respond', WAITING_TO_RESPOND_NORMAL]);
-
-                UserRequests::where('id', '=', $request->request_id)->update(['request_start_time' => date("Y-m-d H:i:s")]);
-
-            } else {
-                
-                // Change status as no providers available in request table
-                UserRequests::where('id', '=', $requests->id)->update( ['status' => REQUEST_CANCELLED] );
-                RequestFilter::where('request_id', '=', $requests->id)->delete();
-
-            }
-
-            return response()->json(['error' => 'Request has been Rejected.']);
-
+            return $UserRequest->with('user', 'service_type')->get();
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Unable to accept, Please try again later']);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Connection Error']);
         }
-        
-        catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Unable to make the request, Please try again later']);
-        }
-
     }
 }

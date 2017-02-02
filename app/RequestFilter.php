@@ -37,7 +37,7 @@ class RequestFilter extends Model
     {
         return $query->where('request_id', '=', $request_id)
                 ->where('provider_id', '=', $provider_id)
-                ->where('status', '=', REQUEST_WAITING);
+                ->where('status', 0);
     }
 
     public function scopeCheckOfferedFilter($query, $request_id, $provider_id)
