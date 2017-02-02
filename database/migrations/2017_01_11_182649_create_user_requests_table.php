@@ -34,6 +34,7 @@ class CreateUserRequestsTable extends Migration
                 ]);
 
             $table->enum('cancelled_by', ['USER', 'PROVIDER']);
+            $table->boolean('paid')->default(0);
 
             $table->double('distance', 15, 8);
             

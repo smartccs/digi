@@ -341,7 +341,7 @@ class UserApiController extends Controller
         $longitude = $request->s_longitude;
 
         $Providers = Provider::whereIn('id', $ActiveProviders)
-            ->where('account_status', 'approved')
+            ->where('status', 'approved')
             ->whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
             ->get();
 
