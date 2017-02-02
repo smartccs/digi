@@ -343,15 +343,17 @@ class UserApiController extends Controller
                         $list_service_ids[] = $service_provider->provider_id;
                     }
                     $list_service_ids = implode(',', $list_service_ids);
+
                 }
 
                 if($list_service_ids) {
                     $query = "SELECT providers.id,providers.waiting_to_respond as waiting, 1.609344 * 3956 * acos( cos( radians('$request->s_latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$request->s_longitude') ) + sin( radians('$request->s_latitude') ) * sin( radians(latitude) ) ) AS distance FROM providers
-                            WHERE id IN ($list_service_ids) AND is_available = 1 AND is_activated = 1 AND is_approved = 1
+                            WHERE id IN ($list_service_ids) AND providers.is_available = 1 AND providers.is_activated = 1 AND providers.is_approved = 1
                             AND (1.609344 * 3956 * acos( cos( radians('$request->s_latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$request->s_longitude') ) + sin( radians('$request->s_latitude') ) * sin( radians(latitude) ) ) ) <= $distance
                             ORDER BY distance";
 
                     $providers = DB::select(DB::raw($query));
+
                 } 
                 
 
@@ -380,7 +382,7 @@ class UserApiController extends Controller
                 $sort_waiting_providers = Helper::sort_waiting_providers($search_providers);  
                 $final_providers = $sort_waiting_providers['providers'];    
 
-            try{
+            // try{
 
                 $requests = new UserRequests;
                 $requests->user_id = Auth::user()->id;
@@ -446,11 +448,11 @@ class UserApiController extends Controller
                         'request_id' => $requests->id,
                         'current_provider' => $first_provider_id
                     ]);
-            }
+            // }
 
-            catch (Exception $e) {
-                return response()->json(['error' => 'Something went wrong while sending request. Please try again.'], 500);
-            }
+            // catch (Exception $e) {
+            //     return response()->json(['error' => 'Something went wrong while sending request. Please try again.'], 500);
+            // }
 
     }
 
