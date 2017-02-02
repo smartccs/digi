@@ -124,7 +124,7 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function location()
+    public function location(Request $request)
     {
         $this->validate($request, [
                 'latitude' => 'required|numeric',
