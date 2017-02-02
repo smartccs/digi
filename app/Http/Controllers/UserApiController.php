@@ -182,12 +182,7 @@ class UserApiController extends Controller
 
             $user->save();
 
-            return response()->json([
-                        'message' => 'Profile Updated successfully!',
-                        'first_name' => $user->first_name,
-                        'last_name' => $user->last_name,
-                        'picture' => $user->picture
-                    ]);
+            return response()->json($user);
         }
 
         catch (ModelNotFoundException $e) {
@@ -680,30 +675,17 @@ class UserApiController extends Controller
 
             $requests = UserRequests::UserRequestStatusCheck(Auth::user()->id,$check_status)->get()->toArray();
 
-            $requests_data = [];$invoice = [];
+                foreach ($requests as  $each_request) {
 
-                foreach ($requests as  $req) {
+                    if( in_array($each_request['status'], ['DROPPED','COMPLETED'])) {
 
-                    $requests_data[] = $req;
+                        // invoice data
 
-                    $allowed_status = ['DROPPED','COMPLETED'];
-
-                    if( in_array($req['status'], $allowed_status)) {
-
-                        // $invoice_query = UserPayment::where('request_id' , $req['request_id'])
-                        //                 ->leftJoin('requests' , 'request_payments.request_id' , '=' , 'requests.id')
-                        //                 ->leftJoin('users' , 'requests.user_id' , '=' , 'users.id')
-                        //                 ->leftJoin('cards' , 'users.default_card' , '=' , 'cards.id');
-
-                        // if(Auth::user()->payment_mode == CARD) {
-                        //     $invoice_query = $invoice_query->where('cards.is_default' , DEFAULT_TRUE) ;  
-                        // }
-
-                        // $invoice = []
+                        $requests['invoice'] = Helper::calculate_fare($each_request['distance']);
                     }
                 }
 
-            return response()->json(['data' => $requests_data, 'invoice' => $invoice]);
+            return response()->json(['data' => $requests]);
 
         }
 

@@ -44,17 +44,32 @@ class UserRequests extends Model
      */
     public function service_type()
     {
-        return $this->belongsTo('App\ServiceType', 'service_type_id');
-    }   
+        return $this->belongsTo('App\ServiceType');
+    }
 
     /**
-     * Provider Model Linked
+     * UserRequestRating Model Linked
      */
-    public function providers()
+    public function rating()
     {
-        return $this->belongsTo('App\Provider', 'provider_id');
-    }  
+        return $this->belongsTo('App\UserRequestRating');
+    }
 
+    /**
+     * The user who created the request.
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
+
+    /**
+     * The provider assigned to the request.
+     */
+    public function provider()
+    {
+        return $this->belongsTo('App\Provider');
+    }
 
     public function scopePendingRequest($query, $user_id)
     {
@@ -114,8 +129,8 @@ class UserRequests extends Model
     public function scopeUserRequestStatusCheck($query, $user_id, $check_status)
     {
         return $query->where('user_requests.user_id', '=', $user_id)
-                            ->whereNotIn('user_requests.status', $check_status)
-                            ->select('user_requests.*')->with('users','providers','service_type');
+                    ->whereNotIn('user_requests.status', $check_status)
+                    ->select('user_requests.*')->with('user','provider','service_type','rating');
     }
 
 
@@ -166,7 +181,7 @@ class UserRequests extends Model
                     ->where('user_requests.later' , DEFAULT_TRUE)
                     ->where('user_requests.status' , REQUEST_INPROGRESS)
                     ->where('user_requests.provider_status' , '<',PROVIDER_STARTED)
-                    ->select('user_requests.*')->with('users','providers','service_type');
+                    ->select('user_requests.*')->with('user','provider','service_type');
     }
 
     public function scopeProviderUpcomingRequest($query, $provider_id)

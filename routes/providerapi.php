@@ -36,27 +36,32 @@ Route::group(['middleware' => ['provider.api']], function () {
 
     });
 
+    Route::resource('trip', 'ProviderResources\TripController');
+    // Route::post('/trip', 'ProviderApiController@trip_accept');
+    // Route::delete('/trip', 'ProviderApiController@trip_destroy');
+    // Route::patch('/trip', 'ProviderApiController@trip_update');
+
     Route::group(['prefix' => 'trip'], function () {
 
-        Route::post('/started', 'ProviderApiController@started');
-        Route::post('/arrived', 'ProviderApiController@arrived');
-        Route::post('/moving', 'ProviderApiController@start_service');
-        Route::post('/reached', 'ProviderApiController@end_service');
+        Route::post('{id}', 'ProviderResources\TripController@accept');
+        Route::get('/status', 'ProviderApiController@request_status_check');
+        // Route::post('/started', 'ProviderApiController@started');
+        // Route::post('/arrived', 'ProviderApiController@arrived');
+        // Route::post('/moving', 'ProviderApiController@start_service');
+        // Route::post('/reached', 'ProviderApiController@end_service');
+        // Route::post('/cancel', 'ProviderApiController@cancel_request');
+        // Route::post('/paid' , 'ProviderApiController@cod_paid');
         Route::post('/rating', 'ProviderApiController@rate_user');
-        Route::post('/cancel', 'ProviderApiController@cancel_request');
-        Route::post('/paid' , 'ProviderApiController@cod_paid');
         Route::post('/message' , 'ProviderApiController@message');
 
     });
 
     Route::group(['prefix' => 'requests'], function () {
 
-        Route::get('/incoming', 'ProviderApiController@incoming_request');
         Route::get('/upcoming' , 'ProviderApiController@upcoming_request');
         Route::post('/accept', 'ProviderApiController@accept');
         Route::post('/reject', 'ProviderApiController@reject');
 
-        Route::get('/status', 'ProviderApiController@request_status_check');
         Route::get('/history', 'ProviderApiController@history');
         Route::post('/show', 'ProviderApiController@request_details');
 
