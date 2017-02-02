@@ -37,9 +37,24 @@ class UserRequests extends Model
      */
     public function service_type()
     {
-        return $this->hasOne('App\ServiceType');
+        return $this->belongsTo('App\ServiceType');
     }
 
+    /**
+     * The user who created the request.
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
+
+    /**
+     * The provider assigned to the request.
+     */
+    public function provider()
+    {
+        return $this->belongsTo('App\Provider');
+    }
 
     public function scopePendingRequest($query, $user_id)
     {

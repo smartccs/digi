@@ -24,7 +24,7 @@ class CreateUserRequestsTable extends Migration
                     'CREATED',
                     'SEARCHING',
                     'CANCELLED',
-                    'ASSIGNED', 
+                    'ACCEPTED', 
                     'STARTED',
                     'ARRIVED',
                     'PICKEDUP',
@@ -33,7 +33,7 @@ class CreateUserRequestsTable extends Migration
                     'COMPLETED',
                 ]);
 
-            $table->enum('cancelled_by', ['USER', 'PROVIDER']);
+            $table->enum('cancelled_by', ['NONE', 'USER', 'PROVIDER']);
             $table->boolean('paid')->default(0);
 
             $table->double('distance', 15, 8);

@@ -33,9 +33,9 @@ class Provider extends Authenticatable
     /**
      * The services that belong to the user.
      */
-    public function services()
+    public function service()
     {
-        return $this->hasMany('App\ProviderService');
+        return $this->hasOne('App\ProviderService');
     }
 
     /**
