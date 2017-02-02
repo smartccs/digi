@@ -623,7 +623,7 @@ class UserApiController extends Controller
             ]);
 
         try{
-            
+
             $requests = UserRequests::findOrFail($request->request_id);
 
             if($requests->status == 'CANCELLED')
@@ -653,6 +653,12 @@ class UserApiController extends Controller
                 } else {
                     return response()->json(['error' => 'Service Already Started!'], 500); 
                 }
+        }
+
+        catch (ModelNotFoundException $e) {
+             return response()->json(['error' => 'No Provider Found!']);
+        }
+
     }
 
     /**
