@@ -104,14 +104,12 @@ class UserApiController extends Controller
         $this->validate($request, [
                 'latitude' => 'required|numeric',
                 'longitude' => 'required|numeric',
-                'address' => 'required',
             ]);
 
         if($user = User::find(Auth::user()->id)){
 
             $user->latitude = $request->latitude;
             $user->longitude = $request->longitude;
-            $user->address = $request->address;
             $user->save();
 
             return response()->json(['message' => 'Location Updated successfully!']);
@@ -629,21 +627,21 @@ class UserApiController extends Controller
 
         try{
 
-            $requests = UserRequests::findOrFail($request->request_id);
+            $UserRequests = UserRequests::findOrFail($request->request_id);
 
-            if($requests->status == 'CANCELLED')
+            if($UserRequests->status == 'CANCELLED')
             {
                  return response()->json(['error' => 'Request is Already Cancelled!'], 500); 
             }
 
-                if(in_array($requests->status, ['ASSIGNED','STARTED','ARRIVED'])) {
+                if(in_array($UserRequests->status, ['ASSIGNED','STARTED','ARRIVED'])) {
 
-                    $requests->status = 'CANCELLED';
-                    $requests->save();
+                    $UserRequests->status = 'CANCELLED';
+                    $UserRequests->save();
 
-                    if($requests->confirmed_provider != DEFAULT_FALSE){
+                    if($UserRequests->confirmed_provider != DEFAULT_FALSE){
 
-                        $provider = Provider::find( $requests->confirmed_provider );
+                        $provider = Provider::find( $UserRequests->confirmed_provider );
                         $provider->is_available = PROVIDER_AVAILABLE;
                         $provider->waiting_to_respond = WAITING_TO_RESPOND_NORMAL;
                         $provider->save();
@@ -1593,7 +1591,7 @@ class UserApiController extends Controller
             return response()->json([
                     'message' => 'Estimated Amount',
                     'estimated_fare' => currency($total), 
-                    'km' => $kilometer
+                    'distance' => $kilometer
                 ]);
 
         }
