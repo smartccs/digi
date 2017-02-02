@@ -21,7 +21,7 @@ use App\RequestFilter;
 use App\ServiceType;
 use App\Provider;
 use App\Settings;
-use App\UserRating;
+use App\UserRequestRating;
 use App\ProviderAvailability;
 use App\Cards;
 use App\UserPayment;
@@ -235,7 +235,6 @@ class UserApiController extends Controller
 
                 for($i = 0; $i < sizeof($providers); $i++) {
 
-                    $providers[$i]->rating = UserRating::Average($providers[$i]->id) ?: 0;
                     $providers[$i]->availablity = ProviderAvailability::Providers($providers[$i]->id)->get()->toArray();
                 }
 
@@ -262,7 +261,6 @@ class UserApiController extends Controller
         try{
 
             $provider = Provider::findOrFail($request->provider_id);
-            $provider['rating'] = UserRating::Average($request->provider_id) ? : 0;
 
             return response()->json($provider);
         }
@@ -288,7 +286,6 @@ class UserApiController extends Controller
         try{
 
             $Provider = Provider::findOrFail($request->provider_id);
-            $Provider->rating = UserRating::Average($request->provider_id) ? : 0;
             $Provider->availability = ProviderAvailability::AvailableProviders($request->provider_id)->get();
 
             return $Provider;
@@ -690,7 +687,7 @@ class UserApiController extends Controller
         }
 
         catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong while sending request. Please try again.'], 500);
+            return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
         }
 
     } 
@@ -823,43 +820,39 @@ class UserApiController extends Controller
 
     public function rate_provider(Request $request) {
 
-        $user = User::find(Auth::user()->id);
-
         $this->validate($request, [
-                'request_id' => 'required|integer|exists:user_requests,id,user_id,'.$user->id.'|unique:user_ratings,request_id',
+                'request_id' => 'required|integer|exists:user_requests,id,user_id,'.Auth::user()->id.'|unique:user_request_ratings,request_id',
                 'rating' => 'required|integer|in:'.RATINGS,
-                'comments' => 'max:255',
-                'is_favorite' => 'in:'.DEFAULT_TRUE.','.DEFAULT_FALSE,
+                'comment' => 'max:255',
             ]);
     
-            $req = Requests::where('id' ,$request->request_id)
-                    ->where('status' ,REQUEST_RATING)
-                    ->first();
+        $request = UserRequests::where('id' ,$request->request_id)
+                ->where('status' ,'COMPLETED')
+                ->where('paid', 0)
+                ->first();
 
-            if (!$req && intval($req->status) == REQUEST_COMPLETED) {
-                 return response()->json(['error' => 'Request is already Completed'], 500);
-            }
+        if ($request) {
+             return response()->json(['error' => 'Not Paid!'], 500);
+        }
 
-            try{
-                //Save Rating
-                $rev_user = new UserRating();
-                $rev_user->provider_id = $req->confirmed_provider;
-                $rev_user->user_id = $req->user_id;
-                $rev_user->request_id = $req->id;
-                $rev_user->rating = $request->rating;
-                $rev_user->comment = $request->comment ? $request->comment: '';
-                $rev_user->save();
+        try{
 
-                $req->status = REQUEST_COMPLETED;
-                $req->save();
+            $rating = new UserRequestRating();
+            $rating->provider_id = $request->provider_id;
+            $rating->user_id = $request->user_id;
+            $rating->request_id = $request->id;
+            $rating->user_rating = $request->rating;
+            $rating->user_comment = $request->comment ?: '';
+            $rating->save();
 
-                // Send Push Notification to Provider
-                // $title = Helper::tr('provider_rated_by_user_title');
-                // $messages = Helper::tr('provider_rated_by_user_message');
-                // $this->dispatch( new sendPushNotification($req->confirmed_provider, PROVIDER,$req->id,$title, $messages,''));     
+            $average = UserRequestRating::where('provider_id',$request->rating)->avg('user_rating');
 
-                return response()->json(['message' => 'Provider Rated Successfully']); 
-            }
+            Provider::where('id',$request->provider_id)->update(['rating' => $average]);
+
+            // Send Push Notification to Provider 
+
+            return response()->json(['message' => 'Provider Rated Successfully']); 
+        }
 
         catch (Exception $e) {
             return response()->json(['error' => 'Something went wrong'], 500);

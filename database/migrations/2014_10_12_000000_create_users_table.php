@@ -31,6 +31,7 @@ class CreateUsersTable extends Migration
             $table->double('longitude',15,8)->nullable();
             $table->string('paypal_email')->nullable();
             $table->float('wallet_balance')->default(0);
+            $table->decimal('rating', 5, 2)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
