@@ -43,7 +43,7 @@ class Provider extends Authenticatable
      */
     public function incoming_requests()
     {
-        return $this->hasMany('App\RequestFilter');
+        return $this->hasMany('App\RequestFilter')->where('status', 0);
     }
 
     /**

@@ -27,10 +27,10 @@ class CreateUserRequestsTable extends Migration
                     'ASSIGNED', 
                     'STARTED',
                     'ARRIVED',
-                    'ROLLING',
-                    'REACHED',
-                    'PAYMENT',
+                    'PICKEDUP',
+                    'DROPPED',
                     'PAID',
+                    'COMPLETED',
                 ]);
 
             $table->enum('cancelled_by', ['USER', 'PROVIDER']);
@@ -45,6 +45,7 @@ class CreateUserRequestsTable extends Migration
             $table->double('d_latitude', 15, 8);
             $table->double('d_longitude', 15, 8);
             
+            $table->timestamp('assigned_at')->nullable();
             $table->timestamp('schedule_at')->nullable();
             $table->timestamp('started_at')->nullable();
             $table->timestamp('finished_at')->nullable();

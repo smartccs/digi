@@ -24,6 +24,15 @@ class RequestFilter extends Model
          'created_at', 'updated_at'
     ];
 
+    /**
+     * The services that belong to the user.
+     */
+    public function request()
+    {
+        return $this->belongsTo('App\UserRequests');
+    }
+
+
     public function scopeCheckWaitingFilter($query, $request_id, $provider_id)
     {
         return $query->where('request_id', '=', $request_id)

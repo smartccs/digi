@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Helpers\Helper;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use DB;
 use Log;
 use Auth;
 use Config;
 use Setting;
+use Carbon\Carbon;
 
 use App\Admin;
 use App\User;
@@ -621,24 +623,20 @@ class ProviderApiController extends Controller
 
     	try{
 
-	        $request_meta = Auth::user()->incoming_requests;
+	        $IncomingRequests = Auth::user()->incoming_requests;
 
-	        $provider_timeout = Setting::get('provider_select_timeout', 10);
+	        $provider_timeout = Setting::get('provider_select_timeout', 180);
 
-	        $request_meta_data = array();
-
-            for ($i=0; $i < sizeof($request_meta); $i++) { 
-                $request_meta[$i]->user_rating = ProviderRating::Average($request_meta[$i]->user_id) ? : 0;
-                $request_meta[$i]->time_left_to_respond = $provider_timeout - (time() - strtotime($request_meta[$i]->request_start_time));
-	            if($request_meta[$i]->time_left_to_respond < 0) {
-	                Helper::assign_next_provider($request_meta[$i]->request_id, Auth::user()->id);
+            for ($i=0; $i < sizeof($IncomingRequests); $i++) { 
+                $IncomingRequests[$i]->user_rating = ProviderRating::Average($IncomingRequests[$i]->user_id) ? : 0;
+                $IncomingRequests[$i]->time_left_to_respond = $provider_timeout - (time() - strtotime($IncomingRequests[$i]->request->assigned_at));
+	            if($IncomingRequests[$i]->time_left_to_respond < 0) {
+	                Helper::assign_next_provider($IncomingRequests[$i]->request_id, Auth::user()->id);
 	            }
             }
 
-	        return $request_meta;
- 		}
-            
-        catch (ModelNotFoundException $e) {
+	        return $IncomingRequests;
+ 		} catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Something went wrong']);
         }
 
