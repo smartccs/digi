@@ -641,9 +641,9 @@ class UserApiController extends Controller
                     $UserRequests->status = 'CANCELLED';
                     $UserRequests->save();
 
-                    if($UserRequests->confirmed_provider != DEFAULT_FALSE){
+                    if($UserRequests->provider_id != DEFAULT_FALSE){
 
-                        $provider = Provider::find( $UserRequests->confirmed_provider );
+                        $provider = Provider::find( $UserRequests->provider_id );
                         $provider->is_available = PROVIDER_AVAILABLE;
                         $provider->waiting_to_respond = WAITING_TO_RESPOND_NORMAL;
                         $provider->save();
@@ -667,7 +667,7 @@ class UserApiController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * Show the request status check.
      *
      * @return \Illuminate\Http\Response
      */
@@ -1563,17 +1563,11 @@ class UserApiController extends Controller
 
             $kilometer = round($meter/1000);
 
-            $base_price = \Setting::get('base_price');
-
-            $per_kilometer_price = \Setting::get('price_per_kilometer');
-
-            $kilometer_price = $kilometer * $per_kilometer_price;
-
-            $total = $base_price + $kilometer_price;
+            $price = Helper::calculate_fare($kilometer);
 
             return response()->json([
                     'message' => 'Estimated Amount',
-                    'estimated_fare' => currency($total), 
+                    'estimated_fare' => currency($price['total']), 
                     'distance' => $kilometer
                 ]);
 

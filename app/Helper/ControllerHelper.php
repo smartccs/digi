@@ -328,4 +328,20 @@ use Mail;
 
             }        
         }
+
+        public static function calculate_fare($kilometer){
+
+            $base_price = \Setting::get('base_price');
+            $price_per_kilometer = \Setting::get('price_per_kilometer');
+            $tax_percentage = \Setting::get('tax_percentage');
+            $commission_percentage = \Setting::get('commission_percentage');
+
+            $price = $base_price + ($kilometer * $price_per_kilometer);
+            $price += ( $commission_percentage/100 ) * $price;
+            $tax_price = ( $tax_percentage/100 ) * $price;
+            $total = $price + $tax_price;
+
+            return ['total' => $total, 'tax_price' => $tax_price, 'base_price' => $base_price];
+
+        }
     }
