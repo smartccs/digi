@@ -21,7 +21,7 @@ use App\RequestFilter;
 use App\ServiceType;
 use App\Provider;
 use App\Settings;
-use App\UserRating;
+use App\UserRequestRating;
 use App\ProviderAvailability;
 use App\Cards;
 use App\UserPayment;
@@ -104,14 +104,12 @@ class UserApiController extends Controller
         $this->validate($request, [
                 'latitude' => 'required|numeric',
                 'longitude' => 'required|numeric',
-                'address' => 'required',
             ]);
 
         if($user = User::find(Auth::user()->id)){
 
             $user->latitude = $request->latitude;
             $user->longitude = $request->longitude;
-            $user->address = $request->address;
             $user->save();
 
             return response()->json(['message' => 'Location Updated successfully!']);
@@ -184,12 +182,7 @@ class UserApiController extends Controller
 
             $user->save();
 
-            return response()->json([
-                        'message' => 'Profile Updated successfully!',
-                        'first_name' => $user->first_name,
-                        'last_name' => $user->last_name,
-                        'picture' => $user->picture
-                    ]);
+            return response()->json($user);
         }
 
         catch (ModelNotFoundException $e) {
@@ -242,7 +235,6 @@ class UserApiController extends Controller
 
                 for($i = 0; $i < sizeof($providers); $i++) {
 
-                    $providers[$i]->rating = UserRating::Average($providers[$i]->id) ?: 0;
                     $providers[$i]->availablity = ProviderAvailability::Providers($providers[$i]->id)->get()->toArray();
                 }
 
@@ -269,7 +261,6 @@ class UserApiController extends Controller
         try{
 
             $provider = Provider::findOrFail($request->provider_id);
-            $provider['rating'] = UserRating::Average($request->provider_id) ? : 0;
 
             return response()->json($provider);
         }
@@ -295,7 +286,6 @@ class UserApiController extends Controller
         try{
 
             $Provider = Provider::findOrFail($request->provider_id);
-            $Provider->rating = UserRating::Average($request->provider_id) ? : 0;
             $Provider->availability = ProviderAvailability::AvailableProviders($request->provider_id)->get();
 
             return $Provider;
@@ -321,6 +311,7 @@ class UserApiController extends Controller
                 'd_longitude' => 'required|numeric',
                 'service_type' => 'required|numeric|exists:service_types,id',
                 'promo_code' => 'exists:promocodes,promo_code',
+                'distance' => 'required|numeric'
             ]);
 
         Log::info('New Request: ', $request->all());
@@ -332,8 +323,6 @@ class UserApiController extends Controller
         }
 
         $ActiveProviders = ProviderService::AvailableServiceProvider($request->service_type)->get()->pluck('provider_id');
-
-        // dd($ActiveProviders);
 
         /*Get default search radius*/
         $distance = Setting::get('search_radius', '10');
@@ -379,7 +368,6 @@ class UserApiController extends Controller
             foreach ($Providers as $key => $Provider) {
 
                 $Filter = new RequestFilter;
-
                 // Send push notifications to the first provider
                 // $title = Helper::get_push_message(604);
                 // $message = "You got a new request from".$user->name;
@@ -394,8 +382,8 @@ class UserApiController extends Controller
                     'request_id' => $UserRequest->id,
                     'current_provider' => $UserRequest->current_provider_id,
                 ]);
+
         } catch (Exception $e) {
-            dd($e);
             return response()->json(['error' => 'Something went wrong while sending request. Please try again.'], 500);
         }
     }
@@ -627,127 +615,79 @@ class UserApiController extends Controller
 
     public function cancel_request(Request $request) {
     
-        $user_id = Auth::user()->id;
-
         $this->validate($request, [
-                'request_id' => 'required|numeric|exists:user_requests,id,user_id,'.$user_id,
+                'request_id' => 'required|numeric|exists:user_requests,id,user_id,'.Auth::user()->id,
             ]);
 
-            $request_id = $request->request_id;
-            $requests = UserRequests::find($request_id);
+        try{
 
-            if($requests->status == REQUEST_CANCELLED)
+            $UserRequests = UserRequests::findOrFail($request->request_id);
+
+            if($UserRequests->status == 'CANCELLED')
             {
                  return response()->json(['error' => 'Request is Already Cancelled!'], 500); 
             }
 
-                if(in_array($requests->provider_status, [PROVIDER_NONE,PROVIDER_ACCEPTED,PROVIDER_STARTED])) {
+                if(in_array($UserRequests->status, ['CREATED','ASSIGNED','STARTED','ARRIVED'])) {
 
-                    $requests->status = REQUEST_CANCELLED;
-                    $requests->save();
+                    $UserRequests->status = 'CANCELLED';
+                    $UserRequests->save();
 
-                    if($requests->confirmed_provider != DEFAULT_FALSE){
+                    if($UserRequests->provider_id != DEFAULT_FALSE){
 
-                        $provider = Provider::find( $requests->confirmed_provider );
+                        $provider = Provider::find( $UserRequests->provider_id );
                         $provider->is_available = PROVIDER_AVAILABLE;
                         $provider->waiting_to_respond = WAITING_TO_RESPOND_NORMAL;
                         $provider->save();
 
-                        // $title = Helper::tr('cancel_by_user_title');
-                        // $message = Helper::tr('cancel_by_user_message');
-                        
-                        // $this->dispatch(new sendPushNotification($requests->confirmed_provider,PROVIDER,$requests->id,$title,$message));
-
-                        // Log::info("Cancelled request by user");
-                        // $email_data = array();
-
-                        // $subject = Helper::tr('request_cancel_user');
-
-                        // $email_data['provider_name'] = $email_data['username'] = "";
-
-                        // if($user = User::find($requests->user_id)) {
-                        //     $email_data['username'] = $user->first_name." ".$user->last_name;    
-                        // }
-                        
-                        // if($provider = Provider::find($requests->confirmed_provider)) {
-                        //     $email_data['provider_name'] = $provider->first_name. " " . $provider->last_name;
-                        // }
-
-                        // $page = "emails.user.request_cancel";
-                        // $email_send = Helper::send_email($page,$subject,$provider->email,$email_data);
+                        // send push and email
                     }
 
-                    RequestFilter::where('request_id', '=', $request_id)->delete();
+                    RequestFilter::where('request_id', '=', $request->request_id)->delete();
 
                     return response()->json(['message' => 'Request Cancelled Successfully']); 
 
                 } else {
                     return response()->json(['error' => 'Service Already Started!'], 500); 
                 }
+        }
+
+        catch (ModelNotFoundException $e) {
+             return response()->json(['error' => 'No Provider Found!']);
+        }
+
     }
 
     /**
-     * Show the application dashboard.
+     * Show the request status check.
      *
      * @return \Illuminate\Http\Response
      */
 
     public function request_status_check() {
 
-        $user = User::find(Auth::user()->id);
-
         try{
 
-            $check_status = [REQUEST_COMPLETED,REQUEST_CANCELLED,REQUEST_NO_PROVIDER_AVAILABLE,REQUEST_TIME_EXCEED_CANCELLED];
+            $check_status = ['COMPLETED','CANCELLED','SEARCHING'];
 
             $requests = UserRequests::UserRequestStatusCheck(Auth::user()->id,$check_status)->get()->toArray();
 
-            $requests_data = [];$invoice = [];
+                foreach ($requests as  $each_request) {
 
-                foreach ($requests as  $req) {
+                    if( in_array($each_request['status'], ['DROPPED','COMPLETED'])) {
 
-                    $req['rating'] = UserRating::Average($req['provider_id']) ?: 0;
+                        // invoice data
 
-                    $requests_data[] = $req;
-
-                    $allowed_status = [REQUEST_COMPLETE_PENDING,REQUEST_COMPLETED,REQUEST_RATING];
-
-                    if( in_array($req['status'], $allowed_status)) {
-
-                        $invoice_query = UserPayment::where('request_id' , $req['request_id'])
-                                        ->leftJoin('requests' , 'request_payments.request_id' , '=' , 'requests.id')
-                                        ->leftJoin('users' , 'requests.user_id' , '=' , 'users.id')
-                                        ->leftJoin('cards' , 'users.default_card' , '=' , 'cards.id');
-
-                        if($user->payment_mode == CARD) {
-                            $invoice_query = $invoice_query->where('cards.is_default' , DEFAULT_TRUE) ;  
-                        }
-
-                        $invoice = $invoice_query->select(
-                                            'requests.confirmed_provider as provider_id' , 
-                                            'request_payments.total_time',
-                                            'request_payments.payment_mode as payment_mode' , 
-                                            'request_payments.base_price',
-                                            'request_payments.time_price' ,
-                                            'request_payments.tax_price' , 
-                                            'request_payments.total',
-                                            'cards.card_token',
-                                            'cards.customer_id',
-                                            'cards.last_four',
-                                            'requests.promo_code',
-                                            'requests.promo_code_id',
-                                            'requests.offer_amount',
-                                            'request_payments.trip_fare')
-                                            ->get()->toArray();
+                        $requests['invoice'] = Helper::calculate_fare($each_request['distance']);
                     }
                 }
 
-            return response()->json(['data' => $requests_data, 'invoice' => $invoice]);
+            return response()->json(['data' => $requests]);
 
         }
 
         catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong while sending request. Please try again.'], 500);
+            return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
         }
 
     } 
@@ -880,43 +820,39 @@ class UserApiController extends Controller
 
     public function rate_provider(Request $request) {
 
-        $user = User::find(Auth::user()->id);
-
         $this->validate($request, [
-                'request_id' => 'required|integer|exists:user_requests,id,user_id,'.$user->id.'|unique:user_ratings,request_id',
+                'request_id' => 'required|integer|exists:user_requests,id,user_id,'.Auth::user()->id.'|unique:user_request_ratings,request_id',
                 'rating' => 'required|integer|in:'.RATINGS,
-                'comments' => 'max:255',
-                'is_favorite' => 'in:'.DEFAULT_TRUE.','.DEFAULT_FALSE,
+                'comment' => 'max:255',
             ]);
     
-            $req = Requests::where('id' ,$request->request_id)
-                    ->where('status' ,REQUEST_RATING)
-                    ->first();
+        $request = UserRequests::where('id' ,$request->request_id)
+                ->where('status' ,'COMPLETED')
+                ->where('paid', 0)
+                ->first();
 
-            if (!$req && intval($req->status) == REQUEST_COMPLETED) {
-                 return response()->json(['error' => 'Request is already Completed'], 500);
-            }
+        if ($request) {
+             return response()->json(['error' => 'Not Paid!'], 500);
+        }
 
-            try{
-                //Save Rating
-                $rev_user = new UserRating();
-                $rev_user->provider_id = $req->confirmed_provider;
-                $rev_user->user_id = $req->user_id;
-                $rev_user->request_id = $req->id;
-                $rev_user->rating = $request->rating;
-                $rev_user->comment = $request->comment ? $request->comment: '';
-                $rev_user->save();
+        try{
 
-                $req->status = REQUEST_COMPLETED;
-                $req->save();
+            $rating = new UserRequestRating();
+            $rating->provider_id = $request->provider_id;
+            $rating->user_id = $request->user_id;
+            $rating->request_id = $request->id;
+            $rating->user_rating = $request->rating;
+            $rating->user_comment = $request->comment ?: '';
+            $rating->save();
 
-                // Send Push Notification to Provider
-                // $title = Helper::tr('provider_rated_by_user_title');
-                // $messages = Helper::tr('provider_rated_by_user_message');
-                // $this->dispatch( new sendPushNotification($req->confirmed_provider, PROVIDER,$req->id,$title, $messages,''));     
+            $average = UserRequestRating::where('provider_id',$request->rating)->avg('user_rating');
 
-                return response()->json(['message' => 'Provider Rated Successfully']); 
-            }
+            Provider::where('id',$request->provider_id)->update(['rating' => $average]);
+
+            // Send Push Notification to Provider 
+
+            return response()->json(['message' => 'Provider Rated Successfully']); 
+        }
 
         catch (Exception $e) {
             return response()->json(['error' => 'Something went wrong'], 500);
@@ -1602,18 +1538,12 @@ class UserApiController extends Controller
 
             $kilometer = round($meter/1000);
 
-            $base_price = \Setting::get('base_price');
-
-            $per_kilometer_price = \Setting::get('price_per_kilometer');
-
-            $kilometer_price = $kilometer * $per_kilometer_price;
-
-            $total = $base_price + $kilometer_price;
+            $price = Helper::calculate_fare($kilometer);
 
             return response()->json([
                     'message' => 'Estimated Amount',
-                    'estimated_fare' => currency($total), 
-                    'km' => $kilometer
+                    'estimated_fare' => currency($price['total']), 
+                    'distance' => $kilometer
                 ]);
 
         }
