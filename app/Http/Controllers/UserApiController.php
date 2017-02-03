@@ -55,7 +55,7 @@ class UserApiController extends Controller
             
             $User = $request->all();
 
-            $User['payment_mode'] = 'cod';
+            $User['payment_mode'] = 'CASH';
             $User['password'] = bcrypt($request->password);
             $User = User::create($User);
 
@@ -75,7 +75,7 @@ class UserApiController extends Controller
     public function change_password(Request $request){
 
         $this->validate($request, [
-                'password' => 'required|confirmed',
+                'password' => 'required|confirmed|min:6',
                 'old_password' => 'required',
             ]);
 
@@ -86,7 +86,12 @@ class UserApiController extends Controller
             $User->password = bcrypt($request->password);
             $User->save();
 
-            return response()->json(['message' => 'Password changed successfully!']);
+            if($request->ajax()) {
+                return response()->json(['message' => 'Password changed successfully!']);
+            }else{
+                return back()->with('flash_success', 'Password Updated');
+            }
+
         } else {
             return response()->json(['error' => 'Please enter correct password'], 500);
         }
@@ -169,9 +174,6 @@ class UserApiController extends Controller
             
             if($request->has('email')){
                 $user->email = $request->email;
-            }
-            
-            if ($request->mobile != ""){
                 $user->mobile = $request->mobile;
             }
 
@@ -182,7 +184,11 @@ class UserApiController extends Controller
 
             $user->save();
 
-            return response()->json($user);
+            if($request->ajax()) {
+                return response()->json($user);
+            }else{
+                return back()->with('flash_success', 'Profile Updated');
+            }
         }
 
         catch (ModelNotFoundException $e) {

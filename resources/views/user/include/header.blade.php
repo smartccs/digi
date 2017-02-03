@@ -19,17 +19,18 @@
                               <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{Auth::user()->first_name}} {{Auth::user()->last_name}}
                               <span class="caret"></span></button>
                               <ul class="dropdown-menu">
-                                <li><a href="{{url('dashboard')}}">Home</a></li>
-                                <li><a href="user-mytrips.html">My Trips</a></li>
-                                <li><a href="user-profile.html">Profile</a></li>
-                                <li><a href="user-change-password.html">Change Password</a></li>
-                                <li><a href="user-payment.html">Payment</a></li>
+                                <li><a href="{{url('dashboard')}}">@lang('messages.dashboard')</a></li>
+                                <li><a href="user-mytrips.html">@lang('messages.my_trips')</a></li>
+                                <li><a href="{{url('profile')}}">@lang('messages.profile')</a></li>
+                                <li><a href="{{url('change/password')}}">@lang('messages.change_password')</a></li>
+                                <li><a href="user-payment.html">@lang('messages.payment')</a></li>
+                                <li><a href="user-payment.html">@lang('messages.wallet')</a></li>
                                 <li><a href="{{ url('/logout') }}"
-                                    onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();">Logout</a></li>
-                                    <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                                        {{ csrf_field() }}
-                                    </form>
+                                        onclick="event.preventDefault();
+                                        document.getElementById('logout-form').submit();">@lang('messages.logout')</a></li>
+                                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                            {{ csrf_field() }}
+                                        </form>
                               </ul>
                             </div>
                       </li>
