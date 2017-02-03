@@ -16,80 +16,33 @@
             <div class="col-md-6">
                 <form action="user-fare-calulate.html">
                 <div class="input-group dash-form">
-                    <input type="text" class="form-control"  placeholder="Enter pickup location" >                               
+                    <input type="text" class="form-control" id="origin-input"  placeholder="Enter pickup location" >                               
                 </div>
 
                 <div class="input-group dash-form">
-                    <input type="text" class="form-control"  placeholder="Enter drop location" >                               
-                </div>                           
+                    <input type="text" class="form-control" id="destination-input"  placeholder="Enter drop location" >                               
+                </div>  
+
+                <input type="hidden" name="s_latitude" id="origin_latitude">
+                <input type="hidden" name="s_longitude" id="origin_longitude">
+                <input type="hidden" name="d_latitude" id="destination_latitude">
+                <input type="hidden" name="d_longitude" id="destination_longitude">
 
                 <div class="car-detail">
 
+                    @foreach($services as $service)
+
                     <div class="car-radio">
-                        <input type="radio" name="fare" id="bmw" checked="checked">
-                        <label for="bmw">
+                        <input type="radio" name="fare" id="service_{{$service->id}}" @if ($loop->first) checked="checked" @endif>
+                        <label for="service_{{$service->id}}">
                             <div class="car-radio-inner">
-                                <div class="img"><img src="img/car-icon-select.png"></div>
-                                <div class="name"><span>BMW</span></div>
-                                <div class="rate">Rs.1500</div>
+                                <div class="img"><img src="{{img($service->image)}}"></div>
+                                <div class="name"><span>{{$service->name}}</span></div>
                             </div>
                         </label>
                     </div>
 
-                    <div class="car-radio">
-                        <input type="radio" name="fare" id="audi">
-                        <label for="audi">
-                            <div class="car-radio-inner">
-                                <div class="img"><img src="img/car-icon-select.png"></div>
-                                <div class="name"><span>Audi</span></div>
-                                <div class="rate">Rs.2500</div>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="car-radio">
-                        <input type="radio" name="fare" id="bmww">
-                        <label for="bmww">
-                            <div class="car-radio-inner">
-                                <div class="img"><img src="img/car-icon-select.png"></div>
-                                <div class="name"><span>BMW</span></div>
-                                <div class="rate">Rs.1500</div>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="car-radio">
-                        <input type="radio" name="fare" id="audii">
-                        <label for="audii">
-                            <div class="car-radio-inner">
-                                <div class="img"><img src="img/car-icon-select.png"></div>
-                                <div class="name"><span>Audi</span></div>
-                                <div class="rate">Rs.2500</div>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="car-radio">
-                        <input type="radio" name="fare" id="bmwww">
-                        <label for="bmwww">
-                            <div class="car-radio-inner">
-                                <div class="img"><img src="img/car-icon-select.png"></div>
-                                <div class="name"><span>BMW</span></div>
-                                <div class="rate">Rs.1500</div>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="car-radio">
-                        <input type="radio" name="fare" id="audiii">
-                        <label for="audiii">
-                            <div class="car-radio-inner">
-                                <div class="img"><img src="img/car-icon-select.png"></div>
-                                <div class="name"><span>Audi</span></div>
-                                <div class="rate">Rs.2500</div>
-                            </div>
-                        </label>
-                    </div>
+                    @endforeach
 
 
                 </div>
@@ -98,10 +51,11 @@
 
                 </form>
             </div>
+                
 
             <div class="col-md-6">
                 <div class="map-responsive">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d386950.6511603643!2d-73.70231446529533!3d40.738882125234106!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNueva+York!5e0!3m2!1ses-419!2sus!4v1445032011908" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+                    <div id="map" style="width: 600px;height: 450px;"></div>
                 </div> 
             </div>
         </div>
@@ -109,4 +63,11 @@
     </div>
 </div>
 
+@endsection
+
+@section('scripts')
+    
+    <script type="text/javascript" src="{{asset('asset/js/map.js')}}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_API_KEY')}}&libraries=places&callback=initMap"
+        async defer></script>
 @endsection

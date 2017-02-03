@@ -1541,6 +1541,7 @@ class UserApiController extends Controller
             $details = json_decode($json, TRUE);
 
             $meter = $details['rows'][0]['elements'][0]['distance']['value'];
+            $time = $details['rows'][0]['elements'][0]['duration']['text'];
 
             $kilometer = round($meter/1000);
 
@@ -1549,7 +1550,8 @@ class UserApiController extends Controller
             return response()->json([
                     'message' => 'Estimated Amount',
                     'estimated_fare' => currency($price['total']), 
-                    'distance' => $kilometer
+                    'distance' => $kilometer,
+                    'time' => $time
                 ]);
 
         }

@@ -37,5 +37,8 @@
     <script type="text/javascript" src="{{asset('asset/js/jquery-migrate-1.2.1.min.js')}}"></script> 
     <script type="text/javascript" src="{{asset('asset/js/slick.min.js')}}"></script>
     <script src="{{asset('asset/js/dashboard-scripts.js')}}"></script>
+
+    @yield('scripts')
+    
 </body>
 </html>

@@ -26,7 +26,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('user.dashboard');
+        $services = $this->UserAPI->services();
+        return view('user.dashboard',compact('services'));
     }
 
     /**
