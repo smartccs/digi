@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Helpers\Helper;
 
 use DB;
 use Log;

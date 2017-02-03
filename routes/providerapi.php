@@ -37,22 +37,13 @@ Route::group(['middleware' => ['provider.api']], function () {
     });
 
     Route::resource('trip', 'ProviderResources\TripController');
-    // Route::post('/trip', 'ProviderApiController@trip_accept');
-    // Route::delete('/trip', 'ProviderApiController@trip_destroy');
-    // Route::patch('/trip', 'ProviderApiController@trip_update');
 
     Route::group(['prefix' => 'trip'], function () {
 
         Route::post('{id}', 'ProviderResources\TripController@accept');
-        Route::get('/status', 'ProviderApiController@request_status_check');
-        // Route::post('/started', 'ProviderApiController@started');
-        // Route::post('/arrived', 'ProviderApiController@arrived');
-        // Route::post('/moving', 'ProviderApiController@start_service');
-        // Route::post('/reached', 'ProviderApiController@end_service');
-        // Route::post('/cancel', 'ProviderApiController@cancel_request');
-        // Route::post('/paid' , 'ProviderApiController@cod_paid');
-        Route::post('/rating', 'ProviderApiController@rate_user');
-        Route::post('/message' , 'ProviderApiController@message');
+        Route::post('{id}/rate', 'ProviderResources\TripController@rate');
+        Route::post('{id}/cancel', 'ProviderResources\TripController@cancel');
+        Route::post('{id}/message' , 'ProviderResources\TripController@message');
 
     });
 

@@ -349,7 +349,7 @@ class UserApiController extends Controller
             $UserRequest->current_provider_id = $Providers[0]->id;
             $UserRequest->service_type_id = $request->service_type;
             
-            $UserRequest->status = 'CREATED';
+            $UserRequest->status = 'SEARCHING';
 
             $UserRequest->s_address = $request->s_address ? : "";
             $UserRequest->d_address = $request->d_address ? : "";

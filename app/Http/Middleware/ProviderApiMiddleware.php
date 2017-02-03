@@ -33,15 +33,15 @@ class ProviderApiMiddleware
 
         } catch (TokenExpiredException $e) {
 
-            return response()->json(['token_expired'], $e->getStatusCode());
+            return response()->json(['error' => 'token_expired'], $e->getStatusCode());
 
         } catch (TokenInvalidException $e) {
 
-            return response()->json(['token_invalid'], $e->getStatusCode());
+            return response()->json(['error' => 'token_invalid'], $e->getStatusCode());
 
         } catch (JWTException $e) {
 
-            return response()->json(['token_absent'], $e->getStatusCode());
+            return response()->json(['error' => 'token_absent'], $e->getStatusCode());
 
         }
 

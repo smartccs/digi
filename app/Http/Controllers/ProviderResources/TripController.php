@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Auth;
 use Setting;
 
+use App\Helpers\Helper;
 use App\UserRequests;
 use App\RequestFilter;
 
@@ -23,14 +24,16 @@ class TripController extends Controller
     {
         try{
 
-            $IncomingRequests = RequestFilter::with('request.user')->where('provider_id', Auth::user()->id)->get();
+            $IncomingRequests = RequestFilter::IncomingRequest(Auth::user()->id)->get();
+
+            dd($IncomingRequests->toArray());
 
             $Timeout = Setting::get('provider_select_timeout', 180);
 
             for ($i=0; $i < sizeof($IncomingRequests); $i++) {
                 $IncomingRequests[$i]->time_left_to_respond = $Timeout - (time() - strtotime($IncomingRequests[$i]->request->assigned_at));
                 if($IncomingRequests[$i]->time_left_to_respond < 0) {
-                    Helper::assign_next_provider($IncomingRequests[$i]->request_id, Auth::user()->id);
+                    $this->assign_next_provider($IncomingRequests[$i]);
                 }
             }
 
@@ -59,6 +62,7 @@ class TripController extends Controller
             return response()->json(['error' => 'Cannot cancel request at this stage!']);
         }
 
+        
 
     }
 
@@ -142,7 +146,7 @@ class TripController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-              'status' => 'required|in:ACCEPTED,STARTED,ARRIVED,PICKEDUP,DROPPED,PAID,COMPLETED',
+              'status' => 'required|in:ACCEPTED,STARTED,ARRIVED,PICKEDUP,DROPPED,PAYMENT,COMPLETED',
            ]);
 
         try{
@@ -184,4 +188,31 @@ class TripController extends Controller
             return response()->json(['error' => 'Connection Error']);
         }
     }
+
+    public function assign_next_provider($UserRequest) {
+
+        RequestFilter::where('provider_id', $provider_id)
+            ->where('request_id', $UserRequest->id)
+            ->where('status', 0)
+            ->delete();
+
+        try {
+
+            $next_provider = RequestFilter::where('request_id', $request_id)
+                ->orderBy('id')
+                ->firstOrFail();
+
+            $UserRequest->update([
+                    'current_provider_id' => $next_provider->provider_id,
+                    'assigned_at' => Carbon::now(),
+                ]);
+            
+        } catch (ModelNotFoundException $e) {
+            UserRequests::where('id', $request_id)->update(['status' => 'CANCELLED']);
+
+            // No longer need request specific rows from RequestMeta
+            RequestFilter::where('request_id', $request_id)->delete();
+        }
+    }
+
 }
