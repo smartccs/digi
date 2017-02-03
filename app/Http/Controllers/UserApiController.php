@@ -815,6 +815,7 @@ class UserApiController extends Controller
                 's_longitude' => 'required|numeric',
                 'd_latitude' => 'required|numeric',
                 'd_longitude' => 'required|numeric',
+                'service_type' => 'required|numeric|exists:service_types,id',
             ]);
 
         try{
@@ -830,13 +831,23 @@ class UserApiController extends Controller
 
             $kilometer = round($meter/1000);
 
-            $price = Helper::calculate_fare($kilometer);
+            $base_price = \Setting::get('base_price');
+            $tax_percentage = \Setting::get('tax_percentage');
+            $commission_percentage = \Setting::get('commission_percentage');
+            $service_type = ServiceType::findOrFail($service_id);
+
+            $price_per_kilometer = $service_type->price;
+            $price = $base_price + ($kilometer * $price_per_kilometer);
+            $price += ( $commission_percentage/100 ) * $price;
+            $tax_price = ( $tax_percentage/100 ) * $price;
+            $total = $price + $tax_price;
 
             return response()->json([
-                    'message' => 'Estimated Amount',
-                    'estimated_fare' => currency($price['total']), 
+                    'estimated_fare' => currency($total), 
                     'distance' => $kilometer,
-                    'time' => $time
+                    'time' => $time,
+                    'tax_price' => $tax_price,
+                    'base_price' => $base_price
                 ]);
 
         }
