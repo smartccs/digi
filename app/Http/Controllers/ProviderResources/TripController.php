@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Auth;
 use Setting;
+use Carbon\Carbon;
 
 use App\Helpers\Helper;
 use App\UserRequests;
@@ -26,14 +27,13 @@ class TripController extends Controller
 
             $IncomingRequests = RequestFilter::IncomingRequest(Auth::user()->id)->get();
 
-            dd($IncomingRequests->toArray());
-
             $Timeout = Setting::get('provider_select_timeout', 180);
 
             for ($i=0; $i < sizeof($IncomingRequests); $i++) {
                 $IncomingRequests[$i]->time_left_to_respond = $Timeout - (time() - strtotime($IncomingRequests[$i]->request->assigned_at));
-                if($IncomingRequests[$i]->time_left_to_respond < 0) {
-                    $this->assign_next_provider($IncomingRequests[$i]);
+                if($IncomingRequests[$i]->request->status == 'SEARCHING' && $IncomingRequests[$i]->time_left_to_respond < 0) {
+                    $this->assign_next_provider($IncomingRequests[$i]->id);
+                    return $this->index();
                 }
             }
 
@@ -71,9 +71,43 @@ class TripController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function rate($id)
     {
-        //
+
+        $this->validate($request, [
+                'rating' => 'required|integer|in:1,2,3,4,5',
+                'comment' => 'max:255',
+            ]);
+    
+        $request = UserRequests::where('id', $request->request_id)
+                ->where('status', 'COMPLETED')
+                ->where('paid', 0)
+                ->first();
+
+        if ($request) {
+             return response()->json(['error' => 'Not Paid!'], 500);
+        }
+
+        try{
+
+            $rating = new UserRequestRating();
+            $rating->provider_id = $request->provider_id;
+            $rating->user_id = $request->user_id;
+            $rating->request_id = $request->id;
+            $rating->user_rating = $request->rating;
+            $rating->user_comment = $request->comment ?: '';
+            $rating->save();
+
+            $average = UserRequestRating::where('provider_id',$request->rating)->avg('user_rating');
+
+            Provider::where('id',$request->provider_id)->update(['rating' => $average]);
+
+            // Send Push Notification to Provider 
+
+            return response()->json(['message' => 'Provider Rated Successfully']); 
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
     }
 
     /**
@@ -189,29 +223,34 @@ class TripController extends Controller
         }
     }
 
-    public function assign_next_provider($UserRequest) {
+    public function assign_next_provider($request_id) {
 
-        RequestFilter::where('provider_id', $provider_id)
+        try {
+            $UserRequest = UserRequests::findOrFail($request_id);
+        } catch (ModelNotFoundException $e) {
+            // Cancelled between update.
+            return false;
+        }
+
+        RequestFilter::where('provider_id', Auth::user()->id)
             ->where('request_id', $UserRequest->id)
-            ->where('status', 0)
             ->delete();
 
         try {
 
-            $next_provider = RequestFilter::where('request_id', $request_id)
+            $next_provider = RequestFilter::where('request_id', $UserRequest->id)
                 ->orderBy('id')
                 ->firstOrFail();
 
-            $UserRequest->update([
-                    'current_provider_id' => $next_provider->provider_id,
-                    'assigned_at' => Carbon::now(),
-                ]);
+            $UserRequest->current_provider_id = $next_provider->provider_id;
+            $UserRequest->assigned_at = Carbon::now();
+            $UserRequest->save();
             
         } catch (ModelNotFoundException $e) {
-            UserRequests::where('id', $request_id)->update(['status' => 'CANCELLED']);
+            UserRequests::where('id', $UserRequest->id)->update(['status' => 'CANCELLED']);
 
             // No longer need request specific rows from RequestMeta
-            RequestFilter::where('request_id', $request_id)->delete();
+            RequestFilter::where('request_id', $UserRequest->id)->delete();
         }
     }
 
