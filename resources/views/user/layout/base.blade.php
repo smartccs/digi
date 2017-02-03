@@ -18,11 +18,10 @@
 
     @include('user.include.header')
 
-    <div class="page-content dashboard-page">
+    <div class="page-content dashboard-page">    
         <div class="container">
             
             @include('user.include.nav')
-
             @yield('content')
 
         </div>

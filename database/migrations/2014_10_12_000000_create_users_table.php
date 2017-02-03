@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('payment_mode');
+            $table->enum('payment_mode', ['CASH', 'CARD', 'PAYPAL']);
             $table->integer('default_card')->nullable();
             $table->string('email')->unique();
             $table->string('password');

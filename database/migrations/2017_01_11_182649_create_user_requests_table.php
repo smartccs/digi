@@ -32,6 +32,7 @@ class CreateUserRequestsTable extends Migration
                 ]);
 
             $table->enum('cancelled_by', ['NONE', 'USER', 'PROVIDER']);
+            $table->enum('payment_mode', ['CASH', 'CARD', 'PAYPAL']);
             $table->boolean('paid')->default(0);
 
             $table->double('distance', 15, 8);
