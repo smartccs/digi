@@ -52,7 +52,7 @@ class UserRequests extends Model
      */
     public function rating()
     {
-        return $this->belongsTo('App\UserRequestRating');
+        return $this->hasOne('App\UserRequestRating', 'request_id');
     }
 
     /**

@@ -10,9 +10,11 @@ use Auth;
 use Setting;
 use Carbon\Carbon;
 
+use App\User;
 use App\Helpers\Helper;
-use App\UserRequests;
 use App\RequestFilter;
+use App\UserRequests;
+use App\UserRequestRating;
 
 class TripController extends Controller
 {
@@ -71,7 +73,7 @@ class TripController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function rate($id)
+    public function rate(Request $request, $id)
     {
 
         $this->validate($request, [
@@ -79,34 +81,33 @@ class TripController extends Controller
                 'comment' => 'max:255',
             ]);
     
-        $request = UserRequests::where('id', $request->request_id)
+        try {
+
+            $UserRequest = UserRequests::where('id', $id)
                 ->where('status', 'COMPLETED')
-                ->where('paid', 0)
-                ->first();
-
-        if ($request) {
-             return response()->json(['error' => 'Not Paid!'], 500);
-        }
-
-        try{
+                ->firstOrFail();
 
             $rating = new UserRequestRating();
-            $rating->provider_id = $request->provider_id;
-            $rating->user_id = $request->user_id;
-            $rating->request_id = $request->id;
-            $rating->user_rating = $request->rating;
-            $rating->user_comment = $request->comment ?: '';
+            $rating->provider_id = $UserRequest->provider_id;
+            $rating->user_id = $UserRequest->user_id;
+            $rating->request_id = $UserRequest->id;
+            $rating->provider_rating = $request->rating;
+            $rating->provider_comment = $request->comment;
             $rating->save();
 
-            $average = UserRequestRating::where('provider_id',$request->rating)->avg('user_rating');
-
-            Provider::where('id',$request->provider_id)->update(['rating' => $average]);
 
             // Send Push Notification to Provider 
+            $average = UserRequestRating::where('provider_id', $UserRequest->provider_id)->avg('provider_rating');
 
-            return response()->json(['message' => 'Provider Rated Successfully']); 
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong'], 500);
+            try {
+                User::findOrFail($UserRequest->user_id)->update(['rating' => $average]);
+                return $UserRequest->with('rating', 'user')->get();
+            } catch (ModelNotFoundException $e) {
+                return response()->json(['error' => 'Something went wrong'], 500);
+            }
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Request not yet completed!'], 500);
         }
     }
 
@@ -186,7 +187,12 @@ class TripController extends Controller
         try{
 
             $UserRequest = UserRequests::findOrFail($id);
-            $UserRequest->status = $request->status;
+            if($request->status == 'DROPPED' && $UserRequest->payment_mode == 'CASH') {
+                $UserRequest->status = 'COMPLETED';
+            } else {
+                $UserRequest->status = $request->status;
+            }
+
             $UserRequest->save();
 
             // Send Push Notification to User

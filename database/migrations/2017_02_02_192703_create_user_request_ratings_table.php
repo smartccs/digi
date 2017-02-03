@@ -18,8 +18,8 @@ class CreateUserRequestRatingsTable extends Migration
             $table->integer('request_id');
             $table->integer('user_id');
             $table->integer('provider_id');
-            $table->integer('user_rating');
-            $table->integer('provider_rating');
+            $table->integer('user_rating')->nullable();
+            $table->integer('provider_rating')->nullable();
             $table->string('user_comment')->nullable();
             $table->string('provider_comment')->nullable();
             $table->timestamps();
