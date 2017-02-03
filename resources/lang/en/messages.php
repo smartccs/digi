@@ -23,4 +23,5 @@ return [
     'wallet' => 'Wallet',
     'my_trips' => 'My Trips',
     'profile' => 'Profile',
+    'ride_now' => 'Ride Now',
 ];

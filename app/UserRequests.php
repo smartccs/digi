@@ -46,6 +46,14 @@ class UserRequests extends Model
     {
         return $this->belongsTo('App\ServiceType');
     }
+    
+    /**
+     * UserPayment Model Linked
+     */
+    public function payment()
+    {
+        return $this->belongsTo('App\UserPayment', 'request_id');
+    }
 
     /**
      * UserRequestRating Model Linked
@@ -113,17 +121,12 @@ class UserRequests extends Model
     }
 
 
-    public function scopeGetUserHistory($query, $user_id)
+    public function scopeUserHistory($query, $user_id)
     {
         return $query->where('user_requests.user_id', '=', $user_id)
-                ->where('user_requests.status', '=', REQUEST_COMPLETED)
-                ->leftJoin('providers', 'providers.id', '=', 'user_requests.confirmed_provider')
-                ->leftJoin('users', 'users.id', '=', 'user_requests.user_id')
-                ->leftJoin('request_payments', 'user_requests.id', '=', 'request_payments.request_id')
-                ->orderBy('request_start_time','desc')
-                ->select('user_requests.id as request_id', 'user_requests.request_type as request_type', 'request_start_time as date',
-                        DB::raw('CONCAT(providers.first_name, " ", providers.last_name) as provider_name'), 'providers.picture',
-                        DB::raw('ROUND(request_payments.total) as total'));
+                    ->where('user_requests.status', '=', 'COMPLETED')
+                    ->select('user_requests.*')
+                    ->with('user','provider','rating','payment');
     }
 
     public function scopeUserRequestStatusCheck($query, $user_id, $check_status)
@@ -133,56 +136,6 @@ class UserRequests extends Model
                     ->select('user_requests.*')->with('user','provider','service_type','rating');
     }
 
-
-    public function scopeProviderRequestStatusCheck($query, $provider_id, $check_status)
-    {
-        return $query->where('requests.confirmed_provider', '=', $provider_id)
-                    ->whereNotIn('requests.status', $check_status)
-                    ->whereNotIn('requests.provider_status', [PROVIDER_RATED])
-                    ->orWhere(function($q) use ($provider_id) {
-                             $q->where('requests.confirmed_provider', $provider_id)
-                                ->where('provider_status', PROVIDER_SERVICE_COMPLETED)                               
-                               ->where('requests.status', REQUEST_COMPLETED);
-                         })
-                    ->leftJoin('users', 'users.id', '=', 'requests.user_id')
-                    ->leftJoin('service_types', 'service_types.id', '=', 'requests.request_type')
-                    ->orderBy('provider_status','desc')
-                    ->select(
-                        'requests.id as request_id',
-                        'requests.request_type as request_type',
-                        'requests.later as later',
-                        'requests.later_status as later_status',
-                        'service_types.name as service_type_name',
-                        'requests.after_image as after_image',
-                        'requests.before_image as before_image',
-                        'request_start_time as request_start_time',
-                        'requests.start_time as start_time',
-                        'requests.status', 'requests.provider_status',
-                        'requests.amount',
-                        DB::raw('CONCAT(users.first_name, " ", users.last_name) as user_name'),
-                        'users.picture as user_picture',
-                        'users.mobile as user_mobile',
-                        'users.id as user_id',
-                        'requests.s_latitude',
-                        'requests.s_longitude',
-                        'requests.s_address',
-                        'requests.d_address',
-                        'requests.is_paid',
-                        'requests.promo_code',
-                        'requests.promo_code_id',
-                        'requests.offer_amount',
-                        'requests.created_at'
-                    );
-    }
-
-    public function scopeUserUpcomingRequest($query, $user_id)
-    {
-        return $query->where('user_requests.user_id' , $user_id)
-                    ->where('user_requests.later' , DEFAULT_TRUE)
-                    ->where('user_requests.status' , REQUEST_INPROGRESS)
-                    ->where('user_requests.provider_status' , '<',PROVIDER_STARTED)
-                    ->select('user_requests.*')->with('user','provider','service_type');
-    }
 
     public function scopeProviderUpcomingRequest($query, $provider_id)
     {

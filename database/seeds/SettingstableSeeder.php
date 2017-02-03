@@ -55,15 +55,15 @@ class SettingsTableSeeder extends Seeder
 		        'value' => ''
 		    ], 
 		    [
-		        'key' => 'cod',
+		        'key' => 'CASH',
 		        'value' => 1
 		    ], 
 		    [
-		        'key' => 'paypal',
+		        'key' => 'PAYPAL',
 		        'value' => 1
 		    ], 
 		    [
-		        'key' => 'card',
+		        'key' => 'CARD',
 		        'value' => 1
 		    ],
 		    [

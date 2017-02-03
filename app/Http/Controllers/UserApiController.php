@@ -22,7 +22,6 @@ use App\ServiceType;
 use App\Provider;
 use App\Settings;
 use App\UserRequestRating;
-use App\ProviderAvailability;
 use App\Cards;
 use App\UserPayment;
 use App\ChatMessage;
@@ -223,32 +222,6 @@ class UserApiController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function provider_details(Request $request)
-    {
-        $this->validate($request, [
-                'provider_id' => 'required|exists:providers,id',
-            ]);
-
-        try{
-
-            $provider = Provider::findOrFail($request->provider_id);
-
-            return response()->json($provider);
-        }
-
-        catch (ModelNotFoundException $e) {
-             return response()->json(['error' => 'No Provider Found!']);
-        }
-        
-    }
-
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
     public function send_request(Request $request) {
 
         $this->validate($request, [
@@ -358,24 +331,19 @@ class UserApiController extends Controller
                  return response()->json(['error' => 'Request is Already Cancelled!'], 500); 
             }
 
-            if(in_array($UserRequest->status, ['CREATED','ASSIGNED','STARTED','ARRIVED'])) {
+            if(in_array($UserRequest->status, ['ASSIGNED','STARTED','ARRIVED'])) {
 
                 $UserRequest->status = 'CANCELLED';
                 $UserRequest->save();
 
                 RequestFilter::where('request_id', $UserRequest->id)->delete();
 
-                if($UserRequest->provider_id != DEFAULT_FALSE){
+                if($UserRequest->provider_id != 0){
 
-                    $provider = Provider::find( $UserRequest->provider_id );
-                    $provider->is_available = PROVIDER_AVAILABLE;
-                    $provider->waiting_to_respond = WAITING_TO_RESPOND_NORMAL;
-                    $provider->save();
+                    ProviderService::where('provider_id',$UserRequest->provider_id)->update(['available', 1]);
 
                     // send push and email
                 }
-
-                RequestFilter::where('request_id', '=', $request->request_id)->delete();
 
                 return response()->json(['message' => 'Request Cancelled Successfully']); 
 
@@ -385,7 +353,7 @@ class UserApiController extends Controller
         }
 
         catch (ModelNotFoundException $e) {
-             return response()->json(['error' => 'No Provider Found!']);
+             return response()->json(['error' => 'No Request Found!']);
         }
 
     }
@@ -424,125 +392,6 @@ class UserApiController extends Controller
 
     } 
 
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function paynow(Request $request) {
-
-        $this->validate($request, [
-            'request_id' => 'required|exists:user_requests,id,user_id,'.Auth::user()->id,
-            'payment_mode' => 'required|in:'.COD.','.PAYPAL.','.CARD.'|exists:settings,key,value,1',
-            'is_paid' => 'required',
-        ]);
-
-
-        $requests = UserRequests::where('id',$request->request_id)
-                    ->where('status' , REQUEST_COMPLETE_PENDING)->first();
-
-        $user = User::find(Auth::user()->id);
-
-        if(!$requests && intval($requests->status) == REQUEST_RATING ) {
-
-            return response()->json(['error' => 'Service is Already Paid']);
-        }
-
-
-            $total = 0;
-
-            if($request_payment = UserPayment::where('request_id' , $request->request_id)->first()) {
-                $request_payment->payment_mode = $request->payment_mode;
-                $request_payment->save();
-                $total = $request_payment->total;
-            }
-
-            if($request->payment_mode == COD) {
-
-                $requests->status = WAITING_FOR_PROVIDER_CONFRIMATION_COD;
-                $request_payment->payment_id = uniqid();
-                $request_payment->status = DEFAULT_TRUE;
-
-            } elseif($request->payment_mode == CARD) {
-
-
-
-
-                $check_card_exists = User::where('users.id' , Auth::user()->id)
-                            ->leftJoin('cards' , 'users.id','=','cards.user_id')
-                            ->where('cards.id' , $user->default_card)
-                            ->where('cards.is_default' , DEFAULT_TRUE);
-
-                if($check_card_exists->count() == 0) {
-                     return response()->json(['error' => 'No default card is available. Please add a card']);
-                }
-
-
-
-                $user_card = $check_card_exists->first();
-
-                // Get the key from settings table
-                $settings = Settings::where('key' , 'stripe_secret_key')->first();
-                $stripe_secret_key = $settings->value;
-
-                $customer_id = $user_card->customer_id;
-            
-                \Stripe\Stripe::setApiKey($stripe_secret_key);
-
-                try{
-
-                   $user_charge =  \Stripe\Charge::create(array(
-                      "amount" => $total * 100,
-                      "currency" => "usd",
-                      "customer" => $customer_id,
-                    ));
-
-                   $payment_id = $user_charge->id;
-                   $amount = $user_charge->amount/100;
-                   $paid_status = $user_charge->paid;
-
-                   $request_payment->payment_id = $payment_id;
-                   $request_payment->status = 1;
-
-                   if($paid_status) {
-                        $requests->is_paid =  DEFAULT_TRUE;
-                   }
-                    $requests->status = REQUEST_RATING;
-                    $requests->amount = $amount;
-                
-                } catch (\Stripe\StripeInvalidRequestError $e) {
-                    return response()->json(['error' => 'Something Went Wrong While Paying'], 500);
-                }
-
-
-            }  
-
-        $requests->save();
-        $request_payment->save();
-
-
-        // // Send notification to the provider Start
-        // if($user)
-        //     $title =  "The"." ".$user->first_name.' '.$user->last_name." done the payment";
-        // else
-        //     $title = Helper::tr('request_completed_user_title');
-
-        // $message = Helper::get_push_message(603);
-        // $this->dispatch(new sendPushNotification($requests->confirmed_provider,PROVIDER,$requests->id,$title,$message));
-        // // Send notification end
-
-        // // Send invoice notification to the user, provider and admin
-        // $subject = Helper::tr('request_completed_bill');
-        // $email = Helper::get_emails(3,Auth::user()->id,$requests->confirmed_provider);
-        // $page = "emails.user.invoice";
-        // Helper::send_invoice($requests->id,$page,$subject,$email);
-
-        return response()->json(['message' => 'Paid Successfully']); 
-
-    }
-
     /**
      * Show the application dashboard.
      *
@@ -553,8 +402,8 @@ class UserApiController extends Controller
     public function rate_provider(Request $request) {
 
         $this->validate($request, [
-                'request_id' => 'required|integer|exists:user_requests,id,user_id,'.Auth::user()->id.'|unique:user_request_ratings,request_id',
-                'rating' => 'required|integer|in:'.RATINGS,
+                'request_id' => 'required|integer|exists:user_requests,id,user_id,'.Auth::user()->id,
+                'rating' => 'required|integer|in:1,2,3,4,5',
                 'comment' => 'max:255',
             ]);
     
@@ -599,11 +448,11 @@ class UserApiController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function history() {
+    public function trips() {
     
         try{
-            $requests = UserRequests::GetUserHistory(Auth::user()->id)->get()->toArray();
-            return $requests;
+            $UserRequests = UserRequests::UserHistory(Auth::user()->id)->get()->toArray();
+            return $UserRequests;
         }
 
         catch (Exception $e) {
@@ -623,7 +472,7 @@ class UserApiController extends Controller
 
         try{
 
-            $modes = Settings::whereIn('key' , array('cod','paypal','card'))->where('value' , 1)->get();
+            $modes = Settings::whereIn('key' , ['CASH','CARD','PAYPAL'])->where('value' , 1)->get();
             if($modes) {
                 foreach ($modes as $key => $mode) {
                     $payment_modes[$mode->key] = $mode->key;
@@ -680,7 +529,7 @@ class UserApiController extends Controller
     public function payment_mode_update(Request $request) {
         
         $this->validate($request, [
-                'payment_mode' => 'required|in:'.COD.','.PAYPAL.','.CARD,
+                'payment_mode' => 'required|in:CARD,CASH,PAYPAL',
          ]);
 
         try{
@@ -746,7 +595,7 @@ class UserApiController extends Controller
                     $cards->save();
 
                     if($user) {
-                        $user->payment_mode = CARD;
+                        $user->payment_mode = 'CARD';
                         $user->default_card = $cards->id;
                         $user->save();
                     }
@@ -781,8 +630,8 @@ class UserApiController extends Controller
             $user = User::find(Auth::user()->id);
 
             if($user) {
-                $user->payment_mode = CARD;
-                $user->default_card = DEFAULT_FALSE;
+                $user->payment_mode = 'CARD';
+                $user->default_card = 0;
                 $user->save();
             }
             return response()->json(['message' => 'Card Deleted']);
@@ -810,14 +659,14 @@ class UserApiController extends Controller
             $user = User::find(Auth::user()->id);
             
             $old_default = Cards::where('user_id' , Auth::user()->id)
-                            ->where('is_default', DEFAULT_TRUE)
-                            ->update(['is_default' => DEFAULT_FALSE]);
+                            ->where('is_default', 1)
+                            ->update(['is_default' => 0]);
 
             $card = Cards::where('id' , $request->card_id)
-                    ->update(['is_default' => DEFAULT_TRUE ]);
+                    ->update(['is_default' => 1 ]);
 
                 if($user) {
-                    $user->payment_mode = CARD;
+                    $user->payment_mode = 'CARD';
                     $user->default_card = $request->card_id;
                     $user->save();
                 }
@@ -865,30 +714,10 @@ class UserApiController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function upcoming_request() {
-
-        try{
-
-            $requests = UserRequests::UserUpcomingRequest(Auth::user()->id)->get()->toArray();
-
-            return $requests;
-        }
-
-        catch(Exception $e) {
-                return response()->json(['error' => "Something Went Wrong"], 500);
-        }        
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
     public function add_money(Request $request){
         $this->validate($request, [
                     'amount' => 'required|integer',
-                    'payment_mode' => 'required|in:'.PAYPAL.','.CARD.'|exists:settings,key,value,'.DEFAULT_TRUE,
+                    'payment_mode' => 'required|in:PAYPAL,CARD|exists:settings,key,value,1',
                 ]);
 
         try{
@@ -900,7 +729,7 @@ class UserApiController extends Controller
                     $check_card_exists = User::where('users.id' , Auth::user()->id)
                                 ->leftJoin('cards' , 'users.id','=','cards.user_id')
                                 ->where('cards.id' , $user->default_card)
-                                ->where('cards.is_default' , DEFAULT_TRUE);
+                                ->where('cards.is_default' , 1);
 
                     if($check_card_exists->count() != 0) {
 
@@ -989,7 +818,6 @@ class UserApiController extends Controller
             ]);
 
         try{
-
 
             $details = "http://maps.googleapis.com/maps/api/distancematrix/json?origins=".$request->s_latitude.",".$request->s_longitude."&destinations=".$request->d_latitude.",".$request->d_longitude."&mode=driving&sensor=false";
 
