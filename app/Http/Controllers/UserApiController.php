@@ -216,41 +216,6 @@ class UserApiController extends Controller
 
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function guest_provider_list(Request $request) {
-
-        $this->validate($request, [
-                'latitude' => 'required|numeric',
-                'longitude' => 'required|numeric',
-                'service_id' => 'exists:service_types,id',
-            ]);
-
-        try {
-
-                $latitude = $request->latitude;
-                $longitude = $request->longitude;
-
-                $distance = \Setting::get('search_radius');
-
-                $providers = Provider::GuestProviderList($latitude, $longitude, $request->service_id, $distance);
-
-                for($i = 0; $i < sizeof($providers); $i++) {
-
-                    $providers[$i]->availablity = ProviderAvailability::Providers($providers[$i]->id)->get()->toArray();
-                }
-
-                return response()->json($providers);
-        }
-
-        catch (Exception $e) {
-             return response()->json(['error' => 'No Providers Found!'], 500);
-        }
-    }
 
     /**
      * Show the application dashboard.
@@ -277,30 +242,6 @@ class UserApiController extends Controller
         
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function guest_provider_availability(Request $request) {
-
-        $this->validate($request, [
-                'provider_id' => 'exists:providers,id',
-            ]);
-
-        try{
-
-            $Provider = Provider::findOrFail($request->provider_id);
-            $Provider->availability = ProviderAvailability::AvailableProviders($request->provider_id)->get();
-
-            return $Provider;
-        }
-
-        catch (ModelNotFoundException $e) {
-             return response()->json(['error' => 'No Provider Found!']);
-        }
-    }
 
     /**
      * Show the application dashboard.
@@ -317,7 +258,8 @@ class UserApiController extends Controller
                 'd_longitude' => 'required|numeric',
                 'service_type' => 'required|numeric|exists:service_types,id',
                 'promo_code' => 'exists:promocodes,promo_code',
-                'distance' => 'required|numeric'
+                'distance' => 'required|numeric',
+                'payment_mode' => 'required|in:CASH,CARD,PAYPAL'
             ]);
 
         Log::info('New Request: ', $request->all());
@@ -340,7 +282,6 @@ class UserApiController extends Controller
             ->whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
             ->get();
 
-        // dd($Providers->toArray());
         // List Providers who are currently busy and add them to the filter list.
 
         if(count($Providers) == 0) {
@@ -354,6 +295,7 @@ class UserApiController extends Controller
             $UserRequest->user_id = Auth::user()->id;
             $UserRequest->current_provider_id = $Providers[0]->id;
             $UserRequest->service_type_id = $request->service_type;
+            $UserRequest->payment_mode = $request->payment_mode;
             
             $UserRequest->status = 'SEARCHING';
 
@@ -394,224 +336,6 @@ class UserApiController extends Controller
         }
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    // Manual request
-    public function manual_create_request(Request $request) {
-
-         $this->validate($request, [
-                    's_latitude' => 'required|numeric',
-                    's_longitude' => 'required|numeric',
-                    'service_type' => 'required|numeric|exists:service_types,id',
-                    'provider_id' => 'required|exists:providers,id',
-                    'promo_code' => 'exists:promocodes,promo_code',
-                ]);
-
-
-                $user = User::find(Auth::user()->id);
-            
-            if($provider = Provider::CheckAvailability($request->provider_id)->first()) {
-
-                try{
-
-                    $check_requests = UserRequests::PendingRequest(Auth::user()->id)->count();
-
-                    if($check_requests > 0) {
-                        return response()->json(['error' => 'Already request is in progress. Try again later']);
-                    }
-
-                    $requests = new UserRequests;
-                    $requests->user_id = $user->id;
-
-                    if($request->service_type){
-                        $requests->request_type = $request->service_type;
-                    }
-
-                    $requests->status = REQUEST_WAITING;
-                    $requests->confirmed_provider = NONE;
-                    $requests->request_start_time = date("Y-m-d H:i:s");
-                    $requests->start_time = date("Y-m-d H:00:00");
-                    $requests->s_address = $request->s_address ? $request->s_address : "";
-                    $requests->d_address = $request->d_address ? $request->d_address : "";
-                        
-                    if($request->s_latitude){ $requests->s_latitude = $request->s_latitude; }
-                    if($request->s_longitude) { $requests->s_longitude = $request->s_longitude; }
-                    if($request->d_latitude){ $requests->d_latitude = $request->d_latitude; }
-                    if($request->d_longitude) { $requests->d_longitude = $request->d_longitude; }
-
-                     $promo_code = Promocode::where('promo_code' , $request->promo_code)->where('is_valid' , 1)->first();
-
-                    if($promo_code) {
-                        $requests->promo_code_id = $promo_code->id;
-                        $requests->promo_code = $request->promo_code;
-                        $requests->offer_amount = $promo_code->offer;  
-                        $requests->is_promo_code = DEFAULT_TRUE;  
-                    }  
-                        
-                    $requests->save();
-
-                    $request_meta = new RequestFilter;
-                    $request_meta->status = REQUEST_META_OFFERED;
-
-                    $provider->waiting_to_respond = WAITING_TO_RESPOND;
-                    $provider->save();
-                
-
-                    // // Send push notifications to the first provider
-                    // $title = Helper::get_push_message(604);
-                    // $message = "You got a new request from".$user->name;
-
-                    // $this->dispatch(new sendPushNotification($request->provider_id,PROVIDER,$requests->id,$title,$message));
-
-                    // Push End
-
-                    $request_meta->request_id = $requests->id;
-                    $request_meta->provider_id = $request->provider_id; 
-                    $request_meta->save();
-
-                    return response()->json(['message' => 'New request Created!','request_id' => $requests->id,
-                    'current_provider' => $request->provider_id]);
-
-                }
-
-            catch (Exception $e) {
-                return response()->json(['error' => 'Something went wrong while sending request. Please try again.'], 500);
-            }
-  
-
-        } else {
-            return response()->json(['error' => 'No Providers Found!'], 500); 
-        }
-  
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function manual_scheduled_request(Request $request) {
-        
-        $this->validate($request, [
-                    'provider_id' => 'required|exists:providers,id',
-                    's_latitude' => 'required|numeric',
-                    's_longitude' => 'required|numeric',
-                    'service_type' => 'required|integer|exists:service_types,id',
-                    'service_start' => 'date',
-            ]);
-
-            $user = User::find(Auth::user()->id);
-
-            if(!$user->payment_mode) {
-                return response()->json(['error' => 'Please Fill the Payment Details!'], 500); 
-            } 
-
-
-            $allow = DEFAULT_FALSE;
-            if($user->payment_mode == CARD) {
-                if($user_card = Cards::find($user->default_card)) {
-                    $allow = DEFAULT_TRUE;
-                }
-            } else {
-                $allow = DEFAULT_TRUE;
-            }
-
-            if($allow == DEFAULT_FALSE) {
-                return response()->json(
-                    ['error' => 'Default card is not available. Please add a card or change the payment mode'], 500); 
-            }
-
-
-
-            $check_requests = UserRequests::PendingRequest(Auth::user()->id)->count();
-
-            if($check_requests > 0) {
-                return response()->json(['error' => 'Already request is in progress. Try again later'], 500);
-            }
-
-
-
-        
-            $check_later_requests = Helper::check_later_request(Auth::user()->id, $request->service_start, DEFAULT_TRUE);
-
-            if($check_later_requests) {
-                return response()->json(['error' => 'Request is already scheduled on this time'], 500);
-            }
-
-
-
-            $request->service_start = \Carbon\Carbon::parse($request->service_start);
-
-            $provider_available_check = ProviderAvailability::where('status' , DEFAULT_TRUE)
-                        ->whereIn('start_time', [
-                                $request->service_start->toTimeString(),
-                                $request->service_start->subHour()->toTimeString(),
-                            ])
-                        ->where('available_date', $request->service_start->toDateString())
-                        ->where('provider_id', $request->provider_id)
-                        ->leftJoin('providers' , 'provider_availabilities.provider_id' ,'=' ,'providers.id')
-                        ->select('provider_id', 'providers.waiting_to_respond as waiting')
-                        ->get();
-
-            if(!$provider_available_check) {
-                return response()->json(['error' => 'No provider found for the selected service in your area currently.'], 500);
-            }
-
-
-
-
-            try{
-                // Create Requests
-                $requests = new UserRequests;
-                $requests->user_id = Auth::user()->id;
-                $requests->request_type = $request->service_type;
-                $requests->status = REQUEST_WAITING;
-                $requests->confirmed_provider = NONE;
-                $requests->request_start_time = \Carbon\Carbon::now();
-                $requests->s_address = $request->s_address;
-                $requests->provider_id = $request->provider_id;
-                $requests->current_provider = $request->provider_id;
-                $requests->start_time = $request->service_start;
-
-                //Later Details
-                $requests->later = DEFAULT_TRUE;
-                $requests->requested_time = $request->service_start;
-                
-                $requests->s_latitude = $request->s_latitude;
-                $requests->s_longitude = $request->s_longitude;
-                    
-                $requests->save();
-
-                $current_provider = Provider::find($request->provider_id);
-                $current_provider->waiting_to_respond = WAITING_TO_RESPOND;
-                $current_provider->save();
-
-                // $title = Helper::get_push_message(604);
-                // $message = "You got a new request from ".$user->name;
-                // $this->dispatch(new sendPushNotification($request->provider_id, PROVIDER, $requests->id, $title, $message)); 
-
-                $request_meta = new RequestFilter;
-                $request_meta->status = REQUEST_META_OFFERED;  // Request status change
-                $request_meta->request_id = $requests->id;
-                $request_meta->provider_id = $request->provider_id;
-                $request_meta->service_id = $request->service_type;
-                $request_meta->save();
-
-                return response()->json(['message' => 'New request Scheduled!',
-                        'request_id' => $requests->id,
-                        'current_provider' => $request->provider_id]);
-            }
-
-            catch (Exception $e) {
-                return response()->json(['error' => 'Something went wrong while sending request. Please try again.'], 500);
-            }
-
-    }
 
     /**
      * Show the application dashboard.
@@ -834,28 +558,28 @@ class UserApiController extends Controller
                 'comment' => 'max:255',
             ]);
     
-        $request = UserRequests::where('id' ,$request->request_id)
+        $UserRequests = UserRequests::where('id' ,$request->request_id)
                 ->where('status' ,'COMPLETED')
                 ->where('paid', 0)
                 ->first();
 
-        if ($request) {
+        if ($UserRequests) {
              return response()->json(['error' => 'Not Paid!'], 500);
         }
 
         try{
 
             $rating = new UserRequestRating();
-            $rating->provider_id = $request->provider_id;
-            $rating->user_id = $request->user_id;
-            $rating->request_id = $request->id;
+            $rating->provider_id = $UserRequests->provider_id;
+            $rating->user_id = $UserRequests->user_id;
+            $rating->request_id = $UserRequests->id;
             $rating->user_rating = $request->rating;
             $rating->user_comment = $request->comment ?: '';
             $rating->save();
 
-            $average = UserRequestRating::where('provider_id',$request->rating)->avg('user_rating');
+            $average = UserRequestRating::where('provider_id',$UserRequests->provider_id)->avg('user_rating');
 
-            Provider::where('id',$request->provider_id)->update(['rating' => $average]);
+            Provider::where('id',$UserRequests->provider_id)->update(['rating' => $average]);
 
             // Send Push Notification to Provider 
 
@@ -885,48 +609,6 @@ class UserApiController extends Controller
         catch (Exception $e) {
             return response()->json(['error' => 'Something went wrong']);
         }
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function single_request(Request $request) {
-
-        $user = User::find(Auth::user()->id);
-
-        $this->validate($request, [
-                'request_id' => 'required|integer|exists:user_requests,id,user_id,'.$user->id,
-            ]);
-
-
-        try{
-
-            $requests = UserRequests::where('requests.id' , $request->request_id)
-                            ->leftJoin('providers' , 'requests.confirmed_provider','=' , 'providers.id')
-                            ->leftJoin('users' , 'requests.user_id','=' , 'users.id')
-                            ->leftJoin('user_ratings' , 'requests.id','=' , 'user_ratings.request_id')
-                            ->leftJoin('request_payments' , 'requests.id','=' , 'request_payments.request_id')
-                            ->leftJoin('cards','users.default_card','=' , 'cards.id')
-                            ->select('providers.id as provider_id' , 'providers.picture as provider_picture', 'requests.s_address as s_address','requests.requested_time as requested_time','requests.status as status','requests.s_latitude as s_latitude','requests.s_longitude as s_longitude',
-                                DB::raw('CONCAT(providers.first_name, " ", providers.last_name) as provider_name'),'user_ratings.rating','user_ratings.comment',
-                                 DB::raw('ROUND(request_payments.base_price) as base_price'), DB::raw('ROUND(request_payments.tax_price) as tax_price'),
-                                 DB::raw('ROUND(request_payments.time_price) as time_price'), DB::raw('ROUND(request_payments.total) as total'),
-                                'cards.id as card_id','cards.customer_id as customer_id',
-                                'cards.card_token','cards.last_four',
-                                'requests.id as request_id','requests.before_image','requests.after_image',
-                                'requests.user_id as user_id',
-                                DB::raw('CONCAT(users.first_name, " ", users.last_name) as user_name'))
-                            ->get()->toArray();
-            return $requests;
-        }
-
-        catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong'], 500);
-        }
-    
     }
 
     /**
@@ -1267,238 +949,6 @@ class UserApiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    
-    public function request_later(Request $request) {
-
-       $this->validate($request, [
-                    'latitude' => 'required|numeric',
-                    'longitude' => 'required|numeric',
-                    'service_type' => 'numeric|exists:service_types,id',
-                    'requested_time' => 'required',
-                ]);
-
-            $user = User::find(Auth::user()->id);
-
-            if(!$user->payment_mode) {
-                return response()->json(['error' => "Payment Mode Not Exist"]);
-            }
-
-
-            $allow = DEFAULT_FALSE;
-            if($user->payment_mode == CARD) {
-                if($user_card = Cards::find($user->default_card)) {
-                    $allow = DEFAULT_TRUE;
-                }
-            } else {
-                $allow = DEFAULT_TRUE;
-            }
-
-            if($allow == DEFAULT_FALSE) {
-                return response()->json(
-                    ['error' => 'Default card is not available. Please add a card or change the payment mode']); 
-            }   
-
-
-
-
-            $check_requests = UserRequests::PendingRequest(Auth::user()->id)->count();
-
-            if($check_requests > 0) {
-                return response()->json(['error' => 'Already request is in progress. Try again later']);
-            }
-
-
-
-            $check_later_requests = Helper::check_later_request(Auth::user()->id,$request->requested_time,DEFAULT_TRUE);
-
-            if($check_later_requests) {
-                return response()->json(['error' => 'Request is already scheduled on this time']);
-            }
-
-                $service_type = $request->service_type;
-                $fav_providers = array(); $first_provider_id = 0;
-                $favProviders = Helper::get_fav_providers($service_type,Auth::user()->id);
-                if($favProviders) {
-                    foreach ($favProviders as $key => $favProvider) {
-                        $fav_providers[] = $favProvider->provider_id;
-                    }                
-                }
-
-
-                $latitude = $request->latitude;
-                $longitude = $request->longitude;
-                $request_start_time = time();
-
-
-                $distance = \Setting::get('search_radius');
-
-                $providers = array();   // Initialize providers variable
-
-                if($service_type) {
-
-                    $service_providers = ProviderService::AvailableServiceProvider($service_type)->get();
-
-                    $list_service_ids = array();   
-                    if($service_providers) {
-                        foreach ($service_providers as $sp => $service_provider) {
-                            $list_service_ids[] = $service_provider->provider_id;
-                        }
-                        $list_service_ids = implode(',', $list_service_ids);
-                    }
-
-
-                    if($list_service_ids) {
-                        $query = "SELECT providers.id,providers.waiting_to_respond as waiting, 1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) AS distance FROM providers
-                                WHERE id IN ($list_service_ids) AND is_available = 1 AND is_activated = 1 AND is_approved = 1
-                                AND (1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance
-                                ORDER BY distance";
-
-                        $providers = DB::select(DB::raw($query));
-                        Log::info("Search query: " . $query);
-                    } 
-                }
-
-                $merge_providers  = $nearby_providers = $fav_and_near_providers = array();
-
-                $fav_near_providers = array();
-
-                if ($providers) {
-
-                    foreach ($providers as $provider) {
-                        $nearby_providers[] = $provider->id;
-                    }
-                }
-
-
-
-                $fav_and_near_providers = array_unique(array_merge($fav_providers,$nearby_providers));
-
-                if(!$fav_and_near_providers) {
-                    return response()->json(
-                        ['error' => 'No provider found for the selected service in your area currently.']);
-                    
-                }
-
-            try {
-
-                // Get the Available providers based on the requested time
-                $list_available_providers = array();
-
-                $requested_date = Helper::formatDate($request->requested_time);
-                $requested_time = $start_time = Helper::formatHour($request->requested_time);
-
-                // get the +2 hours from the requested time
-                $change_date = new \DateTime($request->requested_time);
-                $change_date->modify("+1 hours");
-                $end_time = $change_date->format("H:i:s");
-
-                $next_start_time = $end_time;
-                $next_end_date = Helper::add_date($request->requested_time,'+2');
-                $next_end_time = Helper::formatHour($next_end_date);
-
-                $available_providers = ProviderAvailability::where('available_date' , $requested_date)
-                            ->where(array('start_time' => $start_time,'end_time' => $end_time ))
-                            ->orWhere(array('available_date' => $requested_date,'start_time' => $next_start_time,'end_time' => $next_end_time ))
-                            ->where('status' , DEFAULT_TRUE)
-                            ->whereIn('provider_id',$fav_and_near_providers)
-                            ->leftJoin('providers' , 'provider_availabilities.provider_id' ,'=' ,'providers.id')
-                            ->select('provider_id' , DB::raw('COUNT(provider_id) as count') , 'providers.waiting_to_respond as waiting')
-                            ->groupBy('provider_id')
-                            ->having('count' , '=' , 2)
-                            ->get();
-
-                $before_final_providers = array();
-
-                foreach ($available_providers as $key => $available_provider) {
-                    $list_available_providers['id'] = $available_provider->provider_id;
-                    $list_available_providers['waiting'] = $available_provider->waiting;
-
-                    array_push($before_final_providers, $list_available_providers);
-                }
-
-                /*************************************/
-
-                // Sort the providers based on the waiting time
-                $sort_waiting_providers = Helper::sort_waiting_providers($before_final_providers);  
-
-                // Get the final providers list
-                $final_providers = $sort_waiting_providers['providers'];   
-                
-                $check_waiting_provider_count = $sort_waiting_providers['check_waiting_provider_count'];
-
-                if(count($final_providers) == $check_waiting_provider_count)
-                {
-                    return response()->json(['error' => "Something Went Wrong"]);
-                }
-
-                // Create Requests
-                $requests = new UserRequests;
-                $requests->user_id = $user->id;
-
-                if($service_type)
-                    $requests->request_type = $service_type;
-
-                $requests->status = REQUEST_NEW;
-                $requests->confirmed_provider = NONE;
-                $requests->request_start_time = date("Y-m-d H:i:s", time());
-                $requests->s_address = $request->s_address ? $request->s_address : "";
-
-                //Later Details
-                $requests->later = DEFAULT_TRUE;
-                $requests->requested_time = date('Y-m-d H:i:s', strtotime($request->requested_time));
-                
-                if($latitude){ $requests->s_latitude = $latitude; }
-                if($longitude) { $requests->s_longitude = $longitude; }
-                    
-                $requests->save();
-
-                $requests->status = REQUEST_WAITING;
-                //No need fo current provider state
-                // $requests->current_provider = $first_provider_id;
-                $requests->save();
-
-                // Save all the final providers
-                $first_provider_id = 0;
-
-                if($final_providers) {
-                    foreach ($final_providers as $key => $final_provider) {
-
-                        $request_meta = new RequestsMeta;
-
-                        if($first_provider_id == 0) {
-
-                            $first_provider_id = $final_provider;
-
-                            $request_meta->status = REQUEST_META_OFFERED;  // Request status change
-
-                            // Availablity status change
-                            if($current_provider = Provider::find($first_provider_id)) {
-                                $current_provider->waiting_to_respond = WAITING_TO_RESPOND;
-                                $current_provider->save();
-                            }
-
-                            // Send push notifications to the first provider
-                            // $title = Helper::get_push_message(604);
-                            // $message = "You got a new request from".$user->name;
-                            // $this->dispatch(new sendPushNotification($first_provider_id, PROVIDER,$requests->id,$title, $message,'')); 
-                            // Push End
-                        }
-                        $request_meta->request_id = $requests->id;
-                        $request_meta->provider_id = $final_provider; 
-                        $request_meta->save();
-                    }
-                }
-
-            return response()->json(['message' => 'New request Scheduled!','request_id' => $requests->id,
-                    'current_provider' => $first_provider_id]);
-
-        }
-
-        catch(Exception $e) {
-                return response()->json(['error' => "Something Went Wrong"], 500);
-        }  
-    
-    }
 
     public function forgot_password(Request $request){
 
@@ -1523,6 +973,11 @@ class UserApiController extends Controller
         }
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
     public function estimated_fare(Request $request){
 

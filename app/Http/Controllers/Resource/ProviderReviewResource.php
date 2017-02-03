@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Controllers\Controller;
-use App\ProviderRating;
 
 class ProviderReviewResource extends Controller
 {
@@ -16,14 +15,7 @@ class ProviderReviewResource extends Controller
      */
     public function index()
     {
-        $Reviews = ProviderRating::leftJoin('providers', 'provider_ratings.provider_id', '=', 'providers.id')
-                ->leftJoin('users', 'provider_ratings.user_id', '=', 'users.id')
-                ->select('provider_ratings.*', 'users.first_name as user_first_name', 'users.last_name as user_last_name', 
-                            'providers.first_name as provider_first_name', 'providers.last_name as provider_last_name')
-                ->orderBy('provider_ratings.created_at', 'desc')
-                ->get();
-
-        return view('admin.review.provider_review', compact('Reviews'));
+        return view('admin.review.provider_review');
     }
 
     /**
@@ -90,7 +82,6 @@ class ProviderReviewResource extends Controller
     public function destroy($id)
     {
         try {
-            ProviderRating::find($id)->delete();
             return back()->with('message', 'Rating deleted successfully');
         } 
         catch (ModelNotFoundException $e) {
