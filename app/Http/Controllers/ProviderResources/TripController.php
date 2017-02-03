@@ -8,9 +8,13 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Auth;
 use Setting;
+use Carbon\Carbon;
 
-use App\UserRequests;
+use App\User;
+use App\Helpers\Helper;
 use App\RequestFilter;
+use App\UserRequests;
+use App\UserRequestRating;
 
 class TripController extends Controller
 {
@@ -23,14 +27,15 @@ class TripController extends Controller
     {
         try{
 
-            $IncomingRequests = RequestFilter::with('request.user')->where('provider_id', Auth::user()->id)->get();
+            $IncomingRequests = RequestFilter::IncomingRequest(Auth::user()->id)->get();
 
             $Timeout = Setting::get('provider_select_timeout', 180);
 
             for ($i=0; $i < sizeof($IncomingRequests); $i++) {
                 $IncomingRequests[$i]->time_left_to_respond = $Timeout - (time() - strtotime($IncomingRequests[$i]->request->assigned_at));
-                if($IncomingRequests[$i]->time_left_to_respond < 0) {
-                    Helper::assign_next_provider($IncomingRequests[$i]->request_id, Auth::user()->id);
+                if($IncomingRequests[$i]->request->status == 'SEARCHING' && $IncomingRequests[$i]->time_left_to_respond < 0) {
+                    $this->assign_next_provider($IncomingRequests[$i]->id);
+                    return $this->index();
                 }
             }
 
@@ -59,6 +64,7 @@ class TripController extends Controller
             return response()->json(['error' => 'Cannot cancel request at this stage!']);
         }
 
+        
 
     }
 
@@ -67,9 +73,42 @@ class TripController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function rate(Request $request, $id)
     {
-        //
+
+        $this->validate($request, [
+                'rating' => 'required|integer|in:1,2,3,4,5',
+                'comment' => 'max:255',
+            ]);
+    
+        try {
+
+            $UserRequest = UserRequests::where('id', $id)
+                ->where('status', 'COMPLETED')
+                ->firstOrFail();
+
+            $rating = new UserRequestRating();
+            $rating->provider_id = $UserRequest->provider_id;
+            $rating->user_id = $UserRequest->user_id;
+            $rating->request_id = $UserRequest->id;
+            $rating->provider_rating = $request->rating;
+            $rating->provider_comment = $request->comment;
+            $rating->save();
+
+
+            // Send Push Notification to Provider 
+            $average = UserRequestRating::where('provider_id', $UserRequest->provider_id)->avg('provider_rating');
+
+            try {
+                User::findOrFail($UserRequest->user_id)->update(['rating' => $average]);
+                return $UserRequest->with('rating', 'user')->get();
+            } catch (ModelNotFoundException $e) {
+                return response()->json(['error' => 'Something went wrong'], 500);
+            }
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Request not yet completed!'], 500);
+        }
     }
 
     /**
@@ -142,13 +181,18 @@ class TripController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-              'status' => 'required|in:ACCEPTED,STARTED,ARRIVED,PICKEDUP,DROPPED,PAID,COMPLETED',
+              'status' => 'required|in:ACCEPTED,STARTED,ARRIVED,PICKEDUP,DROPPED,PAYMENT,COMPLETED',
            ]);
 
         try{
 
             $UserRequest = UserRequests::findOrFail($id);
-            $UserRequest->status = $request->status;
+            if($request->status == 'DROPPED' && $UserRequest->payment_mode == 'CASH') {
+                $UserRequest->status = 'COMPLETED';
+            } else {
+                $UserRequest->status = $request->status;
+            }
+
             $UserRequest->save();
 
             // Send Push Notification to User
@@ -184,4 +228,36 @@ class TripController extends Controller
             return response()->json(['error' => 'Connection Error']);
         }
     }
+
+    public function assign_next_provider($request_id) {
+
+        try {
+            $UserRequest = UserRequests::findOrFail($request_id);
+        } catch (ModelNotFoundException $e) {
+            // Cancelled between update.
+            return false;
+        }
+
+        RequestFilter::where('provider_id', Auth::user()->id)
+            ->where('request_id', $UserRequest->id)
+            ->delete();
+
+        try {
+
+            $next_provider = RequestFilter::where('request_id', $UserRequest->id)
+                ->orderBy('id')
+                ->firstOrFail();
+
+            $UserRequest->current_provider_id = $next_provider->provider_id;
+            $UserRequest->assigned_at = Carbon::now();
+            $UserRequest->save();
+            
+        } catch (ModelNotFoundException $e) {
+            UserRequests::where('id', $UserRequest->id)->update(['status' => 'CANCELLED']);
+
+            // No longer need request specific rows from RequestMeta
+            RequestFilter::where('request_id', $UserRequest->id)->delete();
+        }
+    }
+
 }

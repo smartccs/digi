@@ -355,7 +355,7 @@ class UserApiController extends Controller
             $UserRequest->current_provider_id = $Providers[0]->id;
             $UserRequest->service_type_id = $request->service_type;
             
-            $UserRequest->status = 'CREATED';
+            $UserRequest->status = 'SEARCHING';
 
             $UserRequest->s_address = $request->s_address ? : "";
             $UserRequest->d_address = $request->d_address ? : "";
@@ -627,35 +627,37 @@ class UserApiController extends Controller
 
         try{
 
-            $UserRequests = UserRequests::findOrFail($request->request_id);
+            $UserRequest = UserRequests::findOrFail($request->request_id);
 
-            if($UserRequests->status == 'CANCELLED')
+            if($UserRequest->status == 'CANCELLED')
             {
                  return response()->json(['error' => 'Request is Already Cancelled!'], 500); 
             }
 
-                if(in_array($UserRequests->status, ['CREATED','ASSIGNED','STARTED','ARRIVED'])) {
+            if(in_array($UserRequest->status, ['CREATED','ASSIGNED','STARTED','ARRIVED'])) {
 
-                    $UserRequests->status = 'CANCELLED';
-                    $UserRequests->save();
+                $UserRequest->status = 'CANCELLED';
+                $UserRequest->save();
 
-                    if($UserRequests->provider_id != DEFAULT_FALSE){
+                RequestFilter::where('request_id', $UserRequest->id)->delete();
 
-                        $provider = Provider::find( $UserRequests->provider_id );
-                        $provider->is_available = PROVIDER_AVAILABLE;
-                        $provider->waiting_to_respond = WAITING_TO_RESPOND_NORMAL;
-                        $provider->save();
+                if($UserRequest->provider_id != DEFAULT_FALSE){
 
-                        // send push and email
-                    }
+                    $provider = Provider::find( $UserRequest->provider_id );
+                    $provider->is_available = PROVIDER_AVAILABLE;
+                    $provider->waiting_to_respond = WAITING_TO_RESPOND_NORMAL;
+                    $provider->save();
 
-                    RequestFilter::where('request_id', '=', $request->request_id)->delete();
-
-                    return response()->json(['message' => 'Request Cancelled Successfully']); 
-
-                } else {
-                    return response()->json(['error' => 'Service Already Started!'], 500); 
+                    // send push and email
                 }
+
+                RequestFilter::where('request_id', '=', $request->request_id)->delete();
+
+                return response()->json(['message' => 'Request Cancelled Successfully']); 
+
+            } else {
+                return response()->json(['error' => 'Service Already Started!'], 500); 
+            }
         }
 
         catch (ModelNotFoundException $e) {

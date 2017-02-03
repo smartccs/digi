@@ -52,7 +52,7 @@ class UserRequests extends Model
      */
     public function rating()
     {
-        return $this->belongsTo('App\UserRequestRating');
+        return $this->hasOne('App\UserRequestRating', 'request_id');
     }
 
     /**
@@ -75,7 +75,7 @@ class UserRequests extends Model
     {
         return $query->where('user_id', $user_id)
                 // ->where('later', 0) // Schedule - schedule_at != null
-                ->whereNotIn('status' , ['CANCELLED', 'PAID']);
+                ->whereNotIn('status' , ['CANCELLED', 'COMPLETED']);
     }
 
     public function scopeRequestHistory($query)
