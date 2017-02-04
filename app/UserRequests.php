@@ -52,7 +52,7 @@ class UserRequests extends Model
      */
     public function payment()
     {
-        return $this->belongsTo('App\UserPayment', 'request_id');
+        return $this->hasOne('App\UserPayment', 'request_id');
     }
 
     /**
@@ -131,9 +131,10 @@ class UserRequests extends Model
 
     public function scopeUserRequestStatusCheck($query, $user_id, $check_status)
     {
-        return $query->where('user_requests.user_id', '=', $user_id)
+        return $query->where('user_requests.user_id', $user_id)
                     ->whereNotIn('user_requests.status', $check_status)
-                    ->select('user_requests.*')->with('user','provider','service_type','rating');
+                    ->select('user_requests.*')
+                    ->with('user','provider','service_type','rating','payment');
     }
 
 

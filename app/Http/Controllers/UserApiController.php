@@ -368,19 +368,11 @@ class UserApiController extends Controller
 
         try{
 
-            $check_status = ['COMPLETED','CANCELLED','SEARCHING'];
+            $check_status = ['CANCELLED','SEARCHING'];
 
-            $requests = UserRequests::UserRequestStatusCheck(Auth::user()->id,$check_status)->get()->toArray();
-
-                foreach ($requests as  $each_request) {
-
-                    if( in_array($each_request['status'], ['DROPPED','COMPLETED'])) {
-
-                        // invoice data
-
-                        $requests['invoice'] = Helper::calculate_fare($each_request['distance']);
-                    }
-                }
+            $requests = UserRequests::UserRequestStatusCheck(Auth::user()->id,$check_status)
+                                        ->get()
+                                        ->toArray();
 
             return response()->json(['data' => $requests]);
 
