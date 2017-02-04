@@ -834,7 +834,7 @@ class UserApiController extends Controller
             $base_price = \Setting::get('base_price');
             $tax_percentage = \Setting::get('tax_percentage');
             $commission_percentage = \Setting::get('commission_percentage');
-            $service_type = ServiceType::findOrFail($service_id);
+            $service_type = ServiceType::findOrFail($request->service_type);
 
             $price_per_kilometer = $service_type->price;
             $price = $base_price + ($kilometer * $price_per_kilometer);
