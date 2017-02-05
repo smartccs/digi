@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'Laravel',
+    'name' => env('APP_NAME', 'Tranxit'),
 
     /*
     |--------------------------------------------------------------------------
@@ -235,7 +235,5 @@ return [
         'JWTAuth' => 'Tymon\JWTAuth\Facades\JWTAuth',
         'JWTFactory' => 'Tymon\JWTAuth\Facades\JWTFactory',
         'Image' => 'Folklore\Image\Facades\Image',
-
     ],
-
 ];

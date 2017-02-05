@@ -11,8 +11,6 @@
 |
 */
 
-Route::get('/services' , 'Resources\ServiceResource@index');
-
 // Authentication
 Route::post('/register' , 'ProviderAuth\TokenController@register');
 Route::post('/oauth/token' , 'ProviderAuth\TokenController@authenticate');

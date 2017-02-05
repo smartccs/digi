@@ -18,7 +18,7 @@ class ProfileController extends Controller
 
     public function __construct()
     {
-        $this->middleware('provider.api');
+        $this->middleware('provider.api', ['except' => ['show', 'edit']]);
     }
 
     /**
@@ -38,7 +38,7 @@ class ProfileController extends Controller
      */
     public function show()
     {
-        //
+        return view('provider.profile.show');
     }
 
     /**
@@ -48,7 +48,7 @@ class ProfileController extends Controller
      */
     public function edit()
     {
-        //
+        return view('provider.profile.edit');
     }
 
     /**

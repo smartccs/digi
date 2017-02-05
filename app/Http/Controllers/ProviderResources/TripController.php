@@ -41,7 +41,7 @@ class TripController extends Controller
 
             $Response = [
                     'account_status' => \Auth::user()->status,
-                    'service_status' => \Auth::user()->service->status,
+                    'service_status' => \Auth::user()->service ? \Auth::user()->service->status : 'offline',
                     'requests' => $IncomingRequests,
                 ];
 
@@ -95,13 +95,15 @@ class TripController extends Controller
             $rating->provider_comment = $request->comment;
             $rating->save();
 
+            // Delete from filter so that it doesn't show up in status checks.
+            RequestFilter::where('request_id', $id)->delete();
 
             // Send Push Notification to Provider 
             $average = UserRequestRating::where('provider_id', $UserRequest->provider_id)->avg('provider_rating');
 
             try {
                 User::findOrFail($UserRequest->user_id)->update(['rating' => $average]);
-                return $UserRequest->with('rating', 'user')->get();
+                return response()->json(['message' => 'Request Completed!']);
             } catch (ModelNotFoundException $e) {
                 return response()->json(['error' => 'Something went wrong'], 500);
             }
@@ -123,14 +125,14 @@ class TripController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Get the trip history of the provider
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function history()
     {
-        //
+        $Jobs = Auth::guard('provider')->user()->trips;
+        return view('provider.trip.index', compact('Jobs'));
     }
 
     /**
@@ -187,8 +189,11 @@ class TripController extends Controller
         try{
 
             $UserRequest = UserRequests::findOrFail($id);
-            if($request->status == 'DROPPED' && $UserRequest->payment_mode == 'CASH') {
+            if($request->status == 'DROPPED' && $UserRequest->payment_mode != 'CASH') {
                 $UserRequest->status = 'COMPLETED';
+            } else if ($request->status == 'COMPLETED' && $UserRequest->payment_mode == 'CASH') {
+                $UserRequest->status = $request->status;
+                $UserRequest->paid = 1;
             } else {
                 $UserRequest->status = $request->status;
             }

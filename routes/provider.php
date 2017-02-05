@@ -1,18 +1,8 @@
 <?php
 
-Route::get('/home', function () {
-    $users[] = Auth::user();
-    $users[] = Auth::guard()->user();
-    $users[] = Auth::guard('provider')->user();
-
-    //dd($users);
-
-    return view('provider.home');
-})->name('home');
-
 /*
 |--------------------------------------------------------------------------
-| Provider Auth Routes
+| Provider Routes
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
@@ -21,16 +11,11 @@ Route::get('/home', function () {
 |
 */
 
-Route::group(['prefix' => 'provider'], function () {
-  Route::get('/login', 'ProviderAuth\LoginController@showLoginForm');
-  Route::post('/login', 'ProviderAuth\LoginController@login');
-  Route::post('/logout', 'ProviderAuth\LoginController@logout');
+Route::get('/', 'ProviderController@index')->name('index');
+Route::get('/trips', 'ProviderResources\TripController@history')->name('trips');
 
-  Route::get('/register', 'ProviderAuth\RegisterController@showRegistrationForm');
-  Route::post('/register', 'ProviderAuth\RegisterController@register');
+Route::get('/profile', 'ProviderResources\ProfileController@show')->name('profile.show');
+Route::get('/profile/edit', 'ProviderResources\ProfileController@show')->name('profile.edit');
+Route::post('/profile', 'ProviderResources\ProfileController@update')->name('profile.update');
 
-  Route::post('/password/email', 'ProviderAuth\ForgotPasswordController@sendResetLinkEmail');
-  Route::post('/password/reset', 'ProviderAuth\ResetPasswordController@reset');
-  Route::get('/password/reset', 'ProviderAuth\ForgotPasswordController@showLinkRequestForm');
-  Route::get('/password/reset/{token}', 'ProviderAuth\ResetPasswordController@showResetForm');
-});
+Route::get('/profile/password', 'ProviderController@index')->name('password');
