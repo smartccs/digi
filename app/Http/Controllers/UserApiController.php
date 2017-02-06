@@ -23,7 +23,6 @@ use App\Provider;
 use App\Settings;
 use App\UserRequestRating;
 use App\Cards;
-use App\UserPayment;
 use App\ChatMessage;
 use App\Helpers\Helper;
 
@@ -447,7 +446,13 @@ class UserApiController extends Controller
     public function trips() {
     
         try{
-            $UserRequests = UserRequests::UserHistory(Auth::user()->id)->get()->toArray();
+            $UserRequests = UserRequests::UserHistory(Auth::user()->id)->get();
+            if(!empty($UserRequests)){
+                $map_icon = asset('asset/marker.png');
+                foreach ($UserRequests as $key => $value) {
+                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=600x450&maptype=roadmap&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x191919|weight:8|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_API_KEY');
+                }
+            }
             return $UserRequests;
         }
 

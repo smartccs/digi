@@ -30,12 +30,13 @@ class TripController extends Controller
             $IncomingRequests = RequestFilter::IncomingRequest(Auth::user()->id)->get();
 
             $Timeout = Setting::get('provider_select_timeout', 180);
-
-            for ($i=0; $i < sizeof($IncomingRequests); $i++) {
-                $IncomingRequests[$i]->time_left_to_respond = $Timeout - (time() - strtotime($IncomingRequests[$i]->request->assigned_at));
-                if($IncomingRequests[$i]->request->status == 'SEARCHING' && $IncomingRequests[$i]->time_left_to_respond < 0) {
-                    $this->assign_next_provider($IncomingRequests[$i]->id);
-                    return $this->index();
+            if(!empty($IncomingRequests)){
+                for ($i=0; $i < sizeof($IncomingRequests); $i++) {
+                    $IncomingRequests[$i]->time_left_to_respond = $Timeout - (time() - strtotime($IncomingRequests[$i]->request->assigned_at));
+                    if($IncomingRequests[$i]->request->status == 'SEARCHING' && $IncomingRequests[$i]->time_left_to_respond < 0) {
+                        $this->assign_next_provider($IncomingRequests[$i]->id);
+                        return $this->index();
+                    }
                 }
             }
 

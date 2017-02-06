@@ -40,11 +40,11 @@ class UserRequests extends Model
     }
     
     /**
-     * UserPayment Model Linked
+     * UserRequestPayment Model Linked
      */
     public function payment()
     {
-        return $this->hasOne('App\UserPayment', 'request_id');
+        return $this->hasOne('App\UserRequestPayment', 'request_id');
     }
 
     /**
