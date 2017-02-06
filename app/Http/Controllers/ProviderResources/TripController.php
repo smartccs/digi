@@ -15,6 +15,7 @@ use App\Helpers\Helper;
 use App\RequestFilter;
 use App\UserRequests;
 use App\UserRequestRating;
+use App\UserRequestPayment;
 
 class TripController extends Controller
 {
@@ -30,15 +31,15 @@ class TripController extends Controller
             $IncomingRequests = RequestFilter::IncomingRequest(Auth::user()->id)->get();
 
             $Timeout = Setting::get('provider_select_timeout', 180);
-            if(!empty($IncomingRequests)){
-                for ($i=0; $i < sizeof($IncomingRequests); $i++) {
-                    $IncomingRequests[$i]->time_left_to_respond = $Timeout - (time() - strtotime($IncomingRequests[$i]->request->assigned_at));
-                    if($IncomingRequests[$i]->request->status == 'SEARCHING' && $IncomingRequests[$i]->time_left_to_respond < 0) {
-                        $this->assign_next_provider($IncomingRequests[$i]->id);
-                        return $this->index();
+                if(!empty($IncomingRequests)){
+                    for ($i=0; $i < sizeof($IncomingRequests); $i++) {
+                        $IncomingRequests[$i]->time_left_to_respond = $Timeout - (time() - strtotime($IncomingRequests[$i]->request->assigned_at));
+                        if($IncomingRequests[$i]->request->status == 'SEARCHING' && $IncomingRequests[$i]->time_left_to_respond < 0) {
+                            $this->assign_next_provider($IncomingRequests[$i]->id);
+                            return $this->index();
+                        }
                     }
                 }
-            }
 
             $Response = [
                     'account_status' => \Auth::user()->status,
@@ -202,8 +203,8 @@ class TripController extends Controller
             $UserRequest->save();
 
             if($request->status == 'DROPPED') {
-                $UserRequest->with('user')->get();
-                $UserRequest->invoice = $this->invoice();
+                $UserRequest->with('user')->findOrFail($id);
+                $UserRequest->invoice = $this->invoice($id);
                 return $UserRequest;
             }
 
@@ -275,9 +276,9 @@ class TripController extends Controller
     public function invoice($request_id)
     {
         try {
-            $UserRequest = UserRequest::findOrFail($request_id);
+            $UserRequest = UserRequests::findOrFail($request_id);
             
-            $Fixed = $UserRequest->service_type->fixed;
+            $Fixed = $UserRequest->service_type->fixed ? : 0;
             $Distance = ceil($UserRequest->distance) * $UserRequest->service_type->distance;
             $Discount = 0; // Promo Code discounts should be added here.
 
