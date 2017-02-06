@@ -25,6 +25,19 @@ Route::get('/drive', function () {
 
 Auth::routes();
 
+Route::group(['prefix' => 'provider'], function () {
+    Route::get('/login', 'ProviderAuth\LoginController@showLoginForm');
+    Route::post('/login', 'ProviderAuth\LoginController@login');
+    Route::post('/logout', 'ProviderAuth\LoginController@logout');
+
+    Route::get('/register', 'ProviderAuth\RegisterController@showRegistrationForm');
+    Route::post('/register', 'ProviderAuth\RegisterController@register');
+
+    Route::post('/password/email', 'ProviderAuth\ForgotPasswordController@sendResetLinkEmail');
+    Route::post('/password/reset', 'ProviderAuth\ResetPasswordController@reset');
+    Route::get('/password/reset', 'ProviderAuth\ForgotPasswordController@showLinkRequestForm');
+    Route::get('/password/reset/{token}', 'ProviderAuth\ResetPasswordController@showResetForm');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -45,4 +58,3 @@ Route::post('/update/profile', 'HomeController@update_profile');
 // update password
 Route::get('/change/password', 'HomeController@change_password');
 Route::post('/change/password', 'HomeController@update_password');
-

@@ -47,6 +47,22 @@ class Provider extends Authenticatable
     }
 
     /**
+     * The services that belong to the user.
+     */
+    public function requests()
+    {
+        return $this->hasMany('App\RequestFilter');
+    }
+
+    /**
+     * The services that belong to the user.
+     */
+    public function trips()
+    {
+        return $this->hasMany('App\UserRequests');
+    }
+
+    /**
      * Send the password reset notification.
      *
      * @param  string  $token
