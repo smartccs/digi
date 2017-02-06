@@ -286,13 +286,13 @@ class TripController extends Controller
             $Total = $Fixed + $Distance - $Discount + $Commision + $Tax;
 
             $Payment = new UserRequestPayment;
-            $Payment->request_id => $UserRequest->id;
-            $Payment->fixed => $Fixed;
-            $Payment->distance => $Distance;
-            $Payment->commision => $Commision;
-            $Payment->discount => $Discount;
-            $Payment->tax => $Tax;
-            $Payment->total => $Total;
+            $Payment->request_id = $UserRequest->id;
+            $Payment->fixed = $Fixed;
+            $Payment->distance = $Distance;
+            $Payment->commision = $Commision;
+            $Payment->discount = $Discount;
+            $Payment->tax = $Tax;
+            $Payment->total = $Total;
             $Payment->save();
 
             return $Payment;
