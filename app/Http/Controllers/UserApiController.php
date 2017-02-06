@@ -331,7 +331,7 @@ class UserApiController extends Controller
                  return response()->json(['error' => 'Request is Already Cancelled!'], 500); 
             }
 
-            if(in_array($UserRequest->status, ['ASSIGNED','STARTED','ARRIVED'])) {
+            if(in_array($UserRequest->status, ['SEARCHING','STARTED','ARRIVED'])) {
 
                 $UserRequest->status = 'CANCELLED';
                 $UserRequest->save();
