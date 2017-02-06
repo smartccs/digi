@@ -995,3 +995,8 @@ select.form-control{
     margin-right: 0.5em;
     color: #999;
 }
+.map-static{
+    height: 290px;
+    background-size: cover;
+    background-position: center center;
+}

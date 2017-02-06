@@ -11,16 +11,16 @@
                 <h4 class="page-title">Ride Now</h4>
             </div>
         </div>
-
+        @include('common.notify')
         <div class="row no-margin">
             <div class="col-md-6">
-                <form action="user-fare-calulate.html">
+                <form action="{{url('confirm/ride')}}" method="GET">
                 <div class="input-group dash-form">
-                    <input type="text" class="form-control" id="origin-input"  placeholder="Enter pickup location" >                               
+                    <input type="text" class="form-control" id="origin-input" name="s_address"  placeholder="Enter pickup location">
                 </div>
 
                 <div class="input-group dash-form">
-                    <input type="text" class="form-control" id="destination-input"  placeholder="Enter drop location" >                               
+                    <input type="text" class="form-control" id="destination-input" name="d_address"  placeholder="Enter drop location" > 
                 </div>  
 
                 <input type="hidden" name="s_latitude" id="origin_latitude">
@@ -33,7 +33,7 @@
                     @foreach($services as $service)
 
                     <div class="car-radio">
-                        <input type="radio" name="fare" id="service_{{$service->id}}" @if ($loop->first) checked="checked" @endif>
+                        <input type="radio" name="service_type" value="{{$service->id}}" id="service_{{$service->id}}" @if ($loop->first) checked="checked" @endif>
                         <label for="service_{{$service->id}}">
                             <div class="car-radio-inner">
                                 <div class="img"><img src="{{img($service->image)}}"></div>

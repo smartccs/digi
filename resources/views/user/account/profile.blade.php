@@ -11,7 +11,7 @@
                 <h4 class="page-title">@lang('messages.general_information')</h4>
             </div>
         </div>
-
+            @include('common.notify')
         <div class="row no-margin">
             <form>
                 <div class="col-md-6 pro-form">

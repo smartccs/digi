@@ -23,7 +23,6 @@ use App\Provider;
 use App\Settings;
 use App\UserRequestRating;
 use App\Cards;
-use App\UserPayment;
 use App\ChatMessage;
 use App\Helpers\Helper;
 
@@ -331,7 +330,7 @@ class UserApiController extends Controller
                  return response()->json(['error' => 'Request is Already Cancelled!'], 500); 
             }
 
-            if(in_array($UserRequest->status, ['ASSIGNED','STARTED','ARRIVED'])) {
+            if(in_array($UserRequest->status, ['SEARCHING','STARTED','ARRIVED'])) {
 
                 $UserRequest->status = 'CANCELLED';
                 $UserRequest->save();
@@ -370,11 +369,11 @@ class UserApiController extends Controller
 
             $check_status = ['CANCELLED','SEARCHING'];
 
-            $requests = UserRequests::UserRequestStatusCheck(Auth::user()->id,$check_status)
+            $UserRequests = UserRequests::UserRequestStatusCheck(Auth::user()->id,$check_status)
                                         ->get()
                                         ->toArray();
 
-            return response()->json(['data' => $requests]);
+            return response()->json(['data' => $UserRequests]);
 
         }
 
@@ -410,17 +409,21 @@ class UserApiController extends Controller
 
         try{
 
-            $rating = new UserRequestRating();
-            $rating->provider_id = $UserRequests->provider_id;
-            $rating->user_id = $UserRequests->user_id;
-            $rating->request_id = $UserRequests->id;
+            $GetRequest = UserRequests::findOrFail($request->request_id);
+            $rating = new UserRequestRating;
+            $rating->provider_id = $GetRequest->provider_id;
+            $rating->user_id = $GetRequest->user_id;
+            $rating->request_id = $GetRequest->id;
             $rating->user_rating = $request->rating;
             $rating->user_comment = $request->comment ?: '';
             $rating->save();
 
-            $average = UserRequestRating::where('provider_id',$UserRequests->provider_id)->avg('user_rating');
+            $GetRequest->user_rated = 1;
+            $GetRequest->save();
 
-            Provider::where('id',$UserRequests->provider_id)->update(['rating' => $average]);
+            $average = UserRequestRating::where('provider_id',$GetRequest->provider_id)->avg('user_rating');
+
+            Provider::where('id',$GetRequest->provider_id)->update(['rating' => $average]);
 
             // Send Push Notification to Provider 
 
@@ -443,7 +446,13 @@ class UserApiController extends Controller
     public function trips() {
     
         try{
-            $UserRequests = UserRequests::UserHistory(Auth::user()->id)->get()->toArray();
+            $UserRequests = UserRequests::UserTrips(Auth::user()->id)->get();
+            if(!empty($UserRequests)){
+                $map_icon = asset('asset/marker.png');
+                foreach ($UserRequests as $key => $value) {
+                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=600x450&maptype=roadmap&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x191919|weight:8|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_API_KEY');
+                }
+            }
             return $UserRequests;
         }
 
@@ -823,10 +832,10 @@ class UserApiController extends Controller
 
             $kilometer = round($meter/1000);
 
-            $base_price = \Setting::get('base_price');
             $tax_percentage = \Setting::get('tax_percentage');
             $commission_percentage = \Setting::get('commission_percentage');
             $service_type = ServiceType::findOrFail($request->service_type);
+            $base_price = $service_type->fixed;
 
             $price_per_kilometer = $service_type->price;
             $price = $base_price + ($kilometer * $price_per_kilometer);
@@ -848,6 +857,34 @@ class UserApiController extends Controller
                 return response()->json(['error' => "Something Went Wrong"], 500);
         }
 
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function trip_details() {
+
+         $this->validate($request, [
+                'request_id' => 'required|integer|exists:user_requests,id',
+            ]);
+    
+        try{
+            $UserRequests = UserRequests::UserTripDetails(Auth::user()->id,$request->request_id)->get();
+            if(!empty($UserRequests)){
+                $map_icon = asset('asset/marker.png');
+                foreach ($UserRequests as $key => $value) {
+                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=600x450&maptype=roadmap&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x191919|weight:8|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_API_KEY');
+                }
+            }
+            return $UserRequests;
+        }
+
+        catch (Exception $e) {
+            return response()->json(['error' => 'Something went wrong']);
+        }
     }
 
 }

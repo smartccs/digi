@@ -13,18 +13,15 @@ use Config;
 use Setting;
 use Carbon\Carbon;
 
-use App\Admin;
 use App\User;
 use App\Provider;
 use App\ProviderService;
 use App\ServiceType;
 use App\UserRequests;
 use App\RequestFilter;
-use App\UserPayment;
 use App\Settings;
 use App\Cards;
 use App\ChatMessage;
-use App\ProviderAvailability;
 
 class ProviderApiController extends Controller
 {

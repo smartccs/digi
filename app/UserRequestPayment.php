@@ -13,7 +13,7 @@ class UserRequestPayment extends Model
      */
     protected $fillable = [
         'request_id',
-        'payment_mode'
+        'payment_mode',
 
         'fixed',
         'distance',
