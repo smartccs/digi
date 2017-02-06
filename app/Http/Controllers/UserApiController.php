@@ -370,11 +370,11 @@ class UserApiController extends Controller
 
             $check_status = ['CANCELLED','SEARCHING'];
 
-            $requests = UserRequests::UserRequestStatusCheck(Auth::user()->id,$check_status)
+            $UserRequests = UserRequests::UserRequestStatusCheck(Auth::user()->id,$check_status)
                                         ->get()
                                         ->toArray();
 
-            return response()->json(['data' => $requests]);
+            return response()->json(['data' => $UserRequests]);
 
         }
 
@@ -410,17 +410,21 @@ class UserApiController extends Controller
 
         try{
 
-            $rating = new UserRequestRating();
-            $rating->provider_id = $UserRequests->provider_id;
-            $rating->user_id = $UserRequests->user_id;
-            $rating->request_id = $UserRequests->id;
+            $GetRequest = UserRequests::findOrFail($request->request_id);
+            $rating = new UserRequestRating;
+            $rating->provider_id = $GetRequest->provider_id;
+            $rating->user_id = $GetRequest->user_id;
+            $rating->request_id = $GetRequest->id;
             $rating->user_rating = $request->rating;
             $rating->user_comment = $request->comment ?: '';
             $rating->save();
 
-            $average = UserRequestRating::where('provider_id',$UserRequests->provider_id)->avg('user_rating');
+            $GetRequest->user_rated = 1;
+            $GetRequest->save();
 
-            Provider::where('id',$UserRequests->provider_id)->update(['rating' => $average]);
+            $average = UserRequestRating::where('provider_id',$GetRequest->provider_id)->avg('user_rating');
+
+            Provider::where('id',$GetRequest->provider_id)->update(['rating' => $average]);
 
             // Send Push Notification to Provider 
 

@@ -24,7 +24,6 @@ use App\UserPayment;
 use App\Settings;
 use App\Cards;
 use App\ChatMessage;
-use App\ProviderAvailability;
 
 class ProviderApiController extends Controller
 {

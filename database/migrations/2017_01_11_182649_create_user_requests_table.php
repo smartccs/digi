@@ -58,6 +58,9 @@ class CreateUserRequestsTable extends Migration
             $table->timestamp('schedule_at')->nullable();
             $table->timestamp('started_at')->nullable();
             $table->timestamp('finished_at')->nullable();
+            
+            $table->boolean('user_rated')->default(0);
+            $table->boolean('provider_rated')->default(0);
 
             $table->timestamps();
         });

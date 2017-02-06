@@ -14,7 +14,6 @@ use App\UserRequests;
 use App\RequestFilter;
 use App\RequestPayment;
 use App\ProviderService;
-use App\ProviderAvailability;
 
 use Log;
 use File;

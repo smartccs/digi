@@ -32,14 +32,6 @@ class UserRequests extends Model
     ];
 
     /**
-     * User Model Linked
-     */
-    public function users()
-    {
-        return $this->belongsTo('App\User', 'user_id');
-    } 
-
-    /**
      * ServiceType Model Linked
      */
     public function service_type()
@@ -132,6 +124,7 @@ class UserRequests extends Model
     public function scopeUserRequestStatusCheck($query, $user_id, $check_status)
     {
         return $query->where('user_requests.user_id', $user_id)
+                    ->where('user_requests.user_rated',0)
                     ->whereNotIn('user_requests.status', $check_status)
                     ->select('user_requests.*')
                     ->with('user','provider','service_type','rating','payment');
