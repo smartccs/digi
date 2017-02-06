@@ -32,7 +32,7 @@
 								<li><a href="{{route('admin.provider.create')}}">Add New Provider</a></li>
 							</ul>
 						</li>
-						<li class="menu-title">Members</li>
+						<li class="menu-title">Details</li>
 						<li class="with-sub">
 							<a href="#" class="waves-effect  waves-light">
 								<span class="s-caret"><i class="fa fa-angle-down"></i></span>

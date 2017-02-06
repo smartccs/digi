@@ -15,36 +15,50 @@ class CreateUserRequestsTable extends Migration
     {
         Schema::create('user_requests', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('provider_id')->default(0);
             $table->integer('user_id');
-            $table->integer('current_provider')->default(0);
-            $table->integer('confirmed_provider')->default(0);
-            $table->dateTime('request_start_time');
-            $table->integer('later')->default(0);
-            $table->integer('later_status')->default(0);
-            $table->integer('user_later_status')->default(0);
-            $table->dateTime('requested_time')->nullable();
-            $table->integer('request_type');
-            $table->integer('request_meta_id')->default(0);
-            $table->integer('provider_status')->default(0);
-            $table->string('after_image')->nullable();
-            $table->string('before_image')->nullable();
-            $table->double('s_latitude',15,8);
-            $table->double('s_longitude',15,8);
-            $table->double('d_latitude',15,8)->nullable();
-            $table->double('d_longitude',15,8)->nullable();
-            $table->tinyInteger('is_paid')->default(0);
+            $table->integer('provider_id')->default(0);
+            $table->integer('current_provider_id');
+            $table->integer('service_type_id');
+            
+            $table->enum('status', [
+                    'SEARCHING',
+                    'CANCELLED',
+                    'ACCEPTED', 
+                    'STARTED',
+                    'ARRIVED',
+                    'PICKEDUP',
+                    'DROPPED',
+                    'COMPLETED',
+                ]);
+
+            $table->enum('cancelled_by', [
+                    'NONE',
+                    'USER',
+                    'PROVIDER'
+                ]);
+
+            $table->enum('payment_mode', [
+                    'CASH',
+                    'CARD',
+                    'PAYPAL'
+                ]);
+            $table->boolean('paid')->default(0);
+
+            $table->double('distance', 15, 8);
+            
             $table->string('s_address')->nullable();
+            $table->double('s_latitude', 15, 8);
+            $table->double('s_longitude', 15, 8);
+            
             $table->string('d_address')->nullable();
-            $table->dateTime('start_time');
-            $table->dateTime('end_time');
-            $table->integer('amount')->default(0);
-            $table->integer('status')->default(0);
-            $table->float('wallet_amount')->default(0);
-            $table->integer('is_promo_code')->default(0);
-            $table->integer('promo_code_id')->default(0);
-            $table->string('promo_code')->nullable();
-            $table->float('offer_amount')->nullable();
+            $table->double('d_latitude', 15, 8);
+            $table->double('d_longitude', 15, 8);
+            
+            $table->timestamp('assigned_at')->nullable();
+            $table->timestamp('schedule_at')->nullable();
+            $table->timestamp('started_at')->nullable();
+            $table->timestamp('finished_at')->nullable();
+
             $table->timestamps();
         });
     }

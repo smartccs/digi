@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserRating extends Model
+class UserRequestPayment extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,7 +12,15 @@ class UserRating extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id','provider_id','rating','comment','status'
+        'request_id',
+        'payment_mode'
+
+        'fixed',
+        'distance',
+        'commision',
+        'discount',
+        'tax',
+        'total',
     ];
 
     /**
@@ -21,11 +29,6 @@ class UserRating extends Model
      * @var array
      */
     protected $hidden = [
-        'created_at', 'updated_at'
+        'status', 'password', 'remember_token', 'created_at', 'updated_at'
     ];
-
-    public function scopeAverage($query, $provider_id)
-    {
-        return $query->where('provider_id', $provider_id)->avg('rating');
-    }
 }

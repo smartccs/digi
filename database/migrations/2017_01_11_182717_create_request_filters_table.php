@@ -16,10 +16,8 @@ class CreateRequestFiltersTable extends Migration
         Schema::create('request_filters', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('request_id');
-            $table->integer('service_id');
             $table->integer('provider_id');
-            $table->integer('status');
-            $table->integer('is_cancelled');
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }

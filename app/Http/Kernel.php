@@ -48,6 +48,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'provider' => \App\Http\Middleware\RedirectIfNotProvider::class,
         'provider.guest' => \App\Http\Middleware\RedirectIfProvider::class,
+        'provider.api' => \App\Http\Middleware\ProviderApiMiddleware::class,
         'admin' => \App\Http\Middleware\RedirectIfNotAdmin::class,
         'admin.guest' => \App\Http\Middleware\RedirectIfAdmin::class,
         'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
@@ -58,6 +59,5 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'jwt.auth' => 'Tymon\JWTAuth\Middleware\GetUserFromToken',
         'jwt.refresh' => 'Tymon\JWTAuth\Middleware\RefreshToken',
-        'ProviderApiMiddleware' => \App\Http\Middleware\ProviderApiMiddleware::class,
     ];
 }

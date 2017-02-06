@@ -18,6 +18,7 @@ class CreateServiceTypesTable extends Migration
             $table->string('name');
             $table->string('provider_name')->nullable();
             $table->string('image')->nullable();
+            $table->integer('fixed')->nullable();
             $table->integer('price')->nullable();
             $table->string('description')->nullable();
             $table->integer('status')->default(0);

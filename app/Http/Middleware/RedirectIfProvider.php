@@ -18,7 +18,7 @@ class RedirectIfProvider
 	public function handle($request, Closure $next, $guard = 'provider')
 	{
 	    if (Auth::guard($guard)->check()) {
-	        return redirect('provider/home');
+	        return redirect('provider/');
 	    }
 
 	    return $next($request);

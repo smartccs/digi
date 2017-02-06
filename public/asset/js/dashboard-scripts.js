@@ -31,14 +31,12 @@
     });
 
 
-
-
-
 $('.car-detail').slick({
 
     slidesToShow: 3,
   slidesToScroll: 1,
   autoplay: false,
+ infinite: false,
 
 })
     .on("mousewheel", function (event) {
@@ -49,11 +47,6 @@ $('.car-detail').slick({
         $('.slick-prev').click();
     }
 });
-
-
-// $('.collapse').on('show.bs.collapse', function () {
-//     $('.collapse.in').collapse('hide');
-// });
 
    
     $('#collapseDiv').on('shown.bs.collapse', function () {

@@ -31,12 +31,6 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 	// provider
 
-	Route::get('/guest/provider/list' , 'UserApiController@guest_provider_list');
-
-	Route::get('/guest/provider/availability' , 'UserApiController@guest_provider_availability');
-
-	Route::get('/provider/details' , 'UserApiController@provider_details');
-
 	Route::post('/rate/provider' , 'UserApiController@rate_provider');
 
 	// request
@@ -45,19 +39,9 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 	Route::post('/cancel/request' , 'UserApiController@cancel_request');
 	
-	Route::post('/later/request' , 'UserApiController@request_later');
-
-	Route::post('/manual/request' , 'UserApiController@manual_create_request');
-
-	Route::post('/manual/scheduled/request' , 'UserApiController@manual_scheduled_request');
-
 	Route::get('/request/check' , 'UserApiController@request_status_check');
 
-	Route::get('/request' , 'UserApiController@single_request');
-
-	Route::get('/upcoming' , 'UserApiController@upcoming_request');
-
-	Route::get('/history' , 'UserApiController@history');
+	Route::get('/trips' , 'UserApiController@trips');
 
 	// payment
 
@@ -65,7 +49,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 	Route::get('/payment/modes' , 'UserApiController@payment_modes');
 
-	Route::post('/change/modes' , 'UserApiController@payment_mode_update');
+	Route::post('/change/mode' , 'UserApiController@payment_mode_update');
 
 	Route::post('/add/card' , 'UserApiController@add_card');
 
@@ -78,5 +62,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 	// chat
 
 	Route::get('/message' , 'UserApiController@message');
+
+	Route::get('/estimated/fare' , 'UserApiController@estimated_fare');
 	
 });

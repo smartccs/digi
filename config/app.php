@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'Laravel',
+    'name' => env('APP_NAME', 'Tranxit'),
 
     /*
     |--------------------------------------------------------------------------
@@ -181,6 +181,7 @@ return [
         Laravel\Socialite\SocialiteServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
         'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
+        'Folklore\Image\ImageServiceProvider'
 
     ],
 
@@ -233,7 +234,6 @@ return [
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'JWTAuth' => 'Tymon\JWTAuth\Facades\JWTAuth',
         'JWTFactory' => 'Tymon\JWTAuth\Facades\JWTFactory',
-
+        'Image' => 'Folklore\Image\Facades\Image',
     ],
-
 ];

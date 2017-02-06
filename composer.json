@@ -12,7 +12,8 @@
         "laravel/framework": "5.3.*",
         "laravel/passport": "^1.0",
         "laravel/socialite": "^2.0",
-        "tymon/jwt-auth": "0.5.*"
+        "tymon/jwt-auth": "0.5.*",
+        "folklore/image": "0.3.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -30,8 +31,7 @@
         },
         "files": [
             "app/Helper/ControllerHelper.php",
-            "app/Helper/ViewHelper.php",
-            "app/Helper/constants.php"
+            "app/Helper/ViewHelper.php"
         ]
     },
     "autoload-dev": {

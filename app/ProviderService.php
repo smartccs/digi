@@ -12,7 +12,7 @@ class ProviderService extends Model
      * @var array
      */
     protected $fillable = [
-        'service_type_id','provider_id','is_available','status'
+        'service_type_id', 'provider_id', 'available', 'status'
     ];
 
     /**
@@ -24,6 +24,14 @@ class ProviderService extends Model
         'created_at', 'updated_at'
     ];
 
+    /**
+     * The services that belong to the user.
+     */
+    public function provider()
+    {
+        return $this->belongsTo('App\Provider');
+    }
+
     public function scopeCheckService($query, $provider_id, $service_id)
     {
         return $query->where('provider_id' , $provider_id)->where('service_type_id' , $service_id);
@@ -31,6 +39,6 @@ class ProviderService extends Model
 
     public function scopeAvailableServiceProvider($query, $service_id)
     {
-        return $query->where('service_type_id', $service_id)->where('is_available' , 1)->select('provider_id');
+        return $query->where('service_type_id', $service_id)->where('available', true);
     }
 }

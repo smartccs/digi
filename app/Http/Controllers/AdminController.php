@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
-use App\UserRating;
-use App\ProviderRating;
 use App\Provider;
 use App\Settings;
 use App\Admin;
