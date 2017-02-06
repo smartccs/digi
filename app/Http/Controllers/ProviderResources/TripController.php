@@ -189,6 +189,7 @@ class TripController extends Controller
         try{
 
             $UserRequest = UserRequests::findOrFail($id);
+
             if($request->status == 'DROPPED' && $UserRequest->payment_mode != 'CASH') {
                 $UserRequest->status = 'COMPLETED';
             } else if ($request->status == 'COMPLETED' && $UserRequest->payment_mode == 'CASH') {
@@ -197,8 +198,13 @@ class TripController extends Controller
             } else {
                 $UserRequest->status = $request->status;
             }
-
             $UserRequest->save();
+
+            if($request->status == 'DROPPED') {
+                $UserRequest->with('user')->get();
+                $UserRequest->invoice = $this->invoice();
+                return $UserRequest;
+            }
 
             // Send Push Notification to User
        
@@ -262,6 +268,37 @@ class TripController extends Controller
 
             // No longer need request specific rows from RequestMeta
             RequestFilter::where('request_id', $UserRequest->id)->delete();
+        }
+    }
+
+    public function invoice($request_id)
+    {
+        try {
+            $UserRequest = UserRequest::findOrFail($request_id);
+            
+            $Fixed = $UserRequest->service_type->fixed;
+            $Distance = ceil($UserRequest->distance) * $UserRequest->service_type->distance;
+            $Discount = 0; // Promo Code discounts should be added here.
+
+            $Commision = ( $Fixed + $Distance - $Discount ) * (Setting::get('payment_commision', 10) / 100);
+
+            $Tax = $Fixed + $Distance - $Discount + $Commision * (Setting::get('payment_tax', 10) / 100);
+            $Total = $Fixed + $Distance - $Discount + $Commision + $Tax;
+
+            $Payment = new UserRequestPayment;
+            $Payment->request_id => $UserRequest->id;
+            $Payment->fixed => $Fixed;
+            $Payment->distance => $Distance;
+            $Payment->commision => $Commision;
+            $Payment->discount => $Discount;
+            $Payment->tax => $Tax;
+            $Payment->total => $Total;
+            $Payment->save();
+
+            return $Payment;
+
+        } catch (ModelNotFoundException $e) {
+            return false;
         }
     }
 

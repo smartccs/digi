@@ -20,6 +20,7 @@ class CreatePromocodesTable extends Migration
             $table->integer('is_valid');
             $table->integer('total');
             $table->integer('status');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

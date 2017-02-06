@@ -3,19 +3,24 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Promocode extends Model
+class UserRequestPayment extends Model
 {
-    use SoftDeletes;
-    
-     /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'promo_code','offer','is_valid'
+        'request_id',
+        'payment_mode'
+
+        'fixed',
+        'distance',
+        'commision',
+        'discount',
+        'tax',
+        'total',
     ];
 
     /**
@@ -24,6 +29,6 @@ class Promocode extends Model
      * @var array
      */
     protected $hidden = [
-        'created_at', 'updated_at'
+        'status', 'password', 'remember_token', 'created_at', 'updated_at'
     ];
 }
