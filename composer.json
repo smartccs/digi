@@ -13,7 +13,8 @@
         "laravel/passport": "^1.0",
         "laravel/socialite": "^2.0",
         "tymon/jwt-auth": "0.5.*",
-        "folklore/image": "0.3.*"
+        "folklore/image": "0.3.*",
+        "cartalyst/stripe-laravel": "5.0.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

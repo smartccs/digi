@@ -53,8 +53,6 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 	Route::post('/change/mode' , 'UserApiController@payment_mode_update');
 
-	Route::post('/add/card' , 'UserApiController@add_card');
-
 	Route::post('/delete/card' , 'UserApiController@delete_card');
 
 	Route::post('/default/card' , 'UserApiController@default_card');
@@ -66,5 +64,12 @@ Route::group(['middleware' => ['auth:api']], function () {
 	Route::get('/message' , 'UserApiController@message');
 
 	Route::get('/estimated/fare' , 'UserApiController@estimated_fare');
+
+
+	Route::group(['prefix' => 'card'], function () {
+
+		Route::post('/add' , 'PaymentController@create_card');
+
+	});
 	
 });

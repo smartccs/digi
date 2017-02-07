@@ -42,6 +42,7 @@ class CreateUserRequestsTable extends Migration
                     'CARD',
                     'PAYPAL'
                 ]);
+            
             $table->boolean('paid')->default(0);
 
             $table->double('distance', 15, 8);
@@ -62,6 +63,7 @@ class CreateUserRequestsTable extends Migration
             $table->boolean('user_rated')->default(0);
             $table->boolean('provider_rated')->default(0);
 
+            $table->string('stripe_cust_id')->nullable();
             $table->timestamps();
         });
     }

@@ -181,7 +181,8 @@ return [
         Laravel\Socialite\SocialiteServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
         'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
-        'Folklore\Image\ImageServiceProvider'
+        'Folklore\Image\ImageServiceProvider',
+        Cartalyst\Stripe\Laravel\StripeServiceProvider::class,
 
     ],
 
@@ -235,5 +236,6 @@ return [
         'JWTAuth' => 'Tymon\JWTAuth\Facades\JWTAuth',
         'JWTFactory' => 'Tymon\JWTAuth\Facades\JWTFactory',
         'Image' => 'Folklore\Image\Facades\Image',
+        'Stripe' => Cartalyst\Stripe\Laravel\Facades\Stripe::class,
     ],
 ];
