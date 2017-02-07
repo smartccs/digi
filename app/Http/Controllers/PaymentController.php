@@ -7,7 +7,6 @@ use App\User;
 use App\Card;
 use Exception;
 use Auth;
-use Cartalyst\Stripe\Laravel\Facades\Stripe;
 
 class PaymentController extends Controller
 {
@@ -25,12 +24,15 @@ class PaymentController extends Controller
     	try{
 
 	    	$customer_id = $this->customer_id();
-	    	$card = $stripe->cards()->create($customer_id, $request->stripe_token);
+	    	$this->set_stripe();
+	    	$customer = \Stripe\Customer::retrieve($customer_id);
+	    	$card = $customer->sources->create(["source" => $request->stripe_token]);
 
 	    	$create_card = new Card;
 	    	$create_card->user_id = Auth::user()->id;
 	    	$create_card->card_id = $card['id'];
 	    	$create_card->last_four = $card['last4'];
+	    	$create_card->brand = $card['brand'];
 	    	$create_card->save();
 
 	    	return response()->json(['message' => 'Card Added']); 
@@ -57,9 +59,9 @@ class PaymentController extends Controller
 
 			try{
 
-				$stripe = new Stripe();
+				$stripe = $this->set_stripe();
 
-				$customer = $stripe->customers()->create([
+				$customer = \Stripe\Customer::create([
 				    'email' => Auth::user()->email,
 				]);
 
@@ -74,6 +76,15 @@ class PaymentController extends Controller
 
 
     /**
+     * setting stripe.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function set_stripe(){
+    	return \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+    }
+
+    /**
      * delete a card using stripe.
      *
      * @return \Illuminate\Http\Response
@@ -81,16 +92,17 @@ class PaymentController extends Controller
     public function destory_card(Request $request)
     {
     	$this->validate($request,[
-                'card_id' => 'required|integer|exists:cards,id,user_id,'.Auth::user()->id,
+                'card_id' => 'required|integer|exists:cards,card_id,user_id,'.Auth::user()->id,
     		]);
 
     	try{
 
+    		$this->set_stripe();
+
+    		$customer = \Stripe\Customer::retrieve(Auth::user()->stripe_cust_id);
+    		$customer->sources->retrieve($request->card_id)->delete();
+
     		Cards::where('card_id',$request->card_id)->delete();
-
-    		$stripe = new Stripe();
-
-    		$stripe->cards()->delete(Auth::user()->stripe_cust_id, $request->card_id);
 
 	    	return response()->json(['message' => 'Card Deleted']); 
 
@@ -111,9 +123,9 @@ class PaymentController extends Controller
 
     	try{
 
-    		$stripe = new Stripe();
+    		$this->set_stripe();
 
-    		$cards = $stripe->cards()->all(Auth::user()->stripe_cust_id);
+    		$cards = \Stripe\Customer::retrieve(Auth::user()->stripe_cust_id)->sources->all(array('object' => 'card'));
 
 	    	return response()->json(['cards' => $cards]); 
 

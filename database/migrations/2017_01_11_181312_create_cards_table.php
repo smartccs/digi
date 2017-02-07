@@ -18,6 +18,7 @@ class CreateCardsTable extends Migration
             $table->integer('user_id');
             $table->string('last_four');
             $table->string('card_id');
+            $table->string('brand')->nullable();
             $table->integer('is_default')->default(0);
             $table->timestamps();
         });

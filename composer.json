@@ -7,14 +7,14 @@
     "require": {
         "php": ">=5.6.4",
         "anlutro/l4-settings": "^0.4.9",
+        "folklore/image": "0.3.*",
         "guzzlehttp/guzzle": "^6.2",
         "hesto/multi-auth": "^1.0",
         "laravel/framework": "5.3.*",
         "laravel/passport": "^1.0",
         "laravel/socialite": "^2.0",
-        "tymon/jwt-auth": "0.5.*",
-        "folklore/image": "0.3.*",
-        "cartalyst/stripe-laravel": "5.0.*"
+        "stripe/stripe-php": "^4.4",
+        "tymon/jwt-auth": "0.5.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
