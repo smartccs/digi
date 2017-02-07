@@ -43,7 +43,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 	Route::get('/trips' , 'UserApiController@trips');
 	
-	Route::get('/trip/deatils' , 'UserApiController@trip_details');
+	Route::get('/trip/details' , 'UserApiController@trip_details');
 
 	// payment
 

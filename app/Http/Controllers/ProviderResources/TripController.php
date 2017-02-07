@@ -134,7 +134,7 @@ class TripController extends Controller
     public function history(Request $request)
     {
         if($request->ajax()) {
-            $Jobs = UserRequests::where('provider_id', Auth::user()->id)->with('user', 'service_type', 'payment', 'rating')->get();
+            $Jobs = UserRequests::where('provider_id', Auth::user()->id)->with('payment')->get();
             return $Jobs;
         }
         $Jobs = UserRequests::where('provider_id', Auth::guard('provider')->user()->id)->with('user', 'service_type', 'payment', 'rating')->get();
@@ -306,6 +306,27 @@ class TripController extends Controller
         } catch (ModelNotFoundException $e) {
             return false;
         }
+    }
+
+    /**
+     * Get the trip history details of the provider
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function history_details(Request $request)
+    {
+        $this->validate($request, [
+                'request_id' => 'required|integer|exists:user_requests,id',
+            ]);
+
+        if($request->ajax()) {
+            $Jobs = UserRequests::where('id',$request->request_id)
+                                ->where('provider_id', Auth::user()->id)
+                                ->with('payment','service_type','user','rating')
+                                ->get();
+            return $Jobs;
+        }
+
     }
 
 }

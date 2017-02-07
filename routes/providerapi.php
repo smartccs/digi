@@ -52,6 +52,7 @@ Route::group(['middleware' => ['provider.api']], function () {
         Route::post('/reject', 'ProviderApiController@reject');
 
         Route::get('/history', 'ProviderResources\TripController@history');
+        Route::get('/history/details', 'ProviderResources\TripController@history_details');
         Route::post('/show', 'ProviderApiController@request_details');
 
     });
