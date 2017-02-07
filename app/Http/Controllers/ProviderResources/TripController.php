@@ -133,12 +133,11 @@ class TripController extends Controller
      */
     public function history(Request $request)
     {
-        $Jobs = UserRequest::where('provider_id', Auth::guard('provider')->user()->id)->with('user', 'service_type', 'payment', 'rating');
-
         if($request->ajax()) {
+            $Jobs = UserRequests::where('provider_id', Auth::user()->id)->with('user', 'service_type', 'payment', 'rating')->get();
             return $Jobs;
         }
-
+        $Jobs = UserRequests::where('provider_id', Auth::guard('provider')->user()->id)->with('user', 'service_type', 'payment', 'rating')->get();
         return view('provider.trip.index', compact('Jobs'));
     }
 
