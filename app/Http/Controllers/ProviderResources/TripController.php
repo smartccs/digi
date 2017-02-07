@@ -131,9 +131,14 @@ class TripController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function history()
+    public function history(Request $request)
     {
-        $Jobs = Auth::guard('provider')->user()->trips;
+        $Jobs = UserRequest::where('provider_id', Auth::guard('provider')->user()->id)->with('user', 'service_type', 'payment', 'rating');
+
+        if($request->ajax()) {
+            return $Jobs;
+        }
+
         return view('provider.trip.index', compact('Jobs'));
     }
 

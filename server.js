@@ -18,18 +18,24 @@ io.on('connection', function (socket) {
 
     socket.emit('connected', 'Connection to server established!');
 
+    if(route.length) {
+        soocket.emit('location update', route[route.length]);
+    }
+
     socket.on('update sender', function(data) {
         console.log('update sender', data);
-        socket.reqid = data.reqid;
-        socket.join(data.reqid);
-        socket.emit('sender updated', 'Sender Updated ID:'+data.reqid, 'Request ID:'+data.myid);
+        socket.request_id = data.request_id;
+        socket.join(data.request_id);
+        socket.emit('sender updated', 'Sender Updated ID:'+data.request_id, 'Request ID:'+data.myid);
     });
 
     socket.on('update location', function(data) {
         data.timestamp = new Date();
         console.log(data);
-        route.push(data);
-        socket.emit('location update', data);
+        if(route[route.length-1].latitude != data.latitude && route[route.length-1].longitude != data.longitude) {
+            route.push(data);
+            socket.emit('location update', data);
+        }
     });
 
     socket.on('send message', function(data) {
