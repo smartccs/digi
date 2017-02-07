@@ -53,10 +53,6 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 	Route::post('/change/mode' , 'UserApiController@payment_mode_update');
 
-	Route::post('/delete/card' , 'UserApiController@delete_card');
-
-	Route::post('/default/card' , 'UserApiController@default_card');
-
 	Route::post('/add/money' , 'UserApiController@add_money');
 
 	// chat
@@ -68,7 +64,11 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 	Route::group(['prefix' => 'card'], function () {
 
+		Route::get('/', 'PaymentController@card');
+
 		Route::post('/add' , 'PaymentController@create_card');
+
+		Route::post('/destory' , 'PaymentController@destory_card');
 
 	});
 	

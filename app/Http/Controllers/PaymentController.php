@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Card;
+use Exception;
+use Auth;
+use Cartalyst\Stripe\Laravel\Facades\Stripe;
 
 class PaymentController extends Controller
 {
@@ -67,5 +70,56 @@ class PaymentController extends Controller
 				return $e;
 			}
 		}
+    }
+
+
+    /**
+     * delete a card using stripe.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destory_card(Request $request)
+    {
+    	$this->validate($request,[
+                'card_id' => 'required|integer|exists:cards,id,user_id,'.Auth::user()->id,
+    		]);
+
+    	try{
+
+    		Cards::where('card_id',$request->card_id)->delete();
+
+    		$stripe = new Stripe();
+
+    		$stripe->cards()->delete(Auth::user()->stripe_cust_id, $request->card_id);
+
+	    	return response()->json(['message' => 'Card Deleted']); 
+
+    	} catch(Exception $e){
+            return response()->json(['error' => $e->getMessage()], 500);
+    	}	
+
+    }
+
+
+    /**
+     * get all cards using stripe.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function card()
+    {
+
+    	try{
+
+    		$stripe = new Stripe();
+
+    		$cards = $stripe->cards()->all(Auth::user()->stripe_cust_id);
+
+	    	return response()->json(['cards' => $cards]); 
+
+    	} catch(Exception $e){
+            return response()->json(['error' => $e->getMessage()], 500);
+    	}	
+
     }
 }
