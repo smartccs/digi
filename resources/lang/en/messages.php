@@ -24,4 +24,5 @@ return [
     'my_trips' => 'My Trips',
     'profile' => 'Profile',
     'ride_now' => 'Ride Now',
+    'finding_driver' => 'Finding Nearby Driver',
 ];

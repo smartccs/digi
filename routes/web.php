@@ -55,7 +55,7 @@ Route::get('/dashboard', 'HomeController@index');
 // user profiles
 Route::get('/profile', 'HomeController@profile');
 Route::get('/edit/profile', 'HomeController@edit_profile');
-Route::post('/update/profile', 'HomeController@update_profile');
+Route::post('/profile', 'HomeController@update_profile');
 
 // update password
 Route::get('/change/password', 'HomeController@change_password');
@@ -63,3 +63,4 @@ Route::post('/change/password', 'HomeController@update_password');
 
 // ride
 Route::get('/confirm/ride', 'RideController@confirm_ride');
+Route::get('/waiting', 'RideController@waiting');

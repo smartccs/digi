@@ -13,7 +13,7 @@
         </div>
             @include('common.notify')
         <div class="row no-margin edit-pro">
-            <form action="{{url('update/profile')}}" method="post" enctype="multipart/form-data">
+            <form action="{{url('profile')}}" method="post" enctype="multipart/form-data">
             {{ csrf_field() }}
                 <div class="col-md-12">
                     <label>@lang('messages.profile_picture')</label>

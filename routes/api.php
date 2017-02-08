@@ -41,35 +41,26 @@ Route::group(['middleware' => ['auth:api']], function () {
 	
 	Route::get('/request/check' , 'UserApiController@request_status_check');
 
+	// history
+
 	Route::get('/trips' , 'UserApiController@trips');
 	
 	Route::get('/trip/details' , 'UserApiController@trip_details');
 
 	// payment
 
-	Route::post('/pay/now' , 'UserApiController@paynow');
-
-	Route::get('/payment/modes' , 'UserApiController@payment_modes');
-
-	Route::post('/change/mode' , 'UserApiController@payment_mode_update');
-
-	Route::post('/add/money' , 'UserApiController@add_money');
+	Route::post('/payment' , 'PaymentController@payment');
 
 	// chat
 
 	Route::get('/message' , 'UserApiController@message');
 
+	// estimated
+
 	Route::get('/estimated/fare' , 'UserApiController@estimated_fare');
 
+	// card payment
 
-	Route::group(['prefix' => 'card'], function () {
+    Route::resource('card', 'Resource\CardResource');
 
-		Route::get('/', 'PaymentController@card');
-
-		Route::post('/add' , 'PaymentController@create_card');
-
-		Route::post('/destory' , 'PaymentController@destory_card');
-
-	});
-	
 });

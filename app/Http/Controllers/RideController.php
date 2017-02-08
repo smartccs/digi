@@ -28,6 +28,18 @@ class RideController extends Controller
     public function confirm_ride(Request $request)
     {
         $fare = $this->UserAPI->estimated_fare($request)->getData();
-        return view('user.ride.confirm_ride',compact('request','fare'));
+        $service = (new Resource\ServiceResource)->show($request->service_type);
+        $cards = (new Resource\CardResource)->index();
+        return view('user.ride.confirm_ride',compact('request','fare','service','cards'));
+    }
+
+    /**
+     * Waiting for Driver.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function waiting()
+    {
+        return view('user.ride.waiting');
     }
 }

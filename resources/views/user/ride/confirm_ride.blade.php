@@ -3,14 +3,11 @@
 @section('title', 'Ride Confirmation ')
 
 @section('content')
-<style type="text/css">
-
-</style>
 <div class="col-md-9">
     <div class="dash-content">
         <div class="row no-margin">
             <div class="col-md-12">
-                <h4 class="page-title">Ride Now</h4>
+                <h4 class="page-title">@lang('messages.ride_now')</h4>
             </div>
         </div>
 
@@ -19,7 +16,7 @@
                 <form action="user-waiting-provider.html">
                     <dl class="dl-horizontal left-right">
                         <dt>Type</dt>
-                        <dd>XUV</dd>
+                        <dd>{{$service->name}}</dd>
                         <dt>Total Distance</dt>
                         <dd>{{$fare->distance}} Kms</dd>
                         <dt>ETA</dt>
@@ -28,7 +25,29 @@
                         <dd>{{$fare->estimated_fare}}</dd>
                     </dl>
 
-                    <button type="submit" class="full-primary-btn fare-btn">RIDE NOW</button>
+                    <input type="hidden" name="s_address" name="{{Request::get('s_address')}}">
+                    <input type="hidden" name="d_address" name="{{Request::get('d_address')}}">
+                    <input type="hidden" name="s_latitude" name="{{Request::get('s_latitude')}}">
+                    <input type="hidden" name="s_longitude" name="{{Request::get('s_longitude')}}">
+                    <input type="hidden" name="d_latitude" name="{{Request::get('d_latitude')}}">
+                    <input type="hidden" name="d_longitude" name="{{Request::get('d_longitude')}}">
+                    <input type="hidden" name="service_type" name="{{Request::get('service_type')}}">
+
+                    <select class="form-control" name="payment_mode" id="payment_mode" onchange="card(this.value);">
+                      <option value="CASH">CASH</option>
+                      @if($cards->count() > 0)
+                        <option value="CARD">CARD</option>
+                      @endif
+                    </select>
+
+                    <select class="form-control" name="card_id" style="display: none;" id="card_id">
+                      <option value="">Select Card</option>
+                      @foreach($cards as $card)
+                        <option value="{{$card->card_id}}">{{$card->brand}} ***{{$card->last_four}}</option>
+                      @endforeach
+                    </select>
+
+                    <button type="submit" class="full-primary-btn fare-btn">@lang('messages.ride_now')</button>
 
                 </form>
             </div>
@@ -56,4 +75,16 @@
 
     </div>
 </div>
+@endsection
+
+@section('scripts')
+    <script type="text/javascript">
+        function card(value){
+            if(value == 'CARD'){
+                $('#card_id').fadeIn(300);
+            }else{
+                $('#card_id').fadeOut(300);
+            }
+        }
+    </script>
 @endsection

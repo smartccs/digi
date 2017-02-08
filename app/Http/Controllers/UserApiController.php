@@ -231,7 +231,8 @@ class UserApiController extends Controller
                 'service_type' => 'required|numeric|exists:service_types,id',
                 'promo_code' => 'exists:promocodes,promo_code',
                 'distance' => 'required|numeric',
-                'payment_mode' => 'required|in:CASH,CARD,PAYPAL'
+                'payment_mode' => 'required|in:CASH,CARD,PAYPAL',
+                'card_id' => ['required_if:payment_mode,CARD','exists:cards,card_id,user_id,'.Auth::user()->id],
             ]);
 
         Log::info('New Request: ', $request->all());
@@ -284,6 +285,14 @@ class UserApiController extends Controller
             $UserRequest->assigned_at = Carbon::now();
 
             $UserRequest->save();
+
+            // update payment mode 
+
+            User::where('id',Auth::user()->id)->update(['payment_mode' => $request->payment_mode]);
+
+            Card::where('user_id',Auth::user()->id)->update(['is_default' => 0]);
+
+            Card::where('card_id',$request->card_id)->update(['is_default' => 1]);
 
             foreach ($Providers as $key => $Provider) {
 
@@ -488,99 +497,6 @@ class UserApiController extends Controller
         }
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function get_user_payment_modes() {
-
-        try{
-
-            $data = $card_data = array();
-
-            if($user_cards = Cards::where('user_id' , Auth::user()->id)->get()) {
-                foreach ($user_cards as $c => $card) {
-                    $data['id'] = $card->id;
-                    $data['customer_id'] = $card->customer_id;
-                    $data['card_id'] = $card->card_token;
-                    $data['last_four'] = $card->last_four;
-                    $data['is_default']= $card->is_default;
-
-                    array_push($card_data, $data);
-                }
-            } 
-
-            return ['payment_mode' => Auth::user()->payment_mode , 'card' => $card_data];
-        }
-
-        catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong'], 500);
-        }
-    
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function payment_mode_update(Request $request) {
-        
-        $this->validate($request, [
-                'payment_mode' => 'required|in:CARD,CASH,PAYPAL',
-         ]);
-
-        try{
-
-            $user = User::where('id', '=', Auth::user()->id)->update( ['payment_mode' => $request->payment_mode]);
-            return response()->json(['message' => 'Payment Mode Updated']);
-        }
-
-        catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong']);
-        }
-
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function default_card(Request $request) {
-
-         $this->validate($request, [
-                'card_id' => 'required|integer|exists:cards,id,user_id,'.Auth::user()->id,
-            ]);
-
-        try{
-
-            $user = User::find(Auth::user()->id);
-            
-            $old_default = Cards::where('user_id' , Auth::user()->id)
-                            ->where('is_default', 1)
-                            ->update(['is_default' => 0]);
-
-            $card = Cards::where('id' , $request->card_id)
-                    ->update(['is_default' => 1 ]);
-
-                if($user) {
-                    $user->payment_mode = 'CARD';
-                    $user->default_card = $request->card_id;
-                    $user->save();
-                }
-                return response()->json(['message' => 'Successfully Done']);
-        }
-
-        catch(Exception $e) {
-                return response()->json(['error' => "Something Went Wrong"], 500);
-        }
-    
-    }
 
     /**
      * Show the application dashboard.

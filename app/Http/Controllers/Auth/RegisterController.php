@@ -68,7 +68,7 @@ class RegisterController extends Controller
             'last_name' => $data['last_name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'payment_mode' => 'cod'
+            'payment_mode' => 'CASH'
         ]);
 
         // send welcome email here
