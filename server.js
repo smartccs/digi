@@ -25,16 +25,16 @@ io.on('connection', function (socket) {
     socket.on('update sender', function(data) {
         console.log('update sender', data);
         socket.request_id = data.request_id;
-        socket.join(data.request_id);
+        socket.join(socket.request_id);
         socket.emit('sender updated', 'Sender Updated ID:'+data.request_id, 'Request ID:'+data.myid);
     });
 
     socket.on('update location', function(data) {
+        console.log('update location'. data);
         data.timestamp = new Date();
-        console.log(data);
         if(route[route.length-1].latitude != data.latitude && route[route.length-1].longitude != data.longitude) {
             route.push(data);
-            socket.emit('location update', data);
+            socket.broadcast.to( socket.request_id ).emit('location update', data);
         }
     });
 
