@@ -52,6 +52,8 @@
         </div>
     </div>
 
+    @include('provider.layout.partials.modal')
+
     <!-- Scripts -->
     <script type="text/javascript" src="{{ asset('asset/js/jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('asset/js/bootstrap.min.js') }}"></script>
@@ -59,6 +61,13 @@
     <script type="text/javascript" src="{{ asset('asset/js/jquery-migrate-1.2.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('asset/js/slick.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('asset/js/rating.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('asset/js/incoming.js') }}"></script>
+    <script type="text/javascript">
+        $.incoming({
+            'url': '{{ route('api') }}',
+            'modal': 'modal-incoming'
+        })
+    </script>
     @yield('scripts')
 
 </body>

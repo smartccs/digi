@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-use DB;
 use Log;
 use Auth;
 use Hash;
@@ -24,8 +23,6 @@ use App\Settings;
 use App\UserRequestRating;
 use App\Card;
 use App\ChatMessage;
-use App\Helpers\Helper;
-
 
 class UserApiController extends Controller
 {
@@ -176,8 +173,8 @@ class UserApiController extends Controller
             }
 
             if ($request->picture != "") {
-                Helper::delete_avatar($user->picture); 
-                $user->picture = Helper::upload_avatar($request->picture);
+                Storage::delete($user->picture);
+                $user->picture = $request->picture->store('user/profile');
             }
 
             $user->save();
@@ -567,8 +564,8 @@ class UserApiController extends Controller
                         }
 
                         try{
-
-                           $user_charge =  \Stripe\Charge::create(array(
+                            
+                            $user_charge =  \Stripe\Charge::create(array(
                               "amount" => $request->amount * 100,
                               "currency" => "usd",
                               "customer" => $customer_id,

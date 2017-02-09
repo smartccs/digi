@@ -12,6 +12,7 @@ server.listen(port);
 
 io.on('connection', function (socket) {
 
+    var request_id = 'unassigned';
     var route = [];
 
     console.log('new connection established');
@@ -24,17 +25,24 @@ io.on('connection', function (socket) {
 
     socket.on('update sender', function(data) {
         console.log('update sender', data);
-        socket.request_id = data.request_id;
-        socket.join(socket.request_id);
-        socket.emit('sender updated', 'Sender Updated ID:'+data.request_id, 'Request ID:'+data.myid);
+        request_id = data.request_id;
+        socket.join(request_id);
+        socket.emit('sender updated', 'Sender Updated ID:'+request_id);
     });
 
     socket.on('update location', function(data) {
-        console.log('update location'. data);
+        console.log('update location', data);
         data.timestamp = new Date();
-        if(route[route.length-1].latitude != data.latitude && route[route.length-1].longitude != data.longitude) {
+        if(route.length) {
+            if(route[route.length-1].latitude != data.latitude && route[route.length-1].longitude != data.longitude) {
+                console.log('location update route exists'+request_id);
+                route.push(data);
+                socket.broadcast.to( request_id ).emit('location update', data);
+            }
+        } else {
+            console.log('location update no route'+request_id);
             route.push(data);
-            socket.broadcast.to( socket.request_id ).emit('location update', data);
+            socket.broadcast.to( request_id ).emit('location update', data);
         }
     });
 
