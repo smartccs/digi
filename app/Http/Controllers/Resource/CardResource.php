@@ -115,7 +115,7 @@ class CardResource extends Controller
     public function destroy(Request $request)
     {
         $this->validate($request,[
-                'card_id' => 'required|integer|exists:cards,card_id,user_id,'.Auth::user()->id,
+                'card_id' => 'required|exists:cards,card_id,user_id,'.Auth::user()->id,
             ]);
 
         try{
