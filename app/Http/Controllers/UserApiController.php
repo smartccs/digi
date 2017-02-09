@@ -240,12 +240,15 @@ class UserApiController extends Controller
         $ActiveRequests = UserRequests::PendingRequest(Auth::user()->id)->count();
 
         if($ActiveRequests > 0) {
-            return response()->json(['error' => 'Already request is in progress. Try again later'], 500);
+            if($request->ajax()) {
+                return response()->json(['error' => 'Already request is in progress. Try again later'], 500);
+            }else{
+                return back()->with('flash_error', 'Already request is in progress. Try again later');
+            }
         }
 
         $ActiveProviders = ProviderService::AvailableServiceProvider($request->service_type)->get()->pluck('provider_id');
 
-        /*Get default search radius*/
         $distance = Setting::get('search_radius', '10');
         $latitude = $request->s_latitude;
         $longitude = $request->s_longitude;
@@ -258,8 +261,12 @@ class UserApiController extends Controller
         // List Providers who are currently busy and add them to the filter list.
 
         if(count($Providers) == 0) {
-            // Push Notification to User
-            return response()->json(['error' => 'No Providers Found!'], 500); 
+            if($request->ajax()) {
+                // Push Notification to User
+                return response()->json(['error' => 'No Providers Found! Please try again.'], 500); 
+            }else{
+                return back()->with('flash_error', 'No Providers Found! Please try again.');
+            }
         }
 
         try{
@@ -306,14 +313,22 @@ class UserApiController extends Controller
                 $Filter->save();
             }
 
-            return response()->json([
-                    'message' => 'New request Created!',
-                    'request_id' => $UserRequest->id,
-                    'current_provider' => $UserRequest->current_provider_id,
-                ]);
+            if($request->ajax()) {
+                return response()->json([
+                        'message' => 'New request Created!',
+                        'request_id' => $UserRequest->id,
+                        'current_provider' => $UserRequest->current_provider_id,
+                    ]);
+            }else{
+                return redirect()->url('onride');
+            }
 
         } catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong while sending request. Please try again.'], 500);
+            if($request->ajax()) {
+                return response()->json(['error' => 'Something went wrong while sending request. Please try again.'], 500);
+            }else{
+                return back()->with('flash_error', 'Something went wrong while sending request. Please try again.');
+            }
         }
     }
 
@@ -376,7 +391,7 @@ class UserApiController extends Controller
 
         try{
 
-            $check_status = ['CANCELLED','SEARCHING'];
+            $check_status = ['CANCELLED'];
 
             $UserRequests = UserRequests::UserRequestStatusCheck(Auth::user()->id,$check_status)
                                         ->get()

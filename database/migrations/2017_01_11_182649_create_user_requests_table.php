@@ -63,7 +63,6 @@ class CreateUserRequestsTable extends Migration
             $table->boolean('user_rated')->default(0);
             $table->boolean('provider_rated')->default(0);
 
-            $table->string('stripe_cust_id')->nullable();
             $table->timestamps();
         });
     }
