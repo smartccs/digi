@@ -30,7 +30,7 @@
 
                     @foreach($trips as $trip)
 
-                        <tr data-toggle="collapse" data-target="#demo1" class="accordion-toggle collapsed">
+                        <tr data-toggle="collapse" data-target="#trip_{{$trip->id}}" class="accordion-toggle collapsed">
                             <td><span class="arrow-icon fa fa-chevron-right"></span></td>
                             <td>{{date('d-m-Y',strtotime($trip->assigned_at))}}</td>
                             <td>{{$trip->provider->first_name}} {{$trip->provider->last_name}}</td>
@@ -40,7 +40,7 @@
                         </tr>
                         <tr class="hiddenRow">
                             <td colspan="6">
-                                <div class="accordian-body collapse row" id="demo1">
+                                <div class="accordian-body collapse row" id="trip_{{$trip->id}}">
                                     <div class="col-md-6">
                                         <div class="my-trip-left">
                                         <?php 

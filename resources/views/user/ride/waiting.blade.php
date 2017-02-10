@@ -123,10 +123,10 @@
 					}else if(this.props.checkState.status == 'COMPLETED'){
 						var provider_name = this.props.checkState.provider.first_name;
 						$("#ride_status").text("@lang('user.ride.rate_and_review') " +provider_name );
-						setTimeout(function(){
-							$('.rating').rating();
-						},400);
 					}
+					setTimeout(function(){
+						$('.rating').rating();
+					},400);
 				}else{
 					$("#ride_status").text('Text will appear here');
 				}
@@ -221,6 +221,12 @@
 			            	<dl className="dl-horizontal left-right">
 				                <dt>@lang('user.driver_name')</dt>
 				                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
+				                <dt>@lang('user.driver_rating')</dt>
+				                <dd>
+				                	<div className="rating-outer">
+			                            <input type="hidden" value={this.props.checkState.provider.rating} name="rating" className="rating"/>
+			                        </div>
+				                </dd>
 				                <dt>@lang('user.payment_mode')</dt>
 				                <dd>{this.props.checkState.payment_mode}</dd>
 				            </dl> 
@@ -248,6 +254,12 @@
 			            	<dl className="dl-horizontal left-right">
 				                <dt>@lang('user.driver_name')</dt>
 				                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
+				                <dt>@lang('user.driver_rating')</dt>
+				                <dd>
+				                	<div className="rating-outer">
+			                            <input type="hidden" value={this.props.checkState.provider.rating} name="rating" className="rating"/>
+			                        </div>
+				                </dd>
 				                <dt>@lang('user.payment_mode')</dt>
 				                <dd>{this.props.checkState.payment_mode}</dd>
 				            </dl> 
@@ -271,6 +283,12 @@
 		            	<dl className="dl-horizontal left-right">
 			                <dt>@lang('user.driver_name')</dt>
 			                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
+			                <dt>@lang('user.driver_rating')</dt>
+				                <dd>
+				                	<div className="rating-outer">
+			                            <input type="hidden" value={this.props.checkState.provider.rating} name="rating" className="rating"/>
+			                        </div>
+				                </dd>
 			                <dt>@lang('user.payment_mode')</dt>
 			                <dd>{this.props.checkState.payment_mode}</dd>
 			            </dl> 
@@ -294,6 +312,12 @@
 		            	<dl className="dl-horizontal left-right">
 		            		<dt>@lang('user.driver_name')</dt>
 			                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
+			                <dt>@lang('user.driver_rating')</dt>
+			                <dd>
+			                	<div className="rating-outer">
+		                            <input type="hidden" value={this.props.checkState.provider.rating} name="rating" className="rating"/>
+		                        </div>
+			                </dd>
 		            		<dt>@lang('user.payment_mode')</dt>
                         	<dd>{this.props.checkState.payment_mode}</dd>
                         	<dt>@lang('user.ride.km')</dt>
@@ -331,6 +355,12 @@
 		            	<dl className="dl-horizontal left-right">
 		            		<dt>@lang('user.driver_name')</dt>
 			                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
+			                <dt>@lang('user.driver_rating')</dt>
+			                <dd>
+			                	<div className="rating-outer">
+		                            <input type="hidden" value={this.props.checkState.provider.rating} name="rating" className="rating"/>
+		                        </div>
+			                </dd>
 		            		<dt>@lang('user.payment_mode')</dt>
                         	<dd>{this.props.checkState.payment_mode}</dd>
                         	<dt>@lang('user.ride.km')</dt>
@@ -369,7 +399,6 @@
                         <label>@lang('user.ride.comment')</label>
                         <textarea className="form-control" name="comment" placeholder="Write Comment"></textarea>
                     </div>
-
                     <button type="submit" className="full-primary-btn fare-btn">SUBMIT</button>   
                 </form>
 				);

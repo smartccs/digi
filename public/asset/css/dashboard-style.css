@@ -844,6 +844,9 @@ dl.left-right dd, dl.left-right dd span {
     font-weight: 600;
     color: #333;
 }
+.rating-outer span, .rating-symbol-background{
+  font-size: 12px;
+}
 .provider-info .rating-outer span,.provider-info .rating-symbol-background{
   font-size: 16px;
 }

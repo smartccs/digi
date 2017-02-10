@@ -30,6 +30,7 @@ return [
     'my_trips' => 'My Trips',
     'status' => 'Status',
     'driver_name' => 'Driver Name',
+    'driver_rating' => 'Driver Rating',
     'payment_mode' => 'Payment Mode',
     'date' => 'Date',
     'amount' => 'Amount',
