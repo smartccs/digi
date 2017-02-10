@@ -7,13 +7,14 @@
     <div class="dash-content">
         <div class="row no-margin">
             <div class="col-md-12">
-                <h4 class="page-title">@lang('messages.ride_now')</h4>
+                <h4 class="page-title">@lang('user.ride.ride_now')</h4>
             </div>
         </div>
-
+        @include('common.notify')
         <div class="row no-margin">
             <div class="col-md-6">
-                <form action="user-waiting-provider.html">
+                <form action="{{url('create/ride')}}" method="POST">
+                {{ csrf_field() }}
                     <dl class="dl-horizontal left-right">
                         <dt>Type</dt>
                         <dd>{{$service->name}}</dd>
@@ -25,13 +26,14 @@
                         <dd>{{$fare->estimated_fare}}</dd>
                     </dl>
 
-                    <input type="hidden" name="s_address" name="{{Request::get('s_address')}}">
-                    <input type="hidden" name="d_address" name="{{Request::get('d_address')}}">
-                    <input type="hidden" name="s_latitude" name="{{Request::get('s_latitude')}}">
-                    <input type="hidden" name="s_longitude" name="{{Request::get('s_longitude')}}">
-                    <input type="hidden" name="d_latitude" name="{{Request::get('d_latitude')}}">
-                    <input type="hidden" name="d_longitude" name="{{Request::get('d_longitude')}}">
-                    <input type="hidden" name="service_type" name="{{Request::get('service_type')}}">
+                    <input type="hidden" name="s_address" value="{{Request::get('s_address')}}">
+                    <input type="hidden" name="d_address" value="{{Request::get('d_address')}}">
+                    <input type="hidden" name="s_latitude" value="{{Request::get('s_latitude')}}">
+                    <input type="hidden" name="s_longitude" value="{{Request::get('s_longitude')}}">
+                    <input type="hidden" name="d_latitude" value="{{Request::get('d_latitude')}}">
+                    <input type="hidden" name="d_longitude" value="{{Request::get('d_longitude')}}">
+                    <input type="hidden" name="service_type" value="{{Request::get('service_type')}}">
+                    <input type="hidden" name="distance" value="{{$fare->distance}}">
 
                     <select class="form-control" name="payment_mode" id="payment_mode" onchange="card(this.value);">
                       <option value="CASH">CASH</option>
@@ -39,15 +41,18 @@
                         <option value="CARD">CARD</option>
                       @endif
                     </select>
+                    <br>
 
+                    @if($cards->count() > 0)
                     <select class="form-control" name="card_id" style="display: none;" id="card_id">
                       <option value="">Select Card</option>
                       @foreach($cards as $card)
-                        <option value="{{$card->card_id}}">{{$card->brand}} ***{{$card->last_four}}</option>
+                        <option value="{{$card->card_id}}">{{$card->brand}} **** **** **** {{$card->last_four}}</option>
                       @endforeach
                     </select>
+                    @endif
 
-                    <button type="submit" class="full-primary-btn fare-btn">@lang('messages.ride_now')</button>
+                    <button type="submit" class="full-primary-btn fare-btn">@lang('user.ride.ride_now')</button>
 
                 </form>
             </div>

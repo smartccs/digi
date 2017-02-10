@@ -1,56 +1,382 @@
 @extends('user.layout.base')
 
-@section('title', 'Ride Confirmation ')
+@section('title', 'On Ride')
 
 @section('content')
 
 <div class="col-md-9">
     <div class="dash-content">
+    	@include('common.notify')
 		<div class="row no-margin">
 		    <div class="col-md-12">
-		        <h4 class="page-title">@lang('messages.finding_driver')</h4>
+		        <h4 class="page-title" id="ride_status"></h4>
 		    </div>
 		</div>
-
+		
 		<div class="row no-margin">
-		    <form action="user-provider-after-accept.html">
-		        <div class="col-md-6">
-		            <div class="status">
-		                <h6>Status</h6>
-		                <p>Waiting for Provider to accept...</p>
-		            </div>
-
-		            <button type="submit" class="full-primary-btn fare-btn">Cancel Request</button>                                
+		        <div class="col-md-6" id="container" >
+		    		<p>Loading...</p>                             
 		        </div>
+
 		        <div class="col-md-6">
 		            <dl class="dl-horizontal left-right">
-		                <dt>Request ID</dt>
-		                <dd>2596</dd>
-		                <dt>Time</dt>
-		                <dd>10-5-17 08:26:55 PM</dd>                                    
+		                <dt>@lang('user.request_id')</dt>
+		                <dd>{{$request->id}}</dd>
+		                <dt>@lang('user.time')</dt>
+		                <dd>{{date('d-m-Y H:i A',strtotime($request->assigned_at))}}</dd>
 		            </dl> 
 		            <div class="user-request-map">
 		                <div class="from-to row no-margin">
 		                    <div class="from">
 		                        <h5>FROM</h5>
-		                        <p>620 Alice St, Mountain Home, AR, 72653</p>
+		                        <p>{{$request->s_address}}</p>
 		                    </div>
 		                    <div class="to">
 		                        <h5>TO</h5>
-		                        <p>2290 N Koolridge Way, Chino Valley, AZ, 86323</p>
+		                        <p>{{$request->d_address}}</p>
 		                    </div>
 		                    <div class="type">
-		                        <h5>Type : XUV</h5>
+		                    	<h5>TYPE</h5>
+		                        <p>{{$request->service_type->name}}</p>
 		                    </div>
 		                </div>
-		                <div class="map-responsive-trip">
-		                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d386950.6511603643!2d-73.70231446529533!3d40.738882125234106!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNueva+York!5e0!3m2!1ses-419!2sus!4v1445032011908" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
-		                </div>                                
+		                <?php 
+		                    $map_icon = asset('asset/marker.png');
+		                    $static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=600x450&maptype=roadmap&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$request->s_latitude.",".$request->s_longitude."&markers=icon:".$map_icon."%7C".$request->d_latitude.",".$request->d_longitude."&path=color:0x191919|weight:8|".$request->s_latitude.",".$request->s_longitude."|".$request->d_latitude.",".$request->d_longitude."&key=".env('GOOGLE_API_KEY'); ?>
+		                    <div class="map-static" style="background-image: url({{$static_map}});"></div>                               
 		            </div>                          
 		        </div>
-		    </form>
 		</div>
 	</div>
 </div>
+
+@endsection
+
+@section('scripts')
+    <script type="text/javascript" src="{{asset('asset/js/rating.js')}}"></script>    
+	<script type="text/javascript">
+		$('.rating').rating();
+	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
+
+    <script type="text/jsx">
+		var MainComponent = React.createClass({
+			getInitialState: function () {
+                    return {data: [], currency : "{{currency()}}"};
+                },
+			componentDidMount: function(){
+				$.ajax({
+			      url: "{{url('status')}}",
+			      type: "GET"})
+			      .done(function(response){
+
+				        this.setState({
+				            data:response.data[0]
+				        });
+
+				    }.bind(this));
+
+				    setInterval(this.checkRequest, 5000);
+			},
+			checkRequest : function(){
+				$.ajax({
+			      url: "{{url('status')}}",
+			      type: "GET"})
+			      .done(function(response){
+
+				        this.setState({
+				            data:response.data[0]
+				        });
+
+				    }.bind(this));
+			},
+			render: function(){
+				return (
+					<div>
+						<SwitchState checkState={this.state.data} currency={this.state.currency} />
+					</div>
+				);
+			}
+		});
+
+		var SwitchState = React.createClass({
+
+			componentDidMount: function() {
+				this.changeLabel;
+			},
+
+			changeLabel : function(){
+				if(this.props.checkState != ""){
+					if(this.props.checkState.status == 'SEARCHING'){
+						$("#ride_status").text("@lang('user.ride.finding_driver')");
+					}else if(this.props.checkState.status == 'ACCEPTED'){
+						var provider_name = this.props.checkState.provider.first_name;
+						$("#ride_status").text(provider_name+" @lang('user.ride.accepted_ride')");
+					}else if(this.props.checkState.status == 'ARRIVED'){
+						var provider_name = this.props.checkState.provider.first_name;
+						$("#ride_status").text(provider_name+" @lang('user.ride.arrived_ride')");
+					}else if(this.props.checkState.status == 'PICKEDUP'){
+						$("#ride_status").text("@lang('user.ride.onride')");
+					}else if(this.props.checkState.status == 'DROPPED'){
+						$("#ride_status").text("@lang('user.ride.waiting_payment')");
+					}else if(this.props.checkState.status == 'COMPLETED'){
+						var provider_name = this.props.checkState.provider.first_name;
+						$("#ride_status").text("@lang('user.ride.rate_and_review') " +provider_name );
+						setTimeout(function(){
+							$('.rating').rating();
+						},400);
+					}
+				}else{
+					$("#ride_status").text('Text will appear here');
+				}
+			},
+			render: function(){
+
+				if(this.props.checkState != ""){
+
+					this.changeLabel();
+					if(this.props.checkState.status == 'SEARCHING'){
+						return (
+							<div>
+								<Searching checkState={this.props.checkState} />
+							</div>
+						);
+					}else if(this.props.checkState.status == 'ACCEPTED'){
+						return (
+							<div>
+								<Accepted checkState={this.props.checkState} />
+							</div>
+						);
+					}else if(this.props.checkState.status == 'ARRIVED'){
+						return (
+							<div>
+								<Arrived checkState={this.props.checkState} />
+							</div>
+						);
+					}else if(this.props.checkState.status == 'PICKEDUP'){
+						return (
+							<div>
+								<Pickedup checkState={this.props.checkState} />
+							</div>
+						);
+					}else if((this.props.checkState.status == 'DROPPED' || this.props.checkState.status == 'COMPLETED') && this.props.checkState.payment_mode == 'CASH' && this.props.checkState.paid == 0){
+						return (
+							<div>
+								<DroppedAndCash checkState={this.props.checkState} currency={this.props.currency} />
+							</div>
+						);
+					}else if((this.props.checkState.status == 'DROPPED' || this.props.checkState.status == 'COMPLETED') && this.props.checkState.payment_mode == 'CARD' && this.props.checkState.paid == 0){
+						return (
+							<div>
+								<DroppedAndCard checkState={this.props.checkState} currency={this.props.currency} />
+							</div>
+						);
+					}else if(this.props.checkState.status == 'COMPLETED'){
+						return (
+							<div>
+								<Review checkState={this.props.checkState} />
+							</div>
+						);
+					}
+				}else{
+					return ( 
+						<p></p>
+					 );
+				}
+			}
+		});
+
+		var Searching = React.createClass({
+			render: function(){
+				return (
+					<form action="{{url('cancel/ride')}}" method="POST">
+						{{ csrf_field() }}</input>
+						<input type="hidden" name="request_id" value={this.props.checkState.id} />
+			            <div className="status">
+			                <h6>@lang('user.status')</h6>
+			                <p>@lang('user.ride.finding_driver')</p>
+			            </div>
+
+		            	<button type="submit" className="full-primary-btn fare-btn">@lang('user.ride.cancel_request')</button> 
+		            </form>
+				);
+			}
+		});
+
+		var Accepted = React.createClass({
+			render: function(){
+				return (
+					<form action="{{url('cancel/ride')}}" method="POST">
+						{{ csrf_field() }}</input>
+					<input type="hidden" name="request_id" value={this.props.checkState.id} />
+						<div className="status">
+			                <h6>@lang('user.status')</h6>
+			                <p>@lang('user.ride.accepted_ride')</p>
+			            </div>
+		            	<button type="submit" className="full-primary-btn fare-btn">@lang('user.ride.cancel_request')</button> 
+		            	<br/>
+		            		<h5><strong>@lang('user.ride.ride_details')</strong></h5>
+		            	<div className="driver-details">
+			            	<dl className="dl-horizontal left-right">
+				                <dt>@lang('user.driver_name')</dt>
+				                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
+				                <dt>@lang('user.payment_mode')</dt>
+				                <dd>{this.props.checkState.payment_mode}</dd>
+				            </dl> 
+			            </div>
+
+		            </form>
+				);
+			}
+		});
+
+		var Arrived = React.createClass({
+			render: function(){
+				return (
+					<form action="{{url('cancel/ride')}}" method="POST">
+						{{ csrf_field() }}</input>
+					<input type="hidden" name="request_id" value={this.props.checkState.id} />
+						<div className="status">
+			                <h6>@lang('user.status')</h6>
+			                <p>@lang('user.ride.arrived_ride')</p>
+			            </div>
+		            	<button type="submit" className="full-primary-btn fare-btn">@lang('user.ride.cancel_request')</button> 
+		            	<br/>
+		            		<h5><strong>@lang('user.ride.ride_details')</strong></h5>
+		            	<div className="driver-details">
+			            	<dl className="dl-horizontal left-right">
+				                <dt>@lang('user.driver_name')</dt>
+				                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
+				                <dt>@lang('user.payment_mode')</dt>
+				                <dd>{this.props.checkState.payment_mode}</dd>
+				            </dl> 
+			            </div>
+		            </form>
+				);
+			}
+		});
+
+		var Pickedup = React.createClass({
+			render: function(){
+				return (
+				<div>
+					<div className="status">
+		                <h6>@lang('user.status')</h6>
+		                <p>@lang('user.ride.onride')</p>
+		            </div>
+		            <br/>
+	            		<h5><strong>@lang('user.ride.ride_details')</strong></h5>
+	            	<div className="driver-details">
+		            	<dl className="dl-horizontal left-right">
+			                <dt>@lang('user.driver_name')</dt>
+			                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
+			                <dt>@lang('user.payment_mode')</dt>
+			                <dd>{this.props.checkState.payment_mode}</dd>
+			            </dl> 
+		            </div>
+		        </div>
+				);
+			}
+		});
+
+		var DroppedAndCash = React.createClass({
+
+			render: function(){
+				return (
+				<div>
+					<div className="status">
+		                <h6>@lang('user.status')</h6>
+		                <p>@lang('user.ride.dropped_ride')</p>
+		            </div>
+		            <br/>
+		            	<h5><strong>@lang('user.ride.ride_details')</strong></h5>
+		            	<dl className="dl-horizontal left-right">
+		            		<dt>@lang('user.driver_name')</dt>
+			                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
+		            		<dt>@lang('user.payment_mode')</dt>
+                        	<dd>{this.props.checkState.payment_mode}</dd>
+                        	<dt>@lang('user.ride.km')</dt>
+                        	<dd>{this.props.checkState.distance} kms</dd>
+                        </dl>
+		            	<h5><strong>@lang('user.ride.invoice')</strong></h5>
+		            	<dl className="dl-horizontal left-right">
+                            <dt>@lang('user.ride.base_price')</dt>
+                            <dd>{this.props.currency}{this.props.checkState.payment.fixed}</dd>
+                            <dt>@lang('user.ride.tax_price')</dt>
+                            <dd>{this.props.currency}{this.props.checkState.payment.tax}</dd>
+                            <dt>@lang('user.ride.total')</dt>
+                            <dd>{this.props.currency}{this.props.checkState.payment.total}</dd> 
+                            <dt className="big">@lang('user.ride.amount_paid')</dt>
+                            <dd className="big">{this.props.currency}{this.props.checkState.payment.total}</dd>
+                        </dl>
+		        </div>
+				);
+			}
+		});
+
+		var DroppedAndCard = React.createClass({
+
+			render: function(){
+				return (
+				<div>
+					<form method="POST" action="{{url('/payment')}}">
+						{{ csrf_field() }}</input>
+					<div className="status">
+		                <h6>@lang('user.status')</h6>
+		                <p>@lang('user.ride.dropped_ride')</p>
+		            </div>
+		            	<br/>
+		            	<h5><strong>@lang('user.ride.ride_details')</strong></h5>
+		            	<dl className="dl-horizontal left-right">
+		            		<dt>@lang('user.driver_name')</dt>
+			                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
+		            		<dt>@lang('user.payment_mode')</dt>
+                        	<dd>{this.props.checkState.payment_mode}</dd>
+                        	<dt>@lang('user.ride.km')</dt>
+                        	<dd>{this.props.checkState.distance} kms</dd>
+                        </dl>
+		            	<h5><strong>@lang('user.ride.invoice')</strong></h5>
+		            	<input type="hidden" name="request_id" value={this.props.checkState.id} />
+		            	<dl className="dl-horizontal left-right">
+                            <dt>@lang('user.ride.base_price')</dt>
+                            <dd>{this.props.currency}{this.props.checkState.payment.fixed}</dd>
+                            <dt>@lang('user.ride.tax_price')</dt>
+                            <dd>{this.props.currency}{this.props.checkState.payment.tax}</dd>
+                            <dt>@lang('user.ride.total')</dt>
+                            <dd>{this.props.currency}{this.props.checkState.payment.total}</dd> 
+                            <dt className="big">@lang('user.ride.amount_paid')</dt>
+                            <dd className="big">{this.props.currency}{this.props.checkState.payment.total}</dd>
+                        </dl>
+                    	<button type="submit" className="full-primary-btn fare-btn">CONTINUE TO PAY</button>   
+                    </form>
+		        </div>
+				);
+			}
+		});
+
+		var Review = React.createClass({
+			render: function(){
+				return (
+				<form method="POST" action="{{url('/rate')}}">
+				{{ csrf_field() }}</input>
+                    <div className="rate-review">
+                        <label>@lang('user.ride.rating')</label>
+                        <div className="rating-outer">
+                            <input type="hidden" value="1" name="rating" className="rating"/>
+                        </div>
+						<input type="hidden" name="request_id" value={this.props.checkState.id} />
+                        <label>@lang('user.ride.comment')</label>
+                        <textarea className="form-control" name="comment" placeholder="Write Comment"></textarea>
+                    </div>
+
+                    <button type="submit" className="full-primary-btn fare-btn">SUBMIT</button>   
+                </form>
+				);
+			}
+		});
+
+		React.render(<MainComponent/>,document.getElementById("container"));
+	</script>
 
 @endsection

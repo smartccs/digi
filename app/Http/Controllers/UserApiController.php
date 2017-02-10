@@ -320,7 +320,7 @@ class UserApiController extends Controller
                         'current_provider' => $UserRequest->current_provider_id,
                     ]);
             }else{
-                return redirect()->url('onride');
+                return redirect('dashboard');
             }
 
         } catch (Exception $e) {
@@ -340,7 +340,7 @@ class UserApiController extends Controller
      */
 
     public function cancel_request(Request $request) {
-    
+
         $this->validate($request, [
                 'request_id' => 'required|numeric|exists:user_requests,id,user_id,'.Auth::user()->id,
             ]);
@@ -351,10 +351,14 @@ class UserApiController extends Controller
 
             if($UserRequest->status == 'CANCELLED')
             {
-                 return response()->json(['error' => 'Request is Already Cancelled!'], 500); 
+                if($request->ajax()) {
+                    return response()->json(['error' => 'Request is Already Cancelled!'], 500); 
+                }else{
+                    return back()->with('flash_error', 'Request is Already Cancelled!');
+                }
             }
 
-            if(in_array($UserRequest->status, ['SEARCHING','STARTED','ARRIVED'])) {
+            if(in_array($UserRequest->status, ['SEARCHING','ACCEPTED','ARRIVED'])) {
 
                 $UserRequest->status = 'CANCELLED';
                 $UserRequest->save();
@@ -368,15 +372,27 @@ class UserApiController extends Controller
                     // send push and email
                 }
 
-                return response()->json(['message' => 'Request Cancelled Successfully']); 
+                if($request->ajax()) {
+                    return response()->json(['message' => 'Request Cancelled Successfully']); 
+                }else{
+                    return redirect('dashboard')->with('flash_success','Request Cancelled Successfully');
+                }
 
             } else {
-                return response()->json(['error' => 'Service Already Started!'], 500); 
+                if($request->ajax()) {
+                    return response()->json(['error' => 'Service Already Started!'], 500); 
+                }else{
+                    return back()->with('flash_error', 'Service Already Started!');
+                }
             }
         }
 
         catch (ModelNotFoundException $e) {
-             return response()->json(['error' => 'No Request Found!']);
+            if($request->ajax()) {
+                return response()->json(['error' => 'No Request Found!']);
+            }else{
+                return back()->with('flash_error', 'No Request Found!');
+            }
         }
 
     }
@@ -428,7 +444,11 @@ class UserApiController extends Controller
                 ->first();
 
         if ($UserRequests) {
-             return response()->json(['error' => 'Not Paid!'], 500);
+            if($request->ajax()){
+                return response()->json(['error' => 'Not Paid!'], 500);
+            }else{
+                return back()->with('flash_error', 'Service Already Started!');
+            }
         }
 
         try{
@@ -450,12 +470,19 @@ class UserApiController extends Controller
             Provider::where('id',$GetRequest->provider_id)->update(['rating' => $average]);
 
             // Send Push Notification to Provider 
-
-            return response()->json(['message' => 'Provider Rated Successfully']); 
+            if($request->ajax()){
+                return response()->json(['message' => 'Driver Rated Successfully']); 
+            }else{
+                return redirect('dashboard')->with('flash_success', 'Driver Rated Successfully!');
+            }
         }
 
         catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong'], 500);
+            if($request->ajax()){
+                return response()->json(['error' => 'Something went wrong'], 500);
+            }else{
+                return back()->with('flash_error', 'Something went wrong');
+            }
         }
 
     } 

@@ -56,10 +56,18 @@ class PaymentController extends Controller
 	    		$UserRequest->status = 'COMPLETED';
 	    		$UserRequest->save();
 
-            	return response()->json(['message' => 'Paid']); 
+                if($request->ajax()){
+            	   return response()->json(['message' => 'Paid']); 
+                }else{
+                    return redirect('dashboard')->with('flash_success','Paid');
+                }
 
     		} catch(\Stripe\StripeInvalidRequestError $e){
-    			return response()->json(['error' => $e->getMessage()], 500);
+                if($request->ajax()){
+    			     return response()->json(['error' => $e->getMessage()], 500);
+                }else{
+                    return back()->with('flash_error',$e->getMessage());
+                }
     		} 
 
     	}

@@ -8,7 +8,7 @@
     <div class="dash-content">
         <div class="row no-margin">
             <div class="col-md-12">
-                <h4 class="page-title">Ride Now</h4>
+                <h4 class="page-title">@lang('user.ride.ride_now')</h4>
             </div>
         </div>
         @include('common.notify')
@@ -47,7 +47,7 @@
 
                 </div>
 
-                <button type="submit" class="full-primary-btn fare-btn">RIDE NOW</button>
+                <button type="submit" class="full-primary-btn fare-btn">@lang('user.ride.ride_now')</button>
 
                 </form>
             </div>

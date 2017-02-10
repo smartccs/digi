@@ -63,4 +63,21 @@ Route::post('/change/password', 'HomeController@update_password');
 
 // ride
 Route::get('/confirm/ride', 'RideController@confirm_ride');
-Route::get('/waiting', 'RideController@waiting');
+Route::post('/create/ride', 'RideController@create_ride');
+Route::post('/cancel/ride', 'RideController@cancel_ride');
+Route::get('/onride', 'RideController@onride');
+Route::post('/payment', 'RideController@payment');
+Route::post('/rate', 'RideController@rate');
+
+// status check
+Route::get('/status', 'RideController@status');
+
+// trips
+Route::get('/trips', 'HomeController@trips');
+
+// payment
+Route::get('/payment', 'HomeController@payment');
+
+// card
+Route::resource('card', 'Resource\CardResource');
+

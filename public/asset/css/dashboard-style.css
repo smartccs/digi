@@ -793,14 +793,14 @@ border-bottom: 0!important;
     font-size: 13px;
     color: #666;
 }
-dl.left-right dt {
+dl.left-right dt, dl.left-right dt span {
     text-align: left;
     font-size: 12px;
     color: #666;
     letter-spacing: 0.5px;
     margin-bottom: 15px;
 }
-dl.left-right dd {
+dl.left-right dd, dl.left-right dd span {
     font-size: 12px;
     text-align: right;
     font-weight: 600;
@@ -930,6 +930,11 @@ dl.left-right dd.big,dl.left-right dt.big{
   font-size: 16px;
     color: #37b38b;
 }
+dl.left-right dd.big span,dl.left-right dt.big span{
+  font-size: 16px;
+    color: #37b38b;
+    font-weight: 600;
+}
 .provider-info{
   margin-bottom: 15px;
 }
@@ -999,4 +1004,7 @@ select.form-control{
     height: 290px;
     background-size: cover;
     background-position: center center;
+}
+.driver-details{
+  padding-top: 10px;
 }
