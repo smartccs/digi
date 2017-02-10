@@ -110,7 +110,7 @@
 				if(this.props.checkState != ""){
 					if(this.props.checkState.status == 'SEARCHING'){
 						$("#ride_status").text("@lang('user.ride.finding_driver')");
-					}else if(this.props.checkState.status == 'ACCEPTED'){
+					}else if(this.props.checkState.status == 'STARTED'){
 						var provider_name = this.props.checkState.provider.first_name;
 						$("#ride_status").text(provider_name+" @lang('user.ride.accepted_ride')");
 					}else if(this.props.checkState.status == 'ARRIVED'){
@@ -142,7 +142,7 @@
 								<Searching checkState={this.props.checkState} />
 							</div>
 						);
-					}else if(this.props.checkState.status == 'ACCEPTED'){
+					}else if(this.props.checkState.status == 'STARTED'){
 						return (
 							<div>
 								<Accepted checkState={this.props.checkState} />
