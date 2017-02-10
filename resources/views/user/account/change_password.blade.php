@@ -8,7 +8,7 @@
     <div class="dash-content">
         <div class="row no-margin">
             <div class="col-md-12">
-                <h4 class="page-title">@lang('messages.change_password')</h4>
+                <h4 class="page-title">@lang('user.profile.change_password')</h4>
             </div>
         </div>
             @include('common.notify')
@@ -17,21 +17,21 @@
             {{ csrf_field() }}
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>@lang('messages.old_password')</label>
-                        <input type="password" name="old_password" class="form-control" placeholder="@lang('messages.old_password')">
+                        <label>@lang('user.profile.old_password')</label>
+                        <input type="password" name="old_password" class="form-control" placeholder="@lang('user.profile.old_password')">
                     </div>
                     <div class="form-group">
-                        <label>@lang('messages.password')</label>
-                        <input type="password" name="password" class="form-control" placeholder="@lang('messages.password')">
+                        <label>@lang('user.profile.password')</label>
+                        <input type="password" name="password" class="form-control" placeholder="@lang('user.profile.password')">
                     </div>
 
                     <div class="form-group">
-                        <label>@lang('messages.confirm_password')</label>
-                        <input type="password" name="password_confirmation" class="form-control" placeholder="@lang('messages.confirm_password')">
+                        <label>@lang('user.profile.confirm_password')</label>
+                        <input type="password" name="password_confirmation" class="form-control" placeholder="@lang('user.profile.confirm_password')">
                     </div>
                   
                     <div>
-                        <button type="submit" class="form-sub-btn big">@lang('messages.change_password')</button>
+                        <button type="submit" class="form-sub-btn big">@lang('user.profile.change_password')</button>
                     </div>
                 </div>
             </form>

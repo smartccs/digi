@@ -34,12 +34,52 @@ class RideController extends Controller
     }
 
     /**
-     * Waiting for Driver.
+     * Create Ride.
      *
      * @return \Illuminate\Http\Response
      */
-    public function waiting()
+    public function create_ride(Request $request)
     {
-        return view('user.ride.waiting');
+        return $this->UserAPI->send_request($request);
+    }
+
+    /**
+     * Get Request Status Ride.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function status()
+    {
+        return $this->UserAPI->request_status_check();
+    }
+
+    /**
+     * Cancel Ride.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function cancel_ride(Request $request)
+    {
+        return $this->UserAPI->cancel_request($request);
+    }
+
+    /**
+     * Rate Ride.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function rate(Request $request)
+    {
+        return $this->UserAPI->rate_provider($request);
+    }
+
+    /**
+     * payment.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function payment(Request $request)
+    {
+        return (new PaymentController)->payment($request);
     }
 }

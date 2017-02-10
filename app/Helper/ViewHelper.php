@@ -1,9 +1,9 @@
 <?php
 
-function currency($value)
+function currency($value = '')
 {
 	if($value == ""){
-		return '-';
+		return Setting::get('currency');
 	}else{
 		return Setting::get('currency').$value;
 	}

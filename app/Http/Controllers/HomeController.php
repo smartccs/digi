@@ -26,8 +26,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $services = $this->UserAPI->services();
-        return view('user.dashboard',compact('services'));
+        $Response = $this->UserAPI->request_status_check()->getData();
+
+        if(empty($Response->data))
+        {
+            $services = $this->UserAPI->services();
+            return view('user.dashboard',compact('services'));
+        }else{
+            return view('user.ride.waiting')->with('request',$Response->data[0]);
+        }
     }
 
     /**
@@ -78,6 +85,28 @@ class HomeController extends Controller
     public function update_password(Request $request)
     {
         return $this->UserAPI->change_password($request);
+    }
+
+    /**
+     * Trips.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function trips()
+    {
+        $trips = $this->UserAPI->trips();
+        return view('user.ride.trips',compact('trips'));
+    }
+
+     /**
+     * Payment.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function payment()
+    {
+        $cards = (new Resource\CardResource)->index();
+        return view('user.account.payment',compact('cards'));
     }
 
 }

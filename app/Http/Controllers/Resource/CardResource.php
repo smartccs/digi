@@ -65,10 +65,18 @@ class CardResource extends Controller
             $create_card->brand = $card['brand'];
             $create_card->save();
 
-            return response()->json(['message' => 'Card Added']); 
+            if($request->ajax()){
+                return response()->json(['message' => 'Card Added']); 
+            }else{
+                return back()->with('flash_success','Card Added');
+            }
 
         } catch(Exception $e){
-            return response()->json(['error' => $e->getMessage()], 500);
+            if($request->ajax()){
+                return response()->json(['error' => $e->getMessage()], 500);
+            }else{
+                return back()->with('flash_error',$e->getMessage());
+            }
         } 
     }
 
@@ -114,23 +122,33 @@ class CardResource extends Controller
      */
     public function destroy(Request $request)
     {
+
         $this->validate($request,[
-                'card_id' => 'required|integer|exists:cards,card_id,user_id,'.Auth::user()->id,
+                'card_id' => 'required|exists:cards,card_id,user_id,'.Auth::user()->id,
             ]);
 
         try{
+
 
             $this->set_stripe();
 
             $customer = \Stripe\Customer::retrieve(Auth::user()->stripe_cust_id);
             $customer->sources->retrieve($request->card_id)->delete();
 
-            Cards::where('card_id',$request->card_id)->delete();
+            Card::where('card_id',$request->card_id)->delete();
 
-            return response()->json(['message' => 'Card Deleted']); 
+            if($request->ajax()){
+                return response()->json(['message' => 'Card Deleted']); 
+            }else{
+                return back()->with('flash_success','Card Deleted');
+            }
 
         } catch(Exception $e){
-            return response()->json(['error' => $e->getMessage()], 500);
+            if($request->ajax()){
+                return response()->json(['error' => $e->getMessage()], 500);
+            }else{
+                return back()->with('flash_error',$e->getMessage());
+            }
         }
     }
 
