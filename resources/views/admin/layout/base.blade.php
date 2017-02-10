@@ -9,7 +9,7 @@
 		<meta name="author" content="">
 
 		<!-- Title -->
-		<title>Xuber - @yield('title') - Admin Dashboard</title>
+		<title>@yield('title'){{ Setting::get('site_title', 'Tranxit') }}</title>
 
 		<!-- Vendor CSS -->
 		<link rel="stylesheet" href="{{asset('admin/vendor/bootstrap4/css/bootstrap.min.css')}}">

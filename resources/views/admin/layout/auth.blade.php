@@ -10,7 +10,7 @@
     <meta name="author" content="">
 
     <!-- Title -->
-    <title>XUber 3</title>
+    <title>{{ Setting::get('site_title', 'Tranxit') }}</title>
 
     <!-- Vendor CSS -->
     <link rel="stylesheet" href="{{asset('admin/vendor/bootstrap4/css/bootstrap.min.css')}}">

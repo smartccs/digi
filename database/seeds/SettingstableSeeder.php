@@ -15,7 +15,7 @@ class SettingsTableSeeder extends Seeder
         DB::table('settings')->delete();
         DB::table('settings')->insert([
             [
-                'key' => 'site_name',
+                'key' => 'site_title',
                 'value' => 'Tranxit'
             ],
             [
