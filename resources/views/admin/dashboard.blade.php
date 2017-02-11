@@ -116,8 +116,8 @@
 							<h5 class="mb-2">Drivers Rating</h5>
 							@if($providers->count() > 0)
 								@foreach($providers as $provider)
-								<p class="mb-0-5">{{$provider->first_name}} {{$provider->last_name}} <span class="float-xs-right">25%</span></p>
-								<progress class="progress progress{{$diff[array_rand($diff)]}} progress-sm" value="{{$provider->rating}}" max="5">{{$provider->rating/100}}%</progress>
+								<p class="mb-0-5">{{$provider->first_name}} {{$provider->last_name}} <span class="float-xs-right">{{($provider->rating/5)*100}}%</span></p>
+								<progress class="progress progress{{$diff[array_rand($diff)]}} progress-sm" value="{{$provider->rating}}" max="5"></progress>
 								@endforeach
 							@endif
 					</div>

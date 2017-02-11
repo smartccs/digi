@@ -13,7 +13,7 @@
 			<li class="with-sub">
 				<a href="#" class="waves-effect  waves-light">
 					<span class="s-caret"><i class="fa fa-angle-down"></i></span>
-					<span class="s-icon"><i class="ti-package"></i></span>
+					<span class="s-icon"><i class="ti-crown"></i></span>
 					<span class="s-text">Users</span>
 				</a>
 				<ul>
@@ -24,7 +24,7 @@
 			<li class="with-sub">
 				<a href="#" class="waves-effect  waves-light">
 					<span class="s-caret"><i class="fa fa-angle-down"></i></span>
-					<span class="s-icon"><i class="ti-paint-bucket"></i></span>
+					<span class="s-icon"><i class="ti-car"></i></span>
 					<span class="s-text">Providers</span>
 				</a>
 				<ul>
@@ -36,7 +36,7 @@
 			<li class="with-sub">
 				<a href="#" class="waves-effect  waves-light">
 					<span class="s-caret"><i class="fa fa-angle-down"></i></span>
-					<span class="s-icon"><i class="ti-pencil-alt"></i></span>
+					<span class="s-icon"><i class="ti-map-alt"></i></span>
 					<span class="s-text">Map</span>
 				</a>
 				<ul>
@@ -58,7 +58,7 @@
 			<li class="menu-title">Requests</li>
 			<li>
 				<a href="{{route('admin.request.history')}}" class="waves-effect  waves-light">
-					<span class="s-icon"><i class="ti-palette"></i></span>
+					<span class="s-icon"><i class="ti-infinite"></i></span>
 					<span class="s-text">Request History</span>
 				</a>
 			</li>
@@ -72,7 +72,7 @@
 			<li class="with-sub">
 				<a href="#" class="waves-effect  waves-light">
 					<span class="s-caret"><i class="fa fa-angle-down"></i></span>
-					<span class="s-icon"><i class="ti-menu-alt"></i></span>
+					<span class="s-icon"><i class="ti-view-grid"></i></span>
 					<span class="s-text">Service Types</span>
 				</a>
 				<ul>
@@ -83,7 +83,7 @@
 			<li class="with-sub">
 				<a href="#" class="waves-effect  waves-light">
 					<span class="s-caret"><i class="fa fa-angle-down"></i></span>
-					<span class="s-icon"><i class="ti-gallery"></i></span>
+					<span class="s-icon"><i class="ti-layout-tab"></i></span>
 					<span class="s-text">Documents</span>
 				</a>
 				<ul>
@@ -95,41 +95,47 @@
 			<li class="menu-title">Payment Details</li>
 			<li>
 				<a href="{{route('admin.payment')}}" class="waves-effect  waves-light">
-					<span class="s-icon"><i class="ti-layout-tab"></i></span>
+					<span class="s-icon"><i class="ti-infinite"></i></span>
 					<span class="s-text">Payment History</span>
 				</a>
 			</li>
 			<li>
 				<a href="{{route('admin.payment.setting')}}" class="waves-effect  waves-light">
-					<span class="s-icon"><i class="ti-palette"></i></span>
+					<span class="s-icon"><i class="ti-money"></i></span>
 					<span class="s-text">Payment Settings</span>
 				</a>
 			</li>
 			<li class="menu-title">Settings</li>
 			<li>
 				<a href="{{route('admin.setting')}}" class="waves-effect  waves-light">
-					<span class="s-icon"><i class="ti-palette"></i></span>
+					<span class="s-icon"><i class="ti-settings"></i></span>
 					<span class="s-text">Site Settings</span>
 				</a>
 			</li>
 			
 			<li class="menu-title">Others</li>
 			<li>
-				<a href="{{route('admin.help')}}" class="waves-effect  waves-light">
-					<span class="s-icon"><i class="ti-palette"></i></span>
+				<a href="{{route('admin.help')}}" class="waves-effect waves-light">
+					<span class="s-icon"><i class="ti-help"></i></span>
 					<span class="s-text">Help</span>
+				</a>
+			</li>
+			<li>
+				<a href="{{url('translations')}}" class="waves-effect waves-light">
+					<span class="s-icon"><i class="ti-smallcap"></i></span>
+					<span class="s-text">Translations</span>
 				</a>
 			</li>
 			<li class="menu-title">Account</li>
 			<li>
 				<a href="{{route('admin.profile')}}" class="waves-effect  waves-light">
-					<span class="s-icon"><i class="ti-palette"></i></span>
+					<span class="s-icon"><i class="ti-user"></i></span>
 					<span class="s-text">Account Settings</span>
 				</a>
 			</li>
 			<li>
 				<a href="{{route('admin.password')}}" class="waves-effect  waves-light">
-					<span class="s-icon"><i class="ti-palette"></i></span>
+					<span class="s-icon"><i class="ti-exchange-vertical"></i></span>
 					<span class="s-text">Change Password</span>
 				</a>
 			</li>
@@ -137,7 +143,7 @@
 				<a href="{{ url('/admin/logout') }}"
                             onclick="event.preventDefault();
                                      document.getElementById('logout-form').submit();">
-					<span class="s-icon"><i class="ti-palette"></i></span>
+					<span class="s-icon"><i class="ti-power-off"></i></span>
 					<span class="s-text">Logout</span>
                 </a>
 

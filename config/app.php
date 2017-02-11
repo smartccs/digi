@@ -182,6 +182,7 @@ return [
         Laravel\Passport\PassportServiceProvider::class,
         'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
         'Folklore\Image\ImageServiceProvider',
+        'Barryvdh\TranslationManager\ManagerServiceProvider',
 
     ],
 

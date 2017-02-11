@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "db6da3f92b5601bf843a3e93396547be",
-    "content-hash": "42304867c314e860923c4aa0beb296fe",
+    "hash": "15739814630aa43e28214b272d176281",
+    "content-hash": "c6c8ec6d5c7d1b5f20a45a8382e2defc",
     "packages": [
         {
             "name": "anlutro/l4-settings",
@@ -52,6 +52,55 @@
             ],
             "description": "Persistent settings in Laravel.",
             "time": "2016-08-24 14:06:54"
+        },
+        {
+            "name": "barryvdh/laravel-translation-manager",
+            "version": "v0.2.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/barryvdh/laravel-translation-manager.git",
+                "reference": "c960412007766887812d020cf8d187ecad7de86a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/barryvdh/laravel-translation-manager/zipball/c960412007766887812d020cf8d187ecad7de86a",
+                "reference": "c960412007766887812d020cf8d187ecad7de86a",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "5.0.x|5.1.x|5.2.x|5.3.x|5.4.x",
+                "illuminate/translation": "5.0.x|5.1.x|5.2.x|5.3.x|5.4.x",
+                "php": ">=5.4.0",
+                "symfony/finder": "~2.3|~3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Barryvdh\\TranslationManager\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Barry vd. Heuvel",
+                    "email": "barryvdh@gmail.com"
+                }
+            ],
+            "description": "Manage Laravel Translations",
+            "keywords": [
+                "laravel",
+                "translations",
+                "translator"
+            ],
+            "time": "2017-01-25 10:31:08"
         },
         {
             "name": "classpreloader/classpreloader",

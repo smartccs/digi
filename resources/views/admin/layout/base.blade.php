@@ -25,6 +25,8 @@
 		<link rel="stylesheet" href="{{asset('main/vendor/DataTables/Buttons/css/buttons.bootstrap4.min.css')}}">
 		<link rel="stylesheet" href="{{asset('main/vendor/switchery/dist/switchery.min.css')}}">
 		<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css">
+
+		<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
 		<link rel="stylesheet" href="{{asset('main/vendor/dropify/dist/css/dropify.min.css')}}">
 		<link rel="stylesheet" href="{{asset('main/assets/css/core.css')}}">
 
@@ -83,7 +85,6 @@
 			<script type="text/javascript" src="{{asset('main/vendor/jscrollpane/jquery.jscrollpane.min.js')}}"></script>
 			<script type="text/javascript" src="{{asset('main/vendor/jquery-fullscreen-plugin/jquery.fullscreen')}}-min.js"></script>
 			<script type="text/javascript" src="{{asset('main/vendor/waves/waves.min.js')}}"></script>
-			<script type="text/javascript" src="{{asset('main/vendor/switchery/dist/switchery.min.js')}}"></script>
 			<script type="text/javascript" src="{{asset('main/vendor/DataTables/js/jquery.dataTables.min.js')}}"></script>
 			<script type="text/javascript" src="{{asset('main/vendor/DataTables/js/dataTables.bootstrap4.min.js')}}"></script>
 			<script type="text/javascript" src="{{asset('main/vendor/DataTables/Responsive/js/dataTables.responsi')}}ve.min.js"></script>
