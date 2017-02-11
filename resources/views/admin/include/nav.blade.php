@@ -51,8 +51,8 @@
 					<span class="s-text">Ratings & Reviews</span>
 				</a>
 				<ul>
-					<li><a href="{{route('admin.user-review.index')}}">User Ratings</a></li>
-					<li><a href="{{route('admin.provider-review.index')}}">Provider Ratings</a></li>
+					<li><a href="{{route('admin.user-review')}}">User Ratings</a></li>
+					<li><a href="{{route('admin.provider-review')}}">Provider Ratings</a></li>
 				</ul>
 			</li>
 			<li class="menu-title">Requests</li>
@@ -62,12 +62,12 @@
 					<span class="s-text">Request History</span>
 				</a>
 			</li>
-			<li>
+			<!-- <li>
 				<a href="{{route('admin.scheduled.request')}}" class="waves-effect  waves-light">
 					<span class="s-icon"><i class="ti-palette"></i></span>
 					<span class="s-text">Scheduled Requests</span>
 				</a>
-			</li>
+			</li> -->
 			<li class="menu-title">General</li>
 			<li class="with-sub">
 				<a href="#" class="waves-effect  waves-light">

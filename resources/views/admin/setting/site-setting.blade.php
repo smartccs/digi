@@ -79,7 +79,7 @@
 					</div>
 				</div>
 
-				<div class="form-group row">
+				<!-- <div class="form-group row">
 					<label for="base_price" class="col-xs-2 col-form-label">Base Price</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="number" value="{{ Setting::get('base_price', '')  }}" name="base_price" required id="base_price" placeholder="Base price">
@@ -99,17 +99,17 @@
 					<div class="col-xs-10">
 						<input class="form-control" type="number" value="{{ Setting::get('price_per_kilometer', '')  }}" name="price_per_kilometer" required id="price_per_kilometer" placeholder="Price Per Kilometer">
 					</div>
-				</div>
+				</div> -->
 
 				<div class="form-group row">
-					<label for="tax_percentage" class="col-xs-2 col-form-label">Tax percentage</label>
+					<label for="tax_percentage" class="col-xs-2 col-form-label">Tax percentage(%)</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="number" value="{{ Setting::get('tax_percentage', '')  }}" name="tax_percentage" required id="tax_percentage" max="100" min="0" placeholder="Tax percentage">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="commission_percentage" class="col-xs-2 col-form-label">Commission percentage</label>
+					<label for="commission_percentage" class="col-xs-2 col-form-label">Commission percentage(%)</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="number" value="{{ Setting::get('commission_percentage', '')  }}" name="commission_percentage" max="100" min="0" required id="commission_percentage" placeholder="Commission percentage">
 					</div>

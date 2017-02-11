@@ -118,32 +118,4 @@ class Helper
 
     }
 
-
-    public static function time_diff($start,$end) {
-        $start_date = new \DateTime($start);
-        $end_date = new \DateTime($end);
-
-        $time_interval = date_diff($start_date,$end_date);
-        return $time_interval;
-
-    }
-
-    public static function formatHour($date) {
-        $hour_time  = date("H:i:s",strtotime($date));
-        return $hour_time;
-    }
-
-    public static function formatDate($date) {
-        $newdate  = date("Y-m-d",strtotime($date));
-        return $newdate;
-    }
-
-    public static function add_date($date,$no_of_days) {
-
-        $change_date = new \DateTime($date);
-        $change_date->modify($no_of_days." hours");
-        $change_date = $change_date->format("Y-m-d H:i:s");
-        return $change_date;
-    }
-
 }

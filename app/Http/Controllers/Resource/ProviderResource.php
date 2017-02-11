@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Resource;
 
 use DB;
+use Exception;
 use App\Provider;
 use App\ProviderDocument;
 use Illuminate\Http\Request;
@@ -22,17 +23,16 @@ class ProviderResource extends Controller
     public function index()
     {
         $total_requests = UserRequests::select(DB::raw('count(*)'))
-                        ->whereRaw('confirmed_provider = providers.id and status != 0');
+                        ->whereRaw('provider_id','providers.id');
 
         $accepted_requests = UserRequests::select(DB::raw('count(*)'))
-                        ->whereRaw('confirmed_provider = providers.id and status in (1,2,3,4,5)');
+                        ->whereRaw('provider_id = providers.id');
 
         $providers = Provider::select(
                     'providers.*', 
                     DB::raw("(" . $total_requests->toSql() . ") as 'total_requests'"), 
-                    DB::raw("(" . $accepted_requests->toSql() . ") as 'accepted_requests'"),
-                    'provider_services.service_type_id as service_type_id')
-                ->leftJoin('provider_services', 'provider_services.provider_id', '=', 'providers.id')
+                    DB::raw("(" . $accepted_requests->toSql() . ") as 'accepted_requests'"))
+                ->with('service')
                 ->orderBy('providers.id', 'DESC')
                 ->get();
 
@@ -62,10 +62,7 @@ class ProviderResource extends Controller
             'last_name' => 'required|max:255',
             'email' => 'required|unique:providers,email|email|max:255',
             'mobile' => 'digits_between:6,13',
-            'address' => 'max:300',
-            'zipcode' => 'max:300',
             'picture' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
-            'gender' => 'required|in:male,female,others',
             'password' => 'required|min:6|confirmed',
         ]);
 
@@ -73,9 +70,6 @@ class ProviderResource extends Controller
 
             $provider = $request->all();
 
-            $provider['is_available'] = 1;
-            $provider['is_activated'] = 1;
-            $provider['is_approved'] = 1;
             $provider['password'] = bcrypt($request->password);
             if($request->hasFile('picture')) {
                 $provider['picture'] = Helper::upload_avatar($request->picture);
@@ -87,7 +81,7 @@ class ProviderResource extends Controller
 
         } 
 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
             return back()->with('flash_errors', 'Provider Not Found');
         }
     }
@@ -103,7 +97,7 @@ class ProviderResource extends Controller
         try {
             $provider = Provider::findOrFail($id);
             return view('admin.providers.provider-details', compact('provider'));
-        } catch (Execption $e) {
+        } catch (ModelNotFoundException $e) {
             return $e;
         }
     }
@@ -137,10 +131,7 @@ class ProviderResource extends Controller
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
             'mobile' => 'digits_between:6,13',
-            'address' => 'max:300',
-            'zipcode' => 'max:300',
             'picture' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
-            'gender' => 'required|in:male,female,others',
         ]);
 
         try {
@@ -157,9 +148,6 @@ class ProviderResource extends Controller
             $provider->first_name = $request->first_name;
             $provider->last_name = $request->last_name;
             $provider->mobile = $request->mobile;
-            $provider->address = $request->address;
-            $provider->zipcode = $request->zipcode;
-            $provider->gender = $request->gender;
             $provider->save();
 
             return redirect()->route('admin.provider.index')->with('flash_success', 'Provider Updated Successfully');    
@@ -182,7 +170,7 @@ class ProviderResource extends Controller
             Provider::find($id)->delete();
             return back()->with('message', 'Provider deleted successfully');
         } 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
             return back()->with('flash_errors', 'Provider Not Found');
         }
     }
@@ -195,7 +183,7 @@ class ProviderResource extends Controller
      */
     public function approve($id)
     {
-        Provider::where('id',$id)->update(['is_approved' => 1]);
+        Provider::where('id',$id)->update(['status' => 'approved']);
         return back()->with('flash_success', "Provider Approved");
     }
 
@@ -205,10 +193,10 @@ class ProviderResource extends Controller
      * @param  \App\Provider  $provider
      * @return \Illuminate\Http\Response
      */
-    public function decline($id)
+    public function disapprove($id)
     {
-        Provider::where('id',$id)->update(['is_approved' => 0]);
-        return back()->with('flash_success', "Provider Declined");
+        Provider::where('id',$id)->update(['status' => 'banned']);
+        return back()->with('flash_success', "Provider Disapproved");
     }
 
     /**
@@ -236,14 +224,14 @@ class ProviderResource extends Controller
 
         try{
 
-            $requests = UserRequests::where('user_requests.confirmed_provider',$id)
+            $requests = UserRequests::where('user_requests.provider_id',$id)
                     ->RequestHistory()
                     ->get();
 
             return view('admin.request.request-history', compact('requests'));
         }
 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
 

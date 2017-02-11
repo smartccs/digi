@@ -90,13 +90,13 @@
     var map;
     var markers = [
         @foreach($Providers as $Provider)
-        { provider_id: "{{ $Provider->id }}",name: "{{ $Provider->name }}", lat: {{ $Provider->latitude }}, lng: {{ $Provider->longitude }}, available: {{ $Provider->is_available }} },
+        { provider_id: "{{ $Provider->id }}",name: "{{ $Provider->name }}", lat: {{ $Provider->latitude }}, lng: {{ $Provider->longitude }}, available: {{ $Provider->service->available }} },
         @endforeach
     ];
 
     var mapIcons = [
-        '{{ asset('admin/assets/img/map-marker-red.png') }}',
-        '{{ asset('admin/assets/img/map-marker-blue.png') }}',
+        '{{ asset("admin/assets/img/map-marker-red.png") }}',
+        '{{ asset("admin/assets/img/map-marker-blue.png") }}',
     ];
     var mapMarkers = [];
     function initMap() {

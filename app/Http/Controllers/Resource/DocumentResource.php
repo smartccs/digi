@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Resource;
 
 use App\Document;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Controllers\Controller;
@@ -49,7 +50,7 @@ class DocumentResource extends Controller
 
         } 
 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
             return back()->with('flash_errors', 'Document Not Found');
         }
     }
@@ -103,7 +104,7 @@ class DocumentResource extends Controller
             return redirect()->route('admin.document.index')->with('flash_success', 'Document Updated Successfully');    
         } 
 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
             return back()->with('flash_errors', 'Document Not Found');
         }
     }
@@ -120,7 +121,7 @@ class DocumentResource extends Controller
             Document::find($id)->delete();
             return back()->with('message', 'Document deleted successfully');
         } 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
             return back()->with('flash_errors', 'Document Not Found');
         }
     }

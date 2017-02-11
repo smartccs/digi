@@ -11,7 +11,7 @@ function currency($value = '')
 
 function img($img){
 	if($img == ""){
-		return asset('admin/avatar.jpg');
+		return asset('main/avatar.jpg');
 	}else{
 		return $img;
 	}

@@ -16,7 +16,8 @@
                             <th>ID</th>
                             <th>Service Name</th>
                             <th>Provider Name</th>
-                            <th>Status</th>
+                            <th>Fixed Price</th>
+                            <th>Distance Price</th>
                             <th>Service Image</th>
                             <th>Action</th>
                         </tr>
@@ -27,13 +28,8 @@
                             <td>{{$index + 1}}</td>
                             <td>{{$service->name}}</td>
                             <td>{{$service->provider_name}}</td>
-                            <td>
-                                @if($service->status == 1)
-                                    Default
-                                @else 
-                                    N/A
-                                @endif
-                            </td>
+                            <td>{{currency($service->fixed)}}</td>
+                            <td>{{currency($service->price)}}</td>
                             <td>
                                 @if($service->image) 
                                     <img src="{{$service->image}}" style="height: 50px" >

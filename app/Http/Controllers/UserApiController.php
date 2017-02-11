@@ -358,7 +358,7 @@ class UserApiController extends Controller
                 }
             }
 
-            if(in_array($UserRequest->status, ['SEARCHING','ACCEPTED','ARRIVED'])) {
+            if(in_array($UserRequest->status, ['SEARCHING','STARTED','ARRIVED'])) {
 
                 $UserRequest->status = 'CANCELLED';
                 $UserRequest->save();

@@ -12,10 +12,9 @@
 					{{csrf_field()}}
 					<div class="card card-block card-inverse card-primary text-xs-center">
 						<blockquote class="card-blockquote">
-						<h1 style="font-size: 40px;"><i class="fa fa-cc-stripe"></i></h1>
 							<br>
 							<div class="form-group row">
-								<label for="stripe_secret_key" class="col-xs-4 col-form-label"> ON/OFF</label>
+								<label for="stripe_secret_key" class="col-xs-4 col-form-label"><i style="font-size: 24px;" class="fa fa-cc-stripe"></i> ON/OFF</label>
 								<div class="col-xs-8">
 									<div class="float-xs-left mr-1"><input onchange="cardselect()" @if(Setting::get('card') ==1) checked  @endif  name="card" id="stripe_check" type="checkbox" class="js-switch" data-color="#43b968"></div>
 								</div>
@@ -43,10 +42,10 @@
 			                	<button class="pull-right btn btn-default mr10" type="submit">Submit</button>
 							</div>
 						</div>
-						<br>
+						<!-- <br>
 						<hr>
-						<br>
-						<blockquote class="card-blockquote">
+						<br> -->
+						<!-- <blockquote class="card-blockquote">
 						<h1 style="font-size: 40px;"><i class="fa fa-cc-paypal"></i></h1>
 							<br>
 							<div class="form-group row">
@@ -70,7 +69,7 @@
 							<div class="col-md-5">
 			                	<button class="pull-right btn btn-default mr10" type="submit">Submit</button>
 							</div>
-						</div>
+						</div> -->
 					</div>
 
 				</form>

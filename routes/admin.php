@@ -12,22 +12,6 @@
 |
 */
 
-
-Route::group(['prefix' => 'admin'], function () {
-  Route::get('/login', 'AdminAuth\LoginController@showLoginForm');
-  Route::post('/login', 'AdminAuth\LoginController@login');
-  Route::post('/logout', 'AdminAuth\LoginController@logout');
-
-  Route::get('/register', 'AdminAuth\RegisterController@showRegistrationForm');
-  Route::post('/register', 'AdminAuth\RegisterController@register');
-
-  Route::post('/password/email', 'AdminAuth\ForgotPasswordController@sendResetLinkEmail');
-  Route::post('/password/reset', 'AdminAuth\ResetPasswordController@reset');
-  Route::get('/password/reset', 'AdminAuth\ForgotPasswordController@showLinkRequestForm');
-  Route::get('/password/reset/{token}', 'AdminAuth\ResetPasswordController@showResetForm');
-});
-
-
 Route::get('/dashboard', 'AdminController@dashboard')->name('dashboard');
 
 Route::resource('user', 'Resource\UserResource');
@@ -35,10 +19,10 @@ Route::resource('provider', 'Resource\ProviderResource');
 Route::resource('document', 'Resource\DocumentResource');
 Route::resource('service', 'Resource\ServiceResource');
 Route::resource('promocode', 'Resource\PromocodeResource');
-Route::resource('user-review', 'Resource\UserReviewResource');
-Route::resource('provider-review', 'Resource\ProviderReviewResource');
+Route::get('user-review', 'AdminController@user_review')->name('user-review');
+Route::get('provider-review', 'AdminController@provider_review')->name('provider-review');
 Route::get('provider/{id}/approve', 'Resource\ProviderResource@approve')->name('provider.approve');
-Route::get('provider/{id}/decline', 'Resource\ProviderResource@decline')->name('provider.decline');
+Route::get('provider/{id}/disapprove', 'Resource\ProviderResource@disapprove')->name('provider.disapprove');
 Route::get('provider/{id}/request', 'Resource\ProviderResource@request')->name('provider.request');
 Route::get('provider/{id}/document', 'Resource\ProviderResource@document')->name('provider.document');
 Route::get('user/{id}/request', 'Resource\UserResource@request')->name('user.request');

@@ -13,42 +13,41 @@
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Request ID</th>
                             <th>User Name</th>
                             <th>Provider Name</th>
                             <th>Rating</th>
                             <th>Date & Time</th>
                             <th>Comments</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                     @foreach($Reviews as $index => $review)
                         <tr>
                             <td>{{$index + 1}}</td>
-                            <td>{{$review->user_first_name}} {{$review->user_last_name}}</td>
-                            <td>{{$review->provider_first_name}} {{$review->provider_last_name}}</td>
-                            <td>{{$review->rating}}</td>
-                            <td>{{$review->created_at}}</td>
-                            <td>{{$review->comments}}</td>
+                            <td>{{$review->request_id}}</td>
+                            <td>{{$review->user->first_name}} {{$review->user->last_name}}</td>
+                            <td>{{$review->provider->first_name}} {{$review->provider->last_name}}</td>
                             <td>
-                                <form action="{{ route('admin.user-review.destroy', $review->id) }}" method="POST">
-                                    {{ csrf_field() }}
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <button class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class="fa fa-trash"></i> Delete</button>
-                                </form>
+                                <div className="rating-outer">
+                                    <input type="hidden" value="{{$review->user_rating}}" name="rating" class="rating"/>
+                                </div>
                             </td>
+                            <td>{{$review->created_at}}</td>
+                            <td>{{$review->user_comment}}</td>
+                            
                         </tr>
                     @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
                             <th>ID</th>
+                            <th>Request ID</th>
                             <th>User Name</th>
                             <th>Provider Name</th>
                             <th>Rating</th>
                             <th>Date & Time</th>
                             <th>Comments</th>
-                            <th>Action</th>
                         </tr>
                     </tfoot>
                 </table>
