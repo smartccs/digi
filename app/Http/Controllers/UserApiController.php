@@ -413,7 +413,7 @@ class UserApiController extends Controller
                                         ->get()
                                         ->toArray();
 
-            return response()->json(['data' => $UserRequests]);
+            return response()->json(['data' => $UserRequests, 'currency' => currency()]);
 
         }
 
