@@ -134,6 +134,7 @@ class UserApiController extends Controller
     public function details(){
 
         if($user = User::find(Auth::user()->id)){
+            $user->currency = currency();
             return $user;
         }else{
             return response()->json(['error' => 'User Not Found!'], 500);
@@ -413,7 +414,7 @@ class UserApiController extends Controller
                                         ->get()
                                         ->toArray();
 
-            return response()->json(['data' => $UserRequests, 'currency' => currency()]);
+            return response()->json(['data' => $UserRequests]);
 
         }
 

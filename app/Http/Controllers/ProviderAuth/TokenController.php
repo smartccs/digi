@@ -77,6 +77,7 @@ class TokenController extends Controller
 
         $User = \Auth::user();
         $User->access_token = $token;
+        $User->currency = currency();
 
         return response()->json($User);
     }
