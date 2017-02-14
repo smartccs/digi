@@ -69,7 +69,7 @@
 						<?php $diff = ['-success','-info','-warning','-danger']; ?>
 						@foreach($rides as $index => $ride)
 							<tr>
-								<th scope="row">1</th>
+								<th scope="row">{{$index + 1}}</th>
 								<td>{{$ride->user->first_name}} {{$ride->user->last_name}}</td>
 								<td>
 									@if($ride->status != "CANCELLED")

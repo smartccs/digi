@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Auth;
 use Setting;
+use PushNotification;
 use Carbon\Carbon;
 
 use App\User;
@@ -174,7 +175,16 @@ class TripController extends Controller
                 $Filter->delete();
             }
 
+            $user_details = User::find($UserRequest->user_id);
             // Send Push Notification to User
+
+            if($user_details->device_type == 'android'){
+
+            }elseif($user_details->device_type == 'ios'){
+                PushNotification::app('appNameIOSUser')
+                ->to($user_details->device_token)
+                ->send('Hello World, i`m a push message');
+            }
 
             return $UserRequest->with('user')->get();
 

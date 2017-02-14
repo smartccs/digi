@@ -95,8 +95,8 @@
     ];
 
     var mapIcons = [
-        '{{ asset("admin/assets/img/map-marker-red.png") }}',
-        '{{ asset("admin/assets/img/map-marker-blue.png") }}',
+        '{{ asset("main/assets/img/map-marker-red.png") }}',
+        '{{ asset("main/assets/img/map-marker-blue.png") }}',
     ];
     var mapMarkers = [];
     function initMap() {

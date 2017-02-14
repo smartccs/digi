@@ -202,7 +202,6 @@ class AdminController extends Controller
     {
         $this->validate($request,[
             'name' => 'required|max:255',
-            'paypal_email' => 'required|max:255|email',
             'email' => 'required|email|max:255',
             'mobile' => 'required|digits_between:6,13',
             'picture' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
@@ -221,7 +220,6 @@ class AdminController extends Controller
                 $admin->picture = Helper::upload_avatar($request->picture);
             }
             $admin->gender = $request->gender;
-            $admin->paypal_email = $request->paypal_email;
             $admin->save();
 
             return redirect()->back()->with('flash_success','Profile Updated');
