@@ -4,7 +4,7 @@ return array(
 
     'appNameIOSUser'     => array(
         'environment' =>'development',
-        'certificate' => app_path().'/apns/provider/tranxit_user.pem',
+        'certificate' => app_path().'/apns/user/tranxit_user.pem',
         'passPhrase'  =>'appoets123$',
         'service'     =>'apns'
     ),
