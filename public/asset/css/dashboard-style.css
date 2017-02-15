@@ -3176,3 +3176,12 @@ responsive.css
         line-height: 27px;
     }
 }
+
+.rating-outer span, .rating-symbol-background{
+  font-size: 12px;
+}
+.map-static {
+    height: 290px;
+    background-size: cover;
+    background-position: center center;
+}

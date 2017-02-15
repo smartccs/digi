@@ -14,7 +14,7 @@
         @include('common.notify')
         <div class="row no-margin">
             <div class="col-md-6">
-                <form action="{{url('confirm/ride')}}" method="GET">
+                <form action="{{url('confirm/ride')}}" method="GET" onke="return disableEnterKey(event);">
                 <div class="input-group dash-form">
                     <input type="text" class="form-control" id="origin-input" name="s_address"  placeholder="Enter pickup location">
                 </div>
@@ -47,7 +47,7 @@
 
                 </div>
 
-                <button type="submit" class="full-primary-btn fare-btn">@lang('user.ride.ride_now')</button>
+                <button type="submit"  class="full-primary-btn fare-btn">@lang('user.ride.ride_now')</button>
 
                 </form>
             </div>
@@ -70,4 +70,19 @@
     <script type="text/javascript" src="{{asset('asset/js/map.js')}}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_API_KEY')}}&libraries=places&callback=initMap"
         async defer></script>
+
+        <script type="text/javascript">
+            function disableEnterKey(e)
+            {
+                 var key;      
+                 if(window.e)
+                      key = window.e.keyCode; //IE
+                 else
+                      key = e.which; //firefox      
+
+                  console.log(key);
+                if(key == 13)
+                    return e.preventDefault();
+            }
+        </script>
 @endsection

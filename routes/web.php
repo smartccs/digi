@@ -73,7 +73,7 @@ Route::get('/drive', function () {
 |
 */
 
-Route::get('/home', 'HomeController@index');
+Route::get('/dashboard', 'HomeController@index');
 
 // user profiles
 Route::get('/profile', 'HomeController@profile');

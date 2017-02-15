@@ -156,8 +156,6 @@ DropDown.prototype = {
     }
 }
 
-//DATEPICKER
-$('.datepicker').datepicker({});
 
 // $('.view-icon.list-btn').click( function(){
 //     if ( $('.list-view').hasClass('two') ) {

@@ -4,7 +4,6 @@
 
 @section('content')
 
-<?php dd(app_path()); ?>
 <div class="col-md-9">
     <div class="dash-content">
         <div class="row no-margin">

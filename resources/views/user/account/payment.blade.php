@@ -63,23 +63,23 @@
             <div class="row no-margin" id="card-payment">
                 <div class="form-group col-md-12 col-sm-12">
                     <label>@lang('user.card.fullname')</label>
-                    <input data-stripe="name" autocomplete="false" type="text" class="form-control" placeholder="@lang('user.card.fullname')">
+                    <input data-stripe="name" autocomplete="false" required type="text" class="form-control" placeholder="@lang('user.card.fullname')">
                 </div>
                 <div class="form-group col-md-12 col-sm-12">
                     <label>@lang('user.card.card_no')</label>
-                    <input data-stripe="number" type="number" size="16" autocomplete="false" maxlength="16" class="form-control" placeholder="@lang('user.card.card_no')">
+                    <input data-stripe="number" type="number" required size="16" autocomplete="false" maxlength="16" class="form-control" placeholder="@lang('user.card.card_no')">
                 </div>
                 <div class="form-group col-md-4 col-sm-12">
                     <label>@lang('user.card.month')</label>
-                    <input type="number" maxlength="2" size="2" autocomplete="false" class="form-control" data-stripe="exp-month" placeholder="MM">
+                    <input type="number" maxlength="2" size="2" required autocomplete="false" class="form-control" data-stripe="exp-month" placeholder="MM">
                 </div>
                 <div class="form-group col-md-4 col-sm-12">
                     <label>@lang('user.card.year')</label>
-                    <input type="number" maxlength="2" size="2" autocomplete="false" data-stripe="exp-year" class="form-control" placeholder="YY">
+                    <input type="number" maxlength="2" size="2" required autocomplete="false" data-stripe="exp-year" class="form-control" placeholder="YY">
                 </div>
                 <div class="form-group col-md-4 col-sm-12">
                     <label>@lang('user.card.cvv')</label>
-                    <input type="number" data-stripe="cvc" size="4" autocomplete="false" maxlength="4" class="form-control" placeholder="@lang('user.card.cvv')">
+                    <input type="number" data-stripe="cvc" size="4" required autocomplete="false" maxlength="4" class="form-control" placeholder="@lang('user.card.cvv')">
                 </div>
             </div>
           </div>
