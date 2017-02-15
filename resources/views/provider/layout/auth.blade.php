@@ -8,10 +8,13 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel Multi Auth Guard') }}</title>
+    <title>@yield('title'){{ Setting::get('site_title', 'Tranxit') }}</title>
 
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
+    <link href="{{ asset('asset/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('asset/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('asset/css/style.css') }}" rel="stylesheet">
 
     <!-- Scripts -->
     <script>
@@ -21,65 +24,29 @@
     </script>
 </head>
 <body>
-    <nav class="navbar navbar-default navbar-static-top">
-        <div class="container">
-            <div class="navbar-header">
-
-                <!-- Collapsed Hamburger -->
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                    <span class="sr-only">Toggle Navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-
-                <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/provider') }}">
-                    {{ config('app.name', 'Laravel Multi Auth Guard') }}: Provider
-                </a>
-            </div>
-
-            <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav">
-                    &nbsp;
-                </ul>
-
-                <!-- Right Side Of Navbar -->
-                <ul class="nav navbar-nav navbar-right">
-                    <!-- Authentication Links -->
-                    @if (Auth::guest())
-                        <li><a href="{{ url('/provider/login') }}">Login</a></li>
-                        <li><a href="{{ url('/provider/register') }}">Register</a></li>
-                    @else
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ Auth::user()->name }} <span class="caret"></span>
-                            </a>
-
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="{{ url('/provider/logout') }}"
-                                        onclick="event.preventDefault();
-                                                 document.getElementById('logout-form').submit();">
-                                        Logout
-                                    </a>
-
-                                    <form id="logout-form" action="{{ url('/provider/logout') }}" method="POST" style="display: none;">
-                                        {{ csrf_field() }}
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
-                    @endif
-                </ul>
+    <div class="full-page-bg" style="background-image: url({{ asset('asset/img/login-bg.jpg') }});">
+        <div class="log-overlay"></div>
+            <div class="full-page-bg-inner">
+                <div class="row no-margin">
+                    <div class="col-md-6 log-left">
+                        <span class="login-logo"><img src="{{ Setting::get('site_logo', asset('asset/img/logo.png')) }}"></span>
+                        <h2>Xuber needs partners like you.</h2>
+                        <p>Drive with Uber and earn great money as an independent contractor. Get paid weekly just for helping our community of riders get rides around town. Be your own boss and get paid in fares for driving on your own schedule.</p>
+                    </div>
+                    <div class="col-md-6 log-right">
+                        <div class="login-box-outer">
+                            <div class="login-box row no-margin">
+                                @yield('content')
+                            </div>
+                            <div class="log-copy"><p class="no-margin">{{ Setting::get('site_copyright', '&copy; 2017 Appoets') }}</p></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </nav>
-
-    @yield('content')
-
-    <!-- Scripts -->
-    <script src="/js/app.js"></script>
+    </div>
+    <script src="{{ asset('asset/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('asset/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('asset/js/scripts.js') }}"></script>
 </body>
 </html>

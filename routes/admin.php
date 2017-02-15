@@ -12,6 +12,7 @@
 |
 */
 
+Route::get('/', 'AdminController@dashboard')->name('index');
 Route::get('/dashboard', 'AdminController@dashboard')->name('dashboard');
 
 Route::resource('user', 'Resource\UserResource');

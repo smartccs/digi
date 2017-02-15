@@ -26,12 +26,12 @@ class TripController extends Controller
      *
      * @return void
      */
-    public function __construct(Request $request)
+    public function __construct($user = null)
     {
-        if($request->ajax() || $request->wantsJson()) {
-            $this->user = Auth::user();
+        if($user != null) {
+            $this->user = $user;
         } else {
-            $this->user = Auth::guard('provider')->user();
+            $this->user = Auth::user();
         }
     }
 
@@ -82,8 +82,6 @@ class TripController extends Controller
             return response()->json(['error' => 'Cannot cancel request at this stage!']);
         }
 
-        
-
     }
 
     /**
@@ -132,17 +130,6 @@ class TripController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Get the trip history of the provider
      *
      * @return \Illuminate\Http\Response
@@ -159,7 +146,7 @@ class TripController extends Controller
             }
             return $Jobs;
         }
-        $Jobs = UserRequests::where('provider_id', $this->user->id)->with('user', 'service_type', 'payment', 'rating')->get();
+        $Jobs = UserRequests::where('provider_id', Auth::guard('provider')->user()->id)->with('user', 'service_type', 'payment', 'rating')->get();
         return view('provider.trip.index', compact('Jobs'));
     }
 

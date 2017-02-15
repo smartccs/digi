@@ -30,29 +30,22 @@
     </script>
 </head>
 <body>
-
-    @include('provider.layout.partials.header')
-
-    <div class="page-content dashboard-page">
-        <div class="container">
-            @include('provider.layout.partials.left')
-            @yield('content')
-        </div>
-    </div>
-
-    <div class="row footer no-margin">
-        <div class="container">
-            <div class="col-md-6 text-left">
-                <p>{{ Setting::get('site_copyright', '&copy; 2017 Appoets') }}</p>
-            </div>
-            <div class="col-md-6 text-right">
-                <a href="{{ Setting::get('app_url_ios', '#') }}" class="app"><img src="/asset/img/appstore.png"></a>
-                <a href="{{ Setting::get('app_url_android', '#') }}" class="app"><img src="/asset/img/playstore.png"></a>
+    
+    <div id="wrapper">
+        <div class="overlay" id="overlayer" data-toggle="offcanvas"></div>
+        @include('provider.layout.partials.nav')
+        <div id="page-content-wrapper">
+            @include('provider.layout.partials.header')
+            <div class="page-content">
+                <div class="pro-dashboard">
+                    @yield('content')
+                </div>
+                @include('provider.layout.partials.footer')
             </div>
         </div>
     </div>
 
-    @include('provider.layout.partials.modal')
+    <div id="modal-incoming"></div>
 
     <!-- Scripts -->
     <script type="text/javascript" src="{{ asset('asset/js/jquery.min.js') }}"></script>
@@ -61,13 +54,20 @@
     <script type="text/javascript" src="{{ asset('asset/js/jquery-migrate-1.2.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('asset/js/slick.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('asset/js/rating.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('asset/js/incoming.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('asset/js/dashboard-scripts.js') }}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-dom.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+    <script type="text/babel" src="{{ asset('asset/js/incoming.js') }}"></script>
     <script type="text/javascript">
-        $.incoming({
-            'url': '{{ route('api') }}',
-            'modal': 'modal-incoming'
-        })
+        // $.incoming({
+        //     'url': '{{ route('provider.incoming') }}',
+        //     'modal': '#modal-incoming'
+        // });
     </script>
+
     @yield('scripts')
 
 </body>

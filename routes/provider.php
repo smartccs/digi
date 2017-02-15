@@ -14,8 +14,11 @@
 Route::get('/', 'ProviderController@index')->name('index');
 Route::get('/trips', 'ProviderResources\TripController@history')->name('trips');
 
-Route::get('/profile', 'ProviderResources\ProfileController@show')->name('profile.show');
-Route::get('/profile/edit', 'ProviderResources\ProfileController@show')->name('profile.edit');
-Route::post('/profile', 'ProviderResources\ProfileController@update')->name('profile.update');
+Route::get('/incoming', 'ProviderController@incoming')->name('incoming');
+
+Route::resource('documents', 'ProviderResources\DocumentController');
+
+Route::get('/profile', 'ProviderResources\ProfileController@show')->name('profile.index');
+Route::post('/profile', 'ProviderResources\ProfileController@store')->name('profile.update');
 
 Route::get('/profile/password', 'ProviderController@index')->name('password');

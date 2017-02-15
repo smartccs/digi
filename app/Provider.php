@@ -10,8 +10,6 @@ class Provider extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = "providers";
-
     /**
      * The attributes that are mass assignable.
      *
@@ -52,6 +50,22 @@ class Provider extends Authenticatable
     public function requests()
     {
         return $this->hasMany('App\RequestFilter');
+    }
+
+    /**
+     * The services that belong to the user.
+     */
+    public function profile()
+    {
+        return $this->hasOne('App\ProviderProfile');
+    }
+
+    /**
+     * The services that belong to the user.
+     */
+    public function device()
+    {
+        return $this->hasOne('App\ProviderDevice');
     }
 
     /**

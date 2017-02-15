@@ -33,10 +33,10 @@ class ProviderApiController extends Controller
 
     public function history(){
 
-    	try {
-	        $requests = UserRequests::GetProviderHistory(Auth::user()->id)->get()->toArray();
-	        return $requests;
-	    } catch (ModelNotFoundException $e) {
+        try {
+            $requests = UserRequests::GetProviderHistory(Auth::user()->id)->get()->toArray();
+            return $requests;
+        } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Something went wrong']);
         }
 
@@ -50,15 +50,15 @@ class ProviderApiController extends Controller
 
     public function message(Request $request){
 
-    	$this->validate($request, [
+        $this->validate($request, [
                 'request_id' => 'required|integer|exists:user_requests,id',
             ]);
 
-    	try{
+        try{
 
-	        $Messages = ChatMessage::where('provider_id', Auth::user()->id)
-	                	->where('request_id', $request->request_id)->get()->toArray();
-	        return $Messages;
+            $Messages = ChatMessage::where('provider_id', Auth::user()->id)
+                        ->where('request_id', $request->request_id)->get()->toArray();
+            return $Messages;
 
         }
 
@@ -77,9 +77,9 @@ class ProviderApiController extends Controller
 
     public function upcoming_request() {
 
-    	try{
-		    $requests = UserRequests::ProviderUpcomingRequest(Auth::user()->id)->get();
-		    return $requests;
+        try{
+            $requests = UserRequests::ProviderUpcomingRequest(Auth::user()->id)->get();
+            return $requests;
         }
 
         catch(Exception $e) {

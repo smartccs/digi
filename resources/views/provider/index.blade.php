@@ -1,22 +1,21 @@
 @extends('provider.layout.app')
 
 @section('content')
-<div class="col-md-9">
-    <div class="dash-content">
-        <div class="row no-margin">
-            <div class="col-md-12">
-                <h4 class="page-title">Drive Now</h4>
-            </div>
-        </div>
-
-        <div class="row no-margin">
-            <div class="col-md-12">
-                <form action="provider-offline.html">
-                    <div class="map-responsive-full">
+<div class="pro-dashboard-head">
+    <div class="container">
+        <a href="#" class="pro-head-link active">Drive Now</a>
+    </div>
+</div>
+<div class="pro-dashboard-content">
+    <div class="container">
+        <div class="dash-content">
+            <div class="row no-margin">
+                <div class="col-md-12">
+                    <form action="provider-offline.html">
                         <div id="map" style="width: 100%; height: 425px;"></div>
-                    </div>
-                    <button type="submit" class="full-primary-btn fare-btn">GO OFFLINE</button>
-                </form>
+                        <button type="submit" class="full-primary-btn fare-btn">GO OFFLINE</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use Auth;
 use Storage;
 
+use App\ProviderProfile;
+
 class ProfileController extends Controller
 {
     /**
@@ -18,7 +20,7 @@ class ProfileController extends Controller
 
     public function __construct()
     {
-        $this->middleware('provider.api', ['except' => ['show', 'edit']]);
+        $this->middleware('provider.api', ['except' => ['show', 'store']]);
     }
 
     /**
@@ -32,23 +34,84 @@ class ProfileController extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $this->validate($request, [
+                'first_name' => 'required|max:255',
+                'last_name' => 'required|max:255',
+                'mobile' => 'required|digits_between:6,13',
+                'avatar' => 'mimes:jpeg,bmp,png',
+                'language' => 'max:255',
+                'address' => 'max:255',
+                'address_secondary' => 'max:255',
+                'city' => 'max:255',
+                'country' => 'max:255',
+                'postal_code' => 'max:255',
+            ]);
+
+        try {
+
+            $Provider = Auth::user();
+
+            if($request->has('first_name')) 
+                $Provider->first_name = $request->first_name;
+
+            if($request->has('last_name')) 
+                $Provider->last_name = $request->last_name;
+
+            if ($request->has('mobile'))
+                $Provider->mobile = $request->mobile;
+
+            if ($request->hasFile('avatar')) {
+                Storage::delete($Provider->avatar);
+                $Provider->avatar = $request->avatar->store('provider/profile');
+            }
+
+            if($Provider->profile) {
+                $Provider->profile->update([
+                        'language' => $request->language ? : $Provider->profile->language,
+                        'address' => $request->address ? : $Provider->profile->address,
+                        'address_secondary' => $request->address_secondary ? : $Provider->profile->address_secondary,
+                        'city' => $request->city ? : $Provider->profile->city,
+                        'country' => $request->country ? : $Provider->profile->country,
+                        'postal_code' => $request->postal_code ? : $Provider->profile->postal_code,
+                    ]);
+            } else {
+                ProviderProfile::create([
+                        'provider_id' => $Provider->id,
+                        'language' => $request->language,
+                        'address' => $request->address,
+                        'address_secondary' => $request->address_secondary,
+                        'city' => $request->city,
+                        'country' => $request->country,
+                        'postal_code' => $request->postal_code,
+                    ]);
+            }
+
+
+            $Provider->save();
+
+            return redirect(route('provider.profile.index'));
+        }
+
+        catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Provider Not Found!'], 404);
+        }
+    }
+
+    /**
      * Display the specified resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function show()
     {
-        return view('provider.profile.show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function edit()
-    {
-        return view('provider.profile.edit');
+        return view('provider.profile.index');
     }
 
     /**
@@ -65,6 +128,12 @@ class ProfileController extends Controller
                 'last_name' => 'required|max:255',
                 'mobile' => 'required|digits_between:6,13',
                 'avatar' => 'mimes:jpeg,bmp,png',
+                'language' => 'max:255',
+                'address' => 'max:255',
+                'address_secondary' => 'max:255',
+                'city' => 'max:255',
+                'country' => 'max:255',
+                'postal_code' => 'max:255',
             ]);
 
         try {
@@ -80,22 +149,32 @@ class ProfileController extends Controller
             if ($request->has('mobile'))
                 $Provider->mobile = $request->mobile;
 
-            // if ($request->has('address')) 
-            //     $Provider->address = $request->address;
-
-            // if ($request->has('city')) 
-            //     $Provider->city = $request->city;
-
-            // if ($request->has('state')) 
-            //     $Provider->state = $request->state;
-
-            // if ($request->has('pincode')) 
-            //     $Provider->pincode = $request->pincode;
-
             if ($request->hasFile('avatar')) {
                 Storage::delete($Provider->avatar);
                 $Provider->avatar = $request->avatar->store('provider/profile');
             }
+
+            if($Provider->profile) {
+                $Provider->profile->update([
+                        'language' => $request->language ? : $Provider->profile->language,
+                        'address' => $request->address ? : $Provider->profile->address,
+                        'address_secondary' => $request->address_secondary ? : $Provider->profile->address_secondary,
+                        'city' => $request->city ? : $Provider->profile->city,
+                        'country' => $request->country ? : $Provider->profile->country,
+                        'postal_code' => $request->postal_code ? : $Provider->profile->postal_code,
+                    ]);
+            } else {
+                ProviderProfile::create([
+                        'provider_id' => $Provider->id,
+                        'language' => $request->language,
+                        'address' => $request->address,
+                        'address_secondary' => $request->address_secondary,
+                        'city' => $request->city,
+                        'country' => $request->country,
+                        'postal_code' => $request->postal_code,
+                    ]);
+            }
+
 
             $Provider->save();
 
@@ -105,17 +184,6 @@ class ProfileController extends Controller
         catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Provider Not Found!'], 404);
         }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy()
-    {
-        //
     }
 
     /**

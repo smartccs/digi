@@ -21,7 +21,7 @@ class CreateProvidersTable extends Migration
             $table->string('password');
             $table->string('avatar')->nullable();
             $table->decimal('rating', 4, 2)->default(5);
-            $table->enum('status', ['new', 'approved', 'banned']);
+            $table->enum('status', ['onboarding', 'approved', 'banned']);
             $table->double('latitude', 15, 8)->nullable();
             $table->double('longitude', 15, 8)->nullable();
             $table->rememberToken();

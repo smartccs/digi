@@ -39,7 +39,17 @@ class TokenController extends Controller
             $Provider = $request->all();
             $Provider['password'] = bcrypt($request->password);
 
-            return Provider::create($Provider);
+            $Provider = Provider::create($Provider);
+
+            ProviderDevice::create([
+                    'provider_id' => $Provider->id,
+                    'udid' => $request->device_id,
+                    'token' => $request->device_token,
+                    'type' => $request->device_type,
+                ]);
+
+            return $Provider;
+
 
         } catch (QueryException $e) {
             if ($request->ajax() || $request->wantsJson()) {
@@ -59,6 +69,9 @@ class TokenController extends Controller
     public function authenticate(Request $request)
     {
         $this->validate($request, [
+                'device_id' => 'required',
+                'device_type' => 'required|in:android,ios',
+                'device_token' => 'required',
                 'email' => 'required|email',
                 'password' => 'required|min:6',
             ]);
@@ -77,6 +90,23 @@ class TokenController extends Controller
 
         $User = \Auth::user();
         $User->access_token = $token;
+
+        if($User->profile) {
+            if($User->profile->udid != $request->device_id) {
+                $User->profile->update([
+                        'udid' => $request->device_id,
+                        'token' => $request->device_token,
+                        'type' => $request->device_type,
+                    ]);
+            }
+        } else {
+            ProviderDevice::create([
+                    'provider_id' => $User->id,
+                    'udid' => $request->device_id,
+                    'token' => $request->device_token,
+                    'type' => $request->device_type,
+                ]);
+        }
 
         return response()->json($User);
     }
