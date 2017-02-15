@@ -22,7 +22,6 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('picture')->nullable();
             $table->string('device_token')->nullable();
-            $table->string('device_id')->nullable();
             $table->enum('device_type',array('android','ios'));
             $table->enum('login_by',array('manual','facebook','google'));
             $table->string('social_unique_id')->nullable();
