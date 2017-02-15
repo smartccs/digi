@@ -40,6 +40,13 @@
 				</div>
 
 				<div class="form-group row">
+					<label for="fixed" class="col-xs-2 col-form-label">Fixed</label>
+					<div class="col-xs-10">
+						<input class="form-control" type="text" value="{{ $service->fixed }}" name="fixed" required id="fixed" placeholder="Fixed">
+					</div>
+				</div>
+
+				<div class="form-group row">
 					<label for="price" class="col-xs-2 col-form-label">Price</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="text" value="{{ $service->price }}" name="price" required id="price" placeholder="Price">

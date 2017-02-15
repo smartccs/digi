@@ -37,6 +37,7 @@ class UserApiController extends Controller
         $this->validate($request, [
                 'social_unique_id' => ['required_if:login_by,facebook,google','unique:users'],
                 'device_type' => 'required|in:android,ios',
+                'device_id' => 'required',
                 'device_token' => 'required',
                 'login_by' => 'required|in:manual,facebook,google',
                 'first_name' => 'required|max:255',
@@ -128,12 +129,41 @@ class UserApiController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function details(){
+    public function details(Request $request){
 
-        if($user = User::find(Auth::user()->id)){
-            return $user;
-        }else{
-            return response()->json(['error' => 'User Not Found!'], 500);
+        $this->validate($request, [
+            'device_type' => 'in:android,ios',
+        ]);
+
+        try{
+
+            if($user = User::find(Auth::user()->id)){
+                
+                if($request->has('device_token')){
+                    $user->device_token = $request->device_token;
+                }
+
+                if($request->has('device_type')){
+                    $user->device_type = $request->device_type;
+                }
+
+                if($request->has('device_id')){
+                    $user->device_id = $request->device_id;
+                }
+
+                $user->save();
+
+                $user->currency = currency();
+                return $user;
+
+            }else{
+                return response()->json(['error' => 'User Not Found!'], 500);
+            }
+
+        }
+
+        catch (Exception $e) {
+             return response()->json(['error' => 'Something Went Wrong!'], 500);
         }
 
     }
@@ -355,7 +385,7 @@ class UserApiController extends Controller
                 }
             }
 
-            if(in_array($UserRequest->status, ['SEARCHING','ACCEPTED','ARRIVED'])) {
+            if(in_array($UserRequest->status, ['SEARCHING','STARTED','ARRIVED'])) {
 
                 $UserRequest->status = 'CANCELLED';
                 $UserRequest->save();
@@ -701,7 +731,7 @@ class UserApiController extends Controller
             $total = $price + $tax_price;
 
             return response()->json([
-                    'estimated_fare' => currency($total), 
+                    'estimated_fare' => $total, 
                     'distance' => $kilometer,
                     'time' => $time,
                     'tax_price' => $tax_price,

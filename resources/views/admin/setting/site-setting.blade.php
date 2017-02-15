@@ -54,14 +54,14 @@
 				<div class="form-group row">
 					<label for="play_store_link" class="col-xs-2 col-form-label">Playstore link</label>
 					<div class="col-xs-10">
-						<input class="form-control" type="text" value="{{ Setting::get('play_store_link', '')  }}" name="play_store_link" required id="play_store_link" placeholder="Playstore link">
+						<input class="form-control" type="text" value="{{ Setting::get('play_store_link', '')  }}" name="play_store_link"  id="play_store_link" placeholder="Playstore link">
 					</div>
 				</div>
 
 				<div class="form-group row">
 					<label for="app_store_link" class="col-xs-2 col-form-label">Appstore Link</label>
 					<div class="col-xs-10">
-						<input class="form-control" type="text" value="{{ Setting::get('app_store_link', '')  }}" name="app_store_link" required id="app_store_link" placeholder="Appstore link">
+						<input class="form-control" type="text" value="{{ Setting::get('app_store_link', '')  }}" name="app_store_link"  id="app_store_link" placeholder="Appstore link">
 					</div>
 				</div>
 
@@ -79,7 +79,7 @@
 					</div>
 				</div>
 
-				<div class="form-group row">
+				<!-- <div class="form-group row">
 					<label for="base_price" class="col-xs-2 col-form-label">Base Price</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="number" value="{{ Setting::get('base_price', '')  }}" name="base_price" required id="base_price" placeholder="Base price">
@@ -99,19 +99,19 @@
 					<div class="col-xs-10">
 						<input class="form-control" type="number" value="{{ Setting::get('price_per_kilometer', '')  }}" name="price_per_kilometer" required id="price_per_kilometer" placeholder="Price Per Kilometer">
 					</div>
-				</div>
+				</div> -->
 
 				<div class="form-group row">
-					<label for="tax_percentage" class="col-xs-2 col-form-label">Tax percentage</label>
+					<label for="tax_percentage" class="col-xs-2 col-form-label">Tax percentage(%)</label>
 					<div class="col-xs-10">
-						<input class="form-control" type="number" value="{{ Setting::get('tax_percentage', '')  }}" name="tax_percentage" required id="tax_percentage" max="100" min="0" placeholder="Tax percentage">
+						<input class="form-control" type="number" value="{{ Setting::get('tax_percentage', '')  }}" name="tax_percentage"  id="tax_percentage" max="100" min="0" placeholder="Tax percentage">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="commission_percentage" class="col-xs-2 col-form-label">Commission percentage</label>
+					<label for="commission_percentage" class="col-xs-2 col-form-label">Commission percentage(%)</label>
 					<div class="col-xs-10">
-						<input class="form-control" type="number" value="{{ Setting::get('commission_percentage', '')  }}" name="commission_percentage" max="100" min="0" required id="commission_percentage" placeholder="Commission percentage">
+						<input class="form-control" type="number" value="{{ Setting::get('commission_percentage', '')  }}" name="commission_percentage" max="100" min="0"  id="commission_percentage" placeholder="Commission percentage">
 					</div>
 				</div>
 

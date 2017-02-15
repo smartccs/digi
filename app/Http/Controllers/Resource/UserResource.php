@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Controllers\Controller;
+use Exception;
 
 class UserResource extends Controller
 {
@@ -45,10 +46,7 @@ class UserResource extends Controller
             'last_name' => 'required|max:255',
             'email' => 'required|unique:users,email|email|max:255',
             'mobile' => 'digits_between:6,13',
-            'address' => 'max:300',
-            'zipcode' => 'max:300',
             'picture' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
-            'gender' => 'required|in:male,female,others',
             'password' => 'required|min:6|confirmed',
         ]);
 
@@ -56,7 +54,7 @@ class UserResource extends Controller
 
             $user = $request->all();
 
-            $user['payment_mode'] = 'cod';
+            $user['payment_mode'] = 'CASH';
             $user['password'] = bcrypt($request->password);
             if($request->hasFile('picture')) {
                 $user['picture'] = Helper::upload_avatar($request->picture);
@@ -68,7 +66,7 @@ class UserResource extends Controller
 
         } 
 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
             return back()->with('flash_errors', 'User Not Found');
         }
     }
@@ -118,10 +116,7 @@ class UserResource extends Controller
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
             'mobile' => 'digits_between:6,13',
-            'address' => 'max:300',
-            'zipcode' => 'max:300',
             'picture' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
-            'gender' => 'required|in:male,female,others',
         ]);
 
         try {
@@ -138,9 +133,6 @@ class UserResource extends Controller
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
             $user->mobile = $request->mobile;
-            $user->address = $request->address;
-            $user->zipcode = $request->zipcode;
-            $user->gender = $request->gender;
             $user->save();
 
             return redirect()->route('admin.user.index')->with('flash_success', 'User Updated Successfully');    
@@ -163,7 +155,7 @@ class UserResource extends Controller
             User::find($id)->delete();
             return back()->with('message', 'User deleted successfully');
         } 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
             return back()->with('flash_errors', 'User Not Found');
         }
     }
@@ -185,7 +177,7 @@ class UserResource extends Controller
             return view('admin.request.request-history', compact('requests'));
         }
 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
 

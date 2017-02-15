@@ -7,8 +7,11 @@ use App\User;
 use App\Provider;
 use App\Settings;
 use App\Admin;
+use App\UserRequestRating;
 use App\UserPayment;
 use App\UserRequests;
+use App\ServiceType;
+use App\UserRequestPayment;
 use App\Helpers\Helper;
 use Auth;
 
@@ -34,7 +37,12 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
-        return view('admin.dashboard');
+        $rides = UserRequests::with('user')->orderBy('id','desc')->get();
+        $cancel_rides = UserRequests::where('status','CANCELLED')->count();
+        $service = ServiceType::count();
+        $revenue = UserRequestPayment::sum('total');
+        $providers = Provider::take(10)->orderBy('rating','desc')->get();
+        return view('admin.dashboard',compact('providers','service','rides','cancel_rides','revenue'));
     }
 
     /**
@@ -57,7 +65,7 @@ class AdminController extends Controller
      */
     public function provider_map()
     {
-        $Providers = Provider::where('latitude', '!=', 0)->where('longitude', '!=', 0)->get();
+        $Providers = Provider::where('latitude', '!=', 0)->where('longitude', '!=', 0)->with('service')->get();
         return view('admin.map.provider_map', compact('Providers'));
     }
 
@@ -194,7 +202,6 @@ class AdminController extends Controller
     {
         $this->validate($request,[
             'name' => 'required|max:255',
-            'paypal_email' => 'required|max:255|email',
             'email' => 'required|email|max:255',
             'mobile' => 'required|digits_between:6,13',
             'picture' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
@@ -213,7 +220,6 @@ class AdminController extends Controller
                 $admin->picture = Helper::upload_avatar($request->picture);
             }
             $admin->gender = $request->gender;
-            $admin->paypal_email = $request->paypal_email;
             $admin->save();
 
             return redirect()->back()->with('flash_success','Profile Updated');
@@ -277,12 +283,8 @@ class AdminController extends Controller
     public function payment()
     {
         try{
-             $payments = UserPayment::leftJoin('user_requests','user_requests.id','=','user_payments.request_id')
-                        ->leftJoin('users','users.id','=','user_requests.user_id')
-                        ->leftJoin('providers','providers.id','=','user_requests.confirmed_provider')
-                        ->select('user_payments.*','users.first_name as user_first_name','users.last_name as user_last_name',
-                                'providers.first_name as provider_first_name','providers.last_name as provider_last_name')
-                        ->orderBy('user_payments.created_at','desc')
+             $payments = UserRequests::where('paid',1)->with('user','provider','payment')
+                        ->orderBy('user_requests.created_at','desc')
                         ->get();
             
             return view('admin.payment.payment-history', compact('payments'));
@@ -357,16 +359,7 @@ class AdminController extends Controller
         try{
 
             $request = UserRequests::where('user_requests.id',$id)
-                ->leftJoin('providers', 'user_requests.confirmed_provider', '=', 'providers.id')
-                ->leftJoin('users', 'user_requests.user_id', '=', 'users.id')
-                ->leftJoin('user_payments', 'user_requests.id', '=', 'user_payments.request_id')
-                ->select('users.first_name as user_first_name', 'users.last_name as user_last_name', 
-                        'providers.first_name as provider_first_name', 'providers.last_name as provider_last_name',
-                        'users.id as user_id', 'providers.id as provider_id', 'user_requests.*', 
-                        'user_payments.payment_mode as payment_mode', 'user_payments.status as payment_status', 
-                        'user_payments.total_time as total_time','user_payments.base_price as base_price', 
-                        'user_payments.time_price as time_price', 'user_payments.tax_price as tax', 
-                        'user_payments.total as total_amount')
+                ->with('provider','user','payment')
                 ->first();
 
             return view('admin.request.request-details', compact('request'));
@@ -412,6 +405,28 @@ class AdminController extends Controller
              return back()->with('flash_error','Something Went Wrong!');
         }
 
+    }
+
+    /**
+     * User Rating.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function user_review()
+    {
+        $Reviews = UserRequestRating::where('user_id','!=',0)->with('user','provider')->get();
+        return view('admin.review.user_review',compact('Reviews'));
+    }
+
+    /**
+     * Provider Rating.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function provider_review()
+    {
+        $Reviews = UserRequestRating::where('provider_id','!=',0)->with('user','provider')->get();
+        return view('admin.review.provider_review',compact('Reviews'));
     }
 
 }

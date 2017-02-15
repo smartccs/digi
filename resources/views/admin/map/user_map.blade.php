@@ -115,6 +115,7 @@
                 position: {lat: element.lat, lng: element.lng},
                 map: map,
                 title: element.name,
+                icon : '{{ asset("main/assets/img/map-marker-blue.png") }}'
             });
 
             mapMarkers.push(marker);

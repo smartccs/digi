@@ -90,6 +90,7 @@ class TokenController extends Controller
 
         $User = \Auth::user();
         $User->access_token = $token;
+        $User->currency = currency();
 
         if($User->profile) {
             if($User->profile->udid != $request->device_id) {

@@ -23,17 +23,17 @@
                     <tbody>
                     @foreach($payments as $index => $payment)
                         <tr>
-                            <td>{{$payment->request_id}}</td>
-                            <td>{{$payment->payment_id}}</td>
-                            <td>{{$payment->user_first_name}} {{$payment->user_last_name}}</td>
-                            <td>{{$payment->provider_first_name}} {{$payment->provider_last_name}}</td>
-                            <td>{{currency($payment->total)}}</td>
+                            <td>{{$payment->id}}</td>
+                            <td>{{$payment->payment->payment_id}}</td>
+                            <td>{{$payment->user->first_name}} {{$payment->user->last_name}}</td>
+                            <td>{{$payment->provider->first_name}} {{$payment->provider->last_name}}</td>
+                            <td>{{currency($payment->payment->total)}}</td>
                             <td>{{$payment->payment_mode}}</td>
                             <td>
-                                @if($payment->status==0)
-                                    Not Paid
-                                @else
+                                @if($payment->paid)
                                     Paid
+                                @else
+                                    Not Paid
                                 @endif
                             </td>
                         </tr>

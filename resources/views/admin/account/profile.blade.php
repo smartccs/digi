@@ -20,12 +20,6 @@
 					</div>
 				</div>
 
-				<div class="form-group row">
-					<label for="paypal_email" class="col-xs-2 col-form-label">Paypal Email</label>
-					<div class="col-xs-10">
-						<input class="form-control" type="email" required name="paypal_email" value="{{  Auth::guard('admin')->user()->paypal_email }}" id="paypal_email" placeholder="Paypal Email">
-					</div>
-				</div>
 
 				<fieldset class="form-group row">
 					<legend class="col-form-legend col-sm-2">Gender</legend>

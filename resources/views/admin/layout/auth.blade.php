@@ -13,11 +13,11 @@
     <title>{{ Setting::get('site_title', 'Tranxit') }}</title>
 
     <!-- Vendor CSS -->
-    <link rel="stylesheet" href="{{asset('admin/vendor/bootstrap4/css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{asset('admin/vendor/themify-icons/themify-icons.css')}}">
-    <link rel="stylesheet" href="{{asset('admin/vendor/font-awesome/css/font-awesome.min.css')}}">
+    <link rel="stylesheet" href="{{asset('main/vendor/bootstrap4/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{asset('main/vendor/themify-icons/themify-icons.css')}}">
+    <link rel="stylesheet" href="{{asset('main/vendor/font-awesome/css/font-awesome.min.css')}}">
 
-    <link rel="stylesheet" href="{{asset('admin/assets/css/core.css')}}">
+    <link rel="stylesheet" href="{{asset('main/assets/css/core.css')}}">
 
     <!-- HTML5 Shiv and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -28,7 +28,7 @@
 </head>
 <body>
 
-    <?php $background = asset('admin/assets/img/photos-1/2.jpg'); ?>
+    <?php $background = asset('main/assets/img/photos-1/2.jpg'); ?>
 
     <body class="img-cover" style="background-image: url({{$background}});">
     
@@ -39,8 +39,8 @@
     </div>
 
         <!-- Vendor JS -->
-        <script type="text/javascript" src="{{asset('admin/vendor/jquery/jquery-1.12.3.min.js')}}"></script>
-        <script type="text/javascript" src="{{asset('admin/vendor/tether/js/tether.min.js')}}"></script>
-        <script type="text/javascript" src="{{asset('admin/vendor/bootstrap4/js/bootstrap.min.js')}}"></script>
+        <script type="text/javascript" src="{{asset('main/vendor/jquery/jquery-1.12.3.min.js')}}"></script>
+        <script type="text/javascript" src="{{asset('main/vendor/tether/js/tether.min.js')}}"></script>
+        <script type="text/javascript" src="{{asset('main/vendor/bootstrap4/js/bootstrap.min.js')}}"></script>
     </body>
 </html>

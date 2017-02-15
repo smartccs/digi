@@ -20,7 +20,7 @@
                             <th>Total Requests</th>
                             <th>Accepted Requests</th>
                             <th>Cancelled Requests</th>
-                            <th>Availability</th>
+                            <th>Status</th>
                             <th>Approve Option</th>
                             <th>Action</th>
                         </tr>
@@ -36,15 +36,15 @@
                             <td>{{$provider->accepted_requests}}</td>
                             <td>{{$provider->total_requests - $provider->accepted_requests }}</td>
                             <td>
-                                @if($provider->is_available==1) 
+                                @if($provider->service->status == 'active') 
                                     <label class="label label-primary">Yes</label> 
                                 @else 
                                     <label class="label label-warning">N/A</label> 
                                 @endif
                             </td>
                              <td>
-                                @if($provider->is_approved==1) 
-                                    <a class="btn btn-danger" href="{{route('admin.provider.decline', $provider->id )}}">Decline</a>
+                                @if($provider->status == 'approved') 
+                                    <a class="btn btn-danger" href="{{route('admin.provider.disapprove', $provider->id )}}">Disapprove</a>
                                 @else
                                     <a class="btn btn-success" href="{{route('admin.provider.approve', $provider->id )}}">Approve</a>
                                 @endif
@@ -86,7 +86,7 @@
                             <th>Total Requests</th>
                             <th>Accepted Requests</th>
                             <th>Cancelled Requests</th>
-                            <th>Availability</th>
+                            <th>Status</th>
                             <th>Approve Option</th>
                             <th>Action</th>
                         </tr>

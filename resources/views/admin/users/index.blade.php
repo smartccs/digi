@@ -14,12 +14,11 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Full Name</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
                             <th>Email</th>
                             <th>Mobile</th>
-                            <th>Gender</th>
-                            <th>Address</th>
-                            <th>Zipcode</th>
+                            <th>Rating</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -27,12 +26,11 @@
                     @foreach($users as $index => $user)
                         <tr>
                             <td>{{$index + 1}}</td>
-                            <td>{{$user->first_name}} {{$user->last_name}}</td>
+                            <td>{{$user->first_name}}</td>
+                            <td>{{$user->last_name}}</td>
                             <td>{{$user->email}}</td>
                             <td>{{$user->mobile}}</td>
-                            <td>{{$user->gender}}</td>
-                            <td>{{$user->address}}</td>
-                            <td>{{$user->zipcode}}</td>
+                            <td>{{$user->rating}}</td>
                             <td>
                                 <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST">
                                     {{ csrf_field() }}
@@ -48,12 +46,11 @@
                     <tfoot>
                         <tr>
                             <th>ID</th>
-                            <th>Full Name</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
                             <th>Email</th>
                             <th>Mobile</th>
-                            <th>Gender</th>
-                            <th>Address</th>
-                            <th>Zipcode</th>
+                            <th>Rating</th>
                             <th>Action</th>
                         </tr>
                     </tfoot>

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Controllers\Controller;
 use App\Helpers\Helper;
-
+use Exception;
 
 class ServiceResource extends Controller
 {
@@ -47,6 +47,7 @@ class ServiceResource extends Controller
         $this->validate($request, [
             'name' => 'required|max:255',
             'provider_name' => 'required|max:255',
+            'fixed' => 'required|numeric',
             'price' => 'required|numeric',
             'image' => 'mimes:ico,png'
         ]);
@@ -72,7 +73,7 @@ class ServiceResource extends Controller
 
         } 
 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
             return back()->with('flash_errors', 'Service Type Not Found');
         }
     }
@@ -120,7 +121,8 @@ class ServiceResource extends Controller
         $this->validate($request, [
             'name' => 'required|max:255',
             'provider_name' => 'required|max:255',
-            'price' => 'required',
+            'fixed' => 'required|numeric',
+            'price' => 'required|numeric',
             'image' => 'mimes:ico,png'
         ]);
 
@@ -142,6 +144,7 @@ class ServiceResource extends Controller
 
             $service->name = $request->name;
             $service->provider_name = $request->provider_name;
+            $service->fixed = $request->fixed;
             $service->price = $request->price;
             $service->save();
 
@@ -165,7 +168,7 @@ class ServiceResource extends Controller
             ServiceType::find($id)->delete();
             return back()->with('message', 'Service Type deleted successfully');
         } 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
             return back()->with('flash_errors', 'Service Type Not Found');
         }
     }

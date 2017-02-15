@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Auth;
 use Setting;
+use PushNotification;
 use Carbon\Carbon;
 
 use App\User;
