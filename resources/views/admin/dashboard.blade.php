@@ -17,7 +17,7 @@
 				<div class="t-content">
 					<h6 class="text-uppercase mb-1">Total No. of Rides</h6>
 					<h1 class="mb-1">{{$rides->count()}}</h1>
-					<span class="tag tag-danger mr-0-5">-{{round($cancel_rides/$rides->count(),2)}}%</span>
+					<span class="tag tag-danger mr-0-5">@if($cancel_rides == 0) 0.00 @else {{round($cancel_rides/$rides->count(),2)}}% @endif</span>
 					<span class="text-muted font-90">% down from cancelled Request</span>
 				</div>
 			</div>
@@ -49,7 +49,7 @@
 				<div class="t-content">
 					<h6 class="text-uppercase mb-1">Cancelled Rides</h6>
 					<h1 class="mb-1">{{$cancel_rides}}</h1>
-					<i class="fa fa-caret-down text-danger mr-0-5"></i><span>for {{round($cancel_rides/$rides->count(),2)}}% Rides</span>
+					<i class="fa fa-caret-down text-danger mr-0-5"></i><span>for @if($cancel_rides == 0) 0.00 @else {{round($cancel_rides/$rides->count(),2)}}% @endif Rides</span>
 				</div>
 			</div>
 		</div>
@@ -75,7 +75,7 @@
 									@if($ride->status != "CANCELLED")
 										<a class="text-primary" href="{{route('admin.request.details',$ride->id)}}"><span class="underline">View Ride Details</span></a>
 									@else
-										<p>No Details Found </p>
+										<span>No Details Found </span>
 									@endif									
 								</td>
 								<td>

@@ -14,6 +14,7 @@ use App\ServiceType;
 use App\UserRequestPayment;
 use App\Helpers\Helper;
 use Auth;
+use Exception;
 
 
 class AdminController extends Controller
@@ -37,12 +38,18 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
-        $rides = UserRequests::with('user')->orderBy('id','desc')->get();
-        $cancel_rides = UserRequests::where('status','CANCELLED')->count();
-        $service = ServiceType::count();
-        $revenue = UserRequestPayment::sum('total');
-        $providers = Provider::take(10)->orderBy('rating','desc')->get();
-        return view('admin.dashboard',compact('providers','service','rides','cancel_rides','revenue'));
+        try{
+            
+            $rides = UserRequests::with('user')->orderBy('id','desc')->get();
+            $cancel_rides = UserRequests::where('status','CANCELLED')->count();
+            $service = ServiceType::count();
+            $revenue = UserRequestPayment::sum('total');
+            $providers = Provider::take(10)->orderBy('rating','desc')->get();
+            return view('admin.dashboard',compact('providers','service','rides','cancel_rides','revenue'));
+        }
+        catch(Exception $e){
+            return redirect()->route('admin.user.index')->with('flash_error','Something Went Wrong with Dashboard!');
+        }
     }
 
     /**

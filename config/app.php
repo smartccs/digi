@@ -181,7 +181,6 @@ return [
         Laravel\Socialite\SocialiteServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
         'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
-        'Folklore\Image\ImageServiceProvider',
         'Barryvdh\TranslationManager\ManagerServiceProvider',
         'Davibennun\LaravelPushNotification\LaravelPushNotificationServiceProvider'
 
@@ -236,7 +235,6 @@ return [
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'JWTAuth' => 'Tymon\JWTAuth\Facades\JWTAuth',
         'JWTFactory' => 'Tymon\JWTAuth\Facades\JWTFactory',
-        'Image' => 'Folklore\Image\Facades\Image',
         'PushNotification' => 'Davibennun\LaravelPushNotification\Facades\PushNotification'
     ],
 ];

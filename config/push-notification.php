@@ -2,24 +2,24 @@
 
 return array(
 
-    'appNameIOSUser'     => array(
+    'IOSUser'     => array(
         'environment' =>'development',
         'certificate' => app_path().'/apns/user/tranxit_user.pem',
         'passPhrase'  =>'appoets123$',
         'service'     =>'apns'
     ),
-    'appNameIOSProvider' => array(
+    'IOSProvider' => array(
         'environment' =>'production',
         'certificate' => app_path().'/apns/provider/tranxit_provider.pem',
         'passPhrase'  =>'appoets123$',
         'service'     =>'apns'
     ),
-    'appNameAndroidUser' => array(
+    'AndroidUser' => array(
         'environment' =>'development',
         'apiKey'      =>'yourAPIKey',
         'service'     =>'gcm'
     ),
-    'appNameAndroidProvider' => array(
+    'AndroidProvider' => array(
         'environment' =>'development',
         'apiKey'      =>'yourAPIKey',
         'service'     =>'gcm'

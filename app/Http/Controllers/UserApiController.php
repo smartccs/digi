@@ -133,6 +133,8 @@ class UserApiController extends Controller
 
         $this->validate($request, [
             'device_type' => 'in:android,ios',
+            'latitude' => 'numeric',
+            'longitude' => 'numeric',
         ]);
 
         try{
@@ -149,6 +151,14 @@ class UserApiController extends Controller
 
                 if($request->has('device_id')){
                     $user->device_id = $request->device_id;
+                }
+
+                if($request->has('latitude')){
+                    $user->latitude = $request->latitude;
+                }
+
+                if($request->has('longitude')){
+                    $user->longitude = $request->longitude;
                 }
 
                 $user->save();
@@ -229,9 +239,6 @@ class UserApiController extends Controller
     public function services() {
 
         if($serviceList = ServiceType::all()) {
-            foreach ($serviceList as $key => $value) {
-                $serviceList[$key]->grey_image = url('/').\Image::url($value->image,array('grayscale'));
-            }
             return $serviceList;
         } else {
             return response()->json(['error' => 'Services Not Found!'], 500);
@@ -729,7 +736,7 @@ class UserApiController extends Controller
             $total = $price + $tax_price;
 
             return response()->json([
-                    'estimated_fare' => $total, 
+                    'estimated_fare' => round($total,2), 
                     'distance' => $kilometer,
                     'time' => $time,
                     'tax_price' => $tax_price,
