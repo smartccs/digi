@@ -14,7 +14,7 @@
         @include('common.notify')
         <div class="row no-margin">
             <div class="col-md-6">
-                <form action="{{url('confirm/ride')}}" method="GET" onke="return disableEnterKey(event);">
+                <form action="{{url('confirm/ride')}}" method="GET" onkeypress="return disableEnterKey(event);">
                 <div class="input-group dash-form">
                     <input type="text" class="form-control" id="origin-input" name="s_address"  placeholder="Enter pickup location">
                 </div>

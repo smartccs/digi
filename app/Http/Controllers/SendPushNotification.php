@@ -33,13 +33,13 @@ class SendPushNotification extends Controller
 	    	if($user->device_type == 'ios'){
 
 	    		return PushNotification::app('IOSUser')
-		            ->to($$user->device_token)
+		            ->to($user->device_token)
 		            ->send('Hello World, i`m a push message');
 
 	    	}elseif($user->device_type == 'android'){
 	    		
 	    		return PushNotification::app('AndroidUser')
-		            ->to($$user->device_token)
+		            ->to($user->device_token)
 		            ->send('Hello World, i`m a push message');
 
 	    	}
@@ -64,13 +64,13 @@ class SendPushNotification extends Controller
 	    	if($provider->type == 'ios'){
 	    		
 	    		return PushNotification::app('IOSProvider')
-		            ->to($$user->device_token)
+		            ->to($user->device_token)
 		            ->send('Hello World, i`m a push message');
 
 	    	}elseif($provider->type == 'android'){
 	    		
 	    		return PushNotification::app('AndroidProvider')
-		            ->to($$user->device_token)
+		            ->to($user->device_token)
 		            ->send('Hello World, i`m a push message');
 
 	    	}

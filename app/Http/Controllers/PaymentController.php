@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\UserRequestPayment;
 use App\UserRequests;
 use App\Card;
+use App\User;
 
 use Exception;
 use Auth;
