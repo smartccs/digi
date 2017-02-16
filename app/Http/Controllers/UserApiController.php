@@ -22,7 +22,6 @@ use App\Provider;
 use App\Settings;
 use App\UserRequestRating;
 use App\Card;
-use App\ChatMessage;
 
 class UserApiController extends Controller
 {
@@ -133,8 +132,6 @@ class UserApiController extends Controller
 
         $this->validate($request, [
             'device_type' => 'in:android,ios',
-            'latitude' => 'numeric',
-            'longitude' => 'numeric',
         ]);
 
         try{
@@ -151,14 +148,6 @@ class UserApiController extends Controller
 
                 if($request->has('device_id')){
                     $user->device_id = $request->device_id;
-                }
-
-                if($request->has('latitude')){
-                    $user->latitude = $request->latitude;
-                }
-
-                if($request->has('longitude')){
-                    $user->longitude = $request->longitude;
                 }
 
                 $user->save();
@@ -267,7 +256,8 @@ class UserApiController extends Controller
                 'card_id' => ['required_if:payment_mode,CARD','exists:cards,card_id,user_id,'.Auth::user()->id],
             ]);
 
-        Log::info('New Request: ', Auth::user()->id, $request->all());
+        Log::info('New Request from user id :'. Auth::user()->id .' params are :');
+        Log::info($request->all());
 
         $ActiveRequests = UserRequests::PendingRequest(Auth::user()->id)->count();
 
@@ -324,6 +314,8 @@ class UserApiController extends Controller
             $UserRequest->assigned_at = Carbon::now();
 
             $UserRequest->save();
+
+            Log::info('New Request id : '. $UserRequest->id .' Assigned to provider : '. $UserRequest->current_provider_id);
 
             // update payment mode 
 
@@ -542,128 +534,6 @@ class UserApiController extends Controller
         catch (Exception $e) {
             return response()->json(['error' => 'Something went wrong']);
         }
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function payment_modes() {
-
-        $payment_modes = [];
-
-        try{
-
-            $modes = Settings::whereIn('key' , ['CASH','CARD','PAYPAL'])->where('value' , 1)->get();
-            if($modes) {
-                foreach ($modes as $key => $mode) {
-                    $payment_modes[$mode->key] = $mode->key;
-                }            
-            }
-
-            return $payment_modes;
-        }
-
-        catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong'], 500);
-        }
-    }
-
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-
-    public function message(Request $request)
-    {
-        $this->validate($request, [
-                'request_id' => 'required|integer|exists:user_requests,id',
-            ]);
-
-        try{
-
-        $Messages = ChatMessage::where('user_id', Auth::user()->id)
-                ->where('request_id', $request->request_id)
-                ->get()->toArray();
-
-            return $Messages;
-
-        }
-
-        catch(Exception $e) {
-                return response()->json(['error' => "Something Went Wrong"], 500);
-        }
-    }
-
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function add_money(Request $request){
-        $this->validate($request, [
-                    'amount' => 'required|integer',
-                    'payment_mode' => 'required|in:PAYPAL,CARD|exists:settings,key,value,1',
-                ]);
-
-        try{
-
-            $user = User::find(Auth::user()->id);
-
-            if($request->payment_mode == CARD) {
-
-                    $check_card_exists = User::where('users.id' , Auth::user()->id)
-                                ->leftJoin('cards' , 'users.id','=','cards.user_id')
-                                ->where('cards.id' , $user->default_card)
-                                ->where('cards.is_default' , 1);
-
-                    if($check_card_exists->count() != 0) {
-
-                        $user_card = $check_card_exists->first();
-
-                        // Get the key from settings table
-                        $settings = Settings::where('key' , 'stripe_secret_key')->first();
-                        $stripe_secret_key = $settings->value;
-
-                        $customer_id = $user_card->customer_id;
-                    
-                        if($stripe_secret_key) {
-                            \Stripe\Stripe::setApiKey($stripe_secret_key);
-                        } else {
-                           return response()->json(['error' => "Something Went Wrong"]);
-                        }
-
-                        try{
-                            
-                            $user_charge =  \Stripe\Charge::create(array(
-                              "amount" => $request->amount * 100,
-                              "currency" => "usd",
-                              "customer" => $customer_id,
-                            ));
-                        
-                        } catch (\Stripe\StripeInvalidRequestError $e) {
-                            Log::info(print_r($e,true));
-                            return response()->json(['error' => $e]);
-                        
-                        }
-
-                    } else {
-                        return response()->json(['error' => "No Card Exist"]);
-                    }
-
-                }  
-        }
-
-        catch(Exception $e) {
-                return response()->json(['error' => "Something Went Wrong"], 500);
-        }  
     }
 
     /**

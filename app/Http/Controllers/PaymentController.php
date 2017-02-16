@@ -73,4 +73,20 @@ class PaymentController extends Controller
     	}
     }
 
+
+    /**
+     * add wallet money for user.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function add_money(Request $request){
+
+        $this->validate($request, [
+                'amount' => 'required|integer',
+            ]);
+
+        
+
+    }
+
 }
