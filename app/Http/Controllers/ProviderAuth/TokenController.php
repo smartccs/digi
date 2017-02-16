@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 use Tymon\JWTAuth\Exceptions\JWTException;
 
+use Auth;
 use Config;
 use JWTAuth;
 
@@ -89,11 +90,10 @@ class TokenController extends Controller
             return response()->json(['error' => 'Something went wrong, Please try again later!'], 500);
         }
 
-        $User = \Auth::user();
+        $User = Provider::with('service', 'device')->find(Auth::user()->id);
+
         $User->access_token = $token;
         $User->currency = currency();
-
-
 
         if($User->device) {
             if($User->device->token != $request->token) {

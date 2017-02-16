@@ -12,7 +12,8 @@ class Document extends Model
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name',
+        'type'
     ];
 
     /**
@@ -24,4 +25,25 @@ class Document extends Model
         'created_at', 'updated_at'
     ];
 
+    /**
+     * Scope a query to only include popular users.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeVehicle($query)
+    {
+        return $query->where('type', 'VEHICLE');
+    }
+
+    /**
+     * Scope a query to only include popular users.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeDriver($query)
+    {
+        return $query->where('type', 'DRIVER');
+    }
 }
