@@ -17,7 +17,10 @@ class CreateProviderDocumentsTable extends Migration
             $table->increments('id');
             $table->integer('provider_id');
             $table->string('document_id');
-            $table->string('document_url');
+            $table->string('url');
+            $table->string('unique_id');
+            $table->enum('status', ['MISSING', 'ASSESSING', 'ACTIVE']);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

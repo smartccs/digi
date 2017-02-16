@@ -41,12 +41,13 @@ class DocumentResource extends Controller
     {
         $this->validate($request, [
             'name' => 'required|max:255',
+            'type' => 'required|in:VEHICLE,DRIVER',
         ]);
 
         try{
 
             Document::create($request->all());
-            return back()->with('flash_success','Document Saved Successfully');
+            return redirect()->route('admin.document.index')->with('flash_success','Document Saved Successfully');
 
         } 
 
@@ -97,10 +98,14 @@ class DocumentResource extends Controller
     {
         $this->validate($request, [
             'name' => 'required|max:255',
+            'type' => 'required|in:VEHICLE,DRIVER',
         ]);
 
         try {
-            Document::where('id',$id)->update(['name' => $request->name]);
+            Document::where('id',$id)->update([
+                    'name' => $request->name,
+                    'type' => $request->type,
+                ]);
             return redirect()->route('admin.document.index')->with('flash_success', 'Document Updated Successfully');    
         } 
 

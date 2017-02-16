@@ -15,6 +15,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Document Name</th>
+                            <th>Type</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -23,6 +24,7 @@
                         <tr>
                             <td>{{$index + 1}}</td>
                             <td>{{$document->name}}</td>
+                            <td>{{$document->type}}</td>
                             <td>
                                 <form action="{{ route('admin.document.destroy', $document->id) }}" method="POST">
                                     {{ csrf_field() }}
@@ -38,6 +40,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Document Name</th>
+                            <th>Type</th>
                             <th>Action</th>
                         </tr>
                     </tfoot>
