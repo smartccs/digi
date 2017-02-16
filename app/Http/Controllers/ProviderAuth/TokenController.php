@@ -12,6 +12,7 @@ use Config;
 use JWTAuth;
 
 use App\Provider;
+use App\ProviderDevice;
 
 class TokenController extends Controller
 {
@@ -92,9 +93,11 @@ class TokenController extends Controller
         $User->access_token = $token;
         $User->currency = currency();
 
-        if($User->profile) {
-            if($User->profile->udid != $request->device_id) {
-                $User->profile->update([
+
+
+        if($User->device) {
+            if($User->device->token != $request->token) {
+                $User->device->update([
                         'udid' => $request->device_id,
                         'token' => $request->device_token,
                         'type' => $request->device_type,

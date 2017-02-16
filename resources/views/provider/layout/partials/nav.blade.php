@@ -10,7 +10,7 @@
             <a href="new-provider-invite.html">Invite</a>
         </li>
         <li>
-            <a href="new-provider-profile.html">Profile</a>
+            <a href="{{ route('provider.profile.index') }}">Profile</a>
         </li>
         <li>
             <a href="help.html">Help</a>

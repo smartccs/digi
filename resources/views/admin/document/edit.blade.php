@@ -21,6 +21,16 @@
 					</div>
 				</div>
 
+                <div class="form-group row">
+                    <label for="name" class="col-xs-2 col-form-label">Document Type</label>
+                    <div class="col-xs-10">
+                        <select name="type">
+                            <option value="DRIVER" @if($document->type == 'DRIVER') selected @endif>Driver Review</option>
+                            <option value="VEHICLE" @if($document->type == 'VEHICLE') selected @endif>Vehicle Review</option>
+                        </select>
+                    </div>
+                </div>
+
 				<div class="form-group row">
 					<label for="zipcode" class="col-xs-2 col-form-label"></label>
 					<div class="col-xs-10">

@@ -5,7 +5,6 @@
     <div class="container">
         <a href="#" class="pro-head-link active">Profile</a>
         <a href="{{ route('provider.documents.index')}}" class="pro-head-link">Manage Documents</a>
-        <a href="new-provider-vehicles.html" class="pro-head-link">Vehicles</a>
     </div>
 </div>
 <!-- Pro-dashboard-content -->

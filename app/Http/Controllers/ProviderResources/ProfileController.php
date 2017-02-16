@@ -225,8 +225,12 @@ class ProfileController extends Controller
             ]);
 
         $Provider = Auth::user();
-        $Provider->service_status = $request->service_status;
-        $Provider->save();
+        
+        if($Provider->service) {
+            $Provider->service->update(['status' => $request->service_status]);
+        } else {
+            return response()->json(['error' => 'You account has not been approved for driving']);
+        }
 
         return $Provider;
     }
