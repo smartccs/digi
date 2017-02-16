@@ -51,8 +51,8 @@
 					<span class="s-text">Ratings & Reviews</span>
 				</a>
 				<ul>
-					<li><a href="{{route('admin.user-review')}}">User Ratings</a></li>
-					<li><a href="{{route('admin.provider-review')}}">Provider Ratings</a></li>
+					<li><a href="{{route('admin.user.review')}}">User Ratings</a></li>
+					<li><a href="{{route('admin.provider.review')}}">Provider Ratings</a></li>
 				</ul>
 			</li>
 			<li class="menu-title">Requests</li>

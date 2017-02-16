@@ -33,7 +33,7 @@ class ProviderDocument extends Model
      */
     public function provider()
     {
-        return $this->hasOne('App\Provider');
+        return $this->belongsTo('App\Provider');
     }
     /**
      * The services that belong to the user.

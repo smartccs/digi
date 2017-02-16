@@ -19,7 +19,7 @@ class CreateProviderDocumentsTable extends Migration
             $table->string('document_id');
             $table->string('url');
             $table->string('unique_id')->nullable();
-            $table->enum('status', ['MISSING', 'ASSESSING', 'ACTIVE']);
+            $table->enum('status', ['ASSESSING', 'ACTIVE']);
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
         });

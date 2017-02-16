@@ -87,10 +87,19 @@ class Provider extends Authenticatable
     /**
      * The services that belong to the user.
      */
+    public function pending_documents()
+    {
+        return $this->hasMany('App\ProviderDocument')->where('status', 'ASSESSING')->count();
+    }
+
+    /**
+     * The services that belong to the user.
+     */
     public function document($id)
     {
         return $this->hasOne('App\ProviderDocument')->where('document_id', $id)->first();
     }
+
 
     /**
      * Send the password reset notification.
