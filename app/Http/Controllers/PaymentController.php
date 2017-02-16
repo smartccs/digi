@@ -44,7 +44,7 @@ class PaymentController extends Controller
 					  "currency" => "usd",
 					  "customer" => Auth::user()->stripe_cust_id,
 					  "card" => $Card->card_id,
-					  "description" => "Charge for ".Auth::user()->email,
+					  "description" => "Payment Charge for ".Auth::user()->email,
 					  "receipt_email" => Auth::user()->email
 					));
 
@@ -83,9 +83,41 @@ class PaymentController extends Controller
 
         $this->validate($request, [
                 'amount' => 'required|integer',
+                'card_id' => 'required|exists:cards,card_id,user_id,'.Auth::user()->id
             ]);
 
-        
+        try{
+            
+            $StripeWalletCharge = $request->amount * 100;
+
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+
+            $Charge = \Stripe\Charge::create(array(
+                  "amount" => $StripeWalletCharge,
+                  "currency" => "usd",
+                  "customer" => Auth::user()->stripe_cust_id,
+                  "card" => $request->card_id,
+                  "description" => "Adding Money for ".Auth::user()->email,
+                  "receipt_email" => Auth::user()->email
+                ));
+
+            $update_user = User::find(Auth::user()->id);
+            $update_user->wallet_balance += $request->amount;
+            $update_user->save();
+
+            if($request->ajax()){
+               return response()->json(['message' => currency($request->amount).' added to your wallet', 'user' => $update_user]); 
+            }else{
+                return redirect('dashboard')->with('flash_success',currency($request->amount).' added to your wallet');
+            }
+
+        } catch(\Stripe\StripeInvalidRequestError $e){
+            if($request->ajax()){
+                 return response()->json(['error' => $e->getMessage()], 500);
+            }else{
+                return back()->with('flash_error',$e->getMessage());
+            }
+        } 
 
     }
 

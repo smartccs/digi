@@ -20,20 +20,14 @@ use App\UserRequestPayment;
 
 class TripController extends Controller
 {
-    private $user;
-
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct($user = null)
+    public function __construct()
     {
-        if($user != null) {
-            $this->user = $user;
-        } else {
-            $this->user = Auth::user();
-        }
+        //
     }
 
     /**
@@ -44,8 +38,7 @@ class TripController extends Controller
     public function index()
     {
         try{
-
-            $IncomingRequests = RequestFilter::IncomingRequest($this->user->id)->get();
+            $IncomingRequests = RequestFilter::IncomingRequest(Auth::user()->id)->get();
 
             $Timeout = Setting::get('provider_select_timeout', 180);
                 if(!empty($IncomingRequests)){
@@ -59,8 +52,8 @@ class TripController extends Controller
                 }
 
             $Response = [
-                    'account_status' => $this->user->status,
-                    'service_status' => $this->user->service ? $this->user->service->status : 'offline',
+                    'account_status' => Auth::user()->status,
+                    'service_status' => Auth::user()->service ? Auth::user()->service->status : 'offline',
                     'requests' => $IncomingRequests,
                 ];
 
@@ -138,7 +131,7 @@ class TripController extends Controller
     public function history(Request $request)
     {
         if($request->ajax()) {
-            $Jobs = UserRequests::where('provider_id', $this->user->id)->with('payment')->get();
+            $Jobs = UserRequests::where('provider_id', Auth::user()->id)->with('payment')->get();
             if(!empty($Jobs)){
                 $map_icon = asset('asset/marker.png');
                 foreach ($Jobs as $key => $value) {
@@ -167,12 +160,12 @@ class TripController extends Controller
                 return response()->json(['error' => 'Request already under progress!']);
             }
 
-            $UserRequest->provider_id = $this->user->id;
+            $UserRequest->provider_id = Auth::user()->id;
             $UserRequest->status = "STARTED";
             // dd($UserRequest->toArray());
             $UserRequest->save();
 
-            $Filters = RequestFilter::where('request_id', $UserRequest->id)->where('provider_id', '!=', $this->user->id)->get();
+            $Filters = RequestFilter::where('request_id', $UserRequest->id)->where('provider_id', '!=', Auth::user()->id)->get();
             // dd($Filters->toArray());
             foreach ($Filters as $Filter) {
                 $Filter->delete();
@@ -246,7 +239,7 @@ class TripController extends Controller
         try {
 
             // Send Push Notification to User
-            RequestFilter::where('request_id', $UserRequest->id)->where('provider_id', $this->user->id)->delete();
+            RequestFilter::where('request_id', $UserRequest->id)->where('provider_id', Auth::user()->id)->delete();
             return $UserRequest->with('user')->get();
 
         } catch (ModelNotFoundException $e) {
@@ -265,7 +258,7 @@ class TripController extends Controller
             return false;
         }
 
-        RequestFilter::where('provider_id', $this->user->id)
+        RequestFilter::where('provider_id', Auth::user()->id)
             ->where('request_id', $UserRequest->id)
             ->delete();
 
@@ -332,7 +325,7 @@ class TripController extends Controller
         if($request->ajax()) {
             
             $Jobs = UserRequests::where('id',$request->request_id)
-                                ->where('provider_id', $this->user->id)
+                                ->where('provider_id', Auth::user()->id)
                                 ->with('payment','service_type','user','rating')
                                 ->get();
             if(!empty($Jobs)){

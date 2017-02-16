@@ -536,6 +536,7 @@ class UserApiController extends Controller
         }
     }
 
+
     /**
      * Show the application dashboard.
      *

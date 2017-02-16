@@ -51,9 +51,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 	Route::post('/payment' , 'PaymentController@payment');
 
-	// chat
-
-	Route::get('/message' , 'UserApiController@message');
+	Route::post('/add/money' , 'PaymentController@add_money');
 
 	// estimated
 
