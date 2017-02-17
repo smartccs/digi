@@ -106,6 +106,9 @@ class PaymentController extends Controller
             $update_user->wallet_balance += $request->amount;
             $update_user->save();
 
+            Card::where('user_id',Auth::user()->id)->update(['is_default' => 0]);
+            Card::where('card_id',$request->card_id)->update(['is_default' => 1]);
+
             if($request->ajax()){
                return response()->json(['message' => currency($request->amount).' added to your wallet', 'user' => $update_user]); 
             }else{

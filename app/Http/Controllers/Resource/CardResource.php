@@ -21,7 +21,7 @@ class CardResource extends Controller
     {
         try{
 
-            $cards = Card::where('user_id',Auth::user()->id)->get();
+            $cards = Card::where('user_id',Auth::user()->id)->orderBy('created_at','desc')->get();
             return $cards; 
 
         } catch(Exception $e){
