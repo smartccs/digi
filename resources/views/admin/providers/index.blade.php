@@ -32,15 +32,17 @@
                             <td>{{$provider->first_name}} {{$provider->last_name}}</td>
                             <td>{{$provider->email}}</td>
                             <td>{{$provider->mobile}}</td>
-                            <td>{{$provider->total_requests}}</td>
-                            <td>{{$provider->accepted_requests}}</td>
-                            <td>{{$provider->total_requests - $provider->accepted_requests }}</td>
+                            <td>{{$provider->accepted()->count() + $provider->cancelled()->count()}}</td>
+                            <td>{{$provider->accepted()->count()}}</td>
+                            <td>{{$provider->cancelled()->count() }}</td>
                             <td>
+                            @if($provider->service)
                                 @if($provider->service->status == 'active') 
                                     <label class="label label-primary">Yes</label> 
                                 @else 
                                     <label class="label label-warning">N/A</label> 
                                 @endif
+                            @endif
                             </td>
                              <td>
                                 @if($provider->status == 'approved') 

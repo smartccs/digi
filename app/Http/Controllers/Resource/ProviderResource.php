@@ -22,19 +22,9 @@ class ProviderResource extends Controller
      */
     public function index()
     {
-        $total_requests = UserRequests::select(DB::raw('count(*)'))
-                        ->whereRaw('provider_id','providers.id');
-
-        $accepted_requests = UserRequests::select(DB::raw('count(*)'))
-                        ->whereRaw('provider_id = providers.id');
-
-        $providers = Provider::select(
-                    'providers.*', 
-                    DB::raw("(" . $total_requests->toSql() . ") as 'total_requests'"), 
-                    DB::raw("(" . $accepted_requests->toSql() . ") as 'accepted_requests'"))
-                ->with('service')
-                ->orderBy('providers.id', 'DESC')
-                ->get();
+        $providers = Provider::with('service','accepted','cancelled')
+                    ->orderBy('id', 'DESC')
+                    ->get();
 
         return view('admin.providers.index', compact('providers'));
     }

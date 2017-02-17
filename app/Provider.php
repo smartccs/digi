@@ -77,6 +77,24 @@ class Provider extends Authenticatable
     }
 
     /**
+     * The services accepted by the provider
+     */
+    public function accepted()
+    {
+        return $this->hasMany('App\UserRequests','provider_id')
+                    ->where('status','!=','CANCELLED');
+    }
+
+    /**
+     * service cancelled by provider.
+     */
+    public function cancelled()
+    {
+        return $this->hasMany('App\UserRequests','provider_id')
+                ->where('status','CANCELLED');
+    }
+
+    /**
      * Send the password reset notification.
      *
      * @param  string  $token

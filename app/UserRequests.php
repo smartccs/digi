@@ -19,7 +19,7 @@ class UserRequests extends Model
         'paid','distance','s_latitude','d_latitude','s_longitude',
         'd_longitude','paid','s_address', 'd_address',
         'assigned_at','schedule_at','started_at',
-        'finished_at'
+        'finished_at','use_wallet'
     ];
 
     /**

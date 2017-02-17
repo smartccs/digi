@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Auth;
 use Setting;
-use PushNotification;
 use Carbon\Carbon;
 
 use App\User;
@@ -288,11 +287,19 @@ class TripController extends Controller
             $Fixed = $UserRequest->service_type->fixed ? : 0;
             $Distance = ceil($UserRequest->distance) * $UserRequest->service_type->distance;
             $Discount = 0; // Promo Code discounts should be added here.
+            $Wallet = 0;
+
+            if($UserRequest->use_wallet == 1){
+
+                $User = User::findOrFail($UserRequest->user_id);
+                $Wallet = $User->wallet_balance;
+            }
 
             $Commision = ( $Fixed + $Distance - $Discount ) * (Setting::get('payment_commision', 10) / 100);
 
             $Tax = $Fixed + $Distance - $Discount + $Commision * (Setting::get('payment_tax', 10) / 100);
             $Total = $Fixed + $Distance - $Discount + $Commision + $Tax;
+            $Total = $Total - $Wallet;
 
             $Payment = new UserRequestPayment;
             $Payment->request_id = $UserRequest->id;
@@ -300,6 +307,7 @@ class TripController extends Controller
             $Payment->distance = $Distance;
             $Payment->commision = $Commision;
             $Payment->discount = $Discount;
+            $Payment->wallet = $Wallet;
             $Payment->tax = $Tax;
             $Payment->total = $Total;
             $Payment->save();

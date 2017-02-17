@@ -26,6 +26,7 @@ class CreateUserRequestPaymentsTable extends Migration
             $table->float('commision',  10, 2)->default(0);
             $table->float('discount',   10, 2)->default(0);
             $table->float('tax',        10, 2)->default(0);
+            $table->float('wallet',     10, 2)->default(0);
             $table->float('total',      10, 2)->default(0);
 
             $table->timestamps();

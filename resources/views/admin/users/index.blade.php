@@ -32,7 +32,7 @@
                             <td>{{$user->email}}</td>
                             <td>{{$user->mobile}}</td>
                             <td>{{$user->rating}}</td>
-                            <td>{{currency($user->wallet_balance)}}</td>
+                            <td> {{ currency().$user->wallet_balance}}</td>
                             <td>
                                 <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST">
                                     {{ csrf_field() }}

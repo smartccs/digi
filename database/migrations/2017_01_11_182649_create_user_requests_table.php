@@ -62,6 +62,7 @@ class CreateUserRequestsTable extends Migration
             
             $table->boolean('user_rated')->default(0);
             $table->boolean('provider_rated')->default(0);
+            $table->boolean('use_wallet')->default(0);
 
             $table->timestamps();
         });

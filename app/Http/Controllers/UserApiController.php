@@ -252,6 +252,7 @@ class UserApiController extends Controller
                 'service_type' => 'required|numeric|exists:service_types,id',
                 'promo_code' => 'exists:promocodes,promo_code',
                 'distance' => 'required|numeric',
+                'use_wallet' => 'numeric',
                 'payment_mode' => 'required|in:CASH,CARD,PAYPAL',
                 'card_id' => ['required_if:payment_mode,CARD','exists:cards,card_id,user_id,'.Auth::user()->id],
             ]);
@@ -310,6 +311,8 @@ class UserApiController extends Controller
             $UserRequest->d_latitude = $request->d_latitude;
             $UserRequest->d_longitude = $request->d_longitude;
             $UserRequest->distance = $request->distance;
+
+            $UserRequest->use_wallet = $request->use_wallet ? : 0;
             
             $UserRequest->assigned_at = Carbon::now();
 
