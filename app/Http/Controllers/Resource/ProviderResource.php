@@ -195,21 +195,6 @@ class ProviderResource extends Controller
      * @param  \App\Provider  $provider
      * @return \Illuminate\Http\Response
      */
-    public function document($id)
-    {
-        $provider = Provider::find($id);
-        $documents = ProviderDocument::leftJoin('documents', 'provider_documents.document_id', '=', 'documents.id')
-                    ->select('provider_documents.*', 'documents.name as document_name')
-                    ->where('provider_id', $id)->get();
-        return view('admin.providers.provider-document', compact('documents','provider'));
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Provider  $provider
-     * @return \Illuminate\Http\Response
-     */
     public function request($id){
 
         try{

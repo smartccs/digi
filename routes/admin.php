@@ -20,12 +20,16 @@ Route::resource('provider', 'Resource\ProviderResource');
 Route::resource('document', 'Resource\DocumentResource');
 Route::resource('service', 'Resource\ServiceResource');
 Route::resource('promocode', 'Resource\PromocodeResource');
-Route::get('user-review', 'AdminController@user_review')->name('user-review');
-Route::get('provider-review', 'AdminController@provider_review')->name('provider-review');
-Route::get('provider/{id}/approve', 'Resource\ProviderResource@approve')->name('provider.approve');
-Route::get('provider/{id}/disapprove', 'Resource\ProviderResource@disapprove')->name('provider.disapprove');
-Route::get('provider/{id}/request', 'Resource\ProviderResource@request')->name('provider.request');
-Route::get('provider/{id}/document', 'Resource\ProviderResource@document')->name('provider.document');
+
+Route::group(['as' => 'provider.'], function () {
+    Route::get('provider-review', 'AdminController@provider_review')->name('review');
+    Route::get('provider/{id}/approve', 'Resource\ProviderResource@approve')->name('approve');
+    Route::get('provider/{id}/disapprove', 'Resource\ProviderResource@disapprove')->name('disapprove');
+    Route::get('provider/{id}/request', 'Resource\ProviderResource@request')->name('request');
+    Route::resource('provider/{provider}/document', 'Resource\ProviderDocumentResource');
+});
+
+Route::get('user/review', 'AdminController@user_review')->name('user.review');
 Route::get('user/{id}/request', 'Resource\UserResource@request')->name('user.request');
 
 Route::get('user-map', 'AdminController@user_map')->name('user.map');

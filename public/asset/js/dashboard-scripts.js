@@ -156,22 +156,6 @@ DropDown.prototype = {
     }
 }
 
-
-// $('.view-icon.list-btn').click( function(){
-//     if ( $('.list-view').hasClass('two') ) {
-//         $('.list-view').fadeToggle(500);
-//         $('.grid-view').fadeToggle(500);
-//         $('.view-icon.list-btn').addClass('active');
-//         $('.list-view').removeClass('two');
-
-//     } else {
-//         $('.grid-view').fadeToggle(500);
-//         $('.list-view').fadeToggle(500);
-//         $('.view-icon.gird-btn').addClass('active');
-//         $('.list-view').addClass('two');    
-//     }
-// });
-
 // 
 $('.view-icon.list-btn').click( function(){
     $('.grid-view').hide();
