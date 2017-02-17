@@ -614,7 +614,8 @@ class UserApiController extends Controller
                     'distance' => $kilometer,
                     'time' => $time,
                     'tax_price' => $tax_price,
-                    'base_price' => $base_price
+                    'base_price' => $base_price,
+                    'wallet_balance' => Auth::user()->wallet_balance
                 ]);
 
         }

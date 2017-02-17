@@ -289,17 +289,12 @@ class TripController extends Controller
             $Discount = 0; // Promo Code discounts should be added here.
             $Wallet = 0;
 
-            if($UserRequest->use_wallet == 1){
-
-                $User = User::findOrFail($UserRequest->user_id);
-                $Wallet = $User->wallet_balance;
-            }
-
             $Commision = ( $Fixed + $Distance - $Discount ) * (Setting::get('payment_commision', 10) / 100);
 
             $Tax = $Fixed + $Distance - $Discount + $Commision * (Setting::get('payment_tax', 10) / 100);
             $Total = $Fixed + $Distance - $Discount + $Commision + $Tax;
-            $Total = $Total - $Wallet;
+
+
 
             $Payment = new UserRequestPayment;
             $Payment->request_id = $UserRequest->id;
@@ -307,9 +302,30 @@ class TripController extends Controller
             $Payment->distance = $Distance;
             $Payment->commision = $Commision;
             $Payment->discount = $Discount;
-            $Payment->wallet = $Wallet;
+
+            if($UserRequest->use_wallet == 1){
+
+                $Wallet = Auth::user()->wallet_balance;
+
+                $Result = $Total - $Wallet;
+
+                if($Result < 0){
+                    $Result = 0;
+                    $Payment->wallet = $Total;
+                    $CurrentBalance = $Wallet - $Total;
+                    User::where('id',Auth::user()->id)->update(['wallet_balance',$CurrentBalance ]);
+                    $Payment->total = abs($Result);
+                }else{
+                    $Payment->total = $Result;
+                    User::where('id',Auth::user()->id)->update(['wallet_balance',0 ]);
+                    $Payment->wallet = $Total - $Result;
+                }
+
+            }else{
+                $Payment->total = abs($Total);
+            }
+
             $Payment->tax = $Tax;
-            $Payment->total = $Total;
             $Payment->save();
 
             return $Payment;
