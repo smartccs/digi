@@ -385,18 +385,6 @@ class AdminController extends Controller
      * @param  \App\Provider  $provider
      * @return \Illuminate\Http\Response
      */
-    public function chat($id){
-
-        //
-
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Provider  $provider
-     * @return \Illuminate\Http\Response
-     */
     public function scheduled_request(){
 
         try{

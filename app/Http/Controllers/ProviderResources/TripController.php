@@ -305,20 +305,27 @@ class TripController extends Controller
 
             if($UserRequest->use_wallet == 1){
 
-                $Wallet = Auth::user()->wallet_balance;
+                $User = User::find(Auth::user()->id);
 
-                $Result = $Total - $Wallet;
+                $Wallet = $User->wallet_balance;
 
-                if($Result < 0){
-                    $Result = 0;
-                    $Payment->wallet = $Total;
-                    $CurrentBalance = $Wallet - $Total;
-                    User::where('id',Auth::user()->id)->update(['wallet_balance',$CurrentBalance ]);
-                    $Payment->total = abs($Result);
-                }else{
-                    $Payment->total = $Result;
-                    User::where('id',Auth::user()->id)->update(['wallet_balance',0 ]);
-                    $Payment->wallet = $Total - $Result;
+                if($Wallet != 0){
+
+                    if($Total > $Wallet){
+
+                        $Payment->wallet = $Wallet;
+                        $Payable = $Total - $Wallet;
+                        User::where('id',Auth::user()->id)->update(['wallet_balance' => 0 ]);
+                        $Payment->total = abs($Payable);
+
+                    }else{
+
+                        $Payment->total = 0;
+                        $WalletBalance = $Wallet - $Total;
+                        User::where('id',Auth::user()->id)->update(['wallet_balance' => $WalletBalance]);
+                        $Payment->wallet = $Total;
+                    }
+
                 }
 
             }else{

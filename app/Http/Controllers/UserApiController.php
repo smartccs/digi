@@ -286,9 +286,9 @@ class UserApiController extends Controller
         if(count($Providers) == 0) {
             if($request->ajax()) {
                 // Push Notification to User
-                return response()->json(['error' => 'No Providers Found! Please try again.'], 500); 
+                return response()->json(['message' => 'No Providers Found! Please try again.']); 
             }else{
-                return back()->with('flash_error', 'No Providers Found! Please try again.');
+                return back()->with('flash_success', 'No Providers Found! Please try again.');
             }
         }
 

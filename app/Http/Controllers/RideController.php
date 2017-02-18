@@ -72,14 +72,4 @@ class RideController extends Controller
     {
         return $this->UserAPI->rate_provider($request);
     }
-
-    /**
-     * payment.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function payment(Request $request)
-    {
-        return (new PaymentController)->payment($request);
-    }
 }

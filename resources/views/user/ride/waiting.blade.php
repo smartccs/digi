@@ -329,6 +329,15 @@
                             <dd>{this.props.currency}{this.props.checkState.payment.fixed}</dd>
                             <dt>@lang('user.ride.tax_price')</dt>
                             <dd>{this.props.currency}{this.props.checkState.payment.tax}</dd>
+                            <dt>@lang('user.ride.distance_price')</dt>
+                            <dd>{this.props.currency}{this.props.checkState.payment.distance}</dd>
+                            {this.props.checkState.use_wallet ?
+								<span>
+								<dt>@lang('user.ride.detection_wallet')</dt>
+                            	<dd>{this.props.currency}{this.props.checkState.payment.wallet}</dd>  
+                            	</span>
+                            : ''
+                            }
                             <dt>@lang('user.ride.total')</dt>
                             <dd>{this.props.currency}{this.props.checkState.payment.total}</dd> 
                             <dt className="big">@lang('user.ride.amount_paid')</dt>
@@ -373,7 +382,16 @@
                             <dd>{this.props.currency}{this.props.checkState.payment.fixed}</dd>
                             <dt>@lang('user.ride.tax_price')</dt>
                             <dd>{this.props.currency}{this.props.checkState.payment.tax}</dd>
+                            <dt>@lang('user.ride.distance_price')</dt>
+                            <dd>{this.props.currency}{this.props.checkState.payment.distance}</dd>
                             <dt>@lang('user.ride.total')</dt>
+                            {this.props.checkState.use_wallet ?
+								<span>
+								<dt>@lang('user.ride.detection_wallet')</dt>
+                            	<dd>{this.props.currency}{this.props.checkState.payment.wallet}</dd>  
+                            	</span>
+                            : ''
+                            }
                             <dd>{this.props.currency}{this.props.checkState.payment.total}</dd> 
                             <dt className="big">@lang('user.ride.amount_paid')</dt>
                             <dd className="big">{this.props.currency}{this.props.checkState.payment.total}</dd>

@@ -16,14 +16,23 @@
                 <form action="{{url('create/ride')}}" method="POST">
                 {{ csrf_field() }}
                     <dl class="dl-horizontal left-right">
-                        <dt>Type</dt>
+                        <dt>@lang('user.type')</dt>
                         <dd>{{$service->name}}</dd>
-                        <dt>Total Distance</dt>
+                        <dt>@lang('user.total_distance')</dt>
                         <dd>{{$fare->distance}} Kms</dd>
-                        <dt>ETA</dt>
+                        <dt>@lang('user.eta')</dt>
                         <dd>{{$fare->time}}</dd>
-                        <dt>Estimate Amount</dt>
-                        <dd>{{$fare->estimated_fare}}</dd>
+                        <dt>@lang('user.estimated_fare')</dt>
+                        <dd>{{currency($fare->estimated_fare)}}</dd>
+                        <hr>
+                        @if(Auth::user()->wallet_balance > 0)
+
+                        <input type="checkbox" name="use_wallet" value="1"><span style="padding-left: 15px;">@lang('user.use_wallet_balance')</span>
+                        <br>
+                        <br>
+                            <dt>@lang('user.available_wallet_balance')</dt>
+                            <dd>{{currency(Auth::user()->wallet_balance)}}</dd>
+                        @endif
                     </dl>
 
                     <input type="hidden" name="s_address" value="{{Request::get('s_address')}}">
@@ -35,6 +44,7 @@
                     <input type="hidden" name="service_type" value="{{Request::get('service_type')}}">
                     <input type="hidden" name="distance" value="{{$fare->distance}}">
 
+                    <p>@lang('user.payment_method')</p>
                     <select class="form-control" name="payment_mode" id="payment_mode" onchange="card(this.value);">
                       <option value="CASH">CASH</option>
                       @if($cards->count() > 0)

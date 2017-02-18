@@ -109,4 +109,16 @@ class HomeController extends Controller
         return view('user.account.payment',compact('cards'));
     }
 
+
+    /**
+     * Wallet.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function wallet(Request $request)
+    {
+        $cards = (new Resource\CardResource)->index();
+        return view('user.account.wallet',compact('cards'));
+    }
+
 }

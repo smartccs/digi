@@ -89,7 +89,7 @@ Route::get('/confirm/ride', 'RideController@confirm_ride');
 Route::post('/create/ride', 'RideController@create_ride');
 Route::post('/cancel/ride', 'RideController@cancel_ride');
 Route::get('/onride', 'RideController@onride');
-Route::post('/payment', 'RideController@payment');
+Route::post('/payment', 'PaymentController@payment');
 Route::post('/rate', 'RideController@rate');
 
 // status check
@@ -98,9 +98,12 @@ Route::get('/status', 'RideController@status');
 // trips
 Route::get('/trips', 'HomeController@trips');
 
+// wallet
+Route::get('/wallet', 'HomeController@wallet');
+Route::post('/add/money', 'PaymentController@add_money');
+
 // payment
 Route::get('/payment', 'HomeController@payment');
 
 // card
 Route::resource('card', 'Resource\CardResource');
-

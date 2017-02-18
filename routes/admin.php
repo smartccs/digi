@@ -22,18 +22,18 @@ Route::resource('service', 'Resource\ServiceResource');
 Route::resource('promocode', 'Resource\PromocodeResource');
 
 Route::group(['as' => 'provider.'], function () {
-    Route::get('provider-review', 'AdminController@provider_review')->name('review');
+    Route::get('review/provider', 'AdminController@provider_review')->name('review');
     Route::get('provider/{id}/approve', 'Resource\ProviderResource@approve')->name('approve');
     Route::get('provider/{id}/disapprove', 'Resource\ProviderResource@disapprove')->name('disapprove');
     Route::get('provider/{id}/request', 'Resource\ProviderResource@request')->name('request');
     Route::resource('provider/{provider}/document', 'Resource\ProviderDocumentResource');
 });
 
-Route::get('user/review', 'AdminController@user_review')->name('user.review');
+Route::get('review/user', 'AdminController@user_review')->name('user.review');
 Route::get('user/{id}/request', 'Resource\UserResource@request')->name('user.request');
 
-Route::get('user-map', 'AdminController@user_map')->name('user.map');
-Route::get('provider-map', 'AdminController@provider_map')->name('provider.map');
+Route::get('map/user', 'AdminController@user_map')->name('user.map');
+Route::get('map/provider', 'AdminController@provider_map')->name('provider.map');
 
 Route::get('setting', 'AdminController@setting')->name('setting');
 Route::post('setting/store', 'AdminController@setting_store')->name('setting.store');

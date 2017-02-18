@@ -112,7 +112,7 @@ class PaymentController extends Controller
             if($request->ajax()){
                return response()->json(['message' => currency($request->amount).' added to your wallet', 'user' => $update_user]); 
             }else{
-                return redirect('dashboard')->with('flash_success',currency($request->amount).' added to your wallet');
+                return redirect('wallet')->with('flash_success',currency($request->amount).' added to your wallet');
             }
 
         } catch(\Stripe\StripeInvalidRequestError $e){

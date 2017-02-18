@@ -12,7 +12,7 @@
                 <li><a href="{{url('profile')}}">@lang('user.profile.profile')</a></li>
                 <li><a href="{{url('change/password')}}">@lang('user.profile.change_password')</a></li>
                 <li><a href="{{url('/payment')}}">@lang('user.payment')</a></li>
-                <!-- <li><a href="user-payment.html">@lang('user.wallet')</a></li> -->
+                <li><a href="{{url('/wallet')}}">@lang('user.my_wallet') <span class="pull-right">{{currency(Auth::user()->wallet_balance)}}</span></a></li>
                 <li><a href="{{ url('/logout') }}"
                         onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();">@lang('user.profile.logout')</a></li>
