@@ -18,6 +18,8 @@ class ServiceTypesTableSeeder extends Seeder
             [
                 'name' => 'Sedan',
                 'provider_name' => 'Driver',
+                'fixed' => 20,
+                'price' => 10,
                 'status' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -25,6 +27,8 @@ class ServiceTypesTableSeeder extends Seeder
             [
                 'name' => 'Hatchback',
                 'provider_name' => 'Driver',
+                'fixed' => 20,
+                'price' => 10,
                 'status' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -32,6 +36,8 @@ class ServiceTypesTableSeeder extends Seeder
             [
                 'name' => 'SUV',
                 'provider_name' => 'Driver',
+                'fixed' => 20,
+                'price' => 10,
                 'status' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -39,6 +45,8 @@ class ServiceTypesTableSeeder extends Seeder
             [
                 'name' => 'Limousine',
                 'provider_name' => 'Driver',
+                'fixed' => 20,
+                'price' => 10,
                 'status' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),

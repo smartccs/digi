@@ -12,7 +12,7 @@ class ProviderService extends Model
      * @var array
      */
     protected $fillable = [
-        'service_type_id', 'provider_id', 'available', 'status'
+        'service_type_id', 'provider_id', 'status'
     ];
 
     /**
@@ -39,6 +39,6 @@ class ProviderService extends Model
 
     public function scopeAvailableServiceProvider($query, $service_id)
     {
-        return $query->where('service_type_id', $service_id)->where('available', true);
+        return $query->where('service_type_id', $service_id)->where('status', 'riding');
     }
 }

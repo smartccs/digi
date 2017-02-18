@@ -14,6 +14,7 @@ use App\User;
 use App\Helpers\Helper;
 use App\RequestFilter;
 use App\UserRequests;
+use App\ProviderService;
 use App\UserRequestRating;
 use App\UserRequestPayment;
 
@@ -164,6 +165,8 @@ class TripController extends Controller
             // dd($UserRequest->toArray());
             $UserRequest->save();
 
+            ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status' =>'riding']);
+
             $Filters = RequestFilter::where('request_id', $UserRequest->id)->where('provider_id', '!=', Auth::user()->id)->get();
             // dd($Filters->toArray());
             foreach ($Filters as $Filter) {
@@ -203,6 +206,7 @@ class TripController extends Controller
             } else if ($request->status == 'COMPLETED' && $UserRequest->payment_mode == 'CASH') {
                 $UserRequest->status = $request->status;
                 $UserRequest->paid = 1;
+                ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status' =>'active']);
             } else {
                 $UserRequest->status = $request->status;
             }
