@@ -324,9 +324,12 @@ class UserApiController extends Controller
 
             User::where('id',Auth::user()->id)->update(['payment_mode' => $request->payment_mode]);
 
-            Card::where('user_id',Auth::user()->id)->update(['is_default' => 0]);
+            if($request->has('card_id')){
 
-            Card::where('card_id',$request->card_id)->update(['is_default' => 1]);
+                Card::where('user_id',Auth::user()->id)->update(['is_default' => 0]);
+                Card::where('card_id',$request->card_id)->update(['is_default' => 1]);
+                
+            }
 
             foreach ($Providers as $key => $Provider) {
 

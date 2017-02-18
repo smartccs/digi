@@ -24,23 +24,15 @@
 
 class ModalContainer extends React.Component {
 
-    componentWillMount() {
-        this._getIncomingRequests();
-        this.state = {
-            request: {
-                user: {
-                    picture: 'logo.png',
-                    first_name: 'John',
-                    last_name: 'Doe'
-                }
-            }
-        };
-    }
+    constructor(props) {
+        super(props);
+        this.state = {latitude: 0, longitude: 0, request:[]};
+      }
 
-    _getIncomingRequests() {
+    componentWillMount() {
         console.log('TEsting');
-        var latitude;
-        var longitude;
+        var latitude = 0;
+        var longitude = 0;
         
         function getLocation() {
             if (navigator.geolocation) {
@@ -56,6 +48,28 @@ class ModalContainer extends React.Component {
             longitude = position.coords.longitude; 
         }
 
+        setInterval(
+            () => this._requestPing(latitude,longitude),
+          3000
+        );
+
+        this.state = ({
+            latitude : latitude,
+            longitude : longitude,
+            request: {
+                user: {
+                    picture: 'logo.png',
+                    first_name: 'John',
+                    last_name: 'Doe'
+                },
+            
+            }
+        });
+    }
+
+    _requestPing(latitude,longitude){
+        console.log(latitude);
+        console.log('pinging');
         $.ajax({
             url: '/provider/incoming',
             dataType: "JSON",
@@ -77,7 +91,6 @@ class ModalContainer extends React.Component {
                 } else {
                     // this._close();
                 }
-                setTimeout(this._getIncomingRequests, 5000);
             }.bind(this)
         });
     }
