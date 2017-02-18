@@ -29,7 +29,7 @@ class CreateUsersTable extends Migration
             $table->string('mobile')->nullable();
             $table->double('latitude', 15, 8)->nullable();
             $table->double('longitude',15,8)->nullable();
-            $table->string('paypal_email')->nullable();
+            $table->string('stripe_cust_id')->nullable();
             $table->float('wallet_balance')->default(0);
             $table->decimal('rating', 4, 2)->default(5);
             $table->rememberToken();
