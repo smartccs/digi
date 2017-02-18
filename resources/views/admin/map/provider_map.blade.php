@@ -90,14 +90,22 @@
     var map;
     var markers = [
         @foreach($Providers as $Provider)
-        { provider_id: "{{ $Provider->id }}",name: "{{ $Provider->name }}", lat: {{ $Provider->latitude }}, lng: {{ $Provider->longitude }}, available: {{ $Provider->service->available }} },
+        {
+            provider_id: "{{ $Provider->id }}",
+            name: "{{ $Provider->first_name }} {{ $Provider->last_name }}",
+            lat: {{ $Provider->latitude }},
+            lng: {{ $Provider->longitude }},
+            available: "{{ $Provider->service ? $Provider->service->status : 'unactivated' }}"
+        },
         @endforeach
     ];
 
-    var mapIcons = [
-        '{{ asset("main/assets/img/map-marker-red.png") }}',
-        '{{ asset("main/assets/img/map-marker-blue.png") }}',
-    ];
+    var mapIcons = {
+        active: '{{ asset("asset/img/marker-car.png") }}',
+        offline: '{{ asset("asset/img/marker-home.png") }}',
+        unactivated: '{{ asset("asset/img/marker-plus.png") }}'
+    }
+    
     var mapMarkers = [];
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
@@ -128,14 +136,17 @@
 
         var legend = document.getElementById('legend');
         var div = document.createElement('div');
-        div.innerHTML = '<img src="' + mapIcons[0] + '"> ' + 'Unavailable Provider';
+        div.innerHTML = '<img src="' + mapIcons['offline'] + '"> ' + 'Unavailable Provider';
         legend.appendChild(div);
         var div = document.createElement('div');
-        div.innerHTML = '<img src="' + mapIcons[1] + '"> ' + 'Available Provider';
+        div.innerHTML = '<img src="' + mapIcons['active'] + '"> ' + 'Available Provider';
+        legend.appendChild(div);
+        var div = document.createElement('div');
+        div.innerHTML = '<img src="' + mapIcons['unactivated'] + '"> ' + 'Unactivated Provider';
         legend.appendChild(div);
         map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 
     }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}&libraries=places&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAP_KEY') }}&libraries=places&callback=initMap" async defer></script>
 @endsection
