@@ -39,20 +39,43 @@ class ModalContainer extends React.Component {
 
     _getIncomingRequests() {
         console.log('TEsting');
+        var latitude;
+        var longitude;
+        
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                latitude = 0;
+                longitude = 0;
+            }
+        }
+        
+        function showPosition(position) {
+            latitude = position.coords.latitude;
+            longitude = position.coords.longitude; 
+        }
+
         $.ajax({
             url: '/provider/incoming',
             dataType: "JSON",
+            headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken },
+            data: {
+                latitude: latitude,
+                longitude: longitude
+            },
             type: "GET",
             success: function(data){
                 // this.setState({account_status: data.account_status});
                 // this.setState({service_status: data.service_status});
-                console.log(this);
-                console.log('data.requests[0]', data.requests[0].request);
-                if(data.requests.length && data.requests[0].request.status == 'SEARCHING') {
+                console.log(data);
+                console.log('length', data.requests.length);
+                if(data.requests.length > 0 && data.requests[0].request.status == 'SEARCHING') {
+                    console.log('data.requests[0]', data.requests[0].request);
                     this.setState({request: data.requests[0].request});
                     this._open();
                 } else {
-                    this._close();
+                    // this._close();
                 }
                 setTimeout(this._getIncomingRequests, 5000);
             }.bind(this)

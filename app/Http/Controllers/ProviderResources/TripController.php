@@ -21,24 +21,21 @@ use App\UserRequestPayment;
 class TripController extends Controller
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try{
             $IncomingRequests = RequestFilter::IncomingRequest(Auth::user()->id)->get();
+
+            if(!empty($request->latitude)) {
+                Auth::user()->update([
+                        'latitude' => $request->latitude,
+                        'longitude' => $request->longitude,
+                    ]);
+            }
 
             $Timeout = Setting::get('provider_select_timeout', 180);
                 if(!empty($IncomingRequests)){

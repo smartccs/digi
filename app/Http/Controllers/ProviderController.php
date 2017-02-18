@@ -34,8 +34,8 @@ class ProviderController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function incoming() {
+    public function incoming(Request $request) {
         $API = new TripController(\Auth::guard('provider')->user());
-        return $API->index();
+        return $API->index($request);
     }
 }
