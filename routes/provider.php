@@ -16,6 +16,8 @@ Route::get('/trips', 'ProviderResources\TripController@history')->name('trips');
 
 Route::get('/incoming', 'ProviderController@incoming')->name('incoming');
 
+Route::get('/earnings', 'ProviderController@earnings')->name('earnings');
+
 Route::resource('documents', 'ProviderResources\DocumentController');
 
 Route::get('/profile', 'ProviderResources\ProfileController@show')->name('profile.index');

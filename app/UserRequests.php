@@ -109,5 +109,4 @@ class UserRequests extends Model
                     ->select('user_requests.*')
                     ->with('user','provider','service_type','rating','payment');
     }
-
 }
