@@ -8,21 +8,16 @@
 </div>
 <div class="pro-dashboard-content">
     <div class="container">
-        <div class="dash-content">
-            <div class="row no-margin">
-                <div class="col-md-12">
-                    <form action="provider-offline.html">
-                        <div id="map" style="width: 100%; height: 425px;"></div>
-                        <button type="submit" class="full-primary-btn fare-btn">GO OFFLINE</button>
-                    </form>
-                </div>
+        <div class="dash-content" id="trip-container">
+            <div class="row no-margin" >
+
             </div>
         </div>
     </div>
 </div>
 @endsection
 
-@section('scripts')
+@section('scriptss')
 <script type="text/javascript">
     var map;
     var zoomLevel = 13;
@@ -238,7 +233,6 @@
 
             marker.setPosition(center);
             marker.setVisible(true);
-
         });
 
         // var markerSecond = new google.maps.Marker({
@@ -272,22 +266,6 @@
         //     if (status == google.maps.DirectionsStatus.OK) {
         //         directionsDisplay.setDirections(result);
         //     }
-        // });
-
-        // $('#pill-1').click(function() {
-        //     console.log(marker);
-        //     map.setCenter(marker.position);
-        // });
-        // $('#pill-2').click(function() {
-        //     console.log(markerSecond.position);
-        //     map.setCenter(markerSecond.position);
-        // });
-
-        // $('#map-zoom-in').click(function() {
-        //     map.setZoom(++zoomLevel);
-        // });
-        // $('#map-zoom-out').click(function() {
-        //     map.setZoom(--zoomLevel);
         // });
 
     }

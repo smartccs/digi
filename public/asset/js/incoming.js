@@ -1,110 +1,94 @@
-// (function($) {
-//     // jQuery plugin definition
-//     $.incoming = function(params) {
-
-//         // merge default and user parameters
-//         params = $.extend( {url: '/incoming', 'modal': '#modal-incoming'}, params);
-
-//         $.ajax({
-//                 url: params.url,
-//                 type: 'get',
-//                 data: {},
-//                 success: function (data) {
-//                     console.log(data);
-//                     $(params.modal+" #user-image").prop("style", "background-image: url(img/img1.png);");
-//                 }
-//             });
-
-//         return this;
-
-//     };
-
-// })(jQuery);
 'use strict';
 
-class ModalContainer extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {latitude: 0, longitude: 0, request:[]};
-      }
-
+class MainComponent extends React.Component {
     componentWillMount() {
-        console.log('TEsting');
-        var latitude = 0;
-        var longitude = 0;
-        
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-            } else {
-                latitude = 0;
-                longitude = 0;
-            }
-        }
-        
-        function showPosition(position) {
-            latitude = position.coords.latitude;
-            longitude = position.coords.longitude; 
-        }
-
-        setInterval(
-            () => this._requestPing(latitude,longitude),
-          3000
-        );
-
-        this.state = ({
-            latitude : latitude,
-            longitude : longitude,
+        console.log('Mounting');
+        this.setState({
+            latitude: 0,
+            longitude: 0,
             request: {
                 user: {
-                    picture: 'logo.png',
+                    picture: '/asset/logo.png',
                     first_name: 'John',
                     last_name: 'Doe'
                 },
-            
             }
         });
+
+        setInterval(
+            () => this._requestPoll(),
+            10000
+        );
     }
 
-    _requestPing(latitude,longitude){
-        console.log(latitude);
-        console.log('pinging');
+    componentDidMount() {
+        this._requestPoll();
+    }
+
+    _requestPoll(){
+        console.log('Polling');
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                this.setState({latitude: position.coords.latitude, longitude: position.coords.longitude});
+            }.bind(this));
+        }
+
         $.ajax({
             url: '/provider/incoming',
             dataType: "JSON",
             headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken },
             data: {
-                latitude: latitude,
-                longitude: longitude
+                latitude: this.state.latitude,
+                longitude: this.state.longitude
             },
             type: "GET",
             success: function(data){
                 // this.setState({account_status: data.account_status});
                 // this.setState({service_status: data.service_status});
-                console.log(data);
-                console.log('length', data.requests.length);
-                if(data.requests.length > 0 && data.requests[0].request.status == 'SEARCHING') {
-                    console.log('data.requests[0]', data.requests[0].request);
+                // console.log('Ajax Response', data);
+                if(data.requests.length > 0) {
+                    // console.log('data.requests[0]', data.requests[0].request);
                     this.setState({request: data.requests[0].request});
-                    this._open();
-                } else {
-                    // this._close();
+                    // console.log(this.request)
                 }
             }.bind(this)
         });
+    }
+
+    render() {
+        // console.log('Polled State', this.state.request);
+        return (
+            <div> 
+                <ModalComponent request={this.state.request} />
+                <TripComponent request={this.state.request} />
+            </div>
+        );
+    }
+};
+
+class ModalComponent extends React.Component {
+
+    componentDidUpdate(prevProps, prevState) {
+        console.log('Modal Component Updated');
+        if(this.props.request.status == "SEARCHING") {
+            this._open();
+        }
     }
 
     _accept(event) {
         event.preventDefault();
         console.log('Accept');
         $.ajax({
-            url: '/provider/request/accept',
+            url: '/provider/request/'+this.props.request.id,
             dataType: 'json',
+            headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken },
             type: 'POST',
-            data: donation,
             success: function(data) {
-                this.setState({data: data});
+                console.log('Accept', data);
+                if(data.error == undefined) {
+                    window.location.replace("/provider");
+                }
+                this._close();
             }.bind(this),
             error: function(xhr, status, err) {
                 console.error(this.props.url, status, err.toString());
@@ -117,12 +101,16 @@ class ModalContainer extends React.Component {
         event.preventDefault();
         console.log('Reject');
         $.ajax({
-            url: '/provider/request/reject',
+            url: '/provider/request/'+this.props.request.id,
             dataType: 'json',
-            type: 'POST',
-            data: donation,
+            type: 'DELETE',
+            headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken },
             success: function(data) {
-                this.setState({data: data});
+                console.log('Reject', data);
+                if(data.error == undefined) {
+                    window.location.replace("/provider");
+                }
+                this._close();
             }.bind(this),
             error: function(xhr, status, err) {
                 console.error(this.props.url, status, err.toString());
@@ -142,10 +130,6 @@ class ModalContainer extends React.Component {
     }
 
     render() {
-        console.log('render', this);
-        console.log('render', this.state.request);
-        console.log('this.state.request.user.picture', this.state.request.user.picture);
-        let picture = this.state.request.user.picture == null ? 'asset/logo.png' : this.state.request.user.picture;
         return (
             <div className="modal fade" id="incoming" role="dialog">
                 <div className="modal-dialog" role="document">
@@ -154,9 +138,9 @@ class ModalContainer extends React.Component {
                             <h4 className="modal-title text-center incoming-tit" id="myModalLabel">Incoming Request</h4>
                         </div>
                         <div className="modal-body">
-                            <div className="incoming-img bg-img" id="user-image" style={{ backgroundImage: 'url(' + picture + ')'}}></div>
+                            <div className="incoming-img bg-img" id="user-image" style={{ backgroundImage: 'url(' + this.props.request.user.picture + ')'}}></div>
                             <div className="text-center">
-                                <h3 id="usser-name">{this.state.request.user.first_name} {this.state.request.user.last_name}</h3>
+                                <h3 id="usser-name">{this.props.request.user.first_name} {this.props.request.user.last_name}</h3>
                             </div>
                         </div>
                         <div className="modal-footer row no-margin">
@@ -170,8 +154,258 @@ class ModalContainer extends React.Component {
     }
 };
 
+ModalComponent.defaultProps = {
+    request: {
+        user: {
+            first_name: "John",
+            last_name: "Doe",
+            picture: "/asset/logo.png",
+        }
+    }
+};
+
+class TripEmpty extends React.Component {
+    render() {
+        return (
+            <div className="row no-margin">
+                <div className="col-md-12">
+                    <form>
+                        <div id="map" style={{ width: '100%', height: '425px' }}></div>
+                        <button type="submit" className="full-primary-btn fare-btn">GO OFFLINE</button>
+                    </form>
+                </div>
+            </div>
+        );
+    }
+};
+
+class TripArrivedButton extends React.Component {
+    render() {
+        return (
+            <div>
+                <button type="submit" className="full-primary-btn fare-btn" onClick={this.props.submit.bind(this)}>Arrived</button>
+                <button type="submit" className="full-primary-btn fare-btn reg-btn" onClick={this.props.cancel.bind(this)}>Cancel</button>
+            </div>
+        );
+    }    
+}
+
+class TripPickedButton extends React.Component {
+    render() {
+        return (
+            <div>
+                <button type="submit" className="full-primary-btn fare-btn" onClick={this.props.submit.bind(this)}>Picked Up</button>
+            </div>
+        );
+    }
+}
+
+class TripDroppedButton extends React.Component {
+    render() {
+        return (
+            <div>
+                <button type="submit" className="full-primary-btn fare-btn" onClick={this.props.submit.bind(this)}>Dropped</button>
+            </div>
+        );
+    }
+}
+
+class TripCompletedButton extends React.Component {
+    render() {
+        return (
+            <div>
+                <button type="submit" className="full-primary-btn fare-btn" onClick={this.props.submit.bind(this)}>Completed</button>
+            </div>
+        );
+    }
+}
+
+class TripRatingButton extends React.Component {
+    render() {
+        return (
+            <div>
+                <button type="submit" className="full-primary-btn fare-btn" onClick={this.props.submit.bind(this)}>Arrived</button>
+            </div>
+        );
+    }
+}
+
+class TripDetails extends React.Component {
+    // componentDidUpdate() {
+    //     console.log('TripDetails View Updated');
+    //     console.log(this.props.request);
+    // }
+
+    render() {
+        let picture = "/asset/logo.png";
+        // console.log("this.props.request.user.picture", this.props.request.user.picture);
+        if(this.props.request.user.picture != null) {
+            picture = this.props.request.user.picture;
+        }
+        return (
+            <div className="row no-margin">
+                <div className="col-md-6">
+                    <div className="provider-info">
+                        <div className="img" style={{ backgroundImage: 'url(' + picture + ')'}}></div>
+                        <div className="content">
+                            <h6>{this.props.request.user.first_name} {this.props.request.user.last_name}</h6>
+                            <div className="rating-outer">
+                                <input type="hidden" className="rating" value="{this.props.request.user.rating}" />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <dl className="dl-horizontal left-right">
+                        <dt>Request ID</dt>
+                        <dd>{this.props.request.id}</dd>
+                        <dt>Payment Mode</dt>
+                        <dd>{this.props.request.payment_mode}</dd>
+                    </dl>
+
+                    {this.props.button}
+
+                </div>
+                <div className="col-md-6">
+                    <div className="user-request-map">
+                        <div className="from-to row no-margin">
+                            <div className="from">
+                                <h5>FROM</h5>
+                                <p>{this.props.request.s_address}</p>
+                            </div>
+                            <div className="to">
+                                <h5>TO</h5>
+                                <p>{this.props.request.d_address}</p>
+                            </div>
+                        </div>
+                        <div className="map-responsive-trip"></div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
+class TripComponent extends React.Component {
+
+    componentDidUpdate() {
+        console.log('Trip Component '+this.props.request.status);
+        switch(this.props.request.status) {
+            case "STARTED":
+                this.form= {
+                        status: "ARRIVED",
+                        _method: "PATCH",
+                    };
+                break;
+            case "ARRIVED": 
+                this.form= {
+                        status: "PICKEDUP",
+                        _method: "PATCH",
+                    };
+                break;
+            case "PICKEDUP": 
+                this.form= {
+                        status: "DROPPED",
+                        _method: "PATCH",
+                    };
+                break;
+            case "DROPPED": 
+                this.form= {
+                        status: "COMPLETED",
+                        _method: "PATCH",
+                    };
+                break;
+            default:
+                break;
+        }
+    }
+
+    _submit(event) {
+        event.preventDefault();
+        $.ajax({
+            url: '/provider/request/'+this.props.request.id,
+            dataType: 'json',
+            data: this.form,
+            headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken },
+            type: 'POST',
+            success: function(data) {
+                console.log('Accept', data);
+                if(data.error == undefined) {
+                    window.location.replace("/provider");
+                }
+                this._close();
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.error(this.props.url, status, err.toString());
+            }.bind(this)
+        });
+    }
+
+    _cancel(event) {
+        event.preventDefault();
+        $.ajax({
+            url: '/provider/request/'+this.props.request.id,
+            dataType: 'json',
+            headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken },
+            type: 'POST',
+            success: function(data) {
+                console.log('Accept', data);
+                if(data.error == undefined) {
+                    window.location.replace("/provider");
+                }
+                this._close();
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.error(this.props.url, status, err.toString());
+            }.bind(this)
+        });
+    }
+
+    getButtons() {
+        switch(this.props.request.status) {
+            case "STARTED": 
+                return (
+                    <TripArrivedButton submit={this._submit.bind(this)} cancel={this._cancel.bind(this)} />
+                );
+                break;
+            case "ARRIVED": 
+                return (
+                    <TripPickedButton submit={this._submit.bind(this)} cancel={this._cancel.bind(this)} />
+                );
+                break;
+            case "PICKEDUP": 
+                return (
+                    <TripDroppedButton submit={this._submit.bind(this)} cancel={this._cancel.bind(this)} />
+                );
+                break;
+            case "DROPPED": 
+                return (
+                    <TripCompletedButton submit={this._submit.bind(this)} cancel={this._cancel.bind(this)} />
+                );
+                break;
+            default:
+                return null;
+        }
+    }
+
+    render() {
+        if(this.props.request.id == undefined) {
+            return (
+                <TripEmpty />
+            );
+        } else {
+            return (
+                <TripDetails request={this.props.request} button={this.getButtons()} />
+            );
+        }
+    }
+};
 
 ReactDOM.render(
-    <ModalContainer />,
+    <ModalComponent />,
     document.getElementById('modal-incoming')
-)
+);
+
+ReactDOM.render(
+    <MainComponent />,
+    document.getElementById('trip-container')
+);

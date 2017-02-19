@@ -42,6 +42,39 @@ class ProviderController extends Controller
     }
 
     /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function accept(Request $request, $id) {
+        $API = new TripController(\Auth::guard('provider')->user());
+        return $API->accept($request, $id);
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function reject(Request $request, $id) {
+        $API = new TripController(\Auth::guard('provider')->user());
+        return $API->destroy($request, $id);
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function update(Request $request, $id) {
+        $API = new TripController(\Auth::guard('provider')->user());
+        return $API->update($request, $id);
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

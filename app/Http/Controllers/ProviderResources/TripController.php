@@ -147,7 +147,7 @@ class TripController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function accept($id)
+    public function accept(Request $request, $id)
     {
         try {
 
