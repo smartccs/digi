@@ -28,7 +28,8 @@ class TripController extends Controller
     public function index(Request $request)
     {
         try{
-            $IncomingRequests = RequestFilter::IncomingRequest(Auth::user()->id)->get();
+            $IncomingRequests = RequestFilter::with(['request.user', 'request.payment', 'request'])
+                ->where('provider_id', Auth::user()->id)->get();
 
             if(!empty($request->latitude)) {
                 Auth::user()->update([
@@ -94,13 +95,22 @@ class TripController extends Controller
                 ->where('status', 'COMPLETED')
                 ->firstOrFail();
 
-            $rating = new UserRequestRating();
-            $rating->provider_id = $UserRequest->provider_id;
-            $rating->user_id = $UserRequest->user_id;
-            $rating->request_id = $UserRequest->id;
-            $rating->provider_rating = $request->rating;
-            $rating->provider_comment = $request->comment;
-            $rating->save();
+            if($UserRequest->rating == null) {
+                UserRequestRating::create([
+                        'provider_id' => $UserRequest->provider_id,
+                        'user_id' => $UserRequest->user_id,
+                        'request_id' => $UserRequest->id,
+                        'provider_rating' => $request->rating,
+                        'provider_comment' => $request->comment,
+                    ]);
+            } else {
+                $UserRequest->rating->update([
+                        'provider_rating' => $request->rating,
+                        'provider_comment' => $request->comment,
+                    ])
+            }
+
+            $UserRequest->update(['provider_rated' => 1]);
 
             // Delete from filter so that it doesn't show up in status checks.
             RequestFilter::where('request_id', $id)->delete();
@@ -108,12 +118,9 @@ class TripController extends Controller
             // Send Push Notification to Provider 
             $average = UserRequestRating::where('provider_id', $UserRequest->provider_id)->avg('provider_rating');
 
-            try {
-                User::findOrFail($UserRequest->user_id)->update(['rating' => $average]);
-                return response()->json(['message' => 'Request Completed!']);
-            } catch (ModelNotFoundException $e) {
-                return response()->json(['error' => 'Something went wrong'], 500);
-            }
+            $UserRequest->user->update(['rating' => $average]);
+
+            return response()->json(['message' => 'Request Completed!']);
 
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Request not yet completed!'], 500);

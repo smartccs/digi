@@ -31,13 +31,4 @@ class RequestFilter extends Model
     {
         return $this->belongsTo('App\UserRequests');
     }
-
-    public function scopeIncomingRequest($query, $provider_id)
-    {
-        return $query->with(['request.user','request.payment', 'request' => function ($query) use ($provider_id) {
-            $query->where('current_provider_id', $provider_id);
-        }])->where('provider_id', $provider_id);
-    }
-
-
 }

@@ -476,28 +476,36 @@ class UserApiController extends Controller
         if ($UserRequests) {
             if($request->ajax()){
                 return response()->json(['error' => 'Not Paid!'], 500);
-            }else{
+            } else {
                 return back()->with('flash_error', 'Service Already Started!');
             }
         }
 
         try{
 
-            $GetRequest = UserRequests::findOrFail($request->request_id);
-            $rating = new UserRequestRating;
-            $rating->provider_id = $GetRequest->provider_id;
-            $rating->user_id = $GetRequest->user_id;
-            $rating->request_id = $GetRequest->id;
-            $rating->user_rating = $request->rating;
-            $rating->user_comment = $request->comment ?: '';
-            $rating->save();
+            $UserRequest = UserRequests::findOrFail($request->request_id);
+            
+            if($UserRequest->rating == null) {
+                UserRequestRating::create([
+                        'provider_id' => $UserRequest->provider_id,
+                        'user_id' => $UserRequest->user_id,
+                        'request_id' => $UserRequest->id,
+                        'user_rating' => $request->rating,
+                        'user_comment' => $request->comment,
+                    ]);
+            } else {
+                $UserRequest->rating->update([
+                        'user_rating' => $request->rating,
+                        'user_comment' => $request->comment,
+                    ])
+            }
 
-            $GetRequest->user_rated = 1;
-            $GetRequest->save();
+            $UserRequest->user_rated = 1;
+            $UserRequest->save();
 
-            $average = UserRequestRating::where('provider_id',$GetRequest->provider_id)->avg('user_rating');
+            $average = UserRequestRating::where('provider_id', $UserRequest->provider_id)->avg('user_rating');
 
-            Provider::where('id',$GetRequest->provider_id)->update(['rating' => $average]);
+            Provider::where('id',$UserRequest->provider_id)->update(['rating' => $average]);
 
             // Send Push Notification to Provider 
             if($request->ajax()){
@@ -505,9 +513,7 @@ class UserApiController extends Controller
             }else{
                 return redirect('dashboard')->with('flash_success', 'Driver Rated Successfully!');
             }
-        }
-
-        catch (Exception $e) {
+        } catch (Exception $e) {
             if($request->ajax()){
                 return response()->json(['error' => 'Something went wrong'], 500);
             }else{
