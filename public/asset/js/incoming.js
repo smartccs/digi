@@ -17,7 +17,7 @@ class MainComponent extends React.Component {
 
         setInterval(
             () => this._requestPoll(),
-            10000
+            3000
         );
     }
 
@@ -45,7 +45,7 @@ class MainComponent extends React.Component {
             success: function(data){
                 // this.setState({account_status: data.account_status});
                 // this.setState({service_status: data.service_status});
-                // console.log('Ajax Response', data);
+                console.log('Ajax Response', data);
                 if(data.requests.length > 0) {
                     // console.log('data.requests[0]', data.requests[0].request);
                     this.setState({request: data.requests[0].request});
@@ -69,7 +69,7 @@ class MainComponent extends React.Component {
 class ModalComponent extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
-        console.log('Modal Component Updated');
+        // console.log('Modal Component Updated');
         if(this.props.request.status == "SEARCHING") {
             this._open();
         }
@@ -214,17 +214,75 @@ class TripCompletedButton extends React.Component {
     render() {
         return (
             <div>
-                <button type="submit" className="full-primary-btn fare-btn" onClick={this.props.submit.bind(this)}>Completed</button>
+                <button type="submit" className="full-primary-btn fare-btn" onClick={this.props.submit.bind(this)}>Paid</button>
             </div>
         );
     }
 }
 
 class TripRatingButton extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            rating: '1',
+            comment: ''
+        };
+
+        this.handleRatingChange = this.handleRatingChange.bind(this);
+        this.handleCommentChange = this.handleCommentChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleRatingChange(event) {
+        this.setState({rating: event.target.value});
+    }
+
+    handleCommentChange(event) {
+        this.setState({comment: event.target.value});
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+    }
+
+    componentDidMount() {
+        $('.rating').rating();
+    }
+
+    _submit(event) {
+        event.preventDefault();
+        console.log('Rating', this.state.comment, this.state.rating);
+        $.ajax({
+            url: '/provider/request/'+this.props.request+'/rate',
+            dataType: 'json',
+            data: {
+                comment: this.state.comment,
+                rating: this.state.rating
+            },
+            headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken },
+            type: 'POST',
+            success: function(data) {
+                window.location.replace("/provider");
+                console.log('Accept', data);
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.error(this.props.url, status, err.toString());
+            }.bind(this)
+        });
+    }
+
     render() {
         return (
             <div>
-                <button type="submit" className="full-primary-btn fare-btn" onClick={this.props.submit.bind(this)}>Arrived</button>
+                <div className="rate-review">
+                    <label>Rating</label>
+                    <div className="rating-outer">
+                        <input type="hidden" value={this.state.rating} name="rating" className="rating" onChange={this.handleRatingChange} />
+                    </div>
+                    <label>Your Comments</label>
+                    <textarea className="form-control" name="comment" value={this.state.comment} onChange={this.handleCommentChange} placeholder="Write Comment" />
+                </div>
+                <button type="submit" className="full-primary-btn fare-btn" onClick={this._submit.bind(this)}>SUBMIT REVIEW</button>   
             </div>
         );
     }
@@ -250,7 +308,7 @@ class TripDetails extends React.Component {
                         <div className="content">
                             <h6>{this.props.request.user.first_name} {this.props.request.user.last_name}</h6>
                             <div className="rating-outer">
-                                <input type="hidden" className="rating" value="{this.props.request.user.rating}" />
+                                <input type="hidden" className="rating" value={this.props.request.user.rating} />
                             </div>
                         </div>
                     </div>
@@ -328,11 +386,7 @@ class TripComponent extends React.Component {
             headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken },
             type: 'POST',
             success: function(data) {
-                console.log('Accept', data);
-                if(data.error == undefined) {
-                    window.location.replace("/provider");
-                }
-                this._close();
+                console.log('Updated', data);
             }.bind(this),
             error: function(xhr, status, err) {
                 console.error(this.props.url, status, err.toString());
@@ -349,10 +403,6 @@ class TripComponent extends React.Component {
             type: 'POST',
             success: function(data) {
                 console.log('Accept', data);
-                if(data.error == undefined) {
-                    window.location.replace("/provider");
-                }
-                this._close();
             }.bind(this),
             error: function(xhr, status, err) {
                 console.error(this.props.url, status, err.toString());
@@ -369,17 +419,22 @@ class TripComponent extends React.Component {
                 break;
             case "ARRIVED": 
                 return (
-                    <TripPickedButton submit={this._submit.bind(this)} cancel={this._cancel.bind(this)} />
+                    <TripPickedButton submit={this._submit.bind(this)} />
                 );
                 break;
             case "PICKEDUP": 
                 return (
-                    <TripDroppedButton submit={this._submit.bind(this)} cancel={this._cancel.bind(this)} />
+                    <TripDroppedButton submit={this._submit.bind(this)} />
                 );
                 break;
             case "DROPPED": 
                 return (
-                    <TripCompletedButton submit={this._submit.bind(this)} cancel={this._cancel.bind(this)} />
+                    <TripCompletedButton submit={this._submit.bind(this)} />
+                );
+                break;
+            case "COMPLETED": 
+                return (
+                    <TripRatingButton request={this.props.request.id} />
                 );
                 break;
             default:
@@ -388,6 +443,7 @@ class TripComponent extends React.Component {
     }
 
     render() {
+        console.log('Check after request completed', this.props.request);
         if(this.props.request.id == undefined) {
             return (
                 <TripEmpty />

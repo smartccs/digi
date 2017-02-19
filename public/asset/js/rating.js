@@ -198,9 +198,11 @@
       if (this._contains(value)) {
         this._fillUntil(this._rateToIndex(value));
         this.$input.val(value);
+        this.$input.trigger("change");
       } else if (rate === '') {
         this._fillUntil(0);
         this.$input.val('');
+        this.$input.trigger("change");
       }
     },
     rate: function (value) {

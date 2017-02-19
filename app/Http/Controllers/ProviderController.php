@@ -75,6 +75,17 @@ class ProviderController extends Controller
     }
 
     /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function rating(Request $request, $id) {
+        $API = new TripController(\Auth::guard('provider')->user());
+        return $API->rate($request, $id);
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

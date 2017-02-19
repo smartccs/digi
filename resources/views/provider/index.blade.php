@@ -17,7 +17,12 @@
 </div>
 @endsection
 
+@section('scripts')
+<script type="text/javascript" src="{{asset('asset/js/rating.js')}}"></script>    
+@endsection
+
 @section('scriptss')
+<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAP_KEY') }}&libraries=places&callback=initMap" defer></script>
 <script type="text/javascript">
     var map;
     var zoomLevel = 13;
@@ -270,5 +275,4 @@
 
     }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAP_KEY') }}&libraries=places&callback=initMap" async defer></script>
 @endsection

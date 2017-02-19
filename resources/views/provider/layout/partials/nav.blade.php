@@ -1,22 +1,23 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
     <ul class="nav sidebar-nav">
         <li>
-            <a href="new-provider-dashboard.html">Patner Earnings</a>
+            <a href="{{ route('provider.earnings') }}">Patner Earnings</a>
         </li>
         <li>
-            <a href="new-provider-fleet-drivers.html">Fleet</a>
-        </li>
-        <li>
-            <a href="new-provider-invite.html">Invite</a>
+            <a href="#">Invite</a>
         </li>
         <li>
             <a href="{{ route('provider.profile.index') }}">Profile</a>
         </li>
         <li>
-            <a href="help.html">Help</a>
+            <a href="#">Help</a>
         </li>
         <li>
-            <a href="#">Logout</a>
+            <a href="{{ url('/provider/logout') }}"
+                onclick="event.preventDefault();
+                         document.getElementById('logout-form').submit();">
+                Logout
+            </a>
         </li>
     </ul>
 </nav>
