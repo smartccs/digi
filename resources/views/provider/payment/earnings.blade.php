@@ -4,9 +4,9 @@
 <div class="pro-dashboard-head">
         <div class="container">
             <a href="new-provider-dashboard.html" class="pro-head-link active">Payment Statements</a>
-            <a href="new-provider-invoices.html" class="pro-head-link">Invoices</a>
+<!--             <a href="new-provider-invoices.html" class="pro-head-link">Invoices</a>
             <a href="new-provider-patner-invoices.html" class="pro-head-link">Payment Invoices</a>
-            <a href="new-provider-banking.html" class="pro-head-link">Banking</a>
+            <a href="new-provider-banking.html" class="pro-head-link">Banking</a> -->
         </div>
     </div>
 
@@ -16,7 +16,7 @@
             <div class="container">
                 <div class="earning-element">
                     <p class="earning-txt">TOTAL EARNINGS</p>
-                    <p class="earning-price" id="set_fully_sum">$10000.00</p>
+                    <p class="earning-price" id="set_fully_sum">00.00</p>
                 </div>
                 <div class="earning-element row no-margin">
                     <div class="col-lg-2 col-md-3 col-sm-3 col-xs-4">
@@ -29,7 +29,11 @@
                     <div class="col-lg-2 col-md-3 col-sm-3 col-xs-4">
                         <div class="earning-box">
                             <p class="dashboard-count">
+                            @if($provider[0]->accepted->count() != 0)
                                 {{$provider[0]->accepted->count()/$provider[0]->accepted->count()*100}}%
+                            @else
+                            	0%
+                            @endif
                             </p>
                             <p class="dashboard-txt">ACCEPTANCE RATE</p>
                         </div>

@@ -497,7 +497,7 @@ class UserApiController extends Controller
                 $UserRequest->rating->update([
                         'user_rating' => $request->rating,
                         'user_comment' => $request->comment,
-                    ])
+                    ]);
             }
 
             $UserRequest->user_rated = 1;

@@ -107,7 +107,7 @@ class TripController extends Controller
                 $UserRequest->rating->update([
                         'provider_rating' => $request->rating,
                         'provider_comment' => $request->comment,
-                    ])
+                    ]);
             }
 
             $UserRequest->update(['provider_rated' => 1]);
