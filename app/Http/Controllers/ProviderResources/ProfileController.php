@@ -20,7 +20,7 @@ class ProfileController extends Controller
 
     public function __construct()
     {
-        $this->middleware('provider.api', ['except' => ['show', 'store']]);
+        $this->middleware('provider.api', ['except' => ['show', 'store','available']]);
     }
 
     /**

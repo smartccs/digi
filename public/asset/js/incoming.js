@@ -6,6 +6,8 @@ class MainComponent extends React.Component {
         this.setState({
             latitude: 0,
             longitude: 0,
+            service_status: [],
+            account_status: [],
             request: {
                 user: {
                     picture: '/asset/logo.png',
@@ -49,18 +51,22 @@ class MainComponent extends React.Component {
                 if(data.requests.length > 0) {
                     // console.log('data.requests[0]', data.requests[0].request);
                     this.setState({request: data.requests[0].request});
-                    // console.log(this.request)
+                }else{
+                    this.setState({account_status: data.account_status, service_status: data.service_status});
                 }
+                    console.log('ss'+this.state.service_status);
+
             }.bind(this)
         });
     }
-
     render() {
         // console.log('Polled State', this.state.request);
+    
+
         return (
             <div> 
                 <ModalComponent request={this.state.request} />
-                <TripComponent request={this.state.request} />
+                <TripComponent request={this.state.request} service_status={this.state.service_status} account_status={this.state.account_status} />
             </div>
         );
     }
@@ -164,14 +170,36 @@ ModalComponent.defaultProps = {
     }
 };
 
-class TripEmpty extends React.Component {
+class TripEmptyActive extends React.Component {
+    componentDidMount(){
+        initMap();
+    }
     render() {
         return (
             <div className="row no-margin">
                 <div className="col-md-12">
-                    <form>
+                    <form method="POST" action="provider/profile/available">
+                        <input type="hidden" value="offline" name="service_status"/>
                         <div id="map" style={{ width: '100%', height: '425px' }}></div>
                         <button type="submit" className="full-primary-btn fare-btn">GO OFFLINE</button>
+                    </form>
+                </div>
+            </div>
+        );
+    }
+};
+
+class TripEmptyOffline extends React.Component {
+    render() {
+        return (
+            <div className="row no-margin">
+                <div className="col-md-12">
+                    <form method="POST" action="provider/profile/available">
+                        <input type="hidden" value="active" name="service_status"/>
+                        <div className="offline">
+                            <img src="/asset/img/offline.gif"/>
+                        </div>
+                        <button type="submit" className="full-primary-btn fare-btn">GO ONLINE</button>
                     </form>
                 </div>
             </div>
@@ -346,7 +374,8 @@ class TripDetails extends React.Component {
 class TripComponent extends React.Component {
 
     componentDidUpdate() {
-        console.log('Trip Component '+this.props.request.status);
+        console.log('Trip Component '+this.props.request.id);
+        console.log('Trip Component '+this.props.service_status);
         switch(this.props.request.status) {
             case "STARTED":
                 this.form= {
@@ -443,11 +472,17 @@ class TripComponent extends React.Component {
     }
 
     render() {
-        console.log('Check after request completed', this.props.request);
+        console.log('Check after request completed', this.props.service_status);
         if(this.props.request.id == undefined) {
-            return (
-                <TripEmpty />
-            );
+            if(this.props.service_status == 'active'){
+                return (
+                    <TripEmptyActive />
+                );
+            }else{
+                return (
+                    <TripEmptyOffline />
+                );
+            }
         } else {
             return (
                 <TripDetails request={this.props.request} button={this.getButtons()} />

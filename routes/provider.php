@@ -28,3 +28,4 @@ Route::get('/profile', 'ProviderResources\ProfileController@show')->name('profil
 Route::post('/profile', 'ProviderResources\ProfileController@store')->name('profile.update');
 
 Route::get('/profile/password', 'ProviderController@index')->name('password');
+Route::post('/profile/available', 'ProviderController@available')->name('available');

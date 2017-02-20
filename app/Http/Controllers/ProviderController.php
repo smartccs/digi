@@ -108,4 +108,15 @@ class ProviderController extends Controller
 
         return view('provider.payment.earnings',compact('provider','weekly','fully'));
     }
+
+    /**
+     * available.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function available(Request $request)
+    {
+        (new ProviderResources\ProfileController)->available($request);
+        return back();
+    }
 }
