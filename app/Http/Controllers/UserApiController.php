@@ -397,7 +397,7 @@ class UserApiController extends Controller
 
                 if($UserRequest->provider_id != 0){
 
-                    ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status', 'riding']);
+                    ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status' => 'riding']);
 
                     // send push and email
                 }

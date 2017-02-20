@@ -22,7 +22,6 @@
 								<p class="text-muted">Email : {{$user->email}}</p>
 								<p class="text-muted">Mobile : {{$user->mobile}}</p>
 								<p class="text-muted">Gender : {{$user->gender}}</p>
-								<p class="text-muted">Address : {{$user->address}}</p>
 								<p class="text-muted">Wallet Balance : {{currency($user->wallet_balance)}}</p>
 							</div>
 						</div>
