@@ -24,9 +24,4 @@ class Promocode extends Model
     protected $hidden = [
         'created_at', 'updated_at'
     ];
-
-    public function usage()
-    {
-        return $this->belongsTo('App\PromocodeUsage');
-    }
 }

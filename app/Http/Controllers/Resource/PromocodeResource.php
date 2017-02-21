@@ -16,7 +16,7 @@ class PromocodeResource extends Controller
      */
     public function index()
     {
-        $promocodes = Promocode::orderBy('created_at' , 'desc')->with('usage')->get();
+        $promocodes = Promocode::orderBy('created_at' , 'desc')->get();
         return view('admin.promocode.index', compact('promocodes'));
     }
 

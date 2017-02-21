@@ -731,13 +731,24 @@ class UserApiController extends Controller
 
             $find_promo = Promocode::where('promo_code',$request->promocode)->first();
 
-            $promo = new PromocodeUsage;
-            $promo->promocode_id = $find_promo->id;
-            $promo->user_id = Auth::user()->id;
-            $promo->status = 'ADDED';
-            $promo->save();
+            if($find_promo->status == 'EXPIRED' || (date("Y-m-d") > $find_promo->expiration)){
 
-            return response()->json(['message' => 'Promocode Applied']); 
+                return response()->json(['error' => 'Promocode Expired'], 500);
+
+            }elseif(PromocodeUsage::where('promocode_id',$find_promo->id)->count()){
+
+                return response()->json(['error' => 'Promocode Already in use'], 500);
+
+            }else{
+
+                $promo = new PromocodeUsage;
+                $promo->promocode_id = $find_promo->id;
+                $promo->user_id = Auth::user()->id;
+                $promo->status = 'ADDED';
+                $promo->save();
+
+                return response()->json(['message' => 'Promocode Applied']); 
+            }
 
         }
 
