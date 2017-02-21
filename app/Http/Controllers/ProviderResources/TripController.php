@@ -295,6 +295,12 @@ class TripController extends Controller
             $Fixed = $UserRequest->service_type->fixed ? : 0;
             $Distance = ceil($UserRequest->distance) * $UserRequest->service_type->distance;
             $Discount = 0; // Promo Code discounts should be added here.
+
+            if($PromocodeUsage = PromocodeUsage::where('user_id',$UserRequest->user_id)->where('status','ADDED')->first()){
+                if($Promocode = Promocode::find($PromocodeUsage->promocode_id)){
+                    $Discount = $Promocode->discount;
+                }
+            }
             $Wallet = 0;
 
             $Commision = ( $Fixed + $Distance - $Discount ) * (Setting::get('payment_commision', 10) / 100);

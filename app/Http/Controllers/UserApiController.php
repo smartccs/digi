@@ -733,11 +733,11 @@ class UserApiController extends Controller
 
             if($find_promo->status == 'EXPIRED' || (date("Y-m-d") > $find_promo->expiration)){
 
-                return response()->json(['error' => 'Promocode Expired'], 500);
+                return response()->json(['message' => 'Promocode Expired']);
 
             }elseif(PromocodeUsage::where('promocode_id',$find_promo->id)->count()){
 
-                return response()->json(['error' => 'Promocode Already in use'], 500);
+                return response()->json(['message' => 'Promocode Already in use']);
 
             }else{
 
