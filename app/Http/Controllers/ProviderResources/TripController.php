@@ -307,8 +307,12 @@ class TripController extends Controller
 
             $Commision = ( $Fixed + $Distance - $Discount ) * (Setting::get('payment_commision', 10) / 100);
 
-            $Tax = $Fixed + $Distance - $Discount + $Commision * (Setting::get('payment_tax', 10) / 100);
+            $Tax = $Fixed + $Distance + $Commision * (Setting::get('payment_tax', 10) / 100);
             $Total = $Fixed + $Distance - $Discount + $Commision + $Tax;
+
+            if($Total < 0){
+                $Total = $Total; // prevent from negative value
+            }
 
 
             $Payment = new UserRequestPayment;
@@ -316,9 +320,12 @@ class TripController extends Controller
             $Payment->fixed = $Fixed;
             $Payment->distance = $Distance;
             $Payment->commision = $Commision;
+            if($Discount != 0 && $PromocodeUsage){
+                $Payment->promocode_id = $PromocodeUsage->promocode_id;
+            }
             $Payment->discount = $Discount;
 
-            if($UserRequest->use_wallet == 1){
+            if($UserRequest->use_wallet == 1 && $Total > 0){
 
                 $User = User::find($UserRequest->user_id);
 

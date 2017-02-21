@@ -733,11 +733,11 @@ class UserApiController extends Controller
 
             if($find_promo->status == 'EXPIRED' || (date("Y-m-d") > $find_promo->expiration)){
 
-                return response()->json(['message' => 'Promocode Expired']);
+                return response()->json(['message' => 'Promocode Expired', 'code' => 'promocode_expired']);
 
             }elseif(PromocodeUsage::where('promocode_id',$find_promo->id)->count()){
 
-                return response()->json(['message' => 'Promocode Already in use']);
+                return response()->json(['message' => 'Promocode Already in use', 'code' => 'promocode_already_in_use']);
 
             }else{
 
@@ -747,7 +747,7 @@ class UserApiController extends Controller
                 $promo->status = 'ADDED';
                 $promo->save();
 
-                return response()->json(['message' => 'Promocode Applied']); 
+                return response()->json(['message' => 'Promocode Applied' , 'code' => 'promocode_applied']); 
             }
 
         }
