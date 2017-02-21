@@ -301,6 +301,8 @@ class TripController extends Controller
             if($PromocodeUsage = PromocodeUsage::where('user_id',$UserRequest->user_id)->where('status','ADDED')->first()){
                 if($Promocode = Promocode::find($PromocodeUsage->promocode_id)){
                     $Discount = $Promocode->discount;
+                    $PromocodeUsage->status ='USED';
+                    $PromocodeUsage->save();
                 }
             }
             $Wallet = 0;

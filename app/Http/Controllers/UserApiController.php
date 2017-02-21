@@ -10,6 +10,7 @@ use Auth;
 use Hash;
 use Setting;
 use Exception;
+use Storage;
 use Carbon\Carbon;
 
 use App\User;
@@ -735,7 +736,7 @@ class UserApiController extends Controller
 
                 return response()->json(['message' => 'Promocode Expired', 'code' => 'promocode_expired']);
 
-            }elseif(PromocodeUsage::where('promocode_id',$find_promo->id)->count()){
+            }elseif(PromocodeUsage::where('promocode_id',$find_promo->id)->where('status','USED')->count()){
 
                 return response()->json(['message' => 'Promocode Already in use', 'code' => 'promocode_already_in_use']);
 
