@@ -15,6 +15,8 @@ use App\Helpers\Helper;
 use App\RequestFilter;
 use App\UserRequests;
 use App\ProviderService;
+use App\PromocodeUsage;
+use App\Promocode;
 use App\UserRequestRating;
 use App\UserRequestPayment;
 
