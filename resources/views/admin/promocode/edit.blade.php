@@ -22,20 +22,16 @@
 				</div>
 
 				<div class="form-group row">
-					<label for="offer" class="col-xs-2 col-form-label">Offer Amount</label>
+					<label for="discount" class="col-xs-2 col-form-label">Discount</label>
 					<div class="col-xs-10">
-						<input class="form-control" type="number" value="{{ $promocode->offer }}" name="offer" required id="offer" placeholder="Offer Amount">
+						<input class="form-control" type="number" value="{{ $promocode->discount }}" name="discount" required id="discount" placeholder="Discount">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label class="col-sm-2"></label>
-					<div class="col-sm-10">
-						<div class="form-check">
-							<label class="form-check-label">
-								<input class="form-check-input" value="1" name="is_valid" @if($promocode->is_valid ==1) checked  @else  @endif  value="1"  type="checkbox"> Set Default
-							</label>
-						</div>
+					<label for="expiration" class="col-xs-2 col-form-label">Expiration</label>
+					<div class="col-xs-10">
+						<input class="form-control" type="date" value="{{ date('Y-m-d',strtotime($promocode->expiration)) }}" name="expiration" required id="expiration" placeholder="Expiration">
 					</div>
 				</div>
 

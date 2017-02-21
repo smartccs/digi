@@ -16,8 +16,10 @@
                         <tr>
                             <th>ID</th>
                             <th>Promocode </th>
-                            <th>Offer Amount </th>
+                            <th>Discount </th>
+                            <th>Expiration</th>
                             <th>Status</th>
+                            <th>Used Count</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -26,12 +28,22 @@
                         <tr>
                             <td>{{$index + 1}}</td>
                             <td>{{$promo->promo_code}}</td>
-                            <td>{{$promo->offer}}</td>
+                            <td>{{$promo->discount}}</td>
                             <td>
-                                @if($promo->is_valid == 1)
-                                    Valid
+                                {{date('d-m-Y',strtotime($promo->expiration))}}
+                            </td>
+                            <td>
+                                @if(date("Y-m-d") <= $promo->expiration)
+                                    <span class="tag tag-success">Valid</span>
                                 @else
-                                    Expired
+                                    <span class="tag tag-danger">Expiration</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($promo->usage)
+                                    {{$promo->usage->count()}}
+                                @else
+                                    0
                                 @endif
                             </td>
                             <td>
@@ -48,9 +60,11 @@
                     <tfoot>
                         <tr>
                             <th>ID</th>
-                            <th>Promocode</th>
-                            <th>Offer Amount</th>
+                            <th>Promocode </th>
+                            <th>Discount </th>
+                            <th>Expiration</th>
                             <th>Status</th>
+                            <th>Used Count</th>
                             <th>Action</th>
                         </tr>
                     </tfoot>

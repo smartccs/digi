@@ -22,6 +22,7 @@ use App\Provider;
 use App\Settings;
 use App\UserRequestRating;
 use App\Card;
+use App\PromocodeUsage;
 
 class UserApiController extends Controller
 {
@@ -662,5 +663,88 @@ class UserApiController extends Controller
             return response()->json(['error' => 'Something went wrong']);
         }
     }
+
+    /**
+     * get all promo code.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function promocodes() {
+
+        try{
+
+            $this->check_expiry();
+
+            $Promocode = PromocodeUsage::Active()->where('user_id',Auth::user()->id)
+                                ->with('promocode')
+                                ->get()
+                                ->toArray();
+
+            return response()->json($Promocode);
+
+        }
+
+        catch (Exception $e) {
+            return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
+        }
+
+    } 
+
+
+    public function check_expiry(){
+
+        try{
+
+            $Promocode = Promocode::all();
+
+            foreach ($Promocode as $index => $promo) {
+
+                if(date("Y-m-d") > $promo->expiration){
+                    $promo->status = 'EXPIRED';
+                    $promo->save();
+                    PromocodeUsage::where('promocode_id',$promo->id)->update(['status' => 'EXPIRED']);
+                }
+
+            }
+
+        }    
+        catch (Exception $e) {
+            return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
+        }  
+    }
+
+
+    /**
+     * add promo code.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function add_promocode(Request $request) {
+
+         $this->validate($request, [
+                'promocode' => 'required|exists:promocodes,promo_code',
+            ]);
+
+        try{
+
+            $find_promo = Promocode::where('promo_code',$request->promocode)->first();
+
+            $promo = new PromocodeUsage;
+            $promo->promocode_id = $find_promo->id;
+            $promo->user_id = Auth::user()->id;
+            $promo->status = 'ADDED';
+            $promo->save();
+
+            return response()->json(['message' => 'Promocode Applied']); 
+
+        }
+
+        catch (Exception $e) {
+            return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
+        }
+
+    } 
 
 }

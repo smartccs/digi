@@ -303,7 +303,6 @@ class TripController extends Controller
             $Total = $Fixed + $Distance - $Discount + $Commision + $Tax;
 
 
-
             $Payment = new UserRequestPayment;
             $Payment->request_id = $UserRequest->id;
             $Payment->fixed = $Fixed;
@@ -313,7 +312,7 @@ class TripController extends Controller
 
             if($UserRequest->use_wallet == 1){
 
-                $User = User::find(Auth::user()->id);
+                $User = User::find($UserRequest->user_id);
 
                 $Wallet = $User->wallet_balance;
 
@@ -323,14 +322,14 @@ class TripController extends Controller
 
                         $Payment->wallet = $Wallet;
                         $Payable = $Total - $Wallet;
-                        User::where('id',Auth::user()->id)->update(['wallet_balance' => 0 ]);
+                        User::where('id',$UserRequest->user_id)->update(['wallet_balance' => 0 ]);
                         $Payment->total = abs($Payable);
 
                     }else{
 
                         $Payment->total = 0;
                         $WalletBalance = $Wallet - $Total;
-                        User::where('id',Auth::user()->id)->update(['wallet_balance' => $WalletBalance]);
+                        User::where('id',$UserRequest->user_id)->update(['wallet_balance' => $WalletBalance]);
                         $Payment->wallet = $Total;
                     }
 

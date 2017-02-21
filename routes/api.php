@@ -57,6 +57,12 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 	Route::get('/estimated/fare' , 'UserApiController@estimated_fare');
 
+	// promocode
+
+	Route::get('/promocodes' , 'UserApiController@promocodes');
+
+	Route::post('/promocode/add' , 'UserApiController@add_promocode');
+
 	// card payment
 
     Route::resource('card', 'Resource\CardResource');

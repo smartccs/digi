@@ -7,15 +7,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Promocode extends Model
 {
-    use SoftDeletes;
-    
      /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'promo_code','offer','is_valid'
+        'promo_code','discount','expiration'
     ];
 
     /**
@@ -26,4 +24,9 @@ class Promocode extends Model
     protected $hidden = [
         'created_at', 'updated_at'
     ];
+
+    public function usage()
+    {
+        return $this->belongsTo('App\PromocodeUsage');
+    }
 }
