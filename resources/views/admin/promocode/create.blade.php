@@ -16,26 +16,23 @@
 				<div class="form-group row">
 					<label for="promo_code" class="col-xs-2 col-form-label">Promocode</label>
 					<div class="col-xs-10">
-						<input class="form-control" type="text" value="{{ old('promo_code') }}" name="promo_code" required id="promo_code" placeholder="Promocode">
+						<input class="form-control" autocomplete="off"  type="text" value="{{ old('promo_code') }}" name="promo_code" required id="promo_code" placeholder="Promocode">
 					</div>
 				</div>
 				<div class="form-group row">
-					<label for="offer" class="col-xs-2 col-form-label">Offer Amount</label>
+					<label for="discount" class="col-xs-2 col-form-label">Discount</label>
 					<div class="col-xs-10">
-						<input class="form-control" type="number" value="{{ old('offer') }}" name="offer" required id="offer" placeholder="Offer Amount">
+						<input class="form-control" type="number" value="{{ old('discount') }}" name="discount" required id="discount" placeholder="Discount">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label class="col-sm-2"></label>
-					<div class="col-sm-10">
-						<div class="form-check">
-							<label class="form-check-label">
-								<input class="form-check-input" name="is_valid" value="1" type="checkbox"> Is Valid
-							</label>
-						</div>
+					<label for="expiration" class="col-xs-2 col-form-label">Expiration</label>
+					<div class="col-xs-10">
+						<input class="form-control" type="date" value="{{ old('expiration') }}" name="expiration" required id="expiration" placeholder="Expiration">
 					</div>
 				</div>
+
 
 				<div class="form-group row">
 					<label for="zipcode" class="col-xs-2 col-form-label"></label>

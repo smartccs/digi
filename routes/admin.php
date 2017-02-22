@@ -54,7 +54,3 @@ Route::get('request', 'AdminController@request_history')->name('request.history'
 Route::get('scheduled/request', 'AdminController@scheduled_request')->name('scheduled.request');
 
 Route::get('request/{id}/details', 'AdminController@request_details')->name('request.details');
-
-Route::get('chat/{id}', 'AdminController@chat')->name('chat');
-
-

@@ -57,6 +57,7 @@ return array (
     'km' => 'Kilometer',
     'total' => 'Total',
     'amount_paid' => 'Amount to be Paid',
+    'promotion_applied' => 'Promotion Applied'
   ),
   'dashboard' => 'Dashboard',
   'payment' => 'Payment',
@@ -84,4 +85,6 @@ return array (
   'estimated_fare' => 'Estimated Fare',
   'charged' => 'CHARGED',
   'payment_method' => 'Payment Methods',
+  'promotion' => 'Promotions',
+  'add_promocode' => 'Add Promocode',
 );

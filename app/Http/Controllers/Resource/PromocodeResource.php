@@ -39,19 +39,14 @@ class PromocodeResource extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'promo_code' => 'required|max:255',
-            'offer' => 'required|numeric',
+            'promo_code' => 'required|max:100|unique:promocodes',
+            'discount' => 'required|numeric',
+            'expiration' => 'required',
         ]);
 
         try{
 
-            $promo = $request->all();
-
-            if ($request->is_valid === 'yes') {
-                $promo['is_valid'] = 1;
-            }
-
-            Promocode::create($promo);
+            Promocode::create($request->all());
             return back()->with('flash_success','Promocode Saved Successfully');
 
         } 
@@ -102,22 +97,18 @@ class PromocodeResource extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'promo_code' => 'required|max:255',
-            'offer' => 'required|numeric',
+            'promo_code' => 'required|max:100',
+            'discount' => 'required|numeric',
+            'expiration' => 'required',
         ]);
 
         try {
 
            $promo = Promocode::findOrFail($id);
 
-            if ($request->is_valid === 'yes') {
-                $promo->is_valid = 1;
-            }else{
-                $promo->is_valid = 0;
-            }
-
             $promo->promo_code = $request->promo_code;
-            $promo->offer = $request->offer;
+            $promo->discount = $request->discount;
+            $promo->expiration = $request->expiration;
             $promo->save();
 
             return redirect()->route('admin.promocode.index')->with('flash_success', 'Promocode Updated Successfully');    

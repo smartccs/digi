@@ -121,4 +121,25 @@ class HomeController extends Controller
         return view('user.account.wallet',compact('cards'));
     }
 
+    /**
+     * Promotion.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function promotion(Request $request)
+    {
+        $promocodes = $this->UserAPI->promocodes()->getData();
+        return view('user.account.promotion',compact('promocodes'));
+    }
+
+    /**
+     * Add promocode.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function add_promocode(Request $request)
+    {
+        return $this->UserAPI->add_promocode($request);
+    }
+
 }
