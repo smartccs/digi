@@ -50,7 +50,7 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="prof-sub-col col-xs-12">
+                                    <div class="prof-sub-col prof-1 col-xs-12">
                                         <div class="form-group">
                                             <label>Avatar</label>
                                             <input type="file" class="form-control" name="avatar">

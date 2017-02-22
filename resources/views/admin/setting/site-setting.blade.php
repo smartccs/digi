@@ -14,14 +14,14 @@
             
             	{{csrf_field()}}
 				<div class="form-group row">
-					<label for="site_name" class="col-xs-2 col-form-label">Site Name</label>
+					<label for="site_name" class="col-xs-12 col-form-label">Site Name</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="text" value="{{ Setting::get('site_name', '')  }}" name="site_name" required id="site_name" placeholder="Site Name">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="site_logo" class="col-xs-2 col-form-label">Site Logo</label>
+					<label for="site_logo" class="col-xs-12 col-form-label">Site Logo</label>
 					<div class="col-xs-10">
 						@if(Setting::get('site_logo')!='')
 	                    <img style="height: 90px; margin-bottom: 15px; border-radius:2em;" src="{{Setting::get('site_logo')}}">
@@ -32,7 +32,7 @@
 
 
 				<div class="form-group row">
-					<label for="site_icon" class="col-xs-2 col-form-label">Site Icon</label>
+					<label for="site_icon" class="col-xs-12 col-form-label">Site Icon</label>
 					<div class="col-xs-10">
 						@if(Setting::get('site_icon')!='')
 	                    <img style="height: 90px; margin-bottom: 15px; border-radius:2em;" src="{{Setting::get('site_icon')}}">
@@ -42,7 +42,7 @@
 				</div>
 
 				<div class="form-group row">
-					<label for="email_logo" class="col-xs-2 col-form-label">Email Logo</label>
+					<label for="email_logo" class="col-xs-12 col-form-label">Email Logo</label>
 					<div class="col-xs-10">
 						@if(Setting::get('email_logo')!='')
 	                    <img style="height: 90px; margin-bottom: 15px; border-radius:2em;" src="{{Setting::get('email_logo')}}">
@@ -52,28 +52,28 @@
 				</div>
 
 				<div class="form-group row">
-					<label for="play_store_link" class="col-xs-2 col-form-label">Playstore link</label>
+					<label for="play_store_link" class="col-xs-12 col-form-label">Playstore link</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="text" value="{{ Setting::get('play_store_link', '')  }}" name="play_store_link"  id="play_store_link" placeholder="Playstore link">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="app_store_link" class="col-xs-2 col-form-label">Appstore Link</label>
+					<label for="app_store_link" class="col-xs-12 col-form-label">Appstore Link</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="text" value="{{ Setting::get('app_store_link', '')  }}" name="app_store_link"  id="app_store_link" placeholder="Appstore link">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="provider_select_timeout" class="col-xs-2 col-form-label">Provider Timout</label>
+					<label for="provider_select_timeout" class="col-xs-12 col-form-label">Provider Timout</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="number" value="{{ Setting::get('provider_select_timeout', '')  }}" name="provider_select_timeout" required id="provider_select_timeout" placeholder="Provider Timout">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="search_radius" class="col-xs-2 col-form-label">Search Radius</label>
+					<label for="search_radius" class="col-xs-12 col-form-label">Search Radius</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="number" value="{{ Setting::get('search_radius', '')  }}" name="search_radius" required id="search_radius" placeholder="Search Radius">
 					</div>
@@ -102,21 +102,21 @@
 				</div> -->
 
 				<div class="form-group row">
-					<label for="tax_percentage" class="col-xs-2 col-form-label">Tax percentage(%)</label>
+					<label for="tax_percentage" class="col-xs-12 col-form-label">Tax percentage(%)</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="number" value="{{ Setting::get('tax_percentage', '')  }}" name="tax_percentage"  id="tax_percentage" max="100" min="0" placeholder="Tax percentage">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="commission_percentage" class="col-xs-2 col-form-label">Commission percentage(%)</label>
+					<label for="commission_percentage" class="col-xs-12 col-form-label">Commission percentage(%)</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="number" value="{{ Setting::get('commission_percentage', '')  }}" name="commission_percentage" max="100" min="0"  id="commission_percentage" placeholder="Commission percentage">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="base_price" class="col-xs-2 col-form-label">
+					<label for="base_price" class="col-xs-12 col-form-label">
 						Currency ( <strong>{{ Setting::get('currency', '')  }} </strong>)
 					</label>
 					<div class="col-xs-10">
@@ -142,7 +142,7 @@
 
 
 				<div class="form-group row">
-					<label for="zipcode" class="col-xs-2 col-form-label"></label>
+					<label for="zipcode" class="col-xs-12 col-form-label"></label>
 					<div class="col-xs-10">
 						<button type="submit" class="btn btn-primary">Update Site Settings</button>
 					</div>
