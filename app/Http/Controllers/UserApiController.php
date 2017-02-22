@@ -734,11 +734,29 @@ class UserApiController extends Controller
 
             if($find_promo->status == 'EXPIRED' || (date("Y-m-d") > $find_promo->expiration)){
 
-                return response()->json(['message' => 'Promocode Expired', 'code' => 'promocode_expired']);
+                if($request->ajax()){
 
-            }elseif(PromocodeUsage::where('promocode_id',$find_promo->id)->where('status','USED')->count()){
+                    return response()->json([
+                        'message' => 'Promocode Expired', 
+                        'code' => 'promocode_expired'
+                    ]);
 
-                return response()->json(['message' => 'Promocode Already in use', 'code' => 'promocode_already_in_use']);
+                }else{
+                    return back()->with('flash_error', 'Promocode Expired');
+                }
+
+            }elseif(PromocodeUsage::where('promocode_id',$find_promo->id)->where('user_id', Auth::user()->id)->where('status','ADDED')->count() > 0){
+
+                if($request->ajax()){
+
+                    return response()->json([
+                        'message' => 'Promocode Already in use', 
+                        'code' => 'promocode_already_in_use'
+                        ]);
+
+                }else{
+                    return back()->with('flash_error', 'Promocode Already in use');
+                }
 
             }else{
 
@@ -748,13 +766,26 @@ class UserApiController extends Controller
                 $promo->status = 'ADDED';
                 $promo->save();
 
-                return response()->json(['message' => 'Promocode Applied' , 'code' => 'promocode_applied']); 
+                if($request->ajax()){
+
+                    return response()->json([
+                        'message' => 'Promocode Applied' ,
+                        'code' => 'promocode_applied'
+                         ]); 
+
+                }else{
+                    return back()->with('flash_success', 'Promocode Applied');
+                }
             }
 
         }
 
         catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
+            if($request->ajax()){
+                return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
+            }else{
+                return back()->with('flash_error', 'Something Went Wrong');
+            }
         }
 
     } 

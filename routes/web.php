@@ -107,3 +107,8 @@ Route::get('/payment', 'HomeController@payment');
 
 // card
 Route::resource('card', 'Resource\CardResource');
+
+// promotions
+Route::get('/promotion', 'HomeController@promotion');
+Route::post('/add/promocode', 'HomeController@add_promocode');
+

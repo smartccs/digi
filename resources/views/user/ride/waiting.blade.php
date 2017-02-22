@@ -338,6 +338,13 @@
                             	</span>
                             : ''
                             }
+                            {this.props.checkState.payment.discount ?
+								<span>
+								<dt>@lang('user.ride.promotion_applied')</dt>
+                            	<dd>{this.props.currency}{this.props.checkState.payment.discount}</dd>  
+                            	</span>
+                            : ''
+                            }
                             <dt>@lang('user.ride.total')</dt>
                             <dd>{this.props.currency}{this.props.checkState.payment.total}</dd> 
                             <dt className="big">@lang('user.ride.amount_paid')</dt>
@@ -389,6 +396,13 @@
 								<span>
 								<dt>@lang('user.ride.detection_wallet')</dt>
                             	<dd>{this.props.currency}{this.props.checkState.payment.wallet}</dd>  
+                            	</span>
+                            : ''
+                            }
+                            {this.props.checkState.payment.discount ?
+								<span>
+								<dt>@lang('user.ride.promotion_applied')</dt>
+                            	<dd>{this.props.currency}{this.props.checkState.payment.discount}</dd>  
                             	</span>
                             : ''
                             }

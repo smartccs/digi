@@ -307,13 +307,13 @@ class TripController extends Controller
             }
             $Wallet = 0;
 
-            $Commision = ( $Fixed + $Distance - $Discount ) * (Setting::get('payment_commision', 10) / 100);
+            $Commision = ( $Fixed + $Distance ) * (Setting::get('payment_commision', 10) / 100);
 
             $Tax = $Fixed + $Distance + $Commision * (Setting::get('payment_tax', 10) / 100);
             $Total = $Fixed + $Distance - $Discount + $Commision + $Tax;
 
             if($Total < 0){
-                $Total = $Total; // prevent from negative value
+                $Total = 0.00; // prevent from negative value
             }
 
 
