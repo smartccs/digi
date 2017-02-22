@@ -28,9 +28,10 @@
 
         <div class="checkbox">
             <label>
-                <input type="checkbox" name="remember">
+                <input type="checkbox" name="remember">Remember Me
             </label>
         </div>
+
         <br>
 
         <button type="submit" class="log-teal-btn">

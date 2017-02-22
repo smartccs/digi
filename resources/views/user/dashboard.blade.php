@@ -55,7 +55,7 @@
 
             <div class="col-md-6">
                 <div class="map-responsive">
-                    <div id="map" style="width: 600px;height: 450px;"></div>
+                    <div id="map" style="width: 100%; height: 450px;"></div>
                 </div> 
             </div>
         </div>

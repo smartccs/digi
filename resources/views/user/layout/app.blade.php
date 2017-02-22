@@ -110,7 +110,7 @@
                                 </div>
                             </div>
                             <div class="row no-margin">
-                                <div class="col-md-3">
+                                <div class="col-md-3 col-sm-3 col-xs-12">
                                     <ul>
                                         <li><a href="#">Ride</a></li>
                                         <li><a href="#">Drive</a></li>
@@ -118,7 +118,7 @@
                                         <li><a href="#">Fare Estimate</a></li>
                                     </ul>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3 col-sm-3 col-xs-12">
                                     <ul>
                                         <li><a href="{{url('ride')}}">Signup to Ride</a></li>
                                         <li><a href="{{url('drive')}}">Become a Driver</a></li>
@@ -126,7 +126,7 @@
                                     </ul>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-3 col-sm-3 col-xs-12">
                                     <h5>Get App on</h5>
                                     <ul class="app">
                                         <li>
@@ -142,7 +142,7 @@
                                     </ul>                        
                                 </div>
 
-                                <div class="col-md-3">                        
+                                <div class="col-md-3 col-sm-3 col-xs-12">                        
                                     <h5>Connect us</h5>
                                     <ul class="social">
                                         <li><a href="#"><i class="fa fa-facebook"></i></a></li>

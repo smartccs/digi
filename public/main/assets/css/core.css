@@ -415,6 +415,7 @@ a:active {
 .site-header .navbar {
   padding: 0;
   background-color: #fff;
+  height: 60px;
 }
 
 .site-header .navbar-left {
@@ -3142,6 +3143,7 @@ footer .f-title {
 .tile {
   position: relative;
   overflow: hidden;
+  min-height: 150px;
 }
 
 .tile .t-content {
@@ -3209,7 +3211,9 @@ footer .f-title {
   padding-left: 15px;
   color: rgba(255, 255, 255, 0.9);
 }
-
+.tile-1{
+  min-height: 150px;
+}
 .tile-2 {
   border: none !important;
 }
@@ -10214,7 +10218,54 @@ a.text-grey:focus .underline, a.text-grey:hover .underline {
   100%{ -moz-transform: rotate(360deg); transform: rotate(360deg); }
 }
 
+
 .look-a-like{
   background-color: transparent;
   color: red;
 }
+
+
+/*===============================
+  RESPONSIVE
+================================*/
+
+@media screen and (max-width: 1400px){
+  .box-block {
+    padding: 1.25rem;
+  }
+  
+}
+
+@media screen and (max-width: 800px){
+
+  .box-block{
+    overflow: auto;
+  }
+
+}
+@media screen and (max-width: 430px){
+  .tag {
+    padding: 0.2em 0.4em 0.3em;
+    font-size: 65%;
+    min-width: 20px;
+    border-radius: 0;
+  }
+  div.dt-buttons {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+  }
+  div.dataTables_wrapper div.dataTables_info {
+    padding-top: 0.85em;
+    white-space: nowrap;
+    padding-bottom: 0.85em;
+  }
+  .btn-primary {
+    float: none !important;
+    text-align: center !important;
+    display: block;
+}
+}  
+
+
