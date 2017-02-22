@@ -12,6 +12,8 @@
     <link rel="icon" href="{{ Setting::get('site_favicon', asset('favicon.ico')) }}" type="image/x-icon">
 
     <title>@yield('title'){{ Setting::get('site_title', 'Tranxit') }}</title>
+    <link rel="shortcut icon" type="image/png" href="{{ Setting::get('site_icon') }}"/>
+    
 
     <!-- Styles -->
     <link href="{{ asset('asset/css/bootstrap.min.css') }}" rel="stylesheet">

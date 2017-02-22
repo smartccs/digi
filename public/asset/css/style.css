@@ -1042,3 +1042,85 @@ html { height: 100%;}
     margin-top: 20px;
 }
 
+@media screen and (max-width: 991px){
+    .img-block{
+        margin-top: 20px;
+    }
+
+    .find-city{
+        padding: 40px 0;
+    }
+
+    .img-block img {
+        max-height: 300px;
+        margin: 20px auto;
+        max-width: 100%;
+    }
+    .full-img{
+        position: relative;
+        height: 300px;
+        width: 400px;
+        margin: 20px auto;
+    }
+
+    .login-box-outer{
+        float: none;
+        margin: 30px auto;
+    }
+
+    .content-block{
+        margin-bottom: 30px;
+    }
+}
+
+
+@media screen and (max-width: 800px){
+
+    .navbar-nav > li > a {
+      font-size: 16px;
+      padding: 20px 20px;
+    }
+}
+@media screen and (max-width: 767px){
+    .log-left h2{
+        font-size: 40px;
+        line-height: 55px;
+    }
+}
+
+@media screen and (max-width: 500px){
+    .footer-city{
+        height: 220px;
+    }
+
+    .log-left h2{
+        font-size: 30px;
+        line-height: 45px;
+    }
+
+    .log-right{
+        padding: 0;
+    }
+}
+
+
+
+.checkbox input{
+    display: inline-block;
+    padding: 0!important;
+    padding-top: 14px;
+    height: 20px;
+    width: 15px;
+    margin-top: -1px;
+}
+.left img{
+  height: 60px;
+}
+input[type=checkbox]{
+    display: inline-block;
+    padding: 0!important;
+    padding-top: 14px;
+    height: 14px;
+    width: 16px;
+    margin-top: -3px;
+}

@@ -1514,7 +1514,7 @@ select.form-control{
 .footer{
     background-color: #000;
     color: #fff;
-    padding-top: 70px;
+    padding-top: 20px;
 
 }
 .footer .logo-img{
@@ -3025,6 +3025,12 @@ responsive.css
     .manage-doc-section-head-right{
         margin-left: 20px;
     }
+    .footer .app img {
+        height: 40px;
+        margin-bottom: 10px;
+        float: left;
+        margin-right: 20px;
+    }
 }
 
 @media screen and (max-width: 767px){
@@ -3174,6 +3180,62 @@ responsive.css
     .invite-txt{
         font-size: 18px;
         line-height: 27px;
+    }
+    .pay-option h6 {
+      margin: 0;
+      padding-top: 14px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+      font-size: 16px;
+    }
+    .btn-sm{
+      float: none;
+      display: block;
+      margin: 14px auto;
+      text-align: center !important;
+      padding: 10px;
+    }
+    .pay-option form{
+      float: none !important;
+      text-align: center !important;
+    }
+    .dash-content {
+      margin-top: 30px;
+      overflow: auto;
+      white-space: nowrap;
+    }
+    .sub-right {
+      font-size: 12px;
+      margin-top: -12px;
+    }
+    .prof-sub-col{
+      margin: 0;
+      padding: 0 !important;
+    }
+    .prof-name {
+      margin-top: 14px;
+      font-size: 26px;
+    }
+    .prof-1{
+      padding: 0 15px !important;
+    }
+    .list-view{
+      overflow: auto;
+      white-space: nowrap;
+    }
+    .earning-box {
+      border-right: 1px solid #C6C6C6;
+      padding: 15px 25px 15px 0;
+      margin-right: -22px;
+      height: 100px;
+    }
+    table.dataTable {
+      clear: both;
+      margin-top: 6px !important;
+      margin-bottom: 6px !important;
+      max-width: none !important;
+      border-collapse: separate !important;
+      overflow: scroll;
     }
 }
 

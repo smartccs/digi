@@ -13,7 +13,7 @@
                     <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
                         <input type="email" name="email" required="true" class="form-control" id="email" placeholder="Email">
                         @if ($errors->has('email'))
-                            <span class="help-block">
+                            <span class="help-block" style="margin-left: 55px;color: red;">
                                 <strong>{{ $errors->first('email') }}</strong>
                             </span>
                         @endif
@@ -21,7 +21,7 @@
                     <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
                         <input type="password" name="password" required="true" class="form-control" id="password" placeholder="Password">
                         @if ($errors->has('password'))
-                            <span class="help-block">
+                            <span class="help-block" style="margin-left: 55px;color: red;">
                                 <strong>{{ $errors->first('password') }}</strong>
                             </span>
                         @endif

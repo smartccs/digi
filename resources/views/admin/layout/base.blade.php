@@ -11,6 +11,8 @@
 		<!-- Title -->
 		<title>@yield('title'){{ Setting::get('site_title', 'Tranxit') }}</title>
 
+		<link rel="shortcut icon" type="image/png" href="{{ Setting::get('site_icon') }}"/>
+
 		<!-- Vendor CSS -->
 		<link rel="stylesheet" href="{{asset('main/vendor/bootstrap4/css/bootstrap.min.css')}}">
 		<link rel="stylesheet" href="{{asset('main/vendor/themify-icons/themify-icons.css')}}">

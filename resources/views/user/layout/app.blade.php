@@ -5,11 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Xuber</title>
+    <title>{{Setting::get('site_title','Tranxit')}}</title>
 
     <meta name="description" content="">
     <meta name="author" content="">
-
+    <link rel="shortcut icon" type="image/png" href="{{ Setting::get('site_icon') }}"/>
 
     <link href="{{asset('asset/css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('asset/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
@@ -41,21 +41,21 @@
                     </li>
                     
                     <li>
-                        <a href="help.html">Help</a>
+                        <a href="#">Help</a>
                     </li>
                     <li>
-                        <a href="privacy-policy.html">Privacy Policy</a>
+                        <a href="#">Privacy Policy</a>
                     </li>
                     <li>
-                        <a href="terms-and-conditions.html">Terms and Conditions</a>
-                    </li>
-
-                    <li>
-                        <a href="#"><img src="img/appstore-white.png"></a>
+                        <a href="#">Terms and Conditions</a>
                     </li>
 
                     <li>
-                        <a href="#"><img src="img/playstore-white.png"></a>
+                        <a href="{{Setting::get('app_store_link','#')}}"><img src="{{asset('/asset/img/appstore-white.png')}}"></a>
+                    </li>
+
+                    <li>
+                        <a href="{{Setting::get('play_store_link','#')}}"><img src="{{asset('/asset/img/playstore-white.png')}}"></a>
                     </li>
 
 
@@ -82,7 +82,7 @@
                         <span class="hamb-bottom"></span>
                     </button>
 
-                      <a class="navbar-brand" href="{{url('/')}}"><img src="{{asset('asset/img/logo.png')}}"></a>
+                      <a class="navbar-brand" href="{{url('/')}}"><img src="{{ Setting::get('site_logo',asset('asset/img/logo.png'))}}"></a>
                     </div>
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
@@ -90,7 +90,7 @@
                       <li @if(Request::url() == url('/drive')) class="active" @endif><a href="{{url('/drive')}}">Drive</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                      <li><a href="help.html">Help</a></li>
+                      <li><a href="#">Help</a></li>
                       <li><a href="{{url('/login')}}">Signin</a></li>
                       <li><a class="menu-btn" href="{{url('/drive')}}">Become a Driver</a></li>
                     </ul>
@@ -110,7 +110,7 @@
                                 </div>
                             </div>
                             <div class="row no-margin">
-                                <div class="col-md-3">
+                                <div class="col-md-3 col-sm-3 col-xs-12">
                                     <ul>
                                         <li><a href="#">Ride</a></li>
                                         <li><a href="#">Drive</a></li>
@@ -118,7 +118,7 @@
                                         <li><a href="#">Fare Estimate</a></li>
                                     </ul>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3 col-sm-3 col-xs-12">
                                     <ul>
                                         <li><a href="{{url('ride')}}">Signup to Ride</a></li>
                                         <li><a href="{{url('drive')}}">Become a Driver</a></li>
@@ -126,7 +126,7 @@
                                     </ul>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-3 col-sm-3 col-xs-12">
                                     <h5>Get App on</h5>
                                     <ul class="app">
                                         <li>
@@ -142,7 +142,7 @@
                                     </ul>                        
                                 </div>
 
-                                <div class="col-md-3">                        
+                                <div class="col-md-3 col-sm-3 col-xs-12">                        
                                     <h5>Connect us</h5>
                                     <ul class="social">
                                         <li><a href="#"><i class="fa fa-facebook"></i></a></li>
@@ -153,7 +153,7 @@
 
                             <div class="row no-margin">
                                 <div class="col-md-12 copy">
-                                    <p>Copyrights {{date('Y')}} {{Setting::get('site_name','Tranxit')}}.</p>
+                                    <p>Copyrights {{date('Y')}} {{Setting::get('site_title','Tranxit')}}.</p>
                                 </div>
                             </div>
                         </div>

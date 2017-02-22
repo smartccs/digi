@@ -40,7 +40,7 @@
                                 @endif
                             </td>
                             <td>
-                                {{promo_used_count()}}
+                                {{promo_used_count($promo->id)}}
                             </td>
                             <td>
                                 <form action="{{ route('admin.promocode.destroy', $promo->id) }}" method="POST">

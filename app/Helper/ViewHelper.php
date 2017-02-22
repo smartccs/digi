@@ -1,4 +1,5 @@
 <?php
+use App\PromocodeUsage; 
 
 function currency($value = '')
 {
@@ -15,4 +16,9 @@ function img($img){
 	}else{
 		return $img;
 	}
+}
+
+function promo_used_count($promo_id)
+{
+	return PromocodeUsage::where('status','USED')->where('promocode_id',$promo_id)->count();
 }

@@ -14,35 +14,35 @@
             <form class="form-horizontal" action="{{route('admin.service.store')}}" method="POST" enctype="multipart/form-data" role="form">
             	{{csrf_field()}}
 				<div class="form-group row">
-					<label for="name" class="col-xs-2 col-form-label">Service Name</label>
+					<label for="name" class="col-xs-12 col-form-label">Service Name</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="text" value="{{ old('name') }}" name="name" required id="name" placeholder="Service Name">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="provider_name" class="col-xs-2 col-form-label">Provider Name</label>
+					<label for="provider_name" class="col-xs-12 col-form-label">Provider Name</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="text" value="{{ old('provider_name') }}" name="provider_name" required id="provider_name" placeholder="Provider Name">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="picture" class="col-xs-2 col-form-label">Service Image</label>
+					<label for="picture" class="col-xs-12 col-form-label">Service Image</label>
 					<div class="col-xs-10">
 						<input type="file" accept="image/*" name="image" class="dropify form-control-file" id="picture" aria-describedby="fileHelp">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="fixed" class="col-xs-2 col-form-label">Fixed</label>
+					<label for="fixed" class="col-xs-12 col-form-label">Fixed</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="text" value="{{ old('fixed') }}" name="fixed" required id="fixed" placeholder="Fixed">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="price" class="col-xs-2 col-form-label">Price</label>
+					<label for="price" class="col-xs-12 col-form-label">Price</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="text" value="{{ old('price') }}" name="price" required id="price" placeholder="Price">
 					</div>

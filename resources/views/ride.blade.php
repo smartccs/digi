@@ -17,7 +17,7 @@
                         </div>
                         <div class="right">
                             <a href="{{url('login')}}">
-                                <h3>Ride with Xuber</h3>
+                                <h3>Ride with {{Setting::get('site_title','Tranxit')}}</h3>
                                 <h5>SIGN IN <i class="fa fa-chevron-right"></i></h5>
                             </a>
                         </div>
@@ -184,7 +184,7 @@
 
     <div class="row find-city no-margin">
         <div class="container">
-            <h2>Xuber is in Chennai</h2>
+            <h2>{{Setting::get('site_title','Tranxit')}} is in Chennai</h2>
             <form>
                 <div class="input-group find-form">
                     <input type="text" class="form-control"  placeholder="Search" >

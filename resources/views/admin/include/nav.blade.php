@@ -91,6 +91,18 @@
 					<li><a href="{{route('admin.document.create')}}">Add New Document</a></li>
 				</ul>
 			</li>
+
+			<li class="with-sub">
+				<a href="#" class="waves-effect  waves-light">
+					<span class="s-caret"><i class="fa fa-angle-down"></i></span>
+					<span class="s-icon"><i class="ti-layout-tab"></i></span>
+					<span class="s-text">Promocodes</span>
+				</a>
+				<ul>
+					<li><a href="{{route('admin.promocode.index')}}">List Promocodes</a></li>
+					<li><a href="{{route('admin.promocode.create')}}">Add New Promocode</a></li>
+				</ul>
+			</li>
 			
 			<li class="menu-title">Payment Details</li>
 			<li>
