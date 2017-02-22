@@ -106,7 +106,7 @@
                         <div class="container">
                             <div class="footer-logo row no-margin">
                                 <div class="logo-img">
-                                    <img src="{{asset('asset/img/logo-white.png')}}">
+                                    <img src="{{Setting::get('site_logo',asset('asset/img/logo-white.png'))}}">
                                 </div>
                             </div>
                             <div class="row no-margin">
