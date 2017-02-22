@@ -9,6 +9,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title'){{ Setting::get('site_title', 'Tranxit') }}</title>
+    <link rel="shortcut icon" type="image/png" href="{{ Setting::get('site_icon') }}"/>
+
 
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
@@ -30,15 +32,15 @@
                 <div class="row no-margin">
                     <div class="col-md-6 log-left">
                         <span class="login-logo"><img src="{{ Setting::get('site_logo', asset('asset/img/logo.png')) }}"></span>
-                        <h2>Xuber needs partners like you.</h2>
-                        <p>Drive with Uber and earn great money as an independent contractor. Get paid weekly just for helping our community of riders get rides around town. Be your own boss and get paid in fares for driving on your own schedule.</p>
+                        <h2>{{Setting::get('site_title','Tranxit')}} needs partners like you.</h2>
+                        <p>Drive with {{Setting::get('site_title','Tranxit')}} and earn great money as an independent contractor. Get paid weekly just for helping our community of riders get rides around town. Be your own boss and get paid in fares for driving on your own schedule.</p>
                     </div>
                     <div class="col-md-6 log-right">
                         <div class="login-box-outer">
                             <div class="login-box row no-margin">
                                 @yield('content')
                             </div>
-                            <div class="log-copy"><p class="no-margin">{{ Setting::get('site_copyright', '&copy; 2017 Appoets') }}</p></div>
+                            <div class="log-copy"><p class="no-margin">&copy; {{date('Y')}} {{ Setting::get('site_title', '&copy; 2017 Appoets') }}</p></div>
                         </div>
                     </div>
                 </div>

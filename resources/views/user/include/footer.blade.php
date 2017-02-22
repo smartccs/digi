@@ -2,7 +2,7 @@
     <div class="row footer no-margin">
         <div class="container">
             <div class="col-md-6 text-left">
-                <p>&copy;{{date('Y')}} {{Setting::get('site_name','Tranxit')}}</p>
+                <p>&copy;{{date('Y')}} {{Setting::get('site_title','Tranxit')}}</p>
             </div>
             <div class="col-md-6 text-right">
                 <a href="{{Setting::get('app_store_link','#')}}" class="app"><img src="{{asset('asset/img/appstore.png')}}"></a>

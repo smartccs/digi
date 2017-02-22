@@ -14,9 +14,9 @@
             
             	{{csrf_field()}}
 				<div class="form-group row">
-					<label for="site_name" class="col-xs-2 col-form-label">Site Name</label>
+					<label for="site_title" class="col-xs-2 col-form-label">Site Name</label>
 					<div class="col-xs-10">
-						<input class="form-control" type="text" value="{{ Setting::get('site_name', '')  }}" name="site_name" required id="site_name" placeholder="Site Name">
+						<input class="form-control" type="text" value="{{ Setting::get('site_title', 'Tranxit')  }}" name="site_title" required id="site_title" placeholder="Site Name">
 					</div>
 				</div>
 
@@ -41,7 +41,7 @@
 					</div>
 				</div>
 
-				<div class="form-group row">
+				<!-- <div class="form-group row">
 					<label for="email_logo" class="col-xs-2 col-form-label">Email Logo</label>
 					<div class="col-xs-10">
 						@if(Setting::get('email_logo')!='')
@@ -49,7 +49,7 @@
 	                    @endif
 						<input type="file" accept="image/*" name="email_logo" class="dropify form-control-file" id="email_logo" aria-describedby="fileHelp">
 					</div>
-				</div>
+				</div> -->
 
 				<div class="form-group row">
 					<label for="play_store_link" class="col-xs-2 col-form-label">Playstore link</label>
@@ -78,28 +78,6 @@
 						<input class="form-control" type="number" value="{{ Setting::get('search_radius', '')  }}" name="search_radius" required id="search_radius" placeholder="Search Radius">
 					</div>
 				</div>
-
-				<!-- <div class="form-group row">
-					<label for="base_price" class="col-xs-2 col-form-label">Base Price</label>
-					<div class="col-xs-10">
-						<input class="form-control" type="number" value="{{ Setting::get('base_price', '')  }}" name="base_price" required id="base_price" placeholder="Base price">
-					</div>
-				</div>
-
-				<div class="form-group row">
-					<label for="price_per_minute" class="col-xs-2 col-form-label">Price Per Minute</label>
-					<div class="col-xs-10">
-						<input class="form-control" type="number" value="{{ Setting::get('price_per_minute', '')  }}" name="price_per_minute" required id="price_per_minute" placeholder="Price Per Minute">
-					</div>
-				</div>
-
-
-				<div class="form-group row">
-					<label for="price_per_kilometer" class="col-xs-2 col-form-label">Price Per Kilometer</label>
-					<div class="col-xs-10">
-						<input class="form-control" type="number" value="{{ Setting::get('price_per_kilometer', '')  }}" name="price_per_kilometer" required id="price_per_kilometer" placeholder="Price Per Kilometer">
-					</div>
-				</div> -->
 
 				<div class="form-group row">
 					<label for="tax_percentage" class="col-xs-2 col-form-label">Tax percentage(%)</label>

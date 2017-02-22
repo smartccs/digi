@@ -20,8 +20,8 @@
             <div class="col-md-3">
                 <h5>Get App on</h5>
                 <ul class="app">
-                    <li><a href="#"><img src="{{ asset('asset/img/appstore.png') }}"></a></li>
-                    <li><a href="#"><img src="{{ asset('asset/img/playstore.png') }}"></a></li>
+                    <li><a href="{{Setting::get('app_store_link','#')}}"><img src="{{ asset('asset/img/appstore.png') }}"></a></li>
+                    <li><a href="{{Setting::get('play_store_link','#')}}"><img src="{{ asset('asset/img/playstore.png') }}"></a></li>
                 </ul>
             </div>
 
