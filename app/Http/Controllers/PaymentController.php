@@ -59,7 +59,7 @@ class PaymentController extends Controller
 	    		$UserRequest->save();
 
                 if($request->ajax()){
-            	   return response()->json(['message' => 'Paid']); 
+            	   return response()->json(['message' => lang('api.paid')]); 
                 }else{
                     return redirect('dashboard')->with('flash_success','Paid');
                 }
@@ -111,7 +111,7 @@ class PaymentController extends Controller
             Card::where('card_id',$request->card_id)->update(['is_default' => 1]);
 
             if($request->ajax()){
-               return response()->json(['message' => currency($request->amount).' added to your wallet', 'user' => $update_user]); 
+               return response()->json(['message' => currency($request->amount).lang('api.added_to_your_wallet'), 'user' => $update_user]); 
             }else{
                 return redirect('wallet')->with('flash_success',currency($request->amount).' added to your wallet');
             }

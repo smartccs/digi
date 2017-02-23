@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
+use Auth;
 
 class RideController extends Controller
 {
@@ -30,6 +32,15 @@ class RideController extends Controller
         $fare = $this->UserAPI->estimated_fare($request)->getData();
         $service = (new Resource\ServiceResource)->show($request->service_type);
         $cards = (new Resource\CardResource)->index();
+
+        if($request->has('current_longitude') && $request->has('current_latitude'))
+        {
+            User::where('id',Auth::user()->id)->update([
+                'latitude' => $request->current_latitude,
+                'longitude' => $request->current_longitude
+            ]);
+        }
+
         return view('user.ride.confirm_ride',compact('request','fare','service','cards'));
     }
 

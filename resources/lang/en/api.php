@@ -1,0 +1,28 @@
+<?php 
+
+return array (
+
+	'user' => [
+		'incorrect_password' => 'Incorrect Password',
+		'password_updated' => 'Password Updated',
+		'location_updated' => 'Location Updated',
+		'profile_updated' => 'Profile Updated',
+		'user_not_found' => 'User Not Found',
+		'not_paid' => 'User Not Paid',
+
+	],
+	'ride' => [
+		'request_inprogress' => 'Already Request in Progress',
+		'no_providers_found' => 'No Drivers Found',
+		'request_cancelled' => 'Your Ride Cancelled',
+		'already_cancelled' => 'Already Ride Cancelled',
+		'already_onride' => 'Already You are Onride',
+		'provider_rated' => 'Driver Rated',
+	],
+	'something_went_wrong' => 'Something Went Wrong',
+	'services_not_found' => 'Services Not Found',
+	'promocode_expired' => 'Promocode Expired',
+	'promocode_already_in_user' => 'Promocode Already in Use',
+	'paid' => 'Paid',
+	'added_to_your_wallet' => 'Added to your Wallet',
+);

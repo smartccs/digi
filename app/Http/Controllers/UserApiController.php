@@ -58,7 +58,7 @@ class UserApiController extends Controller
 
             return $User;
         } catch (Exception $e) {
-             return response()->json(['error' => 'Something Went Wrong'], 500);
+             return response()->json(['error' => lang('api.something_went_wrong')], 500);
         }
     }
 
@@ -84,13 +84,13 @@ class UserApiController extends Controller
             $User->save();
 
             if($request->ajax()) {
-                return response()->json(['message' => 'Password changed successfully!']);
+                return response()->json(['message' => lang('api.user.password_updated')]);
             }else{
                 return back()->with('flash_success', 'Password Updated');
             }
 
         } else {
-            return response()->json(['error' => 'Please enter correct password'], 500);
+            return response()->json(['error' => lang('api.user.incorrect_password')], 500);
         }
 
     }
@@ -114,11 +114,11 @@ class UserApiController extends Controller
             $user->longitude = $request->longitude;
             $user->save();
 
-            return response()->json(['message' => 'Location Updated successfully!']);
+            return response()->json(['message' => lang('api.user.location_updated')]);
 
         }else{
 
-            return response()->json(['error' => 'User Not Found!'], 500);
+            return response()->json(['error' => lang('api.user.user_not_found')], 500);
 
         }
 
@@ -158,11 +158,11 @@ class UserApiController extends Controller
                 return $user;
 
             }else{
-                return response()->json(['error' => 'User Not Found!'], 500);
+                return response()->json(['error' => lang('api.user.user_not_found')], 500);
             }
         }
         catch (Exception $e) {
-            return response()->json(['error' => 'Something Went Wrong!'], 500);
+            return response()->json(['error' => lang('api.something_went_wrong')], 500);
         }
 
     }
@@ -211,12 +211,12 @@ class UserApiController extends Controller
             if($request->ajax()) {
                 return response()->json($user);
             }else{
-                return back()->with('flash_success', 'Profile Updated');
+                return back()->with('flash_success', lang('api.user.profile_updated'));
             }
         }
 
         catch (ModelNotFoundException $e) {
-             return response()->json(['error' => 'User Not Found!'], 500);
+             return response()->json(['error' => lang('api.user.user_not_found')], 500);
         }
 
     }
@@ -232,7 +232,7 @@ class UserApiController extends Controller
         if($serviceList = ServiceType::all()) {
             return $serviceList;
         } else {
-            return response()->json(['error' => 'Services Not Found!'], 500);
+            return response()->json(['error' => lang('api.services_not_found')], 500);
         }
 
     }
@@ -266,7 +266,7 @@ class UserApiController extends Controller
 
         if($ActiveRequests > 0) {
             if($request->ajax()) {
-                return response()->json(['error' => 'Already request is in progress. Try again later'], 500);
+                return response()->json(['error' => lang('api.ride.request_inprogress')], 500);
             }else{
                 return back()->with('flash_error', 'Already request is in progress. Try again later');
             }
@@ -288,7 +288,7 @@ class UserApiController extends Controller
         if(count($Providers) == 0) {
             if($request->ajax()) {
                 // Push Notification to User
-                return response()->json(['message' => 'No Providers Found! Please try again.']); 
+                return response()->json(['message' => lang('api.ride.no_providers_found')]); 
             }else{
                 return back()->with('flash_success', 'No Providers Found! Please try again.');
             }
@@ -357,7 +357,7 @@ class UserApiController extends Controller
 
         } catch (Exception $e) {
             if($request->ajax()) {
-                return response()->json(['error' => 'Something went wrong while sending request. Please try again.'], 500);
+                return response()->json(['error' => lang('api.something_went_wrong')], 500);
             }else{
                 return back()->with('flash_error', 'Something went wrong while sending request. Please try again.');
             }
@@ -384,7 +384,7 @@ class UserApiController extends Controller
             if($UserRequest->status == 'CANCELLED')
             {
                 if($request->ajax()) {
-                    return response()->json(['error' => 'Request is Already Cancelled!'], 500); 
+                    return response()->json(['error' => lang('api.ride.already_cancelled')], 500); 
                 }else{
                     return back()->with('flash_error', 'Request is Already Cancelled!');
                 }
@@ -405,14 +405,14 @@ class UserApiController extends Controller
                 }
 
                 if($request->ajax()) {
-                    return response()->json(['message' => 'Request Cancelled Successfully']); 
+                    return response()->json(['message' => lang('api.ride.ride_cancelled')]); 
                 }else{
                     return redirect('dashboard')->with('flash_success','Request Cancelled Successfully');
                 }
 
             } else {
                 if($request->ajax()) {
-                    return response()->json(['error' => 'Service Already Started!'], 500); 
+                    return response()->json(['error' => lang('api.ride.already_onride')], 500); 
                 }else{
                     return back()->with('flash_error', 'Service Already Started!');
                 }
@@ -421,7 +421,7 @@ class UserApiController extends Controller
 
         catch (ModelNotFoundException $e) {
             if($request->ajax()) {
-                return response()->json(['error' => 'No Request Found!']);
+                return response()->json(['error' => lang('api.something_went_wrong')]);
             }else{
                 return back()->with('flash_error', 'No Request Found!');
             }
@@ -450,7 +450,7 @@ class UserApiController extends Controller
         }
 
         catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
+            return response()->json(['error' => lang('api.something_went_wrong')], 500);
         }
 
     } 
@@ -477,7 +477,7 @@ class UserApiController extends Controller
 
         if ($UserRequests) {
             if($request->ajax()){
-                return response()->json(['error' => 'Not Paid!'], 500);
+                return response()->json(['error' => lang('api.user.not_paid')], 500);
             } else {
                 return back()->with('flash_error', 'Service Already Started!');
             }
@@ -511,13 +511,13 @@ class UserApiController extends Controller
 
             // Send Push Notification to Provider 
             if($request->ajax()){
-                return response()->json(['message' => 'Driver Rated Successfully']); 
+                return response()->json(['message' => lang('api.ride.provider_rated')]); 
             }else{
                 return redirect('dashboard')->with('flash_success', 'Driver Rated Successfully!');
             }
         } catch (Exception $e) {
             if($request->ajax()){
-                return response()->json(['error' => 'Something went wrong'], 500);
+                return response()->json(['error' => lang('api.something_went_wrong')], 500);
             }else{
                 return back()->with('flash_error', 'Something went wrong');
             }
@@ -546,7 +546,7 @@ class UserApiController extends Controller
         }
 
         catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong']);
+            return response()->json(['error' => lang('api.something_went_wrong')]);
         }
     }
 
@@ -576,7 +576,7 @@ class UserApiController extends Controller
         }
 
         catch(Exception $e){
-                return response()->json(['error' => "Something Went Wrong"], 500);
+                return response()->json(['error' => lang('api.something_went_wrong')], 500);
         }
     }
 
@@ -632,7 +632,7 @@ class UserApiController extends Controller
         }
 
         catch(Exception $e){
-                return response()->json(['error' => "Something Went Wrong"], 500);
+                return response()->json(['error' => lang('api.something_went_wrong')], 500);
         }
 
     }
@@ -661,7 +661,7 @@ class UserApiController extends Controller
         }
 
         catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong']);
+            return response()->json(['error' => lang('api.something_went_wrong')]);
         }
     }
 
@@ -687,7 +687,7 @@ class UserApiController extends Controller
         }
 
         catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
+            return response()->json(['error' => lang('api.something_went_wrong')], 500);
         }
 
     } 
@@ -711,7 +711,7 @@ class UserApiController extends Controller
 
         }    
         catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
+            return response()->json(['error' => lang('api.something_went_wrong')], 500);
         }  
     }
 
@@ -737,12 +737,12 @@ class UserApiController extends Controller
                 if($request->ajax()){
 
                     return response()->json([
-                        'message' => 'Promocode Expired', 
+                        'message' => lang('api.promocode_expired'), 
                         'code' => 'promocode_expired'
                     ]);
 
                 }else{
-                    return back()->with('flash_error', 'Promocode Expired');
+                    return back()->with('flash_error', lang('api.promocode_expired'));
                 }
 
             }elseif(PromocodeUsage::where('promocode_id',$find_promo->id)->where('user_id', Auth::user()->id)->where('status','ADDED')->count() > 0){
@@ -750,7 +750,7 @@ class UserApiController extends Controller
                 if($request->ajax()){
 
                     return response()->json([
-                        'message' => 'Promocode Already in use', 
+                        'message' => lang('api.promocode_already_in_use'), 
                         'code' => 'promocode_already_in_use'
                         ]);
 
@@ -769,12 +769,12 @@ class UserApiController extends Controller
                 if($request->ajax()){
 
                     return response()->json([
-                        'message' => 'Promocode Applied' ,
-                        'code' => 'promocode_applied'
+                            'message' => lang('api.promocode_applied') ,
+                            'code' => 'promocode_applied'
                          ]); 
 
                 }else{
-                    return back()->with('flash_success', 'Promocode Applied');
+                    return back()->with('flash_success', lang('api.promocode_applied'));
                 }
             }
 
@@ -782,7 +782,7 @@ class UserApiController extends Controller
 
         catch (Exception $e) {
             if($request->ajax()){
-                return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
+                return response()->json(['error' => lang('api.something_went_wrong')], 500);
             }else{
                 return back()->with('flash_error', 'Something Went Wrong');
             }

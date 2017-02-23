@@ -27,6 +27,8 @@
                 <input type="hidden" name="s_longitude" id="origin_longitude">
                 <input type="hidden" name="d_latitude" id="destination_latitude">
                 <input type="hidden" name="d_longitude" id="destination_longitude">
+                <input type="hidden" name="current_longitude" id="long">
+                <input type="hidden" name="current_latitude" id="lat">
 
                 <div class="car-detail">
 
@@ -67,22 +69,59 @@
 
 @section('scripts')
     
+    <script type="text/javascript">
+        var current_latitude = 13.0574400;
+        var current_longitude = 80.2482605;
+    </script>
+
+    <script type="text/javascript">
+
+    if( navigator.geolocation )
+    {
+       navigator.geolocation.getCurrentPosition( success, fail );
+    }
+    else
+    {
+        console.log('Sorry, your browser does not support geolocation services');
+    }
+
+     function success(position)
+     {
+         document.getElementById('long').value = position.coords.longitude;
+         document.getElementById('lat').value = position.coords.latitude
+
+        if(position.coords.longitude != "" && position.coords.latitude != ""){
+          current_longitude = position.coords.longitude;
+          current_latitude = position.coords.latitude;
+        }
+        initMap();
+     }
+
+     function fail()
+     {
+        // Could not obtain location
+        console.log('unable to get your location');
+     }
+
+   </script> 
+
     <script type="text/javascript" src="{{asset('asset/js/map.js')}}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_API_KEY')}}&libraries=places&callback=initMap"
+    <script src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_API_KEY')}}&libraries=places"
         async defer></script>
 
-        <script type="text/javascript">
-            function disableEnterKey(e)
-            {
-                 var key;      
-                 if(window.e)
-                      key = window.e.keyCode; //IE
-                 else
-                      key = e.which; //firefox      
+    <script type="text/javascript">
+        function disableEnterKey(e)
+        {
+             var key;      
+             if(window.e)
+                  key = window.e.keyCode; //IE
+             else
+                  key = e.which; //firefox      
 
-                  console.log(key);
-                if(key == 13)
-                    return e.preventDefault();
-            }
-        </script>
+              console.log(key);
+            if(key == 13)
+                return e.preventDefault();
+        }
+    </script>
+ 
 @endsection
