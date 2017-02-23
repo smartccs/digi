@@ -49,7 +49,7 @@
                 <div class="col-md-6 content-block">
                     <h2>Tap the app, get a ride</h2>
                     <div class="title-divider"></div>
-                    <p>Xuber is the smartest way to get around. One tap and a car comes directly to you. Your driver knows exactly where to go. And you can pay with either cash or card.</p>
+                    <p>{{ Setting::get('site_title', 'Tranxit')  }} is the smartest way to get around. One tap and a car comes directly to you. Your driver knows exactly where to go. And you can pay with either cash or card.</p>
                     <a class="content-more" href="#">MORE REASONS TO RIDE <i class="fa fa-chevron-right"></i></a>
                 </div>
             </div>
@@ -90,7 +90,7 @@
                     <h2>They’re people like you, going your way</h2>
                     <div class="title-divider"></div>
                     <p>What makes the Uber experience truly great are the people behind the wheel. They are mothers and fathers. Students and teachers. Veterans. Neighbors. Friends. Our partners drive their own cars—on their own schedule—in cities big and small. Which is why more than one million people worldwide have signed up to drive.</p>
-                    <a class="content-more-btn" href="#">WHY DRIVE WITH Xuber <i class="fa fa-chevron-right"></i></a>
+                    <a class="content-more-btn" href="#">WHY DRIVE WITH {{ Setting::get('site_title', 'Tranxit')  }} <i class="fa fa-chevron-right"></i></a>
                 </div>
                 <?php $behind = asset('asset/img/behind-the-wheel.jpg'); ?>
                 <div class="col-md-6 full-img text-center" style="background-image: url({{$behind}});"> 

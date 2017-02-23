@@ -16,10 +16,10 @@
 							<div class="form-group row">
 								<label for="stripe_secret_key" class="col-xs-4 col-form-label"><i style="font-size: 24px;" class="fa fa-cc-stripe"></i> ON/OFF</label>
 								<div class="col-xs-8">
-									<div class="float-xs-left mr-1"><input onchange="cardselect()" @if(Setting::get('card') ==1) checked  @endif  name="card" id="stripe_check" type="checkbox" class="js-switch" data-color="#43b968"></div>
+									<div class="float-xs-left mr-1"><input @if(Setting::get('CARD') == 1) checked  @endif  name="card" id="stripe_check" type="checkbox" class="js-switch" data-color="#43b968"></div>
 								</div>
 							</div>
-							<div id="card_field" @if(Setting::get('card') == 0) style="display: none;" @endif>
+							<div id="card_field" @if(Setting::get('CARD') == 0) style="display: none;" @endif>
 								<div class="form-group row">
 									<label for="stripe_secret_key" class="col-xs-4 col-form-label">Stripe Secret key</label>
 									<div class="col-xs-8">
@@ -42,34 +42,7 @@
 			                	<button class="pull-right btn btn-default mr10" type="submit">Submit</button>
 							</div>
 						</div>
-						<!-- <br>
-						<hr>
-						<br> -->
-						<!-- <blockquote class="card-blockquote">
-						<h1 style="font-size: 40px;"><i class="fa fa-cc-paypal"></i></h1>
-							<br>
-							<div class="form-group row">
-								<label for="onoff" class="col-xs-4 col-form-label">ON/OFF</label>
-								<div class="col-xs-8">
-									<div class="float-xs-left mr-1"><input onchange="paypalselect()" @if(Setting::get('paypal') == 1) checked  @endif name="paypal" id="paypal_check" type="checkbox" class="js-switch" data-color="#43b968"></div>
-								</div>
-							</div>
-							<div id="paypal_field" @if(Setting::get('paypal') == 0) style="display: none;" @endif>
-								<div class="form-group row">
-									<label for="paypal_email" class="col-xs-4 col-form-label">Paypal Email</label>
-									<div class="col-xs-8">
-										<input class="form-control" type="email" value="{{Setting::get('paypal_email', '') }}" name="paypal_email" id="paypal_email"  placeholder="Paypal Email">
-									</div>
-								</div>
-							</div>
-						</blockquote>
-						<br>
-						<br>
-						<div class="row">
-							<div class="col-md-5">
-			                	<button class="pull-right btn btn-default mr10" type="submit">Submit</button>
-							</div>
-						</div> -->
+
 					</div>
 
 				</form>

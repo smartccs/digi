@@ -27,7 +27,7 @@ class SettingsTableSeeder extends Seeder
                 'value' => asset('asset/img/logo.png'),
             ],
             [
-                'key' => 'site_favicon',
+                'key' => 'site_icon',
                 'value' => asset('logo.png'),
             ],
             [

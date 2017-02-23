@@ -47,7 +47,7 @@
             <div class="col-md-4 content-block small">
                 <h2>Tap the app, get a ride</h2>
                 <div class="title-divider"></div>
-                <p>Xuber is the smartest way to get around. One tap and a car comes directly to you. Your driver knows exactly where to go. And you can pay with either cash or card.</p>
+                <p>{{ Setting::get('site_title', 'Tranxit')  }} is the smartest way to get around. One tap and a car comes directly to you. Your driver knows exactly where to go. And you can pay with either cash or card.</p>
             </div>
 
             <div class="col-md-4 content-block small">

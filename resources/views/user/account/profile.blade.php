@@ -34,7 +34,7 @@
 
                 <div class="col-md-6 pro-form">
                     <h5 class="col-md-6 no-padding"><strong>@lang('user.profile.wallet_balance')</strong></h5>
-                    <p class="col-md-6 no-padding">{{Auth::user()->wallet_balance}}</p>
+                    <p class="col-md-6 no-padding">{{currency(Auth::user()->wallet_balance)}}</p>
                 </div>
 
                 <div class="col-md-6 pro-form">

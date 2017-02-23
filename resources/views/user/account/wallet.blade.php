@@ -26,6 +26,7 @@
                     </div>                                                               
 
                 </div>
+                @if(Setting::get('CARD') == 1)
                 <div class="col-md-6">
                     
                     <h6><strong>@lang('user.add_money')</strong></h6>
@@ -47,6 +48,7 @@
                     <button type="submit" class="full-primary-btn fare-btn">@lang('user.add_money')</button> 
 
                 </div>
+                @endif
             </form>
         </div>
 

@@ -14,6 +14,8 @@
 
         <div class="row no-margin ride-detail">
             <div class="col-md-12">
+            @if($trips->count() > 0)
+
                 <table class="table table-condensed" style="border-collapse:collapse;">
                     <thead>
                         <tr>
@@ -27,7 +29,6 @@
                     </thead>
 
                     <tbody>
-
                     @foreach($trips as $trip)
 
                         <tr data-toggle="collapse" data-target="#trip_{{$trip->id}}" class="accordion-toggle collapsed">
@@ -100,8 +101,13 @@
 
                         @endforeach
 
+
                     </tbody>
                 </table>
+                @else
+                    <hr>
+                    <p style="text-align: center;">No trips Available</p>
+                @endif
             </div>
         </div>
 

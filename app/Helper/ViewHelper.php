@@ -1,5 +1,6 @@
 <?php
 use App\PromocodeUsage; 
+use Illuminate\Support\Facades\Storage;
 
 function currency($value = '')
 {
@@ -14,7 +15,7 @@ function img($img){
 	if($img == ""){
 		return asset('main/avatar.jpg');
 	}else{
-		return $img;
+		return asset('storage/'.$img);
 	}
 }
 

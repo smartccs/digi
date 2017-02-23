@@ -8,6 +8,7 @@ use App\UserRequests;
 use App\Card;
 use App\User;
 
+use Setting;
 use Exception;
 use Auth;
 
@@ -38,7 +39,7 @@ class PaymentController extends Controller
 
     			$Card = Card::where('user_id',Auth::user()->id)->where('is_default',1)->first();
 
-	    		\Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+	    		\Stripe\Stripe::setApiKey(Setting::get('stripe_secret_key'));
 
 	    		$Charge = \Stripe\Charge::create(array(
 					  "amount" => $StripeCharge,
@@ -91,7 +92,7 @@ class PaymentController extends Controller
             
             $StripeWalletCharge = $request->amount * 100;
 
-            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            \Stripe\Stripe::setApiKey(Setting::get('stripe_secret_key'));
 
             $Charge = \Stripe\Charge::create(array(
                   "amount" => $StripeWalletCharge,

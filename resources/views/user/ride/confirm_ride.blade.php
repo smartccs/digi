@@ -47,19 +47,23 @@
                     <p>@lang('user.payment_method')</p>
                     <select class="form-control" name="payment_mode" id="payment_mode" onchange="card(this.value);">
                       <option value="CASH">CASH</option>
+                      @if(Setting::get('CARD') == 1)
                       @if($cards->count() > 0)
                         <option value="CARD">CARD</option>
+                      @endif
                       @endif
                     </select>
                     <br>
 
-                    @if($cards->count() > 0)
-                    <select class="form-control" name="card_id" style="display: none;" id="card_id">
-                      <option value="">Select Card</option>
-                      @foreach($cards as $card)
-                        <option value="{{$card->card_id}}">{{$card->brand}} **** **** **** {{$card->last_four}}</option>
-                      @endforeach
-                    </select>
+                    @if(Setting::get('CARD') == 1)
+                        @if($cards->count() > 0)
+                        <select class="form-control" name="card_id" style="display: none;" id="card_id">
+                          <option value="">Select Card</option>
+                          @foreach($cards as $card)
+                            <option value="{{$card->card_id}}">{{$card->brand}} **** **** **** {{$card->last_four}}</option>
+                          @endforeach
+                        </select>
+                        @endif
                     @endif
 
                     <button type="submit" class="full-primary-btn fare-btn">@lang('user.ride.ride_now')</button>

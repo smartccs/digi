@@ -10,7 +10,7 @@
             <div class="col-md-6 log-left">
                 <span class="login-logo"><img src="{{asset('asset/img/logo.png')}}"></span>
                 <h2>Create your account and get moving in minutes</h2>
-                <p>Welcome to Xuber, the easiest way to get around at the tap of a button.</p>
+                <p>Welcome to {{ Setting::get('site_title', 'Tranxit')  }}, the easiest way to get around at the tap of a button.</p>
             </div>
             <div class="col-md-6 log-right">
                 <div class="login-box-outer">
@@ -68,7 +68,7 @@
                 </div>
 
 
-                <div class="log-copy"><p class="no-margin">&copy;2016 Xuber.com</p></div>
+                <div class="log-copy"><p class="no-margin">&copy;{{date('Y')}} {{ Setting::get('site_title', 'Tranxit')  }}</p></div>
                 </div>
             </div>
         </div>

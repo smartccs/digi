@@ -14,11 +14,16 @@
         @include('common.notify')
         <div class="row no-margin payment">
             <div class="col-md-12">
-                <h5 class="btm-border"><strong>@lang('user.payment_method')</strong> <a href="#" class="sub-right pull-right" data-toggle="modal" data-target="#add-card-modal">@lang('user.card.add_card')</a></h5>
+                <h5 class="btm-border"><strong>@lang('user.payment_method')</strong> 
+                @if(Setting::get('CARD') == 1)
+                <a href="#" class="sub-right pull-right" data-toggle="modal" data-target="#add-card-modal">@lang('user.card.add_card')</a>
+                @endif
+                </h5>
 
                 <div class="pay-option">
                     <h6><img src="{{asset('asset/img/cash-icon.png')}}"> @lang('user.cash') </h6>
                 </div>
+                @if(Setting::get('CARD') == 1)
                 @foreach($cards as $card)
                 <div class="pay-option">
                     <h6>
@@ -35,6 +40,7 @@
                     </h6>
                 </div>
                 @endforeach
+                @endif
 
             </div>
         </div>
@@ -42,6 +48,7 @@
     </div>
 </div>
 
+@if(Setting::get('CARD') == 1)
 
     <!-- Add Card Modal -->
     <div id="add-card-modal" class="modal fade" role="dialog">
@@ -63,19 +70,19 @@
                 </div>
                 <div class="form-group col-md-12 col-sm-12">
                     <label>@lang('user.card.card_no')</label>
-                    <input data-stripe="number" type="number" required size="16" autocomplete="off" maxlength="16" class="form-control" placeholder="@lang('user.card.card_no')">
+                    <input data-stripe="number" type="text" onkeypress="return isNumberKey(event);" required autocomplete="off" maxlength="16" class="form-control" placeholder="@lang('user.card.card_no')">
                 </div>
                 <div class="form-group col-md-4 col-sm-12">
                     <label>@lang('user.card.month')</label>
-                    <input type="number" maxlength="2" size="2" required autocomplete="off" class="form-control" data-stripe="exp-month" placeholder="MM">
+                    <input type="text" onkeypress="return isNumberKey(event);" maxlength="2" required autocomplete="off" class="form-control" data-stripe="exp-month" placeholder="MM">
                 </div>
                 <div class="form-group col-md-4 col-sm-12">
                     <label>@lang('user.card.year')</label>
-                    <input type="number" maxlength="2" size="2" required autocomplete="off" data-stripe="exp-year" class="form-control" placeholder="YY">
+                    <input type="text" onkeypress="return isNumberKey(event);" maxlength="2" required autocomplete="off" data-stripe="exp-year" class="form-control" placeholder="YY">
                 </div>
                 <div class="form-group col-md-4 col-sm-12">
                     <label>@lang('user.card.cvv')</label>
-                    <input type="number" data-stripe="cvc" size="4" required autocomplete="off" maxlength="4" class="form-control" placeholder="@lang('user.card.cvv')">
+                    <input type="text" data-stripe="cvc" onkeypress="return isNumberKey(event);" required autocomplete="off" maxlength="4" class="form-control" placeholder="@lang('user.card.cvv')">
                 </div>
             </div>
           </div>
@@ -90,13 +97,15 @@
       </div>
     </div>
 
+    @endif
+
 @endsection
 
 @section('scripts')
     <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 
     <script type="text/javascript">
-        Stripe.setPublishableKey('{{ env("STRIPE_KEY")}}');
+        Stripe.setPublishableKey("{{ Setting::get('stripe_publishable_key')}}");
 
          var stripeResponseHandler = function (status, response) {
             var $form = $('#payment-form');
@@ -131,5 +140,16 @@
             }
         });
 
+    </script>
+    <script type="text/javascript">
+        function isNumberKey(evt)
+        {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode != 46 && charCode > 31 
+            && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
     </script>
 @endsection

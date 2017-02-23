@@ -60,8 +60,14 @@ class AdminController extends Controller
      */
     public function user_map()
     {
-        $Users = User::where('latitude', '!=', 0)->where('longitude', '!=', 0)->get();
-        return view('admin.map.user_map', compact('Users'));
+        try{
+
+            $Users = User::where('latitude', '!=', 0)->where('longitude', '!=', 0)->get();
+            return view('admin.map.user_map', compact('Users'));
+        }
+        catch(Exception $e){
+            return redirect()->route('admin.setting')->with('flash_error','Something Went Wrong!');
+        }
     }
 
    	/**
@@ -72,8 +78,13 @@ class AdminController extends Controller
      */
     public function provider_map()
     {
-        $Providers = Provider::where('latitude', '!=', 0)->where('longitude', '!=', 0)->with('service')->get();
-        return view('admin.map.provider_map', compact('Providers'));
+        try{
+            $Providers = Provider::where('latitude', '!=', 0)->where('longitude', '!=', 0)->with('service')->get();
+            return view('admin.map.provider_map', compact('Providers'));
+        }
+        catch(Exception $e){
+            return redirect()->route('admin.setting')->with('flash_error','Something Went Wrong!');
+        }
     }
 
     /**
@@ -154,10 +165,10 @@ class AdminController extends Controller
                         $temp_setting->value   = 1;
                     }
 
-                }else if($temp_setting->key == 'card'){
+                }else if($temp_setting->key == 'CARD'){
                     if($request->$key == 'on')
                     {
-                        $temp_setting->value   = 1;
+                        $temp_setting->value = 1;
                     }
                     else
                     {
@@ -232,7 +243,7 @@ class AdminController extends Controller
             return redirect()->back()->with('flash_success','Profile Updated');
         }
 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
         
@@ -275,7 +286,7 @@ class AdminController extends Controller
             }
         }
 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
         
@@ -297,7 +308,7 @@ class AdminController extends Controller
             return view('admin.payment.payment-history', compact('payments'));
         }
 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
     }
@@ -327,7 +338,7 @@ class AdminController extends Controller
             return view('admin.help', compact('Data'));
         }
 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
     }
@@ -348,7 +359,7 @@ class AdminController extends Controller
 
         }
 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
 
@@ -372,7 +383,7 @@ class AdminController extends Controller
             return view('admin.request.request-details', compact('request'));
         }
 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
 
@@ -392,11 +403,12 @@ class AdminController extends Controller
             $requests = UserRequests::where('later' , DEFAULT_TRUE)
                 ->RequestHistory()
                 ->get();
+                
 
             return view('admin.request.scheduled-request', compact('requests'));
         }
 
-        catch (ModelNotFoundException $e) {
+        catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
 
@@ -409,8 +421,13 @@ class AdminController extends Controller
      */
     public function user_review()
     {
-        $Reviews = UserRequestRating::where('user_id','!=',0)->with('user','provider')->get();
-        return view('admin.review.user_review',compact('Reviews'));
+        try{
+            $Reviews = UserRequestRating::where('user_id','!=',0)->with('user','provider')->get();
+            return view('admin.review.user_review',compact('Reviews'));
+        }
+        catch(Exception $e){
+            return redirect()->route('admin.setting')->with('flash_error','Something Went Wrong!');
+        }
     }
 
     /**
@@ -420,8 +437,13 @@ class AdminController extends Controller
      */
     public function provider_review()
     {
-        $Reviews = UserRequestRating::where('provider_id','!=',0)->with('user','provider')->get();
-        return view('admin.review.provider_review',compact('Reviews'));
+        try{
+            $Reviews = UserRequestRating::where('provider_id','!=',0)->with('user','provider')->get();
+            return view('admin.review.provider_review',compact('Reviews'));
+        }
+        catch(Exception $e){
+            return redirect()->route('admin.setting')->with('flash_error','Something Went Wrong!');
+        }
     }
 
 }

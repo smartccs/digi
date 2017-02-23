@@ -9,6 +9,7 @@ use App\User;
 use App\Card;
 use Exception;
 use Auth;
+use Setting;
 
 class CardResource extends Controller
 {
@@ -158,7 +159,7 @@ class CardResource extends Controller
      * @return \Illuminate\Http\Response
      */
     public function set_stripe(){
-        return \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        return \Stripe\Stripe::setApiKey(Setting::get('stripe_secret_key'));
     }
 
     /**
