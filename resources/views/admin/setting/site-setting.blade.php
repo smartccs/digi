@@ -41,6 +41,13 @@
 					</div>
 				</div>
 
+                <div class="form-group row">
+                    <label for="tax_percentage" class="col-xs-2 col-form-label">Copyright Content</label>
+                    <div class="col-xs-10">
+                        <input class="form-control" type="number" value="{{ Setting::get('site_copyright', '&copy; 2017 Appoets') }}" name="site_copyright" id="site_copyright" placeholder="Site Copyright">
+                    </div>
+                </div>
+
 				<div class="form-group row">
 					<label for="play_store_link" class="col-xs-2 col-form-label">Playstore link</label>
 					<div class="col-xs-10">
@@ -119,5 +126,4 @@
 		</div>
     </div>
 </div>
-
 @endsection

@@ -18,15 +18,30 @@
 @endsection
 
 @section('scripts')
-<script type="text/javascript" src="{{asset('asset/js/rating.js')}}"></script>    
+<script type="text/javascript" src="{{asset('asset/js/rating.js')}}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAP_KEY') }}&libraries=places" defer></script>
 <script type="text/javascript">
     var map;
+    var routeMarkers = {
+                source: {
+                    lat: 0,
+                    lng: 0,
+                },
+                destination: {
+                    lat: 0,
+                    lng: 0,
+                }
+            };
     var zoomLevel = 13;
+    var directionsService;
+    var directionsDisplay;
 
     function initMap() {
         // Basic options for a simple Google Map
         var center = new google.maps.LatLng('13', '80');
+        
+        directionsService = new google.maps.DirectionsService;
+        directionsDisplay = new google.maps.DirectionsRenderer;
         // For more options see: https://developers.google.com/maps/documentation/javascript/reference#MapOptions
 
         var mapOptions = {
@@ -237,6 +252,11 @@
             marker.setVisible(true);
         });
 
+    }
+
+    function updateMap(route) {
+
+        console.log('updateMap', route, routeMarkers);
         // var markerSecond = new google.maps.Marker({
         //     map: map,
         //     anchorPoint: new google.maps.Point(0, -29)
@@ -256,19 +276,28 @@
         // bounds.extend(markerSecond.getPosition());
         // map.fitBounds(bounds);
 
-        // var directionsService = new google.maps.DirectionsService;
-        // var directionsDisplay = new google.maps.DirectionsRenderer;
-        // directionsDisplay.setMap(map);
+        if(routeMarkers.source.lat == route.source.lat &&
+            routeMarkers.source.lng == route.source.lng &&
+            routeMarkers.destination.lat == route.destination.lat &&
+            routeMarkers.destination.lng == route.destination.lng) {
 
-        // directionsService.route({
-        //     origin:source,
-        //     destination:destination,
-        //     travelMode: google.maps.TravelMode.DRIVING
-        // }, function(result, status) {
-        //     if (status == google.maps.DirectionsStatus.OK) {
-        //         directionsDisplay.setDirections(result);
-        //     }
-        // });
+        } else {
+
+            routeMarkers = route;
+            
+            directionsDisplay.set('directions', null);
+            directionsDisplay.setMap(map);
+
+            directionsService.route({
+                origin: route.source,
+                destination: route.destination,
+                travelMode: google.maps.TravelMode.DRIVING
+            }, function(result, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    directionsDisplay.setDirections(result);
+                }
+            });
+        }
 
     }
 </script>
