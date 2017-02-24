@@ -25,4 +25,12 @@ return array (
 	'promocode_already_in_user' => 'Promocode Already in Use',
 	'paid' => 'Paid',
 	'added_to_your_wallet' => 'Added to your Wallet',
+	'push' => [
+		'request_accepted' => 'Your Ride Accepted by a Driver',
+		'arrived' => 'Driver Arrived at your Location',
+		'incoming_request' => 'New Incoming Ride',
+		'added_money_to_wallet' => ' Added to your Wallet',
+		'charged_from_wallet' => ' Charged from your Wallet',
+		'document_verfied' => 'Your Documents are verified, Now you are ready to Start your Business',
+	],
 );

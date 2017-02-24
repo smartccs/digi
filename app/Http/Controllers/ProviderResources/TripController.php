@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+use App\Http\Controllers\SendPushNotification;
 use Auth;
 use Setting;
 use Carbon\Carbon;
@@ -180,6 +181,7 @@ class TripController extends Controller
             }
 
             // Send Push Notification to User
+            (new SendPushNotification)->RideAccepted($UserRequest);
 
             return $UserRequest->with('user')->get();
 
@@ -215,6 +217,9 @@ class TripController extends Controller
                 ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status' =>'active']);
             } else {
                 $UserRequest->status = $request->status;
+                if($request->status == 'ARRIVED'){
+                    (new SendPushNotification)->Arrived($UserRequest);
+                }
             }
             $UserRequest->save();
 
@@ -280,6 +285,9 @@ class TripController extends Controller
             $UserRequest->current_provider_id = $next_provider->provider_id;
             $UserRequest->assigned_at = Carbon::now();
             $UserRequest->save();
+
+            // incoming request push to provider
+            (new SendPushNotification)->IncomingRequest($UserRequest->current_provider_id);
             
         } catch (ModelNotFoundException $e) {
             UserRequests::where('id', $UserRequest->id)->update(['status' => 'CANCELLED']);
@@ -342,12 +350,18 @@ class TripController extends Controller
                         User::where('id',$UserRequest->user_id)->update(['wallet_balance' => 0 ]);
                         $Payment->total = abs($Payable);
 
+                        // charged wallet money push 
+                        (new SendPushNotification)->ChargedWalletMoney($UserRequest->user_id,currency($Wallet));
+
                     }else{
 
                         $Payment->total = 0;
                         $WalletBalance = $Wallet - $Total;
                         User::where('id',$UserRequest->user_id)->update(['wallet_balance' => $WalletBalance]);
                         $Payment->wallet = $Total;
+
+                        // charged wallet money push 
+                        (new SendPushNotification)->ChargedWalletMoney($UserRequest->user_id,currency($Total));
                     }
 
                 }

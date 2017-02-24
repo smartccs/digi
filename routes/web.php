@@ -112,3 +112,21 @@ Route::resource('card', 'Resource\CardResource');
 Route::get('/promotion', 'HomeController@promotion');
 Route::post('/add/promocode', 'HomeController@add_promocode');
 
+Route::get('/send/push',
+    function(){
+//         $data = PushNotification::app('IOSUser')
+//         ->to('44405aa1630c9f5d8f0e469b7c8b61c2f18c726d86bae7998d60e37c684e4b9b')
+//         ->send('Hello World, i`m a push message');
+// dd($data);
+
+//         $data = PushNotification::app('AndroidProvider')
+//         ->to('daIar7y9pME:APA91bFzpfRysjv8w5rlsH4XQbOPwHj8Djo6PxiMdn2MIDMuV3SiENuM2cRvFSv-jweMVD-Xr9dIIKIaKJrbhb6PfuETGARTboCwdh3WL7I3apUu0Q3JJkk-S4kZP41EKkqpYnEXUkBn')
+//         ->send('poda panni');
+// dd($data);
+
+// $data = PushNotification::app('IOSProvider')
+//         ->to('a9b9a16c5984afc0ea5b681cc51ada13fc5ce9a8c895d14751de1a2dba7994e7')
+//         ->send('Hello World, i`m a push message');
+// dd($data);
+
+                });

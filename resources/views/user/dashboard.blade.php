@@ -83,6 +83,7 @@
     else
     {
         console.log('Sorry, your browser does not support geolocation services');
+        initMap();
     }
 
      function success(position)
@@ -101,12 +102,13 @@
      {
         // Could not obtain location
         console.log('unable to get your location');
+        initMap();
      }
 
    </script> 
 
     <script type="text/javascript" src="{{asset('asset/js/map.js')}}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_API_KEY')}}&libraries=places"
+    <script src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_API_KEY')}}&libraries=places&callback=initMap"
         async defer></script>
 
     <script type="text/javascript">

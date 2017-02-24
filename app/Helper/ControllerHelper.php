@@ -2,23 +2,7 @@
 
 namespace App\Helpers;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-
-use Carbon\Carbon;
-
-use App\User;
-use App\Cards;
-use App\Provider;
-use App\ServiceType;
-use App\UserRequests;
-use App\RequestFilter;
-use App\RequestPayment;
-use App\ProviderService;
-
-use Log;
 use File;
-use Hash;
-use Mail;
 
 class Helper
 {
@@ -64,58 +48,6 @@ class Helper
     public static function delete_picture($picture) {
         File::delete( public_path() . "/uploads/" . basename($picture));
         return true;
-    }
-
-    public static function send_ios_push($user_id, $title, $message, $type)
-    {
-        require_once app_path().'/ios/apns.php';
-
-        $msg = array("alert" => "" . $title,
-            "status" => "success",
-            "title" => $title,
-            "message" => $message,
-            "badge" => 1,
-            "sound" => "default");
-
-        if (!isset($user_id) || empty($user_id)) {
-            $deviceTokens = array();
-        } else {
-            $deviceTokens = $user_id;
-        }
-
-        $apns = new \Apns();
-        $apns->send_notification($deviceTokens, $msg);
-
-        Log::info($deviceTokens);
-    }   
-
-    public static function send_android_push($user_id, $title ,$message)
-    {
-        require_once app_path().'/gcm/GCM_1.php';
-        require_once app_path().'/gcm/const.php';
-
-        if (!isset($user_id) || empty($user_id)) {
-            $registatoin_ids = "0";
-        } else {
-            $registatoin_ids = trim($user_id);
-        }
-        if (!isset($message) || empty($message)) {
-            $msg = "Message not set";
-        } else {
-            $msg = $message;
-        }
-        if (!isset($title) || empty($title)) {
-            $title1 = "Message not set";
-        } else {
-            $title1 = trim($title);
-        }
-
-        $message = array(TEAM => $title1, MESSAGE => $msg);
-
-        $gcm = new \GCM();
-        $registatoin_ids = array($registatoin_ids);
-        $gcm->send_notification($registatoin_ids, $message);
-
     }
 
 }

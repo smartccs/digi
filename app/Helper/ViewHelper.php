@@ -1,6 +1,5 @@
 <?php
 use App\PromocodeUsage; 
-use Illuminate\Support\Facades\Storage;
 
 function currency($value = '')
 {

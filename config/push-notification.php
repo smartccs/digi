@@ -3,7 +3,7 @@
 return array(
 
     'IOSUser'     => array(
-        'environment' =>'development',
+        'environment' =>'production',
         'certificate' => app_path().'/apns/user/tranxit_user.pem',
         'passPhrase'  =>'appoets123$',
         'service'     =>'apns'
@@ -16,12 +16,12 @@ return array(
     ),
     'AndroidUser' => array(
         'environment' =>'development',
-        'apiKey'      =>'yourAPIKey',
+        'apiKey'      => env('ANDROID_PROVIDER_PUSH_KEY','yourAPIKey'),
         'service'     =>'gcm'
     ),
     'AndroidProvider' => array(
         'environment' =>'development',
-        'apiKey'      =>'yourAPIKey',
+        'apiKey'      => env('ANDROID_USER_PUSH_KEY','yourAPIKey'),
         'service'     =>'gcm'
     )
 

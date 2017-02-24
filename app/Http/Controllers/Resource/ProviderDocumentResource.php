@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\SendPushNotification;
 
 use App\Provider;
 use App\ServiceType;
@@ -22,8 +23,9 @@ class ProviderDocumentResource extends Controller
     {
         try {
             $Provider = Provider::findOrFail($provider);
+            $ProviderService = ProviderService::where('provider_id',$provider)->with('service_type')->get();
             $ServiceTypes = ServiceType::all();
-            return view('admin.providers.document.index', compact('Provider', 'ServiceTypes'));
+            return view('admin.providers.document.index', compact('Provider', 'ServiceTypes','ProviderService'));
         } catch (ModelNotFoundException $e) {
             return redirect()->route('admin.index');
         }
@@ -60,6 +62,10 @@ class ProviderDocumentResource extends Controller
                     'service_type_id' => $request->service_type,
                     'status' => 'offline',
                 ]);
+
+            // sending push to the provider
+
+            (new SendPushNotification)->DocumentsVerfied($provider);
 
         } catch (ModelNotFoundException $e) {
             ProviderService::create([

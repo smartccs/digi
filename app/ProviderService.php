@@ -32,6 +32,11 @@ class ProviderService extends Model
         return $this->belongsTo('App\Provider');
     }
 
+    public function service_type()
+    {
+        return $this->belongsTo('App\ServiceType');
+    }
+
     public function scopeCheckService($query, $provider_id, $service_id)
     {
         return $query->where('provider_id' , $provider_id)->where('service_type_id' , $service_id);

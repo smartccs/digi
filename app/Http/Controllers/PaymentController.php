@@ -7,6 +7,7 @@ use App\UserRequestPayment;
 use App\UserRequests;
 use App\Card;
 use App\User;
+use App\Http\Controllers\SendPushNotification;
 
 use Setting;
 use Exception;
@@ -59,7 +60,7 @@ class PaymentController extends Controller
 	    		$UserRequest->save();
 
                 if($request->ajax()){
-            	   return response()->json(['message' => lang('api.paid')]); 
+            	   return response()->json(['message' => trans('api.paid')]); 
                 }else{
                     return redirect('dashboard')->with('flash_success','Paid');
                 }
@@ -110,8 +111,11 @@ class PaymentController extends Controller
             Card::where('user_id',Auth::user()->id)->update(['is_default' => 0]);
             Card::where('card_id',$request->card_id)->update(['is_default' => 1]);
 
+            //sending push on adding wallet money
+            (new SendPushNotification)->WalletMoney(Auth::user()->id,currency($request->amount));
+
             if($request->ajax()){
-               return response()->json(['message' => currency($request->amount).lang('api.added_to_your_wallet'), 'user' => $update_user]); 
+               return response()->json(['message' => currency($request->amount).trans('api.added_to_your_wallet'), 'user' => $update_user]); 
             }else{
                 return redirect('wallet')->with('flash_success',currency($request->amount).' added to your wallet');
             }

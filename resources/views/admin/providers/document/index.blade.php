@@ -12,6 +12,17 @@
                 <form action="{{ route('admin.provider.document.store', $Provider->id) }}" method="POST">
                     {{ csrf_field() }}
                     <div class="row">
+                        <div class="col-xs-12">
+                            @if($ProviderService->count() > 0)
+                                <hr>
+                                <h6>Allocated Services : 
+                                @foreach($ProviderService as $service)
+                                    <span>{{$service->service_type->name}}</span>,
+                                @endforeach
+                                </h6>
+                                <br>
+                            @endif
+                        </div>
                         <div class="col-xs-8">
                             <select class="form-control input" name="service_type">
                                 @forelse($ServiceTypes as $Type)
