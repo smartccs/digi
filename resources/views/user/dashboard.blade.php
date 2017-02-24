@@ -38,7 +38,7 @@
                         <input type="radio" name="service_type" value="{{$service->id}}" id="service_{{$service->id}}" @if ($loop->first) checked="checked" @endif>
                         <label for="service_{{$service->id}}">
                             <div class="car-radio-inner">
-                                <div class="img"><img src="{{img($service->image)}}"></div>
+                                <div class="img"><img src="{{image($service->image)}}"></div>
                                 <div class="name"><span>{{$service->name}}</span></div>
                             </div>
                         </label>

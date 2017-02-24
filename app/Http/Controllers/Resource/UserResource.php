@@ -57,7 +57,7 @@ class UserResource extends Controller
             $user['payment_mode'] = 'CASH';
             $user['password'] = bcrypt($request->password);
             if($request->hasFile('picture')) {
-                $user['picture'] = Helper::upload_avatar($request->picture);
+                $user['picture'] = $request->picture->store('user/profile');
             }
 
             $user = User::create($user);
@@ -124,10 +124,8 @@ class UserResource extends Controller
             $user = User::findOrFail($id);
 
             if($request->hasFile('picture')) {
-                if($user->picture) {
-                    Helper::delete_avatar($user->picture);
-                }
-                $user->picture = Helper::upload_avatar($request->picture);
+                Storage::delete($user->picture);
+                $user->picture = $request->picture->store('user/profile');
             }
 
             $user->first_name = $request->first_name;

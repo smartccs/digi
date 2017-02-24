@@ -16,7 +16,7 @@
 							<div class="form-group row">
 								<label for="stripe_secret_key" class="col-xs-4 col-form-label"><i style="font-size: 24px;" class="fa fa-cc-stripe"></i> ON/OFF</label>
 								<div class="col-xs-8">
-									<div class="float-xs-left mr-1"><input @if(Setting::get('CARD') == 1) checked  @endif  name="card" id="stripe_check" type="checkbox" class="js-switch" data-color="#43b968"></div>
+									<div class="float-xs-left mr-1"><input @if(Setting::get('CARD') == 1) checked  @endif  name="CARD" id="stripe_check" onchange="cardselect()" type="checkbox" class="js-switch" data-color="#43b968"></div>
 								</div>
 							</div>
 							<div id="card_field" @if(Setting::get('CARD') == 0) style="display: none;" @endif>

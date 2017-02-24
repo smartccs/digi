@@ -232,10 +232,8 @@ class AdminController extends Controller
             $admin->email = $request->email;
             $admin->mobile = $request->mobile;
             if($request->hasFile('picture')){
-                if($admin->picture != ""){
-                    Helper::delete_avatar($admin->picture);
-                }
-                $admin->picture = Helper::upload_avatar($request->picture);
+                Storage::delete($admin->picture);
+                $admin->picture = $request->picture->store('admin/profile');  
             }
             $admin->gender = $request->gender;
             $admin->save();

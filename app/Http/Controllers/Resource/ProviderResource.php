@@ -62,7 +62,7 @@ class ProviderResource extends Controller
 
             $provider['password'] = bcrypt($request->password);
             if($request->hasFile('picture')) {
-                $provider['picture'] = Helper::upload_avatar($request->picture);
+                $provider->picture = $request->picture->store('provider/profile');
             }
 
             $provider = Provider::create($provider);
@@ -130,9 +130,9 @@ class ProviderResource extends Controller
 
             if($request->hasFile('picture')) {
                 if($provider->picture) {
-                    Helper::delete_avatar($provider->picture);
+                    Storage::delete($provider->picture);
                 }
-                $provider->picture = Helper::upload_avatar($request->picture);
+                $provider->picture = $request->picture->store('provider/profile');                    
             }
 
             $provider->first_name = $request->first_name;
