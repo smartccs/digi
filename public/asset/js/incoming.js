@@ -60,15 +60,22 @@ class MainComponent extends React.Component {
         });
     }
     render() {
-        // console.log('Polled State', this.state.request);
-    
-
-        return (
-            <div> 
-                <ModalComponent request={this.state.request} />
-                <TripComponent request={this.state.request} service_status={this.state.service_status} account_status={this.state.account_status} />
-            </div>
-        );
+        console.log('Trip Prop: ', this.props.trip);
+        if(this.props.trip == "true") {
+            var location = { latitude: this.state.latitude, longitude: this.state.longitude };
+            return (
+                <div> 
+                    <ModalComponent request={this.state.request} />
+                    <TripComponent request={this.state.request} service_status={this.state.service_status} account_status={this.state.account_status} location={location} />
+                </div>
+            );
+        } else {
+            return (
+                <div> 
+                    <ModalComponent request={this.state.request} />
+                </div>
+            );
+        }
     }
 };
 
@@ -317,10 +324,9 @@ class TripRatingButton extends React.Component {
 }
 
 class TripDetails extends React.Component {
-    // componentDidUpdate() {
-    //     console.log('TripDetails View Updated');
-    //     console.log(this.props.request);
-    // }
+    componentDidMount() {
+        initMap();
+    }
 
     render() {
         let picture = "/asset/logo.png";
@@ -363,7 +369,7 @@ class TripDetails extends React.Component {
                                 <p>{this.props.request.d_address}</p>
                             </div>
                         </div>
-                        <div className="map-responsive-trip"></div>
+                        <div className="map-responsive-trip" id="map"></div>
                     </div>
                 </div>
             </div>
@@ -382,18 +388,53 @@ class TripComponent extends React.Component {
                         status: "ARRIVED",
                         _method: "PATCH",
                     };
+
+                updateMap({
+                    source: {
+                        lat: this.props.location.latitude,
+                        lng: this.props.location.longitude,
+                    },
+                    destination: {
+                        lat: this.props.request.s_latitude,
+                        lng: this.props.request.s_longitude,
+                    }
+                });
                 break;
             case "ARRIVED": 
                 this.form= {
                         status: "PICKEDUP",
                         _method: "PATCH",
                     };
+
+                updateMap({
+                    source: {
+                        lat: this.props.request.s_latitude,
+                        lng: this.props.request.s_longitude,
+                    },
+                    destination: {
+                        lat: this.props.request.d_latitude,
+                        lng: this.props.request.d_longitude,
+                    }
+                });
+
                 break;
             case "PICKEDUP": 
                 this.form= {
                         status: "DROPPED",
                         _method: "PATCH",
                     };
+
+                updateMap({
+                    source: {
+                        lat: this.props.request.s_latitude,
+                        lng: this.props.request.s_longitude,
+                    },
+                    destination: {
+                        lat: this.props.request.d_latitude,
+                        lng: this.props.request.d_longitude,
+                    }
+                });
+
                 break;
             case "DROPPED": 
                 this.form= {
@@ -484,6 +525,7 @@ class TripComponent extends React.Component {
                 );
             }
         } else {
+            console.log('Rendering Trip Details');
             return (
                 <TripDetails request={this.props.request} button={this.getButtons()} />
             );
@@ -496,7 +538,16 @@ ReactDOM.render(
     document.getElementById('modal-incoming')
 );
 
-ReactDOM.render(
-    <MainComponent />,
-    document.getElementById('trip-container')
-);
+if(document.getElementById('trip-container')) {
+    console.log('Rendering to Trip Container');
+    ReactDOM.render(
+        <MainComponent trip="true" />,
+        document.getElementById('trip-container')
+    );
+} else {
+    console.log('Rendering to Modal Container');
+    ReactDOM.render(
+        <MainComponent trip="false" />,
+        document.getElementById('modal-incoming')
+    );
+}
