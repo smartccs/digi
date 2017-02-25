@@ -119,4 +119,41 @@ class ProviderController extends Controller
         (new ProviderResources\ProfileController)->available($request);
         return back();
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function location_edit()
+    {
+        return view('provider.location.index');
+    }
+
+    /**
+     * Update latitude and longitude of the user.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function location_update(Request $request)
+    {
+        $this->validate($request, [
+                'latitude' => 'required|numeric',
+                'longitude' => 'required|numeric',
+            ]);
+
+        if($Provider = \Auth::user()){
+
+            $Provider->latitude = $request->latitude;
+            $Provider->longitude = $request->longitude;
+            $Provider->save();
+
+            return back()->with(['flash_success' => 'Location Updated successfully!']);
+
+        } else {
+            return back()->with(['flash_error' => 'Provider Not Found!']);
+        }
+    }
+
 }

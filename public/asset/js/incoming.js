@@ -380,8 +380,8 @@ class TripDetails extends React.Component {
 class TripComponent extends React.Component {
 
     componentDidUpdate() {
-        console.log('Trip Component '+this.props.request.id);
-        console.log('Trip Component '+this.props.service_status);
+        // console.log('Trip Component '+this.props.request.id);
+        // console.log('Trip Component '+this.props.service_status);
         switch(this.props.request.status) {
             case "STARTED":
                 this.form= {

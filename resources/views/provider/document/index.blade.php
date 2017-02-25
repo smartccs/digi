@@ -3,8 +3,9 @@
 @section('content')
 <div class="pro-dashboard-head">
     <div class="container">
-        <a href="{{ route('provider.profile.index')}}" class="pro-head-link">Profile</a>
+        <a href="{{ route('provider.profile.index') }}" class="pro-head-link">Profile</a>
         <a href="#" class="pro-head-link active">Manage Documents</a>
+        <a href="{{ route('provider.location.index') }}" class="pro-head-link">Update Location</a>
     </div>
 </div>
 
