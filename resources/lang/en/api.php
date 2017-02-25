@@ -21,6 +21,7 @@ return array (
 	],
 	'something_went_wrong' => 'Something Went Wrong',
 	'services_not_found' => 'Services Not Found',
+	'promocode_applied' => 'Promocode Applied',
 	'promocode_expired' => 'Promocode Expired',
 	'promocode_already_in_user' => 'Promocode Already in Use',
 	'paid' => 'Paid',

@@ -83,7 +83,7 @@ class SendPushNotification extends Controller
 
 	    	$user = User::findOrFail($user_id);
 
-            if($user->device_token != "" || $user->device_token != 'No Device'){
+            if($user->device_token != ""){
 
     	    	if($user->device_type == 'ios'){
 
