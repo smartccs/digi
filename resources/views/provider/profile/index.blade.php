@@ -4,7 +4,8 @@
 <div class="pro-dashboard-head">
     <div class="container">
         <a href="#" class="pro-head-link active">Profile</a>
-        <a href="{{ route('provider.documents.index')}}" class="pro-head-link">Manage Documents</a>
+        <a href="{{ route('provider.documents.index') }}" class="pro-head-link">Manage Documents</a>
+        <a href="{{ route('provider.location.index') }}" class="pro-head-link">Update Location</a>
     </div>
 </div>
 <!-- Pro-dashboard-content -->
