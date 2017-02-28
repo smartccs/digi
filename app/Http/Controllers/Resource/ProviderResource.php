@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Resource;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 use DB;
 use Exception;
+
 use App\Provider;
-use App\ProviderDocument;
-use Illuminate\Http\Request;
 use App\UserRequests;
-use App\ProviderService;
 use App\Helpers\Helper;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Http\Controllers\Controller;
 
 class ProviderResource extends Controller
 {
@@ -173,8 +173,17 @@ class ProviderResource extends Controller
      */
     public function approve($id)
     {
-        Provider::where('id',$id)->update(['status' => 'approved']);
-        return back()->with('flash_success', "Provider Approved");
+        try {
+            $Provider = Provider::findOrFail($id);
+            if($Provider->service) {
+                $Provider->update(['status' => 'approved']);
+                return back()->with('flash_success', "Provider Approved");
+            } else {
+                return back()->with('flash_error', "Provider has not been assigned a service type!");
+            }
+        } catch (ModelNotFoundException $e) {
+            return back()->with('flash_error', "Something went wrong! Please try again later.");
+        }
     }
 
     /**

@@ -207,7 +207,7 @@ class TripController extends Controller
 
         try{
 
-            $UserRequest = UserRequests::findOrFail($id);
+            $UserRequest = UserRequests::with('user')->findOrFail($id);
 
             if($request->status == 'DROPPED' && $UserRequest->payment_mode != 'CASH') {
                 $UserRequest->status = 'COMPLETED';
@@ -231,7 +231,7 @@ class TripController extends Controller
 
             // Send Push Notification to User
        
-            return $UserRequest->with('user')->get();
+            return $UserRequest;
 
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Unable to update, Please try again later']);

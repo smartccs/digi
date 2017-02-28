@@ -55,8 +55,7 @@ class ProviderDocumentResource extends Controller
         
 
         try {
-            $ProviderService = ProviderService::where('provider_id', $provider)
-                ->where('service_type_id', $request->service_type)->firstOrFail();
+            $ProviderService = ProviderService::where('provider_id', $provider)->firstOrFail();
 
             $ProviderService->update([
                     'service_type_id' => $request->service_type,
