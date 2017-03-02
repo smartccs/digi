@@ -303,7 +303,7 @@ class TripController extends Controller
             $UserRequest = UserRequests::findOrFail($request_id);
             
             $Fixed = $UserRequest->service_type->fixed ? : 0;
-            $Distance = ceil($UserRequest->distance) * $UserRequest->service_type->distance;
+            $Distance = ceil($UserRequest->distance) * $UserRequest->service_type->price;
             $Discount = 0; // Promo Code discounts should be added here.
 
             if($PromocodeUsage = PromocodeUsage::where('user_id',$UserRequest->user_id)->where('status','ADDED')->first()){
