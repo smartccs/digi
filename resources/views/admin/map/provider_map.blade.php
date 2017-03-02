@@ -117,7 +117,7 @@
 
         markers.forEach( function(element, index) {
 
-            var url = "/admin/providerDetails/"
+            var url = "/admin/provider/"
 
             marker = new google.maps.Marker({
                 position: {lat: element.lat, lng: element.lng},
