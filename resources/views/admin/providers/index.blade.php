@@ -35,9 +35,9 @@
                         <td>{{$provider->total_requests - $provider->accepted_requests }}</td>
                         <td>
                             @if($provider->pending_documents() > 0)
-                                <a class="btn btn-danger btn-block label-right" href="{{route('admin.provider.document.index', $provider->id )}}">Yes <span class="btn-label">{{ $provider->pending_documents() }}</span></a>
+                                <a class="btn btn-danger label-right" href="{{route('admin.provider.document.index', $provider->id )}}">Yes <span class="btn-label">{{ $provider->pending_documents() }}</span></a>
                             @else
-                                <a class="btn btn-success btn-block" href="{{route('admin.provider.document.index', $provider->id )}}">No</a>
+                                <a class="btn btn-success" href="{{route('admin.provider.document.index', $provider->id )}}">No</a>
                             @endif
                         </td>
                         <td>

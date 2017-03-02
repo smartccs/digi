@@ -299,9 +299,12 @@ class AdminController extends Controller
     public function payment()
     {
         try{
-             $payments = UserRequests::where('paid',1)->with('user','provider','payment')
-                        ->orderBy('user_requests.created_at','desc')
-                        ->get();
+             $payments = UserRequests::where('paid',1)
+                    ->has('user')
+                    ->has('provider')
+                    ->has('payment')
+                    ->orderBy('user_requests.created_at','desc')
+                    ->get();
             
             return view('admin.payment.payment-history', compact('payments'));
         }

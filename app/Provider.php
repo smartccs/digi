@@ -16,7 +16,17 @@ class Provider extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name' ,'last_name', 'email', 'password', 'mobile', 'address', 'picture', 'gender', 'latitude', 'longitude'
+        'first_name',
+        'last_name',
+        'email',
+        'password',
+        'mobile',
+        'address',
+        'picture',
+        'gender',
+        'latitude',
+        'longitude',
+        'status'
     ];
 
     /**

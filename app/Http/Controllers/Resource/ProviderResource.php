@@ -176,8 +176,7 @@ class ProviderResource extends Controller
         try {
             $Provider = Provider::findOrFail($id);
             if($Provider->service) {
-                $Provider->status = 'approved';
-                $Provider->save();
+                $Provider->update(['status' => 'approved']);
                 return back()->with('flash_success', "Provider Approved");
             } else {
                 return back()->with('flash_error', "Provider has not been assigned a service type!");
