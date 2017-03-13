@@ -84,7 +84,6 @@
 			      url: "{{url('status')}}",
 			      type: "GET"})
 			      .done(function(response){
-
 				        this.setState({
 				            data:response.data[0]
 				        });
@@ -221,6 +220,10 @@
 			            	<dl className="dl-horizontal left-right">
 				                <dt>@lang('user.driver_name')</dt>
 				                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
+				                <dt>@lang('user.service_number')</dt>
+				                <dd>{this.props.checkState.provider_service.service_number}</dd>
+				                <dt>@lang('user.service_model')</dt>
+				                <dd>{this.props.checkState.provider_service.service_model}</dd>
 				                <dt>@lang('user.driver_rating')</dt>
 				                <dd>
 				                	<div className="rating-outer">
@@ -254,6 +257,10 @@
 			            	<dl className="dl-horizontal left-right">
 				                <dt>@lang('user.driver_name')</dt>
 				                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
+				                <dt>@lang('user.service_number')</dt>
+				                <dd>{this.props.checkState.provider_service.service_number}</dd>
+				                <dt>@lang('user.service_model')</dt>
+				                <dd>{this.props.checkState.provider_service.service_model}</dd>
 				                <dt>@lang('user.driver_rating')</dt>
 				                <dd>
 				                	<div className="rating-outer">
@@ -283,6 +290,10 @@
 		            	<dl className="dl-horizontal left-right">
 			                <dt>@lang('user.driver_name')</dt>
 			                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
+			                <dt>@lang('user.service_number')</dt>
+				                <dd>{this.props.checkState.provider_service.service_number}</dd>
+				                <dt>@lang('user.service_model')</dt>
+				                <dd>{this.props.checkState.provider_service.service_model}</dd>
 			                <dt>@lang('user.driver_rating')</dt>
 				                <dd>
 				                	<div className="rating-outer">
@@ -312,6 +323,10 @@
 		            	<dl className="dl-horizontal left-right">
 		            		<dt>@lang('user.driver_name')</dt>
 			                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
+			                <dt>@lang('user.service_number')</dt>
+				                <dd>{this.props.checkState.provider_service.service_number}</dd>
+				                <dt>@lang('user.service_model')</dt>
+				                <dd>{this.props.checkState.provider_service.service_model}</dd>
 			                <dt>@lang('user.driver_rating')</dt>
 			                <dd>
 			                	<div className="rating-outer">
@@ -371,6 +386,10 @@
 		            	<dl className="dl-horizontal left-right">
 		            		<dt>@lang('user.driver_name')</dt>
 			                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
+			                <dt>@lang('user.service_number')</dt>
+				                <dd>{this.props.checkState.provider_service.service_number}</dd>
+				                <dt>@lang('user.service_model')</dt>
+				                <dd>{this.props.checkState.provider_service.service_model}</dd>
 			                <dt>@lang('user.driver_rating')</dt>
 			                <dd>
 			                	<div className="rating-outer">

@@ -9,6 +9,7 @@ use App\Settings;
 use App\Admin;
 use App\UserRequestRating;
 use App\UserPayment;
+use App\ProviderService;
 use App\UserRequests;
 use App\ServiceType;
 use App\UserRequestPayment;
@@ -445,6 +446,25 @@ class AdminController extends Controller
         catch(Exception $e){
             return redirect()->route('admin.setting')->with('flash_error','Something Went Wrong!');
         }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\ProviderService
+     * @return \Illuminate\Http\Response
+     */
+    public function destory_provider_service($id){
+
+        try{
+            ProviderService::find($id)->delete();
+            return back()->with('message', 'Service deleted successfully');
+        }
+
+        catch (Exception $e) {
+             return back()->with('flash_error','Something Went Wrong!');
+        }
+
     }
 
 }

@@ -15,16 +15,44 @@
                         <div class="col-xs-12">
                             @if($ProviderService->count() > 0)
                                 <hr>
-                                <h6>Allocated Services : 
-                                @foreach($ProviderService as $service)
-                                    <span>{{$service->service_type->name}}</span>,
-                                @endforeach
-                                </h6>
-                                <br>
+                                <h6>Allocated Services :  </h6>
+                                <table class="table table-striped table-bordered dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Service Name</th>
+                                            <th>Service Number</th>
+                                            <th>Service Model</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($ProviderService as $service)
+                                        <tr>
+                                            <td>{{ $service->service_type->name }}</td>
+                                            <td>{{ $service->service_number }}</td>
+                                            <td>{{ $service->service_model }}</td>
+                                            <td>
+                                                    <a href="{{route('admin.destory.service',$service->id)}}" class="btn btn-danger btn-large" form="form-delete">Delete</a>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Service Name</th>
+                                            <th>Service Number</th>
+                                            <th>Service Model</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                               
                             @endif
+                            <hr>
                         </div>
-                        <div class="col-xs-8">
-                            <select class="form-control input" name="service_type">
+
+                        <div class="col-xs-3">
+                            <select class="form-control input" name="service_type" required>
                                 @forelse($ServiceTypes as $Type)
                                 <option value="{{ $Type->id }}">{{ $Type->name }}</option>
                                 @empty
@@ -32,7 +60,13 @@
                                 @endforelse
                             </select>
                         </div>
-                        <div class="col-xs-4">
+                        <div class="col-xs-3">
+                            <input type="text" required name="service_number" class="form-control" placeholder="Number (CY 98769)">
+                        </div>
+                        <div class="col-xs-3">
+                            <input type="text" required name="service_model" class="form-control" placeholder="Model (Audi R8 - Black)">
+                        </div>
+                        <div class="col-xs-3">
                             <button class="btn btn-primary btn-block" type="submit">Update</button>
                         </div>
                     </div>

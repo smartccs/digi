@@ -22,6 +22,8 @@ return array (
     'name' => 'Name',
   ),
   'cash' => 'CASH',
+  'service_number' => 'Car Number',
+  'service_model' => 'Car Model',
   'card' => 
   array (
     'fullname' => 'Full Name',

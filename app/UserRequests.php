@@ -72,6 +72,11 @@ class UserRequests extends Model
         return $this->belongsTo('App\Provider');
     }
 
+    public function provider_service()
+    {
+        return $this->belongsTo('App\ProviderService', 'provider_id');
+    }
+
     public function scopePendingRequest($query, $user_id)
     {
         return $query->where('user_id', $user_id)
@@ -108,6 +113,6 @@ class UserRequests extends Model
                     ->where('user_requests.user_rated',0)
                     ->whereNotIn('user_requests.status', $check_status)
                     ->select('user_requests.*')
-                    ->with('user','provider','service_type','rating','payment');
+                    ->with('user','provider','service_type','provider_service','rating','payment');
     }
 }

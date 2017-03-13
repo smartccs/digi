@@ -18,6 +18,8 @@ class CreateProviderServicesTable extends Migration
             $table->integer('provider_id');
             $table->integer('service_type_id');
             $table->enum('status', ['active', 'offline','riding']);
+            $table->string('service_number')->nullable();
+            $table->string('service_model')->nullable();
             $table->timestamps();
         });
     }

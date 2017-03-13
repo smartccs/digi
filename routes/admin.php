@@ -54,3 +54,7 @@ Route::get('request', 'AdminController@request_history')->name('request.history'
 Route::get('scheduled/request', 'AdminController@scheduled_request')->name('scheduled.request');
 
 Route::get('request/{id}/details', 'AdminController@request_details')->name('request.details');
+
+Route::get('destory/{id}/service', 'AdminController@destory_provider_service')->name('destory.service');
+
+

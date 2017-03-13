@@ -51,6 +51,8 @@ class ProviderDocumentResource extends Controller
     {
         $this->validate($request, [
                 'service_type' => 'required|exists:service_types,id',
+                'service_number' => 'required',
+                'service_model' => 'required',
             ]);
         
 
@@ -60,6 +62,8 @@ class ProviderDocumentResource extends Controller
             $ProviderService->update([
                     'service_type_id' => $request->service_type,
                     'status' => 'offline',
+                    'service_number' => $request->service_number,
+                    'service_model' => $request->service_model,
                 ]);
 
             // sending push to the provider
@@ -71,6 +75,8 @@ class ProviderDocumentResource extends Controller
                     'provider_id' => $provider,
                     'service_type_id' => $request->service_type,
                     'status' => 'offline',
+                    'service_number' => $request->service_number,
+                    'service_model' => $request->service_model,
                 ]);
         }
 
