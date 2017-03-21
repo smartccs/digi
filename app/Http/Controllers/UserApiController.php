@@ -603,11 +603,13 @@ class UserApiController extends Controller
 
         try{
 
-            $details = "http://maps.googleapis.com/maps/api/distancematrix/json?origins=".$request->s_latitude.",".$request->s_longitude."&destinations=".$request->d_latitude.",".$request->d_longitude."&mode=driving&sensor=false";
+            $details = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".$request->s_latitude.",".$request->s_longitude."&destinations=".$request->d_latitude.",".$request->d_longitude."&mode=driving&sensor=false&key=".env('GOOGLE_API_KEY');
 
-            $json = file_get_contents($details);
+
+            $json = curl($details);
 
             $details = json_decode($json, TRUE);
+
 
             $meter = $details['rows'][0]['elements'][0]['distance']['value'];
             $time = $details['rows'][0]['elements'][0]['duration']['text'];
