@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\UserRequests;
+use App\RequestFilter;
 use App\Provider;
 use Carbon\Carbon;
 use App\Http\Controllers\ProviderResources\TripController;
@@ -154,6 +155,37 @@ class ProviderController extends Controller
         } else {
             return back()->with(['flash_error' => 'Provider Not Found!']);
         }
+    }
+
+    /**
+     * upcoming history.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function upcoming_trips()
+    {
+        $fully = (new ProviderApiController)->upcoming_request();
+        return view('provider.payment.upcoming',compact('fully'));
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+
+    public function cancel(Request $request) {
+
+        try{
+
+            (new ProviderResources\TripController)->cancel($request);
+            return back();
+
+        } catch (ModelNotFoundException $e) {
+            return back()->with(['flash_error' => "Something Went Wrong"]);
+        }
+
     }
 
 }

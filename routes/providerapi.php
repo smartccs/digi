@@ -36,11 +36,12 @@ Route::group(['middleware' => ['provider.api']], function () {
 
     Route::resource('trip', 'ProviderResources\TripController');
 
+    Route::post('cancel', 'ProviderResources\TripController@cancel');
+
     Route::group(['prefix' => 'trip'], function () {
 
         Route::post('{id}', 'ProviderResources\TripController@accept');
         Route::post('{id}/rate', 'ProviderResources\TripController@rate');
-        Route::post('{id}/cancel', 'ProviderResources\TripController@cancel');
         Route::post('{id}/message' , 'ProviderResources\TripController@message');
 
     });

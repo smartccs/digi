@@ -73,6 +73,7 @@ return array (
   'payment_mode' => 'Payment Mode',
   'add_money' => 'Add Money',
   'date' => 'Date',
+  'schedule_date' => 'Scheduled Date',
   'amount' => 'Total Amount',
   'type' => 'Type',
   'time' => 'Time',
@@ -89,4 +90,5 @@ return array (
   'payment_method' => 'Payment Methods',
   'promotion' => 'Promotions',
   'add_promocode' => 'Add Promocode',
+  'upcoming_trips' => 'Upcoming trips',
 );

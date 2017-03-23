@@ -3,9 +3,9 @@
 @section('content')
 <div class="pro-dashboard-head">
         <div class="container">
-            <a href="new-provider-dashboard.html" class="pro-head-link active">Payment Statements</a>
-<!--             <a href="new-provider-invoices.html" class="pro-head-link">Invoices</a>
-            <a href="new-provider-patner-invoices.html" class="pro-head-link">Payment Invoices</a>
+            <a href="{{url('provider/earnings')}}" class="pro-head-link active">Payment Statements</a>
+             <a href="{{url('provider/upcoming')}}" class="pro-head-link">Upcoming</a>
+   <!--         <a href="new-provider-patner-invoices.html" class="pro-head-link">Payment Invoices</a>
             <a href="new-provider-banking.html" class="pro-head-link">Banking</a> -->
         </div>
     </div>

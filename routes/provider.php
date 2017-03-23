@@ -21,6 +21,8 @@ Route::post('/request/{id}/rate', 'ProviderController@rating')->name('rating');
 Route::delete('/request/{id}', 'ProviderController@reject')->name('reject');
 
 Route::get('/earnings', 'ProviderController@earnings')->name('earnings');
+Route::get('/upcoming', 'ProviderController@upcoming_trips')->name('upcoming');
+Route::get('/cancel', 'ProviderController@cancel')->name('cancel');
 
 Route::resource('documents', 'ProviderResources\DocumentController');
 

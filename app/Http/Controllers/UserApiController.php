@@ -399,18 +399,22 @@ class UserApiController extends Controller
                 }
             }
 
-            if(in_array($UserRequest->status, ['SEARCHING','STARTED','ARRIVED'])) {
+            if(in_array($UserRequest->status, ['SEARCHING','STARTED','ARRIVED','SCHEDULED'])) {
 
                 $UserRequest->status = 'CANCELLED';
+                $UserRequest->cancelled_by = 'USER';
                 $UserRequest->save();
 
                 RequestFilter::where('request_id', $UserRequest->id)->delete();
 
-                if($UserRequest->provider_id != 0){
+                if($UserRequest->status != 'SCHEDULED'){
 
-                    ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status' => 'active']);
+                    if($UserRequest->provider_id != 0){
 
-                    // send push and email
+                        ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status' => 'active']);
+
+                        // send push and email
+                    }
                 }
 
                 if($request->ajax()) {
@@ -800,5 +804,29 @@ class UserApiController extends Controller
         }
 
     } 
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function upcoming_trips() {
+    
+        try{
+            $UserRequests = UserRequests::UserUpcomingTrips(Auth::user()->id)->get();
+            if(!empty($UserRequests)){
+                $map_icon = asset('asset/marker.png');
+                foreach ($UserRequests as $key => $value) {
+                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=320x130&maptype=terrian&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_API_KEY');
+                }
+            }
+            return $UserRequests;
+        }
+
+        catch (Exception $e) {
+            return response()->json(['error' => trans('api.something_went_wrong')]);
+        }
+    }
 
 }

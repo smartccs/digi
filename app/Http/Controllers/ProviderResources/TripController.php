@@ -69,13 +69,29 @@ class TripController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function cancel($id)
+    public function cancel(Request $request)
     {
-        $Cancellable = ['SEARCHING', 'ACCEPTED', 'ARRIVED', 'STARTED', 'CREATED'];
+        try{
 
-        if(!in_array($UserRequest->status, $Cancellable)) {
-            return response()->json(['error' => 'Cannot cancel request at this stage!']);
+            $UserRequest = UserRequests::findOrFail($request->id);
+            $Cancellable = ['SEARCHING', 'ACCEPTED', 'ARRIVED', 'STARTED', 'CREATED','SCHEDULED'];
+
+            if(!in_array($UserRequest->status, $Cancellable)) {
+                return back()->with(['flash_error' => 'Cannot cancel request at this stage!']);
+            }
+
+            $UserRequest->status = "CANCELLED";
+            $UserRequest->cancelled_by = "PROVIDER";
+            $UserRequest->save();
+
+             RequestFilter::where('request_id', $UserRequest->id)->delete();
+
+            return $UserRequest;
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Something went wrong']);
         }
+
 
     }
 

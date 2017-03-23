@@ -78,8 +78,11 @@ class ProviderApiController extends Controller
     public function upcoming_request() {
 
         try{
-            $requests = UserRequests::ProviderUpcomingRequest(Auth::user()->id)->get();
-            return $requests;
+
+            return UserRequests::where('provider_id',\Auth::user()->id)
+                    ->where('status','SCHEDULED')
+                    ->with('service_type')
+                    ->get();
         }
 
         catch(Exception $e) {

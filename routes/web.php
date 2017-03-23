@@ -97,6 +97,7 @@ Route::get('/status', 'RideController@status');
 
 // trips
 Route::get('/trips', 'HomeController@trips');
+Route::get('/upcoming/trips', 'HomeController@upcoming_trips');
 
 // wallet
 Route::get('/wallet', 'HomeController@wallet');

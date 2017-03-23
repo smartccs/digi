@@ -142,4 +142,15 @@ class HomeController extends Controller
         return $this->UserAPI->add_promocode($request);
     }
 
+    /**
+     * Upcoming Trips.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function upcoming_trips()
+    {
+        $trips = $this->UserAPI->upcoming_trips();
+        return view('user.ride.upcoming',compact('trips'));
+    }
+
 }
