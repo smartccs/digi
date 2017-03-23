@@ -320,6 +320,10 @@ class UserApiController extends Controller
             
             $UserRequest->assigned_at = Carbon::now();
 
+            if($request->has('schedule_date') && $request->has('schedule_time')){
+                $UserRequest->schedule_at = date("Y-m-d H:i:s",strtotime("$request->schedule_date $request->schedule_time"));
+            }
+
             $UserRequest->save();
 
             Log::info('New Request id : '. $UserRequest->id .' Assigned to provider : '. $UserRequest->current_provider_id);
@@ -444,7 +448,7 @@ class UserApiController extends Controller
 
         try{
 
-            $check_status = ['CANCELLED'];
+            $check_status = ['CANCELLED','SCHEDULED'];
 
             $UserRequests = UserRequests::UserRequestStatusCheck(Auth::user()->id,$check_status)
                                         ->get()

@@ -106,7 +106,10 @@
 			},
 
 			changeLabel : function(){
-				if(this.props.checkState != ""){
+				if(this.props.checkState == undefined){
+					window.location.reload();
+				}else if(this.props.checkState != ""){
+
 					if(this.props.checkState.status == 'SEARCHING'){
 						$("#ride_status").text("@lang('user.ride.finding_driver')");
 					}else if(this.props.checkState.status == 'STARTED'){
@@ -126,6 +129,7 @@
 					setTimeout(function(){
 						$('.rating').rating();
 					},400);
+
 				}else{
 					$("#ride_status").text('Text will appear here');
 				}

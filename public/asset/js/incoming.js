@@ -154,6 +154,10 @@ class ModalComponent extends React.Component {
                             <div className="incoming-img bg-img" id="user-image" style={{ backgroundImage: 'url(' + this.props.request.user.picture + ')'}}></div>
                             <div className="text-center">
                                 <h3 id="usser-name">{this.props.request.user.first_name} {this.props.request.user.last_name}</h3>
+                                {this.props.request.schedule_at ?
+                                    <h5>Scheduled At : {this.props.request.schedule_at}</h5>
+                                    : ""
+                                }
                             </div>
                         </div>
                         <div className="modal-footer row no-margin">

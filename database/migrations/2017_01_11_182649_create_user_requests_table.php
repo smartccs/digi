@@ -29,6 +29,7 @@ class CreateUserRequestsTable extends Migration
                     'PICKEDUP',
                     'DROPPED',
                     'COMPLETED',
+                    'SCHEDULED',
                 ]);
 
             $table->enum('cancelled_by', [

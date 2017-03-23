@@ -13,7 +13,7 @@
         @include('common.notify')
         <div class="row no-margin">
             <div class="col-md-6">
-                <form action="{{url('create/ride')}}" method="POST">
+                <form action="{{url('create/ride')}}" method="POST" id="create_ride">
                 {{ csrf_field() }}
                     <dl class="dl-horizontal left-right">
                         <dt>@lang('user.type')</dt>
@@ -66,7 +66,8 @@
                         @endif
                     @endif
 
-                    <button type="submit" class="full-primary-btn fare-btn">@lang('user.ride.ride_now')</button>
+                    <button type="submit" class="half-primary-btn fare-btn">@lang('user.ride.ride_now')</button>
+                    <button type="button" class="half-secondary-btn fare-btn" data-toggle="modal" data-target="#schedule_modal">Schedule Later</button>
 
                 </form>
             </div>
@@ -94,9 +95,55 @@
 
     </div>
 </div>
+
+
+
+<!-- Schedule Modal -->
+<div id="schedule_modal" class="modal fade schedule-modal" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Schedule a Ride</h4>
+      </div>
+      <form>
+      <div class="modal-body">
+        
+        <label>Date</label>
+        <input value="{{date('m/d/Y')}}" type="text" id="datepicker" placeholder="Date" name="schedule_date">
+        <label>Time</label>
+        <input value="{{date('H:i')}}" type="text" id="timepicker" placeholder="Time" name="schedule_time">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="schedule_button" class="btn btn-default" data-dismiss="modal">Schedule Ride</button>
+      </div>
+
+      </form>
+    </div>
+
+  </div>
+</div>
+
+
 @endsection
 
 @section('scripts')
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#schedule_button').click(function(){
+                $("#datepicker").clone().attr('type','hidden').appendTo($('#create_ride'));
+                $("#timepicker").clone().attr('type','hidden').appendTo($('#create_ride'));
+                document.getElementById('create_ride').submit();
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $('#datepicker').datepicker();
+         $('#timepicker').timepicker({showMeridian : false});
+    </script>
     <script type="text/javascript">
         function card(value){
             if(value == 'CARD'){

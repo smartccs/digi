@@ -80,8 +80,7 @@ class UserRequests extends Model
     public function scopePendingRequest($query, $user_id)
     {
         return $query->where('user_id', $user_id)
-                // ->where('later', 0) // Schedule - schedule_at != null
-                ->whereNotIn('status' , ['CANCELLED', 'COMPLETED']);
+                ->whereNotIn('status' , ['CANCELLED', 'COMPLETED', 'SCHEDULED']);
     }
 
     public function scopeRequestHistory($query)

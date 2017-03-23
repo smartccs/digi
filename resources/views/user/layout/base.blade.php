@@ -12,6 +12,8 @@
     <link href="{{asset('asset/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
     <link href="{{asset('asset/css/slick.css')}}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{asset('asset/css/slick-theme.css')}}"/>
+    <link href="{{asset('asset/css/bootstrap-datepicker.min.css')}}" rel="stylesheet">
+    <link href="{{asset('asset/css/bootstrap-timepicker.css')}}" rel="stylesheet">
     <link href="{{asset('asset/css/dashboard-style.css')}}" rel="stylesheet">
 </head>
 
@@ -37,6 +39,8 @@
     <script type="text/javascript" src="{{asset('asset/js/jquery.mousewheel.js')}}"></script>
     <script type="text/javascript" src="{{asset('asset/js/jquery-migrate-1.2.1.min.js')}}"></script> 
     <script type="text/javascript" src="{{asset('asset/js/slick.min.js')}}"></script>
+    <script src="{{asset('asset/js/bootstrap-datepicker.min.js')}}"></script>
+    <script src="{{asset('asset/js/bootstrap-timepicker.js')}}"></script>
     <script src="{{asset('asset/js/dashboard-scripts.js')}}"></script>
 
     @yield('scripts')

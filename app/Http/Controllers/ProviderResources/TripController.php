@@ -32,7 +32,7 @@ class TripController extends Controller
     {
         try{
             $IncomingRequests = RequestFilter::with(['request.user', 'request.payment', 'request'])
-                ->where('provider_id', Auth::user()->id)->get();
+                ->where('provider_id', Auth::user()->id)->where('status',0)->get();
 
             if(!empty($request->latitude)) {
                 Auth::user()->update([
@@ -47,7 +47,7 @@ class TripController extends Controller
                         $IncomingRequests[$i]->time_left_to_respond = $Timeout - (time() - strtotime($IncomingRequests[$i]->request->assigned_at));
                         if($IncomingRequests[$i]->request->status == 'SEARCHING' && $IncomingRequests[$i]->time_left_to_respond < 0) {
                             $this->assign_next_provider($IncomingRequests[$i]->id);
-                            return $this->index();
+                            // return $this->index();
                         }
                     }
                 }
@@ -166,18 +166,29 @@ class TripController extends Controller
             if($UserRequest->status != "SEARCHING") {
                 return response()->json(['error' => 'Request already under progress!']);
             }
-
+            
             $UserRequest->provider_id = Auth::user()->id;
-            $UserRequest->status = "STARTED";
-            // dd($UserRequest->toArray());
-            $UserRequest->save();
 
-            ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status' =>'riding']);
+            if($UserRequest->schedule_at != ""){
+                RequestFilter::where('request_id',$UserRequest->id)->where('provider_id',Auth::user()->id)->update(['status' => 2]);
 
-            $Filters = RequestFilter::where('request_id', $UserRequest->id)->where('provider_id', '!=', Auth::user()->id)->get();
-            // dd($Filters->toArray());
-            foreach ($Filters as $Filter) {
-                $Filter->delete();
+                $UserRequest->status = "SCHEDULED";
+                $UserRequest->save();
+
+            }else{
+
+
+                $UserRequest->status = "STARTED";
+                $UserRequest->save();
+
+
+                ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status' =>'riding']);
+
+                $Filters = RequestFilter::where('request_id', $UserRequest->id)->where('provider_id', '!=', Auth::user()->id)->get();
+                // dd($Filters->toArray());
+                foreach ($Filters as $Filter) {
+                    $Filter->delete();
+                }
             }
 
             // Send Push Notification to User

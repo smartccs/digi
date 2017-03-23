@@ -33,6 +33,10 @@ a:focus, a:hover{
     text-decoration: none;
 }
 
+button:focus, button:hover, button:active{
+    text-decoration: none;
+}
+
 body{
     background-color: #ffffff;
     color: #44444d;
@@ -2989,6 +2993,69 @@ invites
 
 .welcome-inner label {
     font-weight: normal;
+}
+
+.half-primary-btn {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    padding: 10px;
+    padding-top: 14px;
+    background-color: #37b38b;
+    color: #fff;
+    text-align: left;
+    display: inline-block;
+    width: 49%;
+    margin-top: 20px;
+    font-weight: 600;
+    text-align: center;
+
+}
+
+.half-secondary-btn {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    padding: 10px;
+    padding-top: 14px;
+    background-color: #000;
+    color: #fff;
+    text-align: left;
+    display: inline-block;
+    width: 49%;
+    margin-top: 20px;
+    font-weight: 600;
+    text-align: center;
+
+}
+
+.schedule-modal input{
+    padding: 20px;
+    height: 60px;
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.schedule-modal label{
+  font-size: 12px;
+}
+
+.schedule-modal .btn{
+  border: 0;
+    margin: 0;
+    padding: 0;
+    padding: 20px;
+    /*padding-top: 14px;*/
+    background-color: #000;
+    color: #fff;
+    /*text-align: left;*/
+    display: block;
+    width: 100%;
+    /*margin-top: 20px;*/
+    font-weight: 600;
+    text-align: center;
+    border-radius: 0;
 }
 
 /*===========================================================
