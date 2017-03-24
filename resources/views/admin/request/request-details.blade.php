@@ -28,7 +28,21 @@
 		                    <dt class="col-sm-4">Total Distance :</dt>
 		                    <dd class="col-sm-8">{{$request->distance ? $request->distance : '-'}}</dd>
 
-		                    <dt class="col-sm-4">Ride Start Time :</dt>
+		                    @if($request->status == 'SCHEDULED')
+
+		                    <dt class="col-sm-4">Ride Scheduled Time :</dt>
+		                    <dd class="col-sm-8">
+		                    	@if($request->schedule_at != "0000-00-00 00:00:00")
+		                     		{{date('jS \of F Y h:i:s A', strtotime($request->schedule_at)) }} 
+		                     	@else
+		                     		- 
+		                     	@endif
+		                     </dd>
+
+
+		                     @else
+
+		                     <dt class="col-sm-4">Ride Start Time :</dt>
 		                    <dd class="col-sm-8">
 		                    	@if($request->started_at != "0000-00-00 00:00:00")
 		                     		{{date('jS \of F Y h:i:s A', strtotime($request->started_at)) }} 
@@ -45,14 +59,9 @@
 		                    		- 
 		                    	@endif
 		                    </dd>
-		                    @if($request->later == 1) 
-		                        <dt class="col-sm-4">Requested Time :</dt>
-		                        <dd class="col-sm-8">
-		                        	@if($request->schedule_at != "0000-00-00 00:00:00")
-		                        		{{date('jS \of F Y h:i:s A', strtotime($request->schedule_at)) }}
-		                        	@endif
-		                        </dd>
+
 		                    @endif
+
 
 		                    <dt class="col-sm-4">Pickup Address :</dt>
 		                    <dd class="col-sm-8">{{$request->s_address ? $request->s_address : '-' }}</dd>

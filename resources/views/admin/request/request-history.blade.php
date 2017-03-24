@@ -67,11 +67,6 @@
                                     <li>
                                         <a href="{{ route('admin.request.details', $request->id) }}" class="btn btn-default"><i class="fa fa-search"></i> More Details</a>
                                     </li>
-                                    @if($request->status == 5)
-                                    <li>
-                                        <a href="{{ route('admin.chat', $request->id) }}" class="btn btn-default"><i class="fa fa-comments"></i> Chat History</a>
-                                    </li>
-                                    @endif
                                   </ul>
                                 </div>
                             </td>

@@ -62,12 +62,12 @@
 					<span class="s-text">Request History</span>
 				</a>
 			</li>
-			<!-- <li>
+			<li>
 				<a href="{{route('admin.scheduled.request')}}" class="waves-effect  waves-light">
 					<span class="s-icon"><i class="ti-palette"></i></span>
-					<span class="s-text">Scheduled Requests</span>
+					<span class="s-text">Scheduled Rides</span>
 				</a>
-			</li> -->
+			</li>
 			<li class="menu-title">General</li>
 			<li class="with-sub">
 				<a href="#" class="waves-effect  waves-light">

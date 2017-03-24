@@ -402,9 +402,9 @@ class AdminController extends Controller
 
         try{
 
-            $requests = UserRequests::where('later' , DEFAULT_TRUE)
-                ->RequestHistory()
-                ->get();
+            $requests = UserRequests::where('status' , 'SCHEDULED')
+                        ->RequestHistory()
+                        ->get();
                 
 
             return view('admin.request.scheduled-request', compact('requests'));
