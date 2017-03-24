@@ -47,6 +47,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 	Route::get('upcoming/trips' , 'UserApiController@upcoming_trips');
 	
 	Route::get('/trip/details' , 'UserApiController@trip_details');
+	Route::get('upcoming/trip/details' , 'UserApiController@upcoming_trip_details');
 
 	// payment
 

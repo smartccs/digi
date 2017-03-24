@@ -829,4 +829,32 @@ class UserApiController extends Controller
         }
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function upcoming_trip_details(Request $request) {
+
+         $this->validate($request, [
+                'request_id' => 'required|integer|exists:user_requests,id',
+            ]);
+    
+        try{
+            $UserRequests = UserRequests::UserUpcomingTripDetails(Auth::user()->id,$request->request_id)->get();
+            if(!empty($UserRequests)){
+                $map_icon = asset('asset/marker.png');
+                foreach ($UserRequests as $key => $value) {
+                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=320x130&maptype=terrian&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_API_KEY');
+                }
+            }
+            return $UserRequests;
+        }
+
+        catch (Exception $e) {
+            return response()->json(['error' => trans('api.something_went_wrong')]);
+        }
+    }
+
 }
