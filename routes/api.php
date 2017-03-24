@@ -44,6 +44,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 	// history
 
 	Route::get('/trips' , 'UserApiController@trips');
+	Route::get('upcoming/trips' , 'UserApiController@upcoming_trips');
 	
 	Route::get('/trip/details' , 'UserApiController@trip_details');
 
