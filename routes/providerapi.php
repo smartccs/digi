@@ -45,6 +45,7 @@ Route::group(['middleware' => ['provider.api']], function () {
 
         Route::get('/history', 'ProviderResources\TripController@history');
         Route::get('/history/details', 'ProviderResources\TripController@history_details');
+        Route::get('/upcoming/details', 'ProviderResources\TripController@upcoming_details');
 
     });
 
