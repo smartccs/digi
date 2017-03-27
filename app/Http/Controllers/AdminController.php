@@ -41,7 +41,7 @@ class AdminController extends Controller
     {
         try{
             
-            $rides = UserRequests::with('user')->orderBy('id','desc')->get();
+            $rides = UserRequests::has('user')->orderBy('id','desc')->get();
             $cancel_rides = UserRequests::where('status','CANCELLED')->count();
             $service = ServiceType::count();
             $revenue = UserRequestPayment::sum('total');
@@ -80,7 +80,7 @@ class AdminController extends Controller
     public function provider_map()
     {
         try{
-            $Providers = Provider::where('latitude', '!=', 0)->where('longitude', '!=', 0)->with('service')->get();
+            $Providers = Provider::where('latitude', '!=', 0)->where('longitude', '!=', 0)->has('service')->get();
             return view('admin.map.provider_map', compact('Providers'));
         }
         catch(Exception $e){
@@ -379,7 +379,7 @@ class AdminController extends Controller
         try{
 
             $request = UserRequests::where('user_requests.id',$id)
-                ->with('provider','user','payment')
+                ->has('provider','user','payment')
                 ->first();
 
             return view('admin.request.request-details', compact('request'));
@@ -424,7 +424,7 @@ class AdminController extends Controller
     public function user_review()
     {
         try{
-            $Reviews = UserRequestRating::where('user_id','!=',0)->with('user','provider')->get();
+            $Reviews = UserRequestRating::where('user_id','!=',0)->has('user','provider')->get();
             return view('admin.review.user_review',compact('Reviews'));
         }
         catch(Exception $e){

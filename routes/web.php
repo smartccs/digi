@@ -114,10 +114,10 @@ Route::post('/add/promocode', 'HomeController@add_promocode');
 
 Route::get('/send/push',
     function(){
-//         $data = PushNotification::app('IOSUser')
-//         ->to('44405aa1630c9f5d8f0e469b7c8b61c2f18c726d86bae7998d60e37c684e4b9b')
-//         ->send('Hello World, i`m a push message');
-// dd($data);
+        $data = PushNotification::app('IOSUser')
+        ->to('163e4c0ca9fe084aabeb89372cf3f664790ffc660c8b97260004478aec61212c')
+        ->send('Hello World, i`m a push message');
+dd($data);
 
 //         $data = PushNotification::app('AndroidProvider')
 //         ->to('daIar7y9pME:APA91bFzpfRysjv8w5rlsH4XQbOPwHj8Djo6PxiMdn2MIDMuV3SiENuM2cRvFSv-jweMVD-Xr9dIIKIaKJrbhb6PfuETGARTboCwdh3WL7I3apUu0Q3JJkk-S4kZP41EKkqpYnEXUkBn')
