@@ -274,6 +274,25 @@ class UserApiController extends Controller
             }
         }
 
+        if($request->has('schedule_date') && $request->has('schedule_time')){
+            $schedule_timestamp = strtotime("$request->schedule_date $request->schedule_time");
+            
+            $CheckScheduling = UserRequests::where('status','SCHEDULED')
+                            ->where('user_id', Auth::user()->id)
+                            ->where('schedule_at', '>', strtotime($schedule_timestamp."- 1 hour"))
+                            ->orWhere('schedule_at', '<', strtotime($schedule_timestamp."+ 1 hour"))
+                            ->count();
+
+            if($CheckScheduling > 0){
+                if($request->ajax()) {
+                    return response()->json(['error' => trans('api.ride.request_scheduled')], 500);
+                }else{
+                    return redirect('dashboard')->with('flash_error', 'Already request is Scheduled on this time.');
+                }
+            }
+
+        }
+
         $ActiveProviders = ProviderService::AvailableServiceProvider($request->service_type)->get()->pluck('provider_id');
 
         $distance = Setting::get('search_radius', '10');

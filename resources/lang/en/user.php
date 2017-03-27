@@ -59,7 +59,9 @@ return array (
     'km' => 'Kilometer',
     'total' => 'Total',
     'amount_paid' => 'Amount to be Paid',
-    'promotion_applied' => 'Promotion Applied'
+    'promotion_applied' => 'Promotion Applied',
+    'request_inprogress' => 'Ride Already in Progress',
+    'request_scheduled' => 'Ride Already Scheduled on this time',
   ),
   'dashboard' => 'Dashboard',
   'payment' => 'Payment',
