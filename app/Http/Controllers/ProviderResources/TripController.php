@@ -422,7 +422,7 @@ class TripController extends Controller
             
             $Jobs = UserRequests::where('id',$request->request_id)
                                 ->where('provider_id', Auth::user()->id)
-                                ->has('payment','service_type','user','rating')
+                                ->with('payment','service_type','user','rating')
                                 ->get();
             if(!empty($Jobs)){
                 $map_icon = asset('asset/marker.png');
@@ -451,7 +451,7 @@ class TripController extends Controller
             
             $Jobs = UserRequests::where('id',$request->request_id)
                                 ->where('provider_id', Auth::user()->id)
-                                ->has('service_type','user')
+                                ->with('service_type','user')
                                 ->get();
             if(!empty($Jobs)){
                 $map_icon = asset('asset/marker.png');
