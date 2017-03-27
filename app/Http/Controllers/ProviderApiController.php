@@ -4,69 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Helpers\Helper;
 
-use DB;
-use Log;
+use Exception;
 use Auth;
-use Config;
-use Setting;
-use Carbon\Carbon;
 
-use App\User;
-use App\Provider;
-use App\ProviderService;
-use App\ServiceType;
 use App\UserRequests;
-use App\RequestFilter;
-use App\Settings;
-use App\Cards;
-use App\ChatMessage;
 
 class ProviderApiController extends Controller
 {
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function history(){
-
-        try {
-            $requests = UserRequests::GetProviderHistory(Auth::user()->id)->get()->toArray();
-            return $requests;
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Something went wrong']);
-        }
-
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function message(Request $request){
-
-        $this->validate($request, [
-                'request_id' => 'required|integer|exists:user_requests,id',
-            ]);
-
-        try{
-
-            $Messages = ChatMessage::where('provider_id', Auth::user()->id)
-                        ->where('request_id', $request->request_id)->get()->toArray();
-            return $Messages;
-
-        }
-
-        catch(Exception $e) {
-                return response()->json(['error' => "Something Went Wrong"]);
-        }
-    }
-
 
     /**
      * Show the application dashboard.
@@ -79,10 +24,19 @@ class ProviderApiController extends Controller
 
         try{
 
-            return UserRequests::where('provider_id',\Auth::user()->id)
+            $Jobs = UserRequests::where('provider_id',\Auth::user()->id)
                     ->where('status','SCHEDULED')
                     ->with('service_type')
                     ->get();
+            if(!empty($Jobs)){
+                $map_icon = asset('asset/marker.png');
+                foreach ($Jobs as $key => $value) {
+                    $Jobs[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=320x130&maptype=terrian&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_API_KEY');
+                }
+            }
+
+            return $Jobs;
+            
         }
 
         catch(Exception $e) {
@@ -91,23 +45,4 @@ class ProviderApiController extends Controller
 
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function request_details(Request $request) {
-
-        $this->validate($request, [
-                'request_id' => 'required|integer|exists:requests,id,confirmed_provider,'.Auth::user()->id,
-            ]);
-    
-        try{
-            return UserRequests::RequestDetails($request->request_id)->firstOrFail();
-        } catch(Exception $e) {
-            return response()->json(['error' => "Something Went Wrong"]);
-        }
-    
-    }
 }

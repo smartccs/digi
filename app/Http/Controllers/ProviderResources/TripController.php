@@ -422,7 +422,7 @@ class TripController extends Controller
             
             $Jobs = UserRequests::where('id',$request->request_id)
                                 ->where('provider_id', Auth::user()->id)
-                                ->with('payment','service_type','user','rating')
+                                ->has('payment','service_type','user','rating')
                                 ->get();
             if(!empty($Jobs)){
                 $map_icon = asset('asset/marker.png');

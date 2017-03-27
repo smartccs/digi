@@ -15,13 +15,6 @@
 Route::post('/register' , 'ProviderAuth\TokenController@register');
 Route::post('/oauth/token' , 'ProviderAuth\TokenController@authenticate');
 
-// Route::post('/oauth/token', 'AccessTokenController@issueToken');
-
-// Route::post('/oauth/token/refresh', [
-//     'middleware' => ['web', 'auth'],
-//     'uses' => 'TransientTokenController@refresh',
-// ]);
-
 Route::group(['middleware' => ['provider.api']], function () {
 
     Route::group(['prefix' => 'profile'], function () {
@@ -49,12 +42,9 @@ Route::group(['middleware' => ['provider.api']], function () {
     Route::group(['prefix' => 'requests'], function () {
 
         Route::get('/upcoming' , 'ProviderApiController@upcoming_request');
-        Route::post('/accept', 'ProviderApiController@accept');
-        Route::post('/reject', 'ProviderApiController@reject');
 
         Route::get('/history', 'ProviderResources\TripController@history');
         Route::get('/history/details', 'ProviderResources\TripController@history_details');
-        Route::post('/show', 'ProviderApiController@request_details');
 
     });
 
