@@ -21,7 +21,8 @@ class UserRequestPayment extends Model
         'discount',
         'tax',
         'total',
-        'wallet'
+        'wallet',
+        'surge'
     ];
 
     /**

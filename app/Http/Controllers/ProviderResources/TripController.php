@@ -341,11 +341,17 @@ class TripController extends Controller
                 }
             }
             $Wallet = 0;
+            $Surge = 0;
 
             $Commision = ( $Fixed + $Distance ) * (Setting::get('payment_commision', 10) / 100);
 
             $Tax = $Fixed + $Distance + $Commision * (Setting::get('payment_tax', 10) / 100);
             $Total = $Fixed + $Distance - $Discount + $Commision + $Tax;
+
+            if($UserRequest->surge){
+                $Surge = (\Setting::get('surge_percentage')/100) * $Total;
+                $Total += $Surge;
+            }
 
             if($Total < 0){
                 $Total = 0.00; // prevent from negative value
@@ -357,6 +363,7 @@ class TripController extends Controller
             $Payment->fixed = $Fixed;
             $Payment->distance = $Distance;
             $Payment->commision = $Commision;
+            $Payment->surge = $Surge;
             if($Discount != 0 && $PromocodeUsage){
                 $Payment->promocode_id = $PromocodeUsage->promocode_id;
             }

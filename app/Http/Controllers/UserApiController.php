@@ -339,6 +339,10 @@ class UserApiController extends Controller
             
             $UserRequest->assigned_at = Carbon::now();
 
+            if($Providers->count() <= \Setting::get('surge_trigger') && $Providers->count() > 0){
+                $UserRequest->surge = 1;
+            }
+
             if($request->has('schedule_date') && $request->has('schedule_time')){
                 $UserRequest->schedule_at = date("Y-m-d H:i:s",strtotime("$request->schedule_date $request->schedule_time"));
             }
@@ -653,6 +657,23 @@ class UserApiController extends Controller
             $price += ( $commission_percentage/100 ) * $price;
             $tax_price = ( $tax_percentage/100 ) * $price;
             $total = $price + $tax_price;
+
+            $ActiveProviders = ProviderService::AvailableServiceProvider($request->service_type)->get()->pluck('provider_id');
+
+            $distance = \Setting::get('search_radius', '10');
+            $latitude = $request->s_latitude;
+            $longitude = $request->s_longitude;
+
+            $Providers = Provider::whereIn('id', $ActiveProviders)
+                ->where('status', 'approved')
+                ->whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
+                ->get();
+
+            if($Providers->count() <= \Setting::get('surge_trigger') && $Providers->count() > 0){
+                $surge_price = (\Setting::get('surge_percentage')/100) * $total;
+                $total += $surge_price;
+            }
+ 
 
             return response()->json([
                     'estimated_fare' => round($total,2), 

@@ -20,7 +20,7 @@ class UserRequests extends Model
         'd_longitude','paid','s_address', 'd_address',
         'assigned_at','schedule_at','started_at',
         'finished_at', 'use_wallet',
-        'user_rated', 'provider_rated'
+        'user_rated', 'provider_rated','surge'
     ];
 
     /**
