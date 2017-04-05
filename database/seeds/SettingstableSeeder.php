@@ -88,7 +88,7 @@ class SettingsTableSeeder extends Seeder
             ], 
             [
                 'key' => 'scheduled_cancel_time_exceed',
-                'value' => '10'
+                'value' => 10
             ],
             [
                 'key' => 'price_per_kilometer',
@@ -109,6 +109,18 @@ class SettingsTableSeeder extends Seeder
             [
                 'key' => 'app_store_link',
                 'value' => ''
+            ],
+            [
+                'key' => 'daily_target',
+                'value' => 0
+            ],
+            [
+                'key' => 'surge_percentage',
+                'value' => 0
+            ],
+            [
+                'key' => 'surge_trigger',
+                'value' => 0
             ],
         ]);
     }

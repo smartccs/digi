@@ -27,6 +27,8 @@ Route::group(['middleware' => ['provider.api']], function () {
 
     });
 
+    Route::get('/target' , 'ProviderApiController@target');
+
     Route::resource('trip', 'ProviderResources\TripController');
 
     Route::post('cancel', 'ProviderResources\TripController@cancel');
@@ -42,7 +44,6 @@ Route::group(['middleware' => ['provider.api']], function () {
     Route::group(['prefix' => 'requests'], function () {
 
         Route::get('/upcoming' , 'ProviderApiController@upcoming_request');
-
         Route::get('/history', 'ProviderResources\TripController@history');
         Route::get('/history/details', 'ProviderResources\TripController@history_details');
         Route::get('/upcoming/details', 'ProviderResources\TripController@upcoming_details');

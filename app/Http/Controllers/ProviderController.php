@@ -103,11 +103,15 @@ class ProviderController extends Controller
                     ->where('created_at', '>=', Carbon::now()->subWeekdays(7))
                     ->get();
 
+        $today = UserRequests::where('provider_id',\Auth::guard('provider')->user()->id)
+                    ->where('created_at', '>=', Carbon::today())
+                    ->count();
+
         $fully = UserRequests::where('provider_id',\Auth::guard('provider')->user()->id)
                     ->with('payment','service_type')
                     ->get();
 
-        return view('provider.payment.earnings',compact('provider','weekly','fully'));
+        return view('provider.payment.earnings',compact('provider','weekly','fully','today'));
     }
 
     /**

@@ -19,10 +19,25 @@
                     <p class="earning-price" id="set_fully_sum">00.00</p>
                 </div>
                 <div class="earning-element row no-margin">
+
+                 <div class="col-lg-2 col-md-3 col-sm-3 col-xs-4">
+                        <div class="earning-box">
+                            <p class="dashboard-count">{{$today}}</p>
+                            <p class="dashboard-txt">TRIPS COMPLETED TODAY</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-3 col-sm-3 col-xs-4">
+                        <div class="earning-box">
+                            <p class="dashboard-count">{{Setting::get('daily_target',0)}}</p>
+                            <p class="dashboard-txt">DAILY TRIP TARGET </p>
+                        </div>
+                    </div>
+
                     <div class="col-lg-2 col-md-3 col-sm-3 col-xs-4">
                         <div class="earning-box">
                             <p class="dashboard-count">{{$provider[0]->accepted->count()}}</p>
-                            <p class="dashboard-txt">COMPLETED TRIPS</p>
+                            <p class="dashboard-txt">FULLY COMPLETED TRIPS</p>
                         </div>
                     </div>
                     

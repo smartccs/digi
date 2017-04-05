@@ -45,4 +45,22 @@ class ProviderApiController extends Controller
 
     }
 
+
+    public function target(){
+
+        try{
+
+            $rides = UserRequests::where('provider_id',\Auth::guard('provider')->user()->id)
+                        ->where('status','COMPLETED')
+                        ->where('created_at', '>=', Carbon::today())
+                        ->with('payment','service_type')
+                        ->get();
+
+            return response()->json(['rides' => $rides, 'rides_count' => $rides->count(), 'target' => Setting::get('daily_target','0')]);
+        }   
+        catch(Exception $e) {
+            return response()->json(['error' => "Something Went Wrong"]);
+        }
+    }
+
 }
