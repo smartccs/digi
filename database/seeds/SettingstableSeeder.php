@@ -23,12 +23,16 @@ class SettingsTableSeeder extends Seeder
                 'value' => asset('asset/img/logo.png'),
             ],
             [
+                'key' => 'email_logo',
+                'value' => asset('asset/img/logo.png'),
+            ],
+            [
                 'key' => 'site_mail_icon',
                 'value' => asset('asset/img/logo.png'),
             ],
             [
                 'key' => 'site_icon',
-                'value' => asset('logo.png'),
+                'value' => asset('asset/img/favicon.png'),
             ],
             [
                 'key' => 'provider_select_timeout',
@@ -49,23 +53,23 @@ class SettingsTableSeeder extends Seeder
             [
                 'key' => 'tax_percentage',
                 'value' => 0
-            ],  
+            ],
             [
                 'key' => 'stripe_secret_key',
                 'value' => ''
-            ], 
+            ],
              [
                 'key' => 'stripe_publishable_key',
                 'value' => ''
-            ], 
+            ],
             [
                 'key' => 'CASH',
                 'value' => 1
-            ], 
+            ],
             [
                 'key' => 'PAYPAL',
                 'value' => 1
-            ], 
+            ],
             [
                 'key' => 'CARD',
                 'value' => 1
@@ -73,19 +77,23 @@ class SettingsTableSeeder extends Seeder
             [
                 'key' => 'manual_request',
                 'value' => 0
-            ],  
+            ],
             [
                 'key' => 'paypal_email',
                 'value' => ''
-            ], 
+            ],
             [
                 'key' => 'default_lang',
                 'value' => 'en'
-            ], 
+            ],
             [
                 'key' => 'currency',
                 'value' => '$'
-            ], 
+            ],
+            [
+                'key' => 'distance',
+                'value' => 'Km'
+            ],
             [
                 'key' => 'scheduled_cancel_time_exceed',
                 'value' => 10
@@ -97,10 +105,6 @@ class SettingsTableSeeder extends Seeder
             [
                 'key' => 'commission_percentage',
                 'value' => 0
-            ],
-            [
-                'key' => 'email_logo',
-                'value' => ''
             ],
             [
                 'key' => 'play_store_link',

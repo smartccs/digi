@@ -49,19 +49,15 @@ class ServiceResource extends Controller
             'provider_name' => 'required|max:255',
             'fixed' => 'required|numeric',
             'price' => 'required|numeric',
+            'minute' => 'required|numeric',
+            'distance' => 'required|numeric',
+            'calculator' => 'required|in:MIN,HOUR,DISTANCE,DISTANCEMIN,DISTANCEHOUR',
             'image' => 'mimes:ico,png'
         ]);
 
-        try{
+        try {
 
             $service = $request->all();
-
-            if ($request->is_default === 'yes') {
-                ServiceType::where('status', 1)->update(['status' => 0]);
-                $service['status'] = 1;
-            }else{
-                $service['status'] = 0;
-            }
 
             if($request->hasFile('image')) {
                 $service['image'] = Helper::upload_picture($request->image);
@@ -89,7 +85,7 @@ class ServiceResource extends Controller
         try {
             return ServiceType::findOrFail($id);
         } catch (ModelNotFoundException $e) {
-            return $e;
+            return back()->with('flash_errors', 'Service Type Not Found');
         }
     }
 
@@ -105,7 +101,7 @@ class ServiceResource extends Controller
             $service = ServiceType::findOrFail($id);
             return view('admin.service.edit',compact('service'));
         } catch (ModelNotFoundException $e) {
-            return $e;
+            return back()->with('flash_errors', 'Service Type Not Found');
         }
     }
 
@@ -137,15 +133,13 @@ class ServiceResource extends Controller
                 $service->image = Helper::upload_picture($request->image);
             }
 
-            if ($request->is_default === 'yes') {
-                ServiceType::where('status', 1)->update(['status' => 0]);
-                $service->status = 1;
-            }
-
             $service->name = $request->name;
             $service->provider_name = $request->provider_name;
             $service->fixed = $request->fixed;
             $service->price = $request->price;
+            $service->minute = $request->minute;
+            $service->distance = $request->distance;
+            $service->calculator = $request->calculator;
             $service->save();
 
             return redirect()->route('admin.service.index')->with('flash_success', 'Service Type Updated Successfully');    

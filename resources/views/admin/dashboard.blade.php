@@ -27,7 +27,7 @@
 				<div class="t-icon right"><span class="bg-success"></span><i class="ti-bar-chart"></i></div>
 				<div class="t-content">
 					<h6 class="text-uppercase mb-1">Revenue</h6>
-					<h1 class="mb-1">{{currency()}}{{$revenue}}</h1>
+					<h1 class="mb-1">{{currency($revenue)}}</h1>
 					<i class="fa fa-caret-up text-success mr-0-5"></i><span>from {{$rides->count()}} Rides</span>
 				</div>
 			</div>
@@ -38,8 +38,6 @@
 				<div class="t-content">
 					<h6 class="text-uppercase mb-1">Service Types</h6>
 					<h1 class="mb-1">{{$service}}</h1>
-					<span class="tag tag-primary mr-0-5">+125</span>
-					<span class="text-muted font-90">arraving today</span>
 				</div>
 			</div>
 		</div>

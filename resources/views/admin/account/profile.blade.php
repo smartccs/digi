@@ -20,40 +20,6 @@
 					</div>
 				</div>
 
-
-				<fieldset class="form-group row">
-					<legend class="col-form-legend col-sm-2">Gender</legend>
-					<div class="col-sm-10">
-						<div class="form-check">
-							<label class="form-check-label">
-								<input class="form-check-input" type="radio" name="gender" value="male" 
-									@if(Auth::guard('admin')->user()->gender == 'male') 
-										checked 
-									@endif>
-								Male
-							</label>
-						</div>
-						<div class="form-check">
-							<label class="form-check-label">
-								<input class="form-check-input" type="radio" name="gender" value="female" 
-									@if(Auth::guard('admin')->user()->gender == 'female')
-										checked 
-									@endif>
-								Female
-							</label>
-						</div>
-						<div class="form-check">
-							<label class="form-check-label">
-								<input class="form-check-input" type="radio" name="gender" value="others" 
-									@if(Auth::guard('admin')->user()->gender == 'others') 
-										checked 
-									@endif>
-								Others
-							</label>
-						</div>
-					</div>
-				</fieldset>
-
 				<div class="form-group row">
 					<label for="email" class="col-xs-2 col-form-label">Email</label>
 					<div class="col-xs-10">

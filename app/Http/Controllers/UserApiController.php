@@ -11,21 +11,23 @@ use Hash;
 use Setting;
 use Exception;
 use Storage;
-use Carbon\Carbon;
 use App\Http\Controllers\SendPushNotification;
 
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
+use Carbon\Carbon;
 
+use App\Card;
 use App\User;
-use App\ProviderService;
-use App\UserRequests;
-use App\Promocode;
-use App\RequestFilter;
-use App\ServiceType;
 use App\Provider;
 use App\Settings;
-use App\UserRequestRating;
-use App\Card;
+use App\Promocode;
+use App\ServiceType;
+use App\UserRequests;
+use App\RequestFilter;
 use App\PromocodeUsage;
+use App\ProviderService;
+use App\UserRequestRating;
 
 class UserApiController extends Controller
 {
@@ -575,7 +577,7 @@ class UserApiController extends Controller
             if(!empty($UserRequests)){
                 $map_icon = asset('asset/marker.png');
                 foreach ($UserRequests as $key => $value) {
-                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=320x130&maptype=terrian&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_API_KEY');
+                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=320x130&maptype=terrian&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_MAP_KEY');
                 }
             }
             return $UserRequests;
@@ -623,7 +625,7 @@ class UserApiController extends Controller
      */
 
     public function estimated_fare(Request $request){
-
+        \Log::info('Estimate', $request->all());
         $this->validate($request,[
                 's_latitude' => 'required|numeric',
                 's_longitude' => 'required|numeric',
@@ -634,26 +636,43 @@ class UserApiController extends Controller
 
         try{
 
-            $details = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".$request->s_latitude.",".$request->s_longitude."&destinations=".$request->d_latitude.",".$request->d_longitude."&mode=driving&sensor=false&key=".env('GOOGLE_API_KEY');
+            $details = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".$request->s_latitude.",".$request->s_longitude."&destinations=".$request->d_latitude.",".$request->d_longitude."&mode=driving&sensor=false&key=".env('GOOGLE_MAP_KEY');
 
+            // $client = new Client(); //GuzzleHttp\Client
+            // $result = $client->get($details);
 
             $json = curl($details);
 
             $details = json_decode($json, TRUE);
 
-
             $meter = $details['rows'][0]['elements'][0]['distance']['value'];
             $time = $details['rows'][0]['elements'][0]['duration']['text'];
+            $time_in_mins = $details['rows'][0]['elements'][0]['duration']['value'];
+
+            dd($details['rows'][0]['elements'][0]);
 
             $kilometer = round($meter/1000);
 
             $tax_percentage = \Setting::get('tax_percentage');
             $commission_percentage = \Setting::get('commission_percentage');
             $service_type = ServiceType::findOrFail($request->service_type);
+            
             $base_price = $service_type->fixed;
 
-            $price_per_kilometer = $service_type->price;
-            $price = $base_price + ($kilometer * $price_per_kilometer);
+            if($service_type->calculator == 'MIN') {
+                $price = $base_price + $service_type->minute * $time_in_mins;
+            } else if($service_type->calculator == 'HOUR') {
+                $price = $base_price + $service_type->minute * 60;
+            } else if($service_type->calculator == 'DISTANCE') {
+                $price = $base_price + ($kilometer * $service_type->price);
+            } else if($service_type->calculator == 'DISTANCEMIN') {
+                $price = $base_price + ($kilometer * $service_type->price) + ($service_type->minute * $time_in_mins);
+            } else if($service_type->calculator == 'DISTANCEHOUR') {
+                $price = $base_price + ($kilometer * $service_type->price) + ($service_type->minute * $time_in_mins * 60);
+            } else {
+                $price = $base_price + ($kilometer * $service_type->price);
+            }
+
             $price += ( $commission_percentage/100 ) * $price;
             $tax_price = ( $tax_percentage/100 ) * $price;
             $total = $price + $tax_price;
@@ -673,7 +692,6 @@ class UserApiController extends Controller
                 $surge_price = (\Setting::get('surge_percentage')/100) * $total;
                 $total += $surge_price;
             }
- 
 
             return response()->json([
                     'estimated_fare' => round($total,2), 
@@ -684,12 +702,9 @@ class UserApiController extends Controller
                     'wallet_balance' => Auth::user()->wallet_balance
                 ]);
 
+        } catch(Exception $e) {
+            return response()->json(['error' => trans('api.something_went_wrong')], 500);
         }
-
-        catch(Exception $e){
-                return response()->json(['error' => trans('api.something_went_wrong')], 500);
-        }
-
     }
 
     /**
@@ -709,7 +724,7 @@ class UserApiController extends Controller
             if(!empty($UserRequests)){
                 $map_icon = asset('asset/marker.png');
                 foreach ($UserRequests as $key => $value) {
-                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=320x130&maptype=terrian&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_API_KEY');
+                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=320x130&maptype=terrian&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_MAP_KEY');
                 }
             }
             return $UserRequests;
@@ -858,7 +873,7 @@ class UserApiController extends Controller
             if(!empty($UserRequests)){
                 $map_icon = asset('asset/marker.png');
                 foreach ($UserRequests as $key => $value) {
-                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=320x130&maptype=terrian&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_API_KEY');
+                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=320x130&maptype=terrian&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_MAP_KEY');
                 }
             }
             return $UserRequests;
@@ -886,7 +901,7 @@ class UserApiController extends Controller
             if(!empty($UserRequests)){
                 $map_icon = asset('asset/marker.png');
                 foreach ($UserRequests as $key => $value) {
-                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=320x130&maptype=terrian&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_API_KEY');
+                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=320x130&maptype=terrian&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_MAP_KEY');
                 }
             }
             return $UserRequests;

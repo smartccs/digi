@@ -11,7 +11,6 @@ class DemoSeeder extends Seeder
      */
     public function run()
     {
-
         DB::table('users')->truncate();
         DB::table('users')->insert([
             'first_name' => 'Appoets',
@@ -26,7 +25,16 @@ class DemoSeeder extends Seeder
             'last_name' => 'Demo',
             'email' => 'demo@appoets.com',
             'password' => bcrypt('123456'),
+            'status' => 'approved',
         ]);
 
+        DB::table('provider_services')->truncate();
+        DB::table('provider_services')->insert([
+            'provider_id' => 1,
+            'service_type_id' => 1,
+            'status' => 'active',
+            'service_number' => '4ppo3ts',
+            'service_model' => 'Audi R8',
+        ]);
     }
 }

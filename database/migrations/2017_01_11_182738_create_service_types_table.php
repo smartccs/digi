@@ -18,8 +18,11 @@ class CreateServiceTypesTable extends Migration
             $table->string('name');
             $table->string('provider_name')->nullable();
             $table->string('image')->nullable();
-            $table->integer('fixed')->nullable();
-            $table->integer('price')->nullable();
+            $table->integer('fixed');
+            $table->integer('price');
+            $table->integer('minute');
+            $table->integer('distance');
+            $table->enum('calculator', ['MIN', 'HOUR', 'DISTANCE', 'DISTANCEMIN', 'DISTANCEHOUR']);
             $table->string('description')->nullable();
             $table->integer('status')->default(0);
             $table->timestamps();

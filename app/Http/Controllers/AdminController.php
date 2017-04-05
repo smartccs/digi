@@ -40,7 +40,6 @@ class AdminController extends Controller
     public function dashboard()
     {
         try{
-            
             $rides = UserRequests::has('user')->orderBy('id','desc')->get();
             $cancel_rides = UserRequests::where('status','CANCELLED')->count();
             $service = ServiceType::count();
@@ -221,22 +220,18 @@ class AdminController extends Controller
     {
         $this->validate($request,[
             'name' => 'required|max:255',
-            'email' => 'required|email|max:255',
             'mobile' => 'required|digits_between:6,13',
             'picture' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
-                       
         ]);
 
         try{
             $admin = Admin::find(Auth::guard('admin')->user()->id);
             $admin->name = $request->name;
-            $admin->email = $request->email;
             $admin->mobile = $request->mobile;
             if($request->hasFile('picture')){
                 Storage::delete($admin->picture);
                 $admin->picture = $request->picture->store('admin/profile');  
             }
-            $admin->gender = $request->gender;
             $admin->save();
 
             return redirect()->back()->with('flash_success','Profile Updated');
