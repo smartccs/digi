@@ -106,6 +106,10 @@ class AdminController extends Controller
      */
     public function setting_store(Request $request)
     {
+        if(Setting::get('demo_mode', 0) == 1) {
+            return back()->with('flash_error','Disabled for demo purposes! Please contact us at info@appoets.com');
+        }
+
         $this->validate($request,[
                 'site_icon' => 'mimes:jpeg,jpg,bmp,png||max:5242880',
                 'site_logo' => 'mimes:jpeg,jpg,bmp,png||max:5242880',
@@ -218,6 +222,10 @@ class AdminController extends Controller
      */
     public function profile_update(Request $request)
     {
+        if(Setting::get('demo_mode', 0) == 1) {
+            return back()->with('flash_error', 'Disabled for demo purposes! Please contact us at info@appoets.com');
+        }
+
         $this->validate($request,[
             'name' => 'required|max:255',
             'mobile' => 'required|digits_between:6,13',
@@ -262,12 +270,16 @@ class AdminController extends Controller
      */
     public function password_update(Request $request)
     {
+        if(Setting::get('demo_mode', 0) == 1) {
+            return back()->with('flash_error','Disabled for demo purposes! Please contact us at info@appoets.com');
+        }
+
         $this->validate($request,[
             'old_password' => 'required',
             'password' => 'required|min:6|confirmed',
         ]);
 
-        try{
+        try {
 
            $Admin = Admin::find(Auth::guard('admin')->user()->id);
 
@@ -278,12 +290,9 @@ class AdminController extends Controller
 
                 return redirect()->back()->with('flash_success','Password Updated');
             }
-        }
-
-        catch (Exception $e) {
+        } catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
-        
     }
 
     /**
@@ -294,7 +303,7 @@ class AdminController extends Controller
      */
     public function payment()
     {
-        try{
+        try {
              $payments = UserRequests::where('paid',1)
                     ->has('user')
                     ->has('provider')
@@ -303,9 +312,7 @@ class AdminController extends Controller
                     ->get();
             
             return view('admin.payment.payment-history', compact('payments'));
-        }
-
-        catch (Exception $e) {
+        } catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
     }
@@ -328,14 +335,11 @@ class AdminController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function help(){
-
-        try{
+        try {
             $str = file_get_contents('http://appoets.com/help.json');
             $Data = json_decode($str, true);
             return view('admin.help', compact('Data'));
-        }
-
-        catch (Exception $e) {
+        } catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
     }
@@ -347,19 +351,13 @@ class AdminController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function request_history(){
-
-        try{
-
+        try {
             $requests = UserRequests::RequestHistory()->get();
 
             return view('admin.request.request-history', compact('requests'));
-
-        }
-
-        catch (Exception $e) {
+        } catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
-
     }
 
 
@@ -370,20 +368,16 @@ class AdminController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function request_details($id){
-
-        try{
+        try {
 
             $request = UserRequests::where('user_requests.id',$id)
                 ->has('provider','user','payment')
                 ->first();
 
             return view('admin.request.request-details', compact('request'));
-        }
-
-        catch (Exception $e) {
+        } catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
-
     }
 
 
@@ -394,21 +388,15 @@ class AdminController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function scheduled_request(){
-
         try{
-
             $requests = UserRequests::where('status' , 'SCHEDULED')
                         ->RequestHistory()
                         ->get();
-                
 
             return view('admin.request.scheduled-request', compact('requests'));
-        }
-
-        catch (Exception $e) {
+        } catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
-
     }
 
     /**
@@ -418,11 +406,10 @@ class AdminController extends Controller
      */
     public function user_review()
     {
-        try{
+        try {
             $Reviews = UserRequestRating::where('user_id','!=',0)->has('user','provider')->get();
             return view('admin.review.user_review',compact('Reviews'));
-        }
-        catch(Exception $e){
+        } catch(Exception $e) {
             return redirect()->route('admin.setting')->with('flash_error','Something Went Wrong!');
         }
     }
@@ -434,11 +421,10 @@ class AdminController extends Controller
      */
     public function provider_review()
     {
-        try{
+        try {
             $Reviews = UserRequestRating::where('provider_id','!=',0)->with('user','provider')->get();
             return view('admin.review.provider_review',compact('Reviews'));
-        }
-        catch(Exception $e){
+        } catch(Exception $e) {
             return redirect()->route('admin.setting')->with('flash_error','Something Went Wrong!');
         }
     }
@@ -450,16 +436,12 @@ class AdminController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destory_provider_service($id){
-
-        try{
+        try {
             ProviderService::find($id)->delete();
             return back()->with('message', 'Service deleted successfully');
-        }
-
-        catch (Exception $e) {
+        } catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
-
     }
 
 }

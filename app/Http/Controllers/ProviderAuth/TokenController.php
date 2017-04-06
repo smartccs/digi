@@ -43,6 +43,17 @@ class TokenController extends Controller
 
             $Provider = Provider::create($Provider);
 
+            if(Setting::get('demo_mode', 0) == 1) {
+                $Provider->update(['status' => 'approved']);
+                ProviderService::create([
+                    'provider_id' => $Provider->id,
+                    'service_type_id' => '1',
+                    'status' => 'active',
+                    'service_number' => '4pp03ets',
+                    'service_model' => 'Audi R8',
+                ]);
+            }
+
             ProviderDevice::create([
                     'provider_id' => $Provider->id,
                     'udid' => $request->device_id,

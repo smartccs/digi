@@ -179,7 +179,7 @@ class ProviderResource extends Controller
                 $Provider->update(['status' => 'approved']);
                 return back()->with('flash_success', "Provider Approved");
             } else {
-                return back()->with('flash_error', "Provider has not been assigned a service type!");
+                return redirect()->route('admin.provider.document.index', $id)->with('flash_error', "Provider has not been assigned a service type!");
             }
         } catch (ModelNotFoundException $e) {
             return back()->with('flash_error', "Something went wrong! Please try again later.");

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\ProviderAuth;
 
-use App\Provider;
-use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Auth;
+
+use Validator;
+
+use App\Provider;
+use App\ProviderService;
 
 class RegisterController extends Controller
 {
@@ -64,12 +67,25 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return Provider::create([
+        $Provider = Provider::create([
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+
+        if(Setting::get('demo_mode', 0) == 1) {
+            $Provider->update(['status' => 'approved']);
+            ProviderService::create([
+                'provider_id' => $Provider->id,
+                'service_type_id' => '1',
+                'status' => 'active',
+                'service_number' => '4pp03ets',
+                'service_model' => 'Audi R8',
+            ]);
+        }
+        
+        return $Provider;
     }
 
     /**

@@ -8,14 +8,12 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Log;
 use Auth;
 use Hash;
+use Storage;
 use Setting;
 use Exception;
-use Storage;
-use App\Http\Controllers\SendPushNotification;
 
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Client;
 use Carbon\Carbon;
+use App\Http\Controllers\SendPushNotification;
 
 use App\Card;
 use App\User;
@@ -263,15 +261,15 @@ class UserApiController extends Controller
                 'card_id' => ['required_if:payment_mode,CARD','exists:cards,card_id,user_id,'.Auth::user()->id],
             ]);
 
-        Log::info('New Request from user id :'. Auth::user()->id .' params are :');
-        Log::info($request->all());
+        Log::info('New Request from User:', Auth::user()->id);
+        Log::info('Request Details:', $request->all());
 
         $ActiveRequests = UserRequests::PendingRequest(Auth::user()->id)->count();
 
         if($ActiveRequests > 0) {
             if($request->ajax()) {
                 return response()->json(['error' => trans('api.ride.request_inprogress')], 500);
-            }else{
+            } else {
                 return redirect('dashboard')->with('flash_error', 'Already request is in progress. Try again later');
             }
         }
@@ -341,7 +339,7 @@ class UserApiController extends Controller
             
             $UserRequest->assigned_at = Carbon::now();
 
-            if($Providers->count() <= \Setting::get('surge_trigger') && $Providers->count() > 0){
+            if($Providers->count() <= Setting::get('surge_trigger') && $Providers->count() > 0){
                 $UserRequest->surge = 1;
             }
 
@@ -647,30 +645,29 @@ class UserApiController extends Controller
 
             $meter = $details['rows'][0]['elements'][0]['distance']['value'];
             $time = $details['rows'][0]['elements'][0]['duration']['text'];
-            $time_in_mins = $details['rows'][0]['elements'][0]['duration']['value'];
-
-            dd($details['rows'][0]['elements'][0]);
+            $seconds = $details['rows'][0]['elements'][0]['duration']['value'];
 
             $kilometer = round($meter/1000);
+            $minutes = round($seconds/60);
 
-            $tax_percentage = \Setting::get('tax_percentage');
-            $commission_percentage = \Setting::get('commission_percentage');
+            $tax_percentage = Setting::get('tax_percentage');
+            $commission_percentage = Setting::get('commission_percentage');
             $service_type = ServiceType::findOrFail($request->service_type);
             
-            $base_price = $service_type->fixed;
+            $price = $service_type->fixed;
 
             if($service_type->calculator == 'MIN') {
-                $price = $base_price + $service_type->minute * $time_in_mins;
+                $price = $service_type->minute * $minutes;
             } else if($service_type->calculator == 'HOUR') {
-                $price = $base_price + $service_type->minute * 60;
+                $price = $service_type->minute * 60;
             } else if($service_type->calculator == 'DISTANCE') {
-                $price = $base_price + ($kilometer * $service_type->price);
+                $price = ($kilometer * $service_type->price);
             } else if($service_type->calculator == 'DISTANCEMIN') {
-                $price = $base_price + ($kilometer * $service_type->price) + ($service_type->minute * $time_in_mins);
+                $price = ($kilometer * $service_type->price) + ($service_type->minute * $minutes);
             } else if($service_type->calculator == 'DISTANCEHOUR') {
-                $price = $base_price + ($kilometer * $service_type->price) + ($service_type->minute * $time_in_mins * 60);
+                $price = ($kilometer * $service_type->price) + ($service_type->minute * $minutes * 60);
             } else {
-                $price = $base_price + ($kilometer * $service_type->price);
+                $price = ($kilometer * $service_type->price);
             }
 
             $price += ( $commission_percentage/100 ) * $price;
@@ -679,7 +676,7 @@ class UserApiController extends Controller
 
             $ActiveProviders = ProviderService::AvailableServiceProvider($request->service_type)->get()->pluck('provider_id');
 
-            $distance = \Setting::get('search_radius', '10');
+            $distance = Setting::get('search_radius', '10');
             $latitude = $request->s_latitude;
             $longitude = $request->s_longitude;
 
@@ -688,8 +685,8 @@ class UserApiController extends Controller
                 ->whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
                 ->get();
 
-            if($Providers->count() <= \Setting::get('surge_trigger') && $Providers->count() > 0){
-                $surge_price = (\Setting::get('surge_percentage')/100) * $total;
+            if($Providers->count() <= Setting::get('surge_trigger') && $Providers->count() > 0){
+                $surge_price = (Setting::get('surge_percentage')/100) * $total;
                 $total += $surge_price;
             }
 

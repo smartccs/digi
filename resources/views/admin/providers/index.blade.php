@@ -18,7 +18,7 @@
                         <th>Total Requests</th>
                         <th>Accepted Requests</th>
                         <th>Cancelled Requests</th>
-                        <th>Pending Review</th>
+                        <th>Documents / Service Type</th>
                         <th>Online</th>
                         <th>Action</th>
                     </tr>
@@ -34,10 +34,10 @@
                         <td>{{$provider->accepted_requests}}</td>
                         <td>{{$provider->total_requests - $provider->accepted_requests }}</td>
                         <td>
-                            @if($provider->pending_documents() > 0)
-                                <a class="btn btn-danger label-right" href="{{route('admin.provider.document.index', $provider->id )}}">Yes <span class="btn-label">{{ $provider->pending_documents() }}</span></a>
+                            @if($provider->pending_documents() > 0 || $provider->service == null)
+                                <a class="btn btn-danger label-right" href="{{route('admin.provider.document.index', $provider->id )}}">Attention! <span class="btn-label">{{ $provider->pending_documents() }}</span></a>
                             @else
-                                <a class="btn btn-success" href="{{route('admin.provider.document.index', $provider->id )}}">No</a>
+                                <a class="btn btn-success" href="{{route('admin.provider.document.index', $provider->id )}}">All Set!</a>
                             @endif
                         </td>
                         <td>
@@ -90,7 +90,7 @@
                         <th>Total Requests</th>
                         <th>Accepted Requests</th>
                         <th>Cancelled Requests</th>
-                        <th>Pending Review</th>
+                        <th>Documents / Service Type</th>
                         <th>Online</th>
                         <th>Action</th>
                     </tr>
