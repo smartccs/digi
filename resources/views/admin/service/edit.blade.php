@@ -66,6 +66,13 @@
                     </div>
                 </div>
 
+                 <div class="form-group row">
+                    <label for="capacity" class="col-xs-2 col-form-label">Seat Capacity</label>
+                    <div class="col-xs-10">
+                        <input class="form-control" type="number" value="{{ $service->capacity }}" name="capacity" required id="capacity" placeholder="Seat Capacity">
+                    </div>
+                </div>
+
                 <div class="form-group row">
                     <label for="calculator" class="col-xs-2 col-form-label">Pricing Logic</label>
                     <div class="col-xs-10">

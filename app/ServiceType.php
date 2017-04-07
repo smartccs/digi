@@ -20,7 +20,8 @@ class ServiceType extends Model
         'status',
         'minute',
         'distance',
-        'calculator'
+        'calculator',
+        'capacity'
     ];
 
     /**

@@ -14,6 +14,7 @@
                         <th>ID</th>
                         <th>Service Name</th>
                         <th>Provider Name</th>
+                        <th>Capacity</th>
                         <th>Base Price</th>
                         <th>Base Distance</th>
                         <th>Distance Price</th>
@@ -29,6 +30,7 @@
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $service->name }}</td>
                         <td>{{ $service->provider_name }}</td>
+                        <td>{{ $service->capacity }}</td>
                         <td>{{ currency($service->fixed) }}</td>
                         <td>{{ distance($service->distance) }}</td>
                         <td>{{ currency($service->price) }}</td>
@@ -61,6 +63,7 @@
                         <th>ID</th>
                         <th>Service Name</th>
                         <th>Provider Name</th>
+                        <th>Capacity</th>
                         <th>Base Price</th>
                         <th>Base Distance</th>
                         <th>Distance Price</th>

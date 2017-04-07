@@ -51,6 +51,7 @@ class ServiceResource extends Controller
         $this->validate($request, [
             'name' => 'required|max:255',
             'provider_name' => 'required|max:255',
+            'capacity' => 'required|numeric',
             'fixed' => 'required|numeric',
             'price' => 'required|numeric',
             'minute' => 'required|numeric',
@@ -147,6 +148,7 @@ class ServiceResource extends Controller
             $service->minute = $request->minute;
             $service->distance = $request->distance;
             $service->calculator = $request->calculator;
+            $service->capacity = $request->capacity;
             $service->save();
 
             return redirect()->route('admin.service.index')->with('flash_success', 'Service Type Updated Successfully');    

@@ -18,6 +18,7 @@ return array (
 		'already_cancelled' => 'Already Ride Cancelled',
 		'already_onride' => 'Already You are Onride',
 		'provider_rated' => 'Driver Rated',
+		'request_scheduled' => 'Ride Scheduled',
 	],
 	'something_went_wrong' => 'Something Went Wrong',
 	'services_not_found' => 'Services Not Found',

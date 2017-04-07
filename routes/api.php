@@ -41,6 +41,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 	
 	Route::get('/request/check' , 'UserApiController@request_status_check');
 
+	Route::get('/show' , 'UserApiController@show');
+
 	// history
 
 	Route::get('/trips' , 'UserApiController@trips');

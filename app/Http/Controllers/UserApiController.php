@@ -909,4 +909,51 @@ class UserApiController extends Controller
         }
     }
 
+
+    /**
+     * Show the nearby providers.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function show(Request $request) {
+
+        $this->validate($request, [
+                'latitude' => 'required|numeric',
+                'longitude' => 'required|numeric',
+                'service' => 'required|numeric|exists:service_types,id',
+            ]);
+
+        try{
+
+            $ActiveProviders = ProviderService::AvailableServiceProvider($request->service)->get()->pluck('provider_id');
+
+            $distance = Setting::get('search_radius', '10');
+            $latitude = $request->latitude;
+            $longitude = $request->longitude;
+
+            $Providers = Provider::whereIn('id', $ActiveProviders)
+                ->where('status', 'approved')
+                ->whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
+                ->get();
+
+            if(count($Providers) == 0) {
+                if($request->ajax()) {
+                    return response()->json(['message' => "No Providers Found"]); 
+                }else{
+                    return back()->with('flash_success', 'No Providers Found! Please try again.');
+                }
+            }
+        
+            return $Providers;
+
+        } catch (Exception $e) {
+            if($request->ajax()) {
+                return response()->json(['error' => trans('api.something_went_wrong')], 500);
+            }else{
+                return back()->with('flash_error', 'Something went wrong while sending request. Please try again.');
+            }
+        }
+    }
+
 }
