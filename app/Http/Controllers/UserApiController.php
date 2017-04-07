@@ -916,7 +916,7 @@ class UserApiController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function show(Request $request) {
+    public function show_providers(Request $request) {
 
         $this->validate($request, [
                 'latitude' => 'required|numeric',
