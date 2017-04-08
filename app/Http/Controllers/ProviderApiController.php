@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Exception;
 use Auth;
 
+use Setting;
+use Carbon\Carbon;
 use App\UserRequests;
 
 class ProviderApiController extends Controller
@@ -24,7 +26,7 @@ class ProviderApiController extends Controller
 
         try{
 
-            $Jobs = UserRequests::where('provider_id',\Auth::user()->id)
+            $Jobs = UserRequests::where('provider_id',Auth::user()->id)
                     ->where('status','SCHEDULED')
                     ->with('service_type')
                     ->get();
@@ -50,7 +52,7 @@ class ProviderApiController extends Controller
 
         try{
 
-            $rides = UserRequests::where('provider_id',\Auth::guard('provider')->user()->id)
+            $rides = UserRequests::where('provider_id',Auth::user()->id)
                         ->where('status','COMPLETED')
                         ->where('created_at', '>=', Carbon::today())
                         ->with('payment','service_type')

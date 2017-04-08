@@ -11,6 +11,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Auth;
 use Config;
 use JWTAuth;
+use Setting;
 
 use App\Provider;
 use App\ProviderDevice;
