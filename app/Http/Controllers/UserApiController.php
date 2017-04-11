@@ -156,7 +156,7 @@ class UserApiController extends Controller
 
                 $user->save();
 
-                $user->currency = currency();
+                $user->currency = Setting::get('currency');
                 return $user;
 
             }else{
@@ -695,7 +695,7 @@ class UserApiController extends Controller
                     'distance' => $kilometer,
                     'time' => $time,
                     'tax_price' => $tax_price,
-                    'base_price' => $base_price,
+                    'base_price' => $service_type->fixed,
                     'wallet_balance' => Auth::user()->wallet_balance
                 ]);
 
