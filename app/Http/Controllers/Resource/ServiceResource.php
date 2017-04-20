@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Resource;
 
-use App\ServiceType;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Helpers\Helper;
+
 use Exception;
+use Setting;
+use App\Helpers\Helper;
+
+use App\ServiceType;
 
 class ServiceResource extends Controller
 {
