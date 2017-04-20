@@ -52,7 +52,7 @@ class DocumentResource extends Controller
         } 
 
         catch (Exception $e) {
-            return back()->with('flash_errors', 'Document Not Found');
+            return back()->with('flash_error', 'Document Not Found');
         }
     }
 
@@ -110,7 +110,7 @@ class DocumentResource extends Controller
         } 
 
         catch (Exception $e) {
-            return back()->with('flash_errors', 'Document Not Found');
+            return back()->with('flash_error', 'Document Not Found');
         }
     }
 
@@ -127,7 +127,7 @@ class DocumentResource extends Controller
             return back()->with('message', 'Document deleted successfully');
         } 
         catch (Exception $e) {
-            return back()->with('flash_errors', 'Document Not Found');
+            return back()->with('flash_error', 'Document Not Found');
         }
     }
 }

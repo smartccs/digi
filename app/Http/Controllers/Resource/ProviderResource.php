@@ -72,7 +72,7 @@ class ProviderResource extends Controller
         } 
 
         catch (Exception $e) {
-            return back()->with('flash_errors', 'Provider Not Found');
+            return back()->with('flash_error', 'Provider Not Found');
         }
     }
 
@@ -144,7 +144,7 @@ class ProviderResource extends Controller
         } 
 
         catch (ModelNotFoundException $e) {
-            return back()->with('flash_errors', 'Provider Not Found');
+            return back()->with('flash_error', 'Provider Not Found');
         }
     }
 
@@ -161,7 +161,7 @@ class ProviderResource extends Controller
             return back()->with('message', 'Provider deleted successfully');
         } 
         catch (Exception $e) {
-            return back()->with('flash_errors', 'Provider Not Found');
+            return back()->with('flash_error', 'Provider Not Found');
         }
     }
 

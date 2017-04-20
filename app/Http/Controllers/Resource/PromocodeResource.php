@@ -52,7 +52,7 @@ class PromocodeResource extends Controller
         } 
 
         catch (ModelNotFoundException $e) {
-            return back()->with('flash_errors', 'Promocode Not Found');
+            return back()->with('flash_error', 'Promocode Not Found');
         }
     }
 
@@ -115,7 +115,7 @@ class PromocodeResource extends Controller
         } 
 
         catch (ModelNotFoundException $e) {
-            return back()->with('flash_errors', 'Promocode Not Found');
+            return back()->with('flash_error', 'Promocode Not Found');
         }
     }
 
@@ -132,7 +132,7 @@ class PromocodeResource extends Controller
             return back()->with('message', 'Promocode deleted successfully');
         } 
         catch (ModelNotFoundException $e) {
-            return back()->with('flash_errors', 'Promocode Not Found');
+            return back()->with('flash_error', 'Promocode Not Found');
         }
     }
 }

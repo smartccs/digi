@@ -64,7 +64,6 @@ class ServiceResource extends Controller
         ]);
 
         try {
-
             $service = $request->all();
 
             if($request->hasFile('image')) {
@@ -74,11 +73,9 @@ class ServiceResource extends Controller
             $service = ServiceType::create($service);
 
             return back()->with('flash_success','Service Type Saved Successfully');
-
-        } 
-
-        catch (Exception $e) {
-            return back()->with('flash_errors', 'Service Type Not Found');
+        } catch (Exception $e) {
+            dd("Exception", $e);
+            return back()->with('flash_error', 'Service Type Not Found');
         }
     }
 
@@ -93,7 +90,7 @@ class ServiceResource extends Controller
         try {
             return ServiceType::findOrFail($id);
         } catch (ModelNotFoundException $e) {
-            return back()->with('flash_errors', 'Service Type Not Found');
+            return back()->with('flash_error', 'Service Type Not Found');
         }
     }
 
@@ -109,7 +106,7 @@ class ServiceResource extends Controller
             $service = ServiceType::findOrFail($id);
             return view('admin.service.edit',compact('service'));
         } catch (ModelNotFoundException $e) {
-            return back()->with('flash_errors', 'Service Type Not Found');
+            return back()->with('flash_error', 'Service Type Not Found');
         }
     }
 
@@ -158,7 +155,7 @@ class ServiceResource extends Controller
         } 
 
         catch (ModelNotFoundException $e) {
-            return back()->with('flash_errors', 'Service Type Not Found');
+            return back()->with('flash_error', 'Service Type Not Found');
         }
     }
 
@@ -178,7 +175,7 @@ class ServiceResource extends Controller
             return back()->with('message', 'Service Type deleted successfully');
         } 
         catch (Exception $e) {
-            return back()->with('flash_errors', 'Service Type Not Found');
+            return back()->with('flash_error', 'Service Type Not Found');
         }
     }
 }

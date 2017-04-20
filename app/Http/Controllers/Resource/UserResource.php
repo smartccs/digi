@@ -67,7 +67,7 @@ class UserResource extends Controller
         } 
 
         catch (Exception $e) {
-            return back()->with('flash_errors', 'User Not Found');
+            return back()->with('flash_error', 'User Not Found');
         }
     }
 
@@ -137,7 +137,7 @@ class UserResource extends Controller
         } 
 
         catch (ModelNotFoundException $e) {
-            return back()->with('flash_errors', 'User Not Found');
+            return back()->with('flash_error', 'User Not Found');
         }
     }
 
@@ -154,7 +154,7 @@ class UserResource extends Controller
             return back()->with('message', 'User deleted successfully');
         } 
         catch (Exception $e) {
-            return back()->with('flash_errors', 'User Not Found');
+            return back()->with('flash_error', 'User Not Found');
         }
     }
 

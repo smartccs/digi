@@ -16,6 +16,7 @@ class ServiceType extends Model
         'provider_name',
         'image',
         'price',
+        'fixed',
         'description',
         'status',
         'minute',

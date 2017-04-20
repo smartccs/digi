@@ -126,6 +126,10 @@ class SettingsTableSeeder extends Seeder
                 'key' => 'surge_trigger',
                 'value' => 0
             ],
+            [
+                'key' => 'demo_mode',
+                'value' => 0
+            ],
         ]);
     }
 }
