@@ -20,19 +20,15 @@ class SettingsTableSeeder extends Seeder
             ],
             [
                 'key' => 'site_logo',
-                'value' => asset('asset/img/logo.png'),
+                'value' => asset('logo-black.png'),
             ],
             [
                 'key' => 'email_logo',
-                'value' => asset('asset/img/logo.png'),
-            ],
-            [
-                'key' => 'site_mail_icon',
-                'value' => asset('asset/img/logo.png'),
+                'value' => asset('logo-white.png'),
             ],
             [
                 'key' => 'site_icon',
-                'value' => asset('asset/img/favicon.png'),
+                'value' => asset('favicon.ico'),
             ],
             [
                 'key' => 'provider_select_timeout',
