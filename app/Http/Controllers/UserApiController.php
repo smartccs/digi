@@ -261,7 +261,7 @@ class UserApiController extends Controller
                 'card_id' => ['required_if:payment_mode,CARD','exists:cards,card_id,user_id,'.Auth::user()->id],
             ]);
 
-        Log::info('New Request from User:', Auth::user()->id);
+        Log::info('New Request from User: '.Auth::user()->id);
         Log::info('Request Details:', $request->all());
 
         $ActiveRequests = UserRequests::PendingRequest(Auth::user()->id)->count();

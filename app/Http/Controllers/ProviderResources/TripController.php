@@ -6,18 +6,18 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-use App\Http\Controllers\SendPushNotification;
 use Auth;
 use Setting;
 use Carbon\Carbon;
+use App\Helpers\Helper;
+use App\Http\Controllers\SendPushNotification;
 
 use App\User;
-use App\Helpers\Helper;
-use App\RequestFilter;
-use App\UserRequests;
-use App\ProviderService;
-use App\PromocodeUsage;
 use App\Promocode;
+use App\UserRequests;
+use App\RequestFilter;
+use App\PromocodeUsage;
+use App\ProviderService;
 use App\UserRequestRating;
 use App\UserRequestPayment;
 
@@ -39,6 +39,11 @@ class TripController extends Controller
                         'latitude' => $request->latitude,
                         'longitude' => $request->longitude,
                     ]);
+                $update_location = Provider::find(Auth::user()->id);
+                $update_location->latitude = $request->latitude;
+                $update_location->longitude = $request->longitude;
+                $update_location->save();
+
             }
 
             $Timeout = Setting::get('provider_select_timeout', 180);

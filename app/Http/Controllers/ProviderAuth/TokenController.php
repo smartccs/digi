@@ -105,7 +105,7 @@ class TokenController extends Controller
         $User = Provider::with('service', 'device')->find(Auth::user()->id);
 
         $User->access_token = $token;
-        $User->currency = currency();
+        $User->currency = Setting::get('currency', '$');
 
         if($User->device) {
             if($User->device->token != $request->token) {

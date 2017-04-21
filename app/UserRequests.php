@@ -74,7 +74,7 @@ class UserRequests extends Model
 
     public function provider_service()
     {
-        return $this->belongsTo('App\ProviderService', 'provider_id');
+        return $this->belongsTo('App\ProviderService', 'provider_id', 'provider_id');
     }
 
     public function scopePendingRequest($query, $user_id)
