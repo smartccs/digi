@@ -104,8 +104,7 @@ class ProviderDocumentResource extends Controller
     {
         try {
             $Document = ProviderDocument::where('provider_id', $provider)
-                ->where('document_id', $id)
-                ->firstOrFail();
+                ->findOrFail($id);
 
             return view('admin.providers.document.edit', compact('Document'));
         } catch (ModelNotFoundException $e) {
@@ -125,8 +124,7 @@ class ProviderDocumentResource extends Controller
         try {
 
             $Document = ProviderDocument::where('provider_id', $provider)
-                ->where('document_id', $id)
-                ->firstOrFail();
+                ->findOrFail($id);
             $Document->update(['status' => 'ACTIVE']);
 
             return redirect()->route('admin.provider.document.index', $provider)->with('flash_success', 'Provider document has been approved.');
@@ -146,8 +144,7 @@ class ProviderDocumentResource extends Controller
         try {
 
             $Document = ProviderDocument::where('provider_id', $provider)
-                ->where('document_id', $id)
-                ->firstOrFail();
+                ->findOrFail($id);
             $Document->delete();
 
             return redirect()->route('admin.provider.document.index', $provider)->with('flash_success', 'Provider document has been deleted');

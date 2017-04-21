@@ -6,7 +6,7 @@ function currency($value = '')
 {
 	if($value == ""){
 		return Setting::get('currency')."0";
-	}else{
+	} else {
 		return Setting::get('currency').$value;
 	}
 }

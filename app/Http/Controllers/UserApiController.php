@@ -159,7 +159,7 @@ class UserApiController extends Controller
                 $user->currency = Setting::get('currency');
                 return $user;
 
-            }else{
+            } else {
                 return response()->json(['error' => trans('api.user.user_not_found')], 500);
             }
         }
