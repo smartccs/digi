@@ -32,8 +32,8 @@ Route::group(['as' => 'provider.'], function () {
 Route::get('review/user', 'AdminController@user_review')->name('user.review');
 Route::get('user/{id}/request', 'Resource\UserResource@request')->name('user.request');
 
-Route::get('map/user', 'AdminController@user_map')->name('user.map');
-Route::get('map/provider', 'AdminController@provider_map')->name('provider.map');
+Route::get('map', 'AdminController@map_index')->name('map.index');
+Route::get('map/ajax', 'AdminController@map_ajax')->name('map.ajax');
 
 Route::get('setting', 'AdminController@setting')->name('setting');
 Route::post('setting/store', 'AdminController@setting_store')->name('setting.store');

@@ -3,20 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
-use App\Provider;
-use App\Settings;
-use App\Admin;
-use App\UserRequestRating;
-use App\UserPayment;
-use App\ProviderService;
-use App\UserRequests;
-use App\ServiceType;
-use App\UserRequestPayment;
+
 use App\Helpers\Helper;
+
 use Auth;
+use Setting;
 use Exception;
 
+use App\User;
+use App\Admin;
+use App\Provider;
+use App\UserPayment;
+use App\ServiceType;
+use App\UserRequests;
+use App\ProviderService;
+use App\UserRequestRating;
+use App\UserRequestPayment;
 
 class AdminController extends Controller
 {
@@ -68,22 +70,44 @@ class AdminController extends Controller
         catch(Exception $e){
             return redirect()->route('admin.setting')->with('flash_error','Something Went Wrong!');
         }
-    }
-
-   	/**
-     * Remove the specified resource from storage.
+    /**
+     * Map of all Users and Drivers.
      *
-     * @param  \App\Provider  $provider
      * @return \Illuminate\Http\Response
      */
-    public function provider_map()
+    public function map_index()
     {
-        try{
-            $Providers = Provider::where('latitude', '!=', 0)->where('longitude', '!=', 0)->has('service')->get();
-            return view('admin.map.provider_map', compact('Providers'));
-        }
-        catch(Exception $e){
-            return redirect()->route('admin.setting')->with('flash_error','Something Went Wrong!');
+        return view('admin.map.index');
+    }
+
+    /**
+     * Map of all Users and Drivers.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function map_ajax()
+    {
+        try {
+
+            $Providers = Provider::where('latitude', '!=', 0)
+                    ->where('longitude', '!=', 0)
+                    ->with('service')
+                    ->get();
+
+            $Users = User::where('latitude', '!=', 0)
+                    ->where('longitude', '!=', 0)
+                    ->get();
+
+            for ($i=0; $i < sizeof($Users); $i++) { 
+                $Users[$i]->status = 'user';
+            }
+
+            $All = $Users->merge($Providers);
+
+            return $All;
+
+        } catch (Exception $e) {
+            return [];
         }
     }
 

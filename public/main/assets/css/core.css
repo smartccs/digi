@@ -420,7 +420,7 @@ a:active {
 
 .site-header .navbar-left {
   height: 60px;
-  background-color: #212330;
+  /*background-color: #212330;*/
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -445,7 +445,7 @@ a:active {
 }
 
 .site-header .navbar-brand .logo {
-  width: 100px;
+  width: 120px;
   height: 25px;
   background: url(../img/logo.png) no-repeat;
 }

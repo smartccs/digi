@@ -33,16 +33,11 @@
 				</ul>
 			</li>
 			<li class="menu-title">Details</li>
-			<li class="with-sub">
-				<a href="#" class="waves-effect  waves-light">
-					<span class="s-caret"><i class="fa fa-angle-down"></i></span>
+			<li>
+				<a href="{{route('admin.map.index')}}" class="waves-effect waves-light">
 					<span class="s-icon"><i class="ti-map-alt"></i></span>
 					<span class="s-text">Map</span>
 				</a>
-				<ul>
-					<li><a href="{{route('admin.user.map')}}">User Locations</a></li>
-					<li><a href="{{route('admin.provider.map')}}">Provider Locations</a></li>
-				</ul>
 			</li>
 			<li class="with-sub">
 				<a href="#" class="waves-effect  waves-light">

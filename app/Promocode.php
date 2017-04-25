@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Promocode extends Model
 {
+    use SoftDeletes;
+    
      /**
      * The attributes that are mass assignable.
      *
@@ -24,4 +26,11 @@ class Promocode extends Model
     protected $hidden = [
         'created_at', 'updated_at'
     ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
 }

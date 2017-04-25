@@ -19,6 +19,7 @@ class CreatePromocodesTable extends Migration
             $table->float('discount',10, 2)->default(0);
             $table->dateTime('expiration');
             $table->enum('status', ['ADDED','EXPIRED']);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

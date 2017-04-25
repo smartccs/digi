@@ -29,11 +29,11 @@ class PromocodeUsage extends Model
      */
     public function promocode()
     {
-        return $this->belongsTo('App\Promocode');
+        return $this->belongsTo('App\Promocode')->withTrashed();
     }
 
    	public function scopeActive($query)
     {
-        return $query->where('status' , 'ADDED');
+        return $query->where('status', 'ADDED');
     }
 }

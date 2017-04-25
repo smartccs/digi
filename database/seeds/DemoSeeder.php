@@ -26,6 +26,8 @@ class DemoSeeder extends Seeder
             'email' => 'demo@appoets.com',
             'password' => bcrypt('123456'),
             'status' => 'approved',
+            'latitude' => '13.00',
+            'logitude' => '80.00'
         ]);
 
         DB::table('provider_services')->truncate();
