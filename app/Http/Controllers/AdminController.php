@@ -55,21 +55,16 @@ class AdminController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Dispatcher Panel.
      *
      * @param  \App\Provider  $provider
      * @return \Illuminate\Http\Response
      */
-    public function user_map()
+    public function dispatcher()
     {
-        try{
+        return view('admin.dispatcher');
+    }
 
-            $Users = User::where('latitude', '!=', 0)->where('longitude', '!=', 0)->get();
-            return view('admin.map.user_map', compact('Users'));
-        }
-        catch(Exception $e){
-            return redirect()->route('admin.setting')->with('flash_error','Something Went Wrong!');
-        }
     /**
      * Map of all Users and Drivers.
      *
