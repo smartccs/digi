@@ -3,9 +3,15 @@
 		<ul class="sidebar-menu">
 			<li class="menu-title">Main</li>
 			<li>
-				<a href="{{route('admin.dashboard')}}" class="waves-effect  waves-light">
+				<a href="{{route('admin.dashboard')}}" class="waves-effect waves-light">
 					<span class="s-icon"><i class="ti-anchor"></i></span>
 					<span class="s-text">Dashboard</span>
+				</a>
+			</li>
+			<li>
+				<a href="{{route('admin.dispatcher')}}" class="waves-effect waves-light">
+					<span class="s-icon"><i class="ti-target"></i></span>
+					<span class="s-text">Dispatcher</span>
 				</a>
 			</li>
 			
@@ -52,13 +58,13 @@
 			</li>
 			<li class="menu-title">Requests</li>
 			<li>
-				<a href="{{route('admin.request.history')}}" class="waves-effect  waves-light">
+				<a href="{{route('admin.requests.index')}}" class="waves-effect  waves-light">
 					<span class="s-icon"><i class="ti-infinite"></i></span>
 					<span class="s-text">Request History</span>
 				</a>
 			</li>
 			<li>
-				<a href="{{route('admin.scheduled.request')}}" class="waves-effect  waves-light">
+				<a href="{{route('admin.requests.scheduled')}}" class="waves-effect  waves-light">
 					<span class="s-icon"><i class="ti-palette"></i></span>
 					<span class="s-text">Scheduled Rides</span>
 				</a>
@@ -107,14 +113,14 @@
 				</a>
 			</li>
 			<li>
-				<a href="{{route('admin.payment.setting')}}" class="waves-effect  waves-light">
+				<a href="{{route('admin.settings.payment')}}" class="waves-effect  waves-light">
 					<span class="s-icon"><i class="ti-money"></i></span>
 					<span class="s-text">Payment Settings</span>
 				</a>
 			</li>
 			<li class="menu-title">Settings</li>
 			<li>
-				<a href="{{route('admin.setting')}}" class="waves-effect  waves-light">
+				<a href="{{route('admin.settings')}}" class="waves-effect  waves-light">
 					<span class="s-icon"><i class="ti-settings"></i></span>
 					<span class="s-text">Site Settings</span>
 				</a>

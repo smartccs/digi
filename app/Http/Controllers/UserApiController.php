@@ -295,7 +295,7 @@ class UserApiController extends Controller
 
         $ActiveProviders = ProviderService::AvailableServiceProvider($request->service_type)->get()->pluck('provider_id');
 
-        $distance = Setting::get('search_radius', '10');
+        $distance = Setting::get('provider_search_radius', '10');
         $latitude = $request->s_latitude;
         $longitude = $request->s_longitude;
 
@@ -676,7 +676,7 @@ class UserApiController extends Controller
 
             $ActiveProviders = ProviderService::AvailableServiceProvider($request->service_type)->get()->pluck('provider_id');
 
-            $distance = Setting::get('search_radius', '10');
+            $distance = Setting::get('provider_search_radius', '10');
             $latitude = $request->s_latitude;
             $longitude = $request->s_longitude;
 
@@ -739,47 +739,33 @@ class UserApiController extends Controller
      */
 
     public function promocodes() {
-
         try{
-
             $this->check_expiry();
 
-            $Promocode = PromocodeUsage::Active()->where('user_id',Auth::user()->id)
-                                ->with('promocode')
-                                ->get()
-                                ->toArray();
+            return PromocodeUsage::Active()
+                    ->where('user_id', Auth::user()->id)
+                    ->with('promocode')
+                    ->get();
 
-            return response()->json($Promocode);
-
-        }
-
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json(['error' => trans('api.something_went_wrong')], 500);
         }
-
     } 
 
 
     public function check_expiry(){
-
         try{
-
             $Promocode = Promocode::all();
-
             foreach ($Promocode as $index => $promo) {
-
                 if(date("Y-m-d") > $promo->expiration){
                     $promo->status = 'EXPIRED';
                     $promo->save();
-                    PromocodeUsage::where('promocode_id',$promo->id)->update(['status' => 'EXPIRED']);
+                    PromocodeUsage::where('promocode_id', $promo->id)->update(['status' => 'EXPIRED']);
                 }
-
             }
-
-        }    
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json(['error' => trans('api.something_went_wrong')], 500);
-        }  
+        }
     }
 
 
@@ -791,7 +777,7 @@ class UserApiController extends Controller
 
     public function add_promocode(Request $request) {
 
-         $this->validate($request, [
+        $this->validate($request, [
                 'promocode' => 'required|exists:promocodes,promo_code',
             ]);
 
@@ -928,7 +914,7 @@ class UserApiController extends Controller
 
             $ActiveProviders = ProviderService::AvailableServiceProvider($request->service)->get()->pluck('provider_id');
 
-            $distance = Setting::get('search_radius', '10');
+            $distance = Setting::get('provider_search_radius', '10');
             $latitude = $request->latitude;
             $longitude = $request->longitude;
 

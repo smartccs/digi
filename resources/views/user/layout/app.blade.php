@@ -51,11 +51,11 @@
                     </li>
 
                     <li>
-                        <a href="{{Setting::get('app_store_link','#')}}"><img src="{{asset('/asset/img/appstore-white.png')}}"></a>
+                        <a href="{{Setting::get('store_link_ios','#')}}"><img src="{{asset('/asset/img/appstore-white.png')}}"></a>
                     </li>
 
                     <li>
-                        <a href="{{Setting::get('play_store_link','#')}}"><img src="{{asset('/asset/img/playstore-white.png')}}"></a>
+                        <a href="{{Setting::get('store_link_android','#')}}"><img src="{{asset('/asset/img/playstore-white.png')}}"></a>
                     </li>
 
 
@@ -130,12 +130,12 @@
                                     <h5>Get App on</h5>
                                     <ul class="app">
                                         <li>
-                                            <a href="{{Setting::get('app_store_link','#')}}">
+                                            <a href="{{Setting::get('store_link_ios','#')}}">
                                                 <img src="{{asset('asset/img/appstore.png')}}">
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{{Setting::get('play_store_link','#')}}">
+                                            <a href="{{Setting::get('store_link_android','#')}}">
                                                 <img src="{{asset('asset/img/playstore.png')}}">
                                             </a>
                                         </li>                                                        

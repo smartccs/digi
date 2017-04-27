@@ -112,9 +112,9 @@ class AdminController extends Controller
      * @param  \App\Provider  $provider
      * @return \Illuminate\Http\Response
      */
-    public function setting()
+    public function settings()
     {
-        return view('admin.setting.site-setting');
+        return view('admin.settings.appoets');
     }
 
     /**
@@ -130,95 +130,82 @@ class AdminController extends Controller
         }
 
         $this->validate($request,[
-                'site_icon' => 'mimes:jpeg,jpg,bmp,png||max:5242880',
-                'site_logo' => 'mimes:jpeg,jpg,bmp,png||max:5242880',
+                'sitename' => 'required',
+                'site_icon' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
+                'site_logo' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
             ]);
 
-        $settings = Settings::all();
+        if($request->hasFile('site_icon')) {
+            $site_icon = Helper::upload_picture($request->file('site_icon'));
+            Setting::set('site_icon', $site_icon);
+        }
 
-            foreach ($settings as $setting) {
+        if($request->hasFile('site_logo')) {
+            $site_logo = Helper::upload_picture($request->file('site_logo'));
+            Setting::set('site_logo', $site_logo);
+        }
 
-                $key = $setting->key;
-               
-                $temp_setting = Settings::find($setting->id);
+        if($request->hasFile('site_email_logo')) {
+            $site_email_logo = Helper::upload_picture($request->file('site_email_logo'));
+            Setting::set('site_email_logo', $site_email_logo);
+        }
 
-                if($temp_setting->key == 'site_icon'){
-                    
-                    if($request->file('site_icon') == null){
-                        $icon = $temp_setting->value;
-                    } else {
-                        if($temp_setting->value) {
-                            Helper::delete_picture($temp_setting->value);
-                        }
-                        $icon = Helper::upload_picture($request->file('site_icon'));
-                    }
-
-                    $temp_setting->value = $icon;
-
-                }else if($temp_setting->key == 'site_logo'){
-
-                    if($request->file('site_logo') == null){
-                        $logo = $temp_setting->value;
-                    } else {
-                        if($temp_setting->value) {
-                            Helper::delete_picture($temp_setting->value);
-                        }
-                        $logo = Helper::upload_picture($request->file('site_logo'));
-                    }
-
-                    $temp_setting->value = $logo;
-
-                }else if($temp_setting->key == 'email_logo'){
-
-                    if($request->file('email_logo') == null){
-                        $logo = $temp_setting->value;
-                    } else {
-                        if($temp_setting->value) {
-                            Helper::delete_picture($temp_setting->value);
-                        }
-                        $logo = Helper::upload_picture($request->file('email_logo'));
-                    }
-
-                    $temp_setting->value = $logo;
-
-                }else if($temp_setting->key == 'manual_request'){
-
-                    if($request->$key==1)
-                    {
-                        $temp_setting->value   = 1;
-                    }
-
-                }else if($temp_setting->key == 'CARD'){
-                    if($request->$key == 'on')
-                    {
-                        $temp_setting->value = 1;
-                    }
-                    else
-                    {
-                        $temp_setting->value = 0;
-                    }
-                }else if($temp_setting->key == 'paypal'){
-                    if($request->$key == 'on')
-                    {
-                        $temp_setting->value   = 1;
-                    }
-                    else
-                    {
-                        $temp_setting->value = 0;
-                    }
-                }else if($request->$key != ''){
-
-                    $temp_setting->value = $request->$key;
-                
-                }
-                
-                $temp_setting->save();
-                  
-            }
+        Setting::set('site_title', $request->site_title);
+        Setting::set('store_link_android', $request->store_link_android);
+        Setting::set('store_link_ios', $request->store_link_ios);
+        Setting::set('provider_select_timeout', $request->provider_select_timeout);
+        Setting::set('provider_search_radius', $request->provider_search_radius);
+        Setting::save();
         
         return back()->with('flash_success','Settings Updated Successfully');
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function settings_payment()
+    {
+        return view('admin.payment.settings');
+    }
+
+    /**
+     * Save payment related settings.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function settings_payment_store(Request $request)
+    {
+        $this->validate($request, [
+                'CARD' => 'in:on',
+                'CASH' => 'in:on',
+                'stripe_secret_key' => 'required_if:CARD,on|max:255',
+                'stripe_publishable_key' => 'required_if:CARD,on|max:255',
+                'daily_target' => 'required|integer|min:0',
+                'tax_percentage' => 'required|numeric|min:0|max:100',
+                'surge_percentage' => 'required|numeric|min:0|max:100',
+                'commission_percentage' => 'required|numeric|min:0|max:100',
+                'surge_trigger' => 'required|integer|min:0',
+                'currency' => 'required'
+            ]);
+
+        Setting::set('CARD', $request->has('CARD') ? 1 : 0 );
+        Setting::set('CASH', $request->has('CASH') ? 1 : 0 );
+        Setting::set('stripe_secret_key', $request->stripe_secret_key);
+        Setting::set('stripe_publishable_key', $request->stripe_publishable_key);
+        Setting::set('daily_target', $request->daily_target);
+        Setting::set('tax_percentage', $request->tax_percentage);
+        Setting::set('surge_percentage', $request->surge_percentage);
+        Setting::set('commission_percentage', $request->commission_percentage);
+        Setting::set('surge_trigger', $request->surge_trigger);
+        Setting::set('currency', $request->currency);
+        Setting::save();
+
+        return back()->with('flash_success','Settings Updated Successfully');
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -230,8 +217,6 @@ class AdminController extends Controller
     {
         return view('admin.account.profile');
     }
-
-
 
     /**
      * Remove the specified resource from storage.
@@ -342,77 +327,12 @@ class AdminController extends Controller
      * @param  \App\Provider  $provider
      * @return \Illuminate\Http\Response
      */
-    public function payment_setting()
+    public function help()
     {
-        return view('admin.payment.payment-setting');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Provider  $provider
-     * @return \Illuminate\Http\Response
-     */
-    public function help(){
         try {
             $str = file_get_contents('http://appoets.com/help.json');
             $Data = json_decode($str, true);
             return view('admin.help', compact('Data'));
-        } catch (Exception $e) {
-             return back()->with('flash_error','Something Went Wrong!');
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Provider  $provider
-     * @return \Illuminate\Http\Response
-     */
-    public function request_history(){
-        try {
-            $requests = UserRequests::RequestHistory()->get();
-
-            return view('admin.request.request-history', compact('requests'));
-        } catch (Exception $e) {
-             return back()->with('flash_error','Something Went Wrong!');
-        }
-    }
-
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Provider  $provider
-     * @return \Illuminate\Http\Response
-     */
-    public function request_details($id){
-        try {
-
-            $request = UserRequests::where('user_requests.id',$id)
-                ->has('provider','user','payment')
-                ->first();
-
-            return view('admin.request.request-details', compact('request'));
-        } catch (Exception $e) {
-             return back()->with('flash_error','Something Went Wrong!');
-        }
-    }
-
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Provider  $provider
-     * @return \Illuminate\Http\Response
-     */
-    public function scheduled_request(){
-        try{
-            $requests = UserRequests::where('status' , 'SCHEDULED')
-                        ->RequestHistory()
-                        ->get();
-
-            return view('admin.request.scheduled-request', compact('requests'));
         } catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
@@ -426,7 +346,7 @@ class AdminController extends Controller
     public function user_review()
     {
         try {
-            $Reviews = UserRequestRating::where('user_id','!=',0)->has('user','provider')->get();
+            $Reviews = UserRequestRating::where('user_id', '!=', 0)->has('user', 'provider')->get();
             return view('admin.review.user_review',compact('Reviews'));
         } catch(Exception $e) {
             return redirect()->route('admin.setting')->with('flash_error','Something Went Wrong!');
@@ -463,4 +383,41 @@ class AdminController extends Controller
         }
     }
 
+    /**
+     * Testing page for push notifications.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function push_index()
+    {
+        $data = PushNotification::app('IOSUser')
+            ->to('163e4c0ca9fe084aabeb89372cf3f664790ffc660c8b97260004478aec61212c')
+            ->send('Hello World, i`m a push message');
+        dd($data);
+
+        $data = PushNotification::app('AndroidProvider')
+            ->to('daIar7y9pME:APA91bFzpfRysjv8w5rlsH4XQbOPwHj8Djo6PxiMdn2MIDMuV3SiENuM2cRvFSv-jweMVD-Xr9dIIKIaKJrbhb6PfuETGARTboCwdh3WL7I3apUu0Q3JJkk-S4kZP41EKkqpYnEXUkBn')
+            ->send('poda panni');
+        dd($data);
+
+        $data = PushNotification::app('IOSProvider')
+            ->to('a9b9a16c5984afc0ea5b681cc51ada13fc5ce9a8c895d14751de1a2dba7994e7')
+            ->send('Hello World, i`m a push message');
+        dd($data);
+    }
+
+    /**
+     * Testing page for push notifications.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function push_store(Request $request)
+    {
+        try {
+            ProviderService::find($id)->delete();
+            return back()->with('message', 'Service deleted successfully');
+        } catch (Exception $e) {
+             return back()->with('flash_error','Something Went Wrong!');
+        }
+    }
 }

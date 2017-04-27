@@ -46,7 +46,7 @@
                         <td>
                             <form action="{{ route('admin.service.destroy', $service->id) }}" method="POST">
                                 {{ csrf_field() }}
-                                <input type="hidden" name="_method" value="DELETE">
+                                {{ method_field('DELETE') }}
                                 <a href="{{ route('admin.service.edit', $service->id) }}" class="btn btn-info btn-block">
                                     <i class="fa fa-pencil"></i> Edit
                                 </a>

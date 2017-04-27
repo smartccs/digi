@@ -44,35 +44,35 @@
                 <div class="form-group row">
                     <label for="tax_percentage" class="col-xs-2 col-form-label">Copyright Content</label>
                     <div class="col-xs-10">
-                        <input class="form-control" type="number" value="{{ Setting::get('site_copyright', '&copy; 2017 Appoets') }}" name="site_copyright" id="site_copyright" placeholder="Site Copyright">
+                        <input class="form-control" type="text" value="{{ Setting::get('site_copyright', '&copy; 2017 Appoets') }}" name="site_copyright" id="site_copyright" placeholder="Site Copyright">
                     </div>
                 </div>
 
 				<div class="form-group row">
-					<label for="play_store_link" class="col-xs-2 col-form-label">Playstore link</label>
+					<label for="store_link_android" class="col-xs-2 col-form-label">Playstore link</label>
 					<div class="col-xs-10">
-						<input class="form-control" type="text" value="{{ Setting::get('play_store_link', '')  }}" name="play_store_link"  id="play_store_link" placeholder="Playstore link">
+						<input class="form-control" type="text" value="{{ Setting::get('store_link_android', '')  }}" name="store_link_android"  id="store_link_android" placeholder="Playstore link">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="app_store_link" class="col-xs-2 col-form-label">Appstore Link</label>
+					<label for="store_link_ios" class="col-xs-2 col-form-label">Appstore Link</label>
 					<div class="col-xs-10">
-						<input class="form-control" type="text" value="{{ Setting::get('app_store_link', '')  }}" name="app_store_link"  id="app_store_link" placeholder="Appstore link">
+						<input class="form-control" type="text" value="{{ Setting::get('store_link_ios', '')  }}" name="store_link_ios"  id="store_link_ios" placeholder="Appstore link">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="provider_select_timeout" class="col-xs-2 col-form-label">Provider Timout</label>
+					<label for="provider_select_timeout" class="col-xs-2 col-form-label">Provider Accept Timeout</label>
 					<div class="col-xs-10">
-						<input class="form-control" type="number" value="{{ Setting::get('provider_select_timeout', '')  }}" name="provider_select_timeout" required id="provider_select_timeout" placeholder="Provider Timout">
+						<input class="form-control" type="number" value="{{ Setting::get('provider_select_timeout', '60')  }}" name="provider_select_timeout" required id="provider_select_timeout" placeholder="Provider Timout">
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="search_radius" class="col-xs-2 col-form-label">Search Radius</label>
+					<label for="provider_search_radius" class="col-xs-2 col-form-label">Provider Search Radius</label>
 					<div class="col-xs-10">
-						<input class="form-control" type="number" value="{{ Setting::get('search_radius', '')  }}" name="search_radius" required id="search_radius" placeholder="Search Radius">
+						<input class="form-control" type="number" value="{{ Setting::get('provider_search_radius', '100')  }}" name="provider_search_radius" required id="provider_search_radius" placeholder="Provider Search Radius">
 					</div>
 				</div>
 

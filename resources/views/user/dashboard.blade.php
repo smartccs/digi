@@ -107,23 +107,23 @@
 
    </script> 
 
-    <script type="text/javascript" src="{{asset('asset/js/map.js')}}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_MAP_KEY')}}&libraries=places&callback=initMap"
-        async defer></script>
+<script type="text/javascript" src="{{asset('asset/js/map.js')}}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_MAP_KEY')}}&libraries=places&callback=initMap"
+    async defer></script>
 
-    <script type="text/javascript">
-        function disableEnterKey(e)
-        {
-             var key;      
-             if(window.e)
-                  key = window.e.keyCode; //IE
-             else
-                  key = e.which; //firefox      
+<script type="text/javascript">
+    function disableEnterKey(e)
+    {
+        var key;      
+        if(window.e)
+            key = window.e.keyCode; //IE
+        else
+            key = e.which; //firefox      
 
-              console.log(key);
-            if(key == 13)
-                return e.preventDefault();
-        }
-    </script>
- 
+        console.log(key);
+        if(key == 13)
+            return e.preventDefault();
+    }
+</script>
+
 @endsection

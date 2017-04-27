@@ -126,19 +126,20 @@ a:hover{
     height: 18px;
 }
 .navbar{
-    margin-bottom: 0;
-    border: 0;
-    border-radius: 0;
-    background-color: #fff;
-    border-bottom: 1px solid #eee;
+  margin-bottom: 0;
+  border: 0;
+  border-radius: 0;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
 }
 .nav>li>a:focus, .nav>li>a:hover,.nav>li.active>a,.nav>li.active>a:focus, .nav>li.active>a:hover {
-    text-decoration: none;
-    background-color: #37b38b;
-    color: #fff;
+  text-decoration: none;
+  background-color: #37b38b;
+  color: #fff;
 }
 .page-content{
   padding-top: 90px;
+  margin-bottom: 40px
 }
 
 .menu-drop .dropdown .btn{

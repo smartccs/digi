@@ -2,17 +2,18 @@
 
 /*
 |--------------------------------------------------------------------------
-| Authentication Routes
+| User Authentication Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
 */
 
 
 Auth::routes();
+
+/*
+|--------------------------------------------------------------------------
+| Provider Authentication Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::group(['prefix' => 'provider'], function () {
     Route::get('/login', 'ProviderAuth\LoginController@showLoginForm');
@@ -27,6 +28,12 @@ Route::group(['prefix' => 'provider'], function () {
     Route::get('/password/reset', 'ProviderAuth\ForgotPasswordController@showLinkRequestForm');
     Route::get('/password/reset/{token}', 'ProviderAuth\ResetPasswordController@showResetForm');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Admin Authentication Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('/login', 'AdminAuth\LoginController@showLoginForm');
@@ -43,11 +50,6 @@ Route::group(['prefix' => 'admin'], function () {
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
 */
 
 Route::get('/', function () {
@@ -66,11 +68,6 @@ Route::get('/drive', function () {
 |--------------------------------------------------------------------------
 | User Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
 */
 
 Route::get('/dashboard', 'HomeController@index');
@@ -110,24 +107,5 @@ Route::get('/payment', 'HomeController@payment');
 Route::resource('card', 'Resource\CardResource');
 
 // promotions
-Route::get('/promotion', 'HomeController@promotion');
-Route::post('/add/promocode', 'HomeController@add_promocode');
-
-Route::get('/send/push',
-    function(){
-        $data = PushNotification::app('IOSUser')
-        ->to('163e4c0ca9fe084aabeb89372cf3f664790ffc660c8b97260004478aec61212c')
-        ->send('Hello World, i`m a push message');
-dd($data);
-
-//         $data = PushNotification::app('AndroidProvider')
-//         ->to('daIar7y9pME:APA91bFzpfRysjv8w5rlsH4XQbOPwHj8Djo6PxiMdn2MIDMuV3SiENuM2cRvFSv-jweMVD-Xr9dIIKIaKJrbhb6PfuETGARTboCwdh3WL7I3apUu0Q3JJkk-S4kZP41EKkqpYnEXUkBn')
-//         ->send('poda panni');
-// dd($data);
-
-// $data = PushNotification::app('IOSProvider')
-//         ->to('a9b9a16c5984afc0ea5b681cc51ada13fc5ce9a8c895d14751de1a2dba7994e7')
-//         ->send('Hello World, i`m a push message');
-// dd($data);
-
-                });
+Route::get('/promotions', 'HomeController@promotions_index')->name('promocodes.index');
+Route::post('/promotions', 'HomeController@promotions_store')->name('promocodes.store');

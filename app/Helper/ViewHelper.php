@@ -5,7 +5,7 @@ use App\PromocodeUsage;
 function currency($value = '')
 {
 	if($value == ""){
-		return Setting::get('currency')."0";
+		return Setting::get('currency')."0.00";
 	} else {
 		return Setting::get('currency').$value;
 	}

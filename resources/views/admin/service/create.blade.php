@@ -11,7 +11,7 @@
             <h5 style="margin-bottom: 2em;">Add Service Type</h5>
 
             <form class="form-horizontal" action="{{route('admin.service.store')}}" method="POST" enctype="multipart/form-data" role="form">
-                {{csrf_field()}}
+                {{ csrf_field() }}
                 <div class="form-group row">
                     <label for="name" class="col-xs-12 col-form-label">Service Name</label>
                     <div class="col-xs-10">
@@ -78,6 +78,13 @@
                             <option value="DISTANCEMIN">@lang('servicetypes.DISTANCEMIN')</option>
                             <option value="DISTANCEHOUR">@lang('servicetypes.DISTANCEHOUR')</option>
                         </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="description" class="col-xs-12 col-form-label">Description</label>
+                    <div class="col-xs-10">
+                        <textarea class="form-control" type="number" value="{{ old('description') }}" name="description" required id="description" placeholder="Description" rows="4"></textarea>
                     </div>
                 </div>
 

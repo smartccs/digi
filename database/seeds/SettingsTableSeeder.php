@@ -23,7 +23,7 @@ class SettingsTableSeeder extends Seeder
                 'value' => asset('logo-black.png'),
             ],
             [
-                'key' => 'email_logo',
+                'key' => 'site_email_logo',
                 'value' => asset('logo-white.png'),
             ],
             [
@@ -31,11 +31,15 @@ class SettingsTableSeeder extends Seeder
                 'value' => asset('favicon.ico'),
             ],
             [
+                'key' => 'site_copyright',
+                'value' => '&copy; 2017 Appoets'
+            ],
+            [
                 'key' => 'provider_select_timeout',
                 'value' => 60
             ],
             [
-                'key' => 'search_radius',
+                'key' => 'provider_search_radius',
                 'value' => 100
             ],
             [
@@ -54,16 +58,12 @@ class SettingsTableSeeder extends Seeder
                 'key' => 'stripe_secret_key',
                 'value' => ''
             ],
-             [
+            [
                 'key' => 'stripe_publishable_key',
                 'value' => ''
             ],
             [
                 'key' => 'CASH',
-                'value' => 1
-            ],
-            [
-                'key' => 'PAYPAL',
                 'value' => 1
             ],
             [
@@ -73,10 +73,6 @@ class SettingsTableSeeder extends Seeder
             [
                 'key' => 'manual_request',
                 'value' => 0
-            ],
-            [
-                'key' => 'paypal_email',
-                'value' => ''
             ],
             [
                 'key' => 'default_lang',
@@ -103,11 +99,11 @@ class SettingsTableSeeder extends Seeder
                 'value' => 0
             ],
             [
-                'key' => 'play_store_link',
+                'key' => 'store_link_android',
                 'value' => ''
             ],
             [
-                'key' => 'app_store_link',
+                'key' => 'store_link_ios',
                 'value' => ''
             ],
             [

@@ -126,10 +126,10 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function promotion(Request $request)
+    public function promotions_index(Request $request)
     {
         $promocodes = $this->UserAPI->promocodes()->getData();
-        return view('user.account.promotion',compact('promocodes'));
+        return view('user.account.promotions', compact('promocodes'));
     }
 
     /**
@@ -137,7 +137,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function add_promocode(Request $request)
+    public function promotions_store(Request $request)
     {
         return $this->UserAPI->add_promocode($request);
     }

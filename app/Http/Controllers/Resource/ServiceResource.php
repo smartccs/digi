@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use Exception;
 use Setting;
+use Exception;
 use App\Helpers\Helper;
 
 use App\ServiceType;
@@ -173,8 +173,9 @@ class ServiceResource extends Controller
         try {
             ServiceType::find($id)->delete();
             return back()->with('message', 'Service Type deleted successfully');
-        } 
-        catch (Exception $e) {
+        } catch (ModelNotFoundException $e) {
+            return back()->with('flash_error', 'Service Type Not Found');
+        } catch (Exception $e) {
             return back()->with('flash_error', 'Service Type Not Found');
         }
     }

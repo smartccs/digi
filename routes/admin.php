@@ -1,19 +1,14 @@
 <?php
 
-
 /*
 |--------------------------------------------------------------------------
-| Admin Auth Routes
+| Admin Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
 */
 
 Route::get('/', 'AdminController@dashboard')->name('index');
 Route::get('/dashboard', 'AdminController@dashboard')->name('dashboard');
+Route::get('/dispatcher', 'AdminController@dispatcher')->name('dispatcher');
 
 Route::resource('user', 'Resource\UserResource');
 Route::resource('provider', 'Resource\ProviderResource');
@@ -35,26 +30,23 @@ Route::get('user/{id}/request', 'Resource\UserResource@request')->name('user.req
 Route::get('map', 'AdminController@map_index')->name('map.index');
 Route::get('map/ajax', 'AdminController@map_ajax')->name('map.ajax');
 
-Route::get('setting', 'AdminController@setting')->name('setting');
-Route::post('setting/store', 'AdminController@setting_store')->name('setting.store');
+Route::get('settings', 'AdminController@settings')->name('settings');
+Route::post('settings/store', 'AdminController@settings_store')->name('settings.store');
+Route::get('settings/payment', 'AdminController@settings_payment')->name('settings.payment');
+Route::post('settings/payment', 'AdminController@settings_payment_store')->name('settings.payment.store');
 
 Route::get('profile', 'AdminController@profile')->name('profile');
-Route::post('profile/update', 'AdminController@profile_update')->name('profile.update');
+Route::post('profile', 'AdminController@profile_update')->name('profile.update');
 
 Route::get('password', 'AdminController@password')->name('password');
-Route::post('password/update', 'AdminController@password_update')->name('password.update');
+Route::post('password', 'AdminController@password_update')->name('password.update');
 
 Route::get('payment', 'AdminController@payment')->name('payment');
-Route::get('payment/setting', 'AdminController@payment_setting')->name('payment.setting');
 
 Route::get('help', 'AdminController@help')->name('help');
 
-Route::get('request', 'AdminController@request_history')->name('request.history');
+Route::resource('requests', 'Resource\TripResource');
+Route::get('requests/scheduled', 'Resource\TripResource@scheduled')->name('requests.scheduled');
 
-Route::get('scheduled/request', 'AdminController@scheduled_request')->name('scheduled.request');
-
-Route::get('request/{id}/details', 'AdminController@request_details')->name('request.details');
-
-Route::get('destory/{id}/service', 'AdminController@destory_provider_service')->name('destory.service');
-
-
+Route::get('push', 'AdminController@push_index')->name('push.index');
+Route::post('push', 'AdminController@push_store')->name('push.store');
