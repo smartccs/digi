@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="box box-block bg-white">
             <h4>Request details</h4>
-            <a href="{{ route('admin.request.index') }}" class="btn btn-default pull-right">
+            <a href="{{ route('admin.requests.index') }}" class="btn btn-default pull-right">
                 <i class="fa fa-angle-left"></i> Back
             </a>
             <div class="row">

@@ -58,7 +58,7 @@
                                   </button>
                                   <ul class="dropdown-menu">
                                     <li>
-                                        <a href="{{ route('admin.request.details', $request->id) }}" class="btn btn-default"><i class="fa fa-search"></i> More Details</a>
+                                        <a href="{{ route('admin.requests.show', $request->id) }}" class="btn btn-default"><i class="fa fa-search"></i> More Details</a>
                                     </li>
                                   </ul>
                                 </div>

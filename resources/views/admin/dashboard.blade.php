@@ -71,7 +71,7 @@
 								<td>{{$ride->user->first_name}} {{$ride->user->last_name}}</td>
 								<td>
 									@if($ride->status != "CANCELLED")
-										<a class="text-primary" href="{{route('admin.request.details',$ride->id)}}"><span class="underline">View Ride Details</span></a>
+										<a class="text-primary" href="{{route('admin.requests.show',$ride->id)}}"><span class="underline">View Ride Details</span></a>
 									@else
 										<span>No Details Found </span>
 									@endif									
