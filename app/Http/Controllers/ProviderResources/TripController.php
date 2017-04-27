@@ -39,11 +39,6 @@ class TripController extends Controller
                         'latitude' => $request->latitude,
                         'longitude' => $request->longitude,
                     ]);
-                $update_location = Provider::find(Auth::user()->id);
-                $update_location->latitude = $request->latitude;
-                $update_location->longitude = $request->longitude;
-                $update_location->save();
-
             }
 
             $Timeout = Setting::get('provider_select_timeout', 180);

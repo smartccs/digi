@@ -29,7 +29,7 @@ class AdminController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('admin');  
+        $this->middleware('admin');
     }
 
 
@@ -237,7 +237,7 @@ class AdminController extends Controller
         ]);
 
         try{
-            $admin = Admin::find(Auth::guard('admin')->user()->id);
+            $admin = Auth::guard('admin')->user();
             $admin->name = $request->name;
             $admin->mobile = $request->mobile;
             if($request->hasFile('picture')){
@@ -308,7 +308,7 @@ class AdminController extends Controller
     public function payment()
     {
         try {
-             $payments = UserRequests::where('paid',1)
+             $payments = UserRequests::where('paid', 1)
                     ->has('user')
                     ->has('provider')
                     ->has('payment')

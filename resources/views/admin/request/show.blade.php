@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="box box-block bg-white">
             <h4>Request details</h4>
-            <a href="{{ route('admin.request.history') }}" class="btn btn-default pull-right">
+            <a href="{{ route('admin.request.index') }}" class="btn btn-default pull-right">
                 <i class="fa fa-angle-left"></i> Back
             </a>
             <div class="row">
@@ -27,7 +27,6 @@
                         <dd class="col-sm-8">{{$request->distance ? $request->distance : '-'}}</dd>
 
                         @if($request->status == 'SCHEDULED')
-
                         <dt class="col-sm-4">Ride Scheduled Time :</dt>
                         <dd class="col-sm-8">
                             @if($request->schedule_at != "0000-00-00 00:00:00")
@@ -35,12 +34,9 @@
                             @else
                                 - 
                             @endif
-                         </dd>
-
-
-                         @else
-
-                         <dt class="col-sm-4">Ride Start Time :</dt>
+                        </dd>
+                        @else
+                        <dt class="col-sm-4">Ride Start Time :</dt>
                         <dd class="col-sm-8">
                             @if($request->started_at != "0000-00-00 00:00:00")
                                 {{date('jS \of F Y h:i:s A', strtotime($request->started_at)) }} 
@@ -57,9 +53,7 @@
                                 - 
                             @endif
                         </dd>
-
                         @endif
-
 
                         <dt class="col-sm-4">Pickup Address :</dt>
                         <dd class="col-sm-8">{{$request->s_address ? $request->s_address : '-' }}</dd>
@@ -102,8 +96,7 @@
 <style type="text/css">
     #map {
         height: 100%;
-        min-height: 400px; 
+        min-height: 400px;
     }
 </style>
 @endsection
-

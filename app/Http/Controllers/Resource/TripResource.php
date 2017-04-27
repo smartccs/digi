@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Resource;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use App\UserRequests;
+
 class TripResource extends Controller
 {
     /**
