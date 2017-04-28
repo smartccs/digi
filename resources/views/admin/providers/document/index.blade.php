@@ -32,7 +32,7 @@
                                             <td>{{ $service->service_number }}</td>
                                             <td>{{ $service->service_model }}</td>
                                             <td>
-                                                    <a href="{{route('admin.destory.service',$service->id)}}" class="btn btn-danger btn-large" form="form-delete">Delete</a>
+                                                <a href="{{route('admin.services.destroy',$service->id)}}" class="btn btn-danger btn-large" form="form-delete">Delete</a>
                                             </td>
                                         </tr>
                                         @endforeach

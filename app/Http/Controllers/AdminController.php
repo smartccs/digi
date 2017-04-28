@@ -114,7 +114,7 @@ class AdminController extends Controller
      */
     public function settings()
     {
-        return view('admin.settings.appoets');
+        return view('admin.settings.application');
     }
 
     /**
@@ -123,14 +123,14 @@ class AdminController extends Controller
      * @param  \App\Provider  $provider
      * @return \Illuminate\Http\Response
      */
-    public function setting_store(Request $request)
+    public function settings_store(Request $request)
     {
         if(Setting::get('demo_mode', 0) == 1) {
             return back()->with('flash_error','Disabled for demo purposes! Please contact us at info@appoets.com');
         }
 
         $this->validate($request,[
-                'sitename' => 'required',
+                'site_title' => 'required',
                 'site_icon' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
                 'site_logo' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
             ]);
@@ -241,7 +241,6 @@ class AdminController extends Controller
             $admin->name = $request->name;
             $admin->mobile = $request->mobile;
             if($request->hasFile('picture')){
-                Storage::delete($admin->picture);
                 $admin->picture = $request->picture->store('admin/profile');  
             }
             $admin->save();

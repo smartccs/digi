@@ -41,7 +41,8 @@ function promo_used_count($promo_id)
 	return PromocodeUsage::where('status','USED')->where('promocode_id',$promo_id)->count();
 }
 
-function curl($url){
+function curl($url)
+{
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

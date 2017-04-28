@@ -7,12 +7,11 @@
 <div class="content-area py-1">
     <div class="container-fluid">
     	<div class="box box-block bg-white">
+			<h5>Site Settings</h5>
 
-			<h5 style="margin-bottom: 2em;">Site Settings</h5>
-
-            <form class="form-horizontal" action="{{route('admin.setting.store')}}" method="POST" enctype="multipart/form-data" role="form">
-            
+            <form class="form-horizontal" action="{{ route('admin.settings.store') }}" method="POST" enctype="multipart/form-data" role="form">
             	{{csrf_field()}}
+            	
 				<div class="form-group row">
 					<label for="site_title" class="col-xs-2 col-form-label">Site Name</label>
 					<div class="col-xs-10">
