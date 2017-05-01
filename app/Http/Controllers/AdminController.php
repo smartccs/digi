@@ -55,17 +55,6 @@ class AdminController extends Controller
     }
 
     /**
-     * Dispatcher Panel.
-     *
-     * @param  \App\Provider  $provider
-     * @return \Illuminate\Http\Response
-     */
-    public function dispatcher()
-    {
-        return view('admin.dispatcher');
-    }
-
-    /**
      * Map of all Users and Drivers.
      *
      * @return \Illuminate\Http\Response

@@ -47,7 +47,7 @@ class TripController extends Controller
                         $IncomingRequests[$i]->time_left_to_respond = $Timeout - (time() - strtotime($IncomingRequests[$i]->request->assigned_at));
                         if($IncomingRequests[$i]->request->status == 'SEARCHING' && $IncomingRequests[$i]->time_left_to_respond < 0) {
                             $this->assign_next_provider($IncomingRequests[$i]->id);
-                            // return $this->index();
+                            return $this->index($request);
                         }
                     }
                 }

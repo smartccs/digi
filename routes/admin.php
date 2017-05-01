@@ -8,7 +8,11 @@
 
 Route::get('/', 'AdminController@dashboard')->name('index');
 Route::get('/dashboard', 'AdminController@dashboard')->name('dashboard');
-Route::get('/dispatcher', 'AdminController@dispatcher')->name('dispatcher');
+
+Route::group(['as' => 'dispatcher.', 'prefix' => 'dispatcher'], function () {
+	Route::get('/', 'DispatcherController@index')->name('index');
+	Route::get('/users', 'DispatcherController@users')->name('users');
+});
 
 Route::resource('user', 'Resource\UserResource');
 Route::resource('provider', 'Resource\ProviderResource');

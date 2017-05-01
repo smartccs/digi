@@ -9,7 +9,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="{{ route('admin.dispatcher') }}" class="waves-effect waves-light">
+				<a href="{{ route('admin.dispatcher.index') }}" class="waves-effect waves-light">
 					<span class="s-icon"><i class="ti-target"></i></span>
 					<span class="s-text">Dispatcher</span>
 				</a>

@@ -35,30 +35,30 @@
                         <td>{{$provider->total_requests - $provider->accepted_requests }}</td>
                         <td>
                             @if($provider->pending_documents() > 0 || $provider->service == null)
-                                <a class="btn btn-danger label-right" href="{{route('admin.provider.document.index', $provider->id )}}">Attention! <span class="btn-label">{{ $provider->pending_documents() }}</span></a>
+                                <a class="btn btn-danger btn-block label-right" href="{{route('admin.provider.document.index', $provider->id )}}">Attention! <span class="btn-label">{{ $provider->pending_documents() }}</span></a>
                             @else
-                                <a class="btn btn-success" href="{{route('admin.provider.document.index', $provider->id )}}">All Set!</a>
+                                <a class="btn btn-success btn-block" href="{{route('admin.provider.document.index', $provider->id )}}">All Set!</a>
                             @endif
                         </td>
                         <td>
                             @if($provider->service)
                                 @if($provider->service->status == 'active')
-                                    <label class="btn btn-primary">Yes</label>
+                                    <label class="btn btn-block btn-primary">Yes</label>
                                 @else
-                                    <label class="btn btn-warning">No</label>
+                                    <label class="btn btn-block btn-warning">No</label>
                                 @endif
                             @else
-                                <label class="btn btn-danger">N/A</label>
+                                <label class="btn btn-block btn-danger">N/A</label>
                             @endif
                         </td>
                         <td>
                             <div class="input-group-btn">
                                 @if($provider->status == 'approved')
-                                    <a class="btn btn-danger" href="{{route('admin.provider.disapprove', $provider->id )}}">Disable</a>
+                                    <a class="btn btn-danger btn-block" href="{{route('admin.provider.disapprove', $provider->id )}}">Disable</a>
                                 @else
-                                    <a class="btn btn-success" href="{{route('admin.provider.approve', $provider->id )}}">Enable</a>
+                                    <a class="btn btn-success btn-block" href="{{route('admin.provider.approve', $provider->id )}}">Enable</a>
                                 @endif
-                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Action
+                                <button type="button" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Action
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">

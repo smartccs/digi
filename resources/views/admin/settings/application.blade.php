@@ -11,7 +11,7 @@
 
             <form class="form-horizontal" action="{{ route('admin.settings.store') }}" method="POST" enctype="multipart/form-data" role="form">
             	{{csrf_field()}}
-            	
+
 				<div class="form-group row">
 					<label for="site_title" class="col-xs-2 col-form-label">Site Name</label>
 					<div class="col-xs-10">
@@ -23,7 +23,7 @@
 					<label for="site_logo" class="col-xs-2 col-form-label">Site Logo</label>
 					<div class="col-xs-10">
 						@if(Setting::get('site_logo')!='')
-	                    <img style="height: 90px; margin-bottom: 15px; border-radius:2em;" src="{{Setting::get('site_logo')}}">
+	                    <img style="height: 90px; margin-bottom: 15px;" src="{{ Setting::get('site_logo') }}">
 	                    @endif
 						<input type="file" accept="image/*" name="site_logo" class="dropify form-control-file" id="site_logo" aria-describedby="fileHelp">
 					</div>
@@ -34,7 +34,7 @@
 					<label for="site_icon" class="col-xs-2 col-form-label">Site Icon</label>
 					<div class="col-xs-10">
 						@if(Setting::get('site_icon')!='')
-	                    <img style="height: 90px; margin-bottom: 15px; border-radius:2em;" src="{{Setting::get('site_icon')}}">
+	                    <img style="height: 90px; margin-bottom: 15px;" src="{{ Setting::get('site_icon') }}">
 	                    @endif
 						<input type="file" accept="image/*" name="site_icon" class="dropify form-control-file" id="site_icon" aria-describedby="fileHelp">
 					</div>
