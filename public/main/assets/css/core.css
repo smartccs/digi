@@ -440,13 +440,13 @@ a:active {
   display: inline-block;
   float: none;
   margin: 0;
-  padding: 1.3rem 0 0;
+  padding: 10px 0 0;
   height: 60px;
 }
 
 .site-header .navbar-brand .logo {
   width: 120px;
-  height: 25px;
+  height: 40px;
   background: url(../img/logo.png) no-repeat;
 }
 
