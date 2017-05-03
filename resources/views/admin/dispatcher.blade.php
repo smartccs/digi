@@ -192,6 +192,9 @@ $(document).ready(function() {
 </script>
 
 <script type="text/babel" src="{{ asset('asset/js/dispatcher.js') }}"></script>
+<script type="text/javascript">
+    
+</script>
 @endsection
 
 @section('styles')

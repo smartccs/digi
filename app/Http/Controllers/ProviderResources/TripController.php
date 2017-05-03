@@ -349,14 +349,13 @@ class TripController extends Controller
             $Total = $Fixed + $Distance - $Discount + $Commision + $Tax;
 
             if($UserRequest->surge){
-                $Surge = (\Setting::get('surge_percentage')/100) * $Total;
+                $Surge = (Setting::get('surge_percentage')/100) * $Total;
                 $Total += $Surge;
             }
 
             if($Total < 0){
                 $Total = 0.00; // prevent from negative value
             }
-
 
             $Payment = new UserRequestPayment;
             $Payment->request_id = $UserRequest->id;
@@ -400,7 +399,7 @@ class TripController extends Controller
 
                 }
 
-            }else{
+            } else {
                 $Payment->total = abs($Total);
             }
 

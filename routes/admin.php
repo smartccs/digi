@@ -11,7 +11,9 @@ Route::get('/dashboard', 'AdminController@dashboard')->name('dashboard');
 
 Route::group(['as' => 'dispatcher.', 'prefix' => 'dispatcher'], function () {
 	Route::get('/', 'DispatcherController@index')->name('index');
+	Route::get('/trips', 'DispatcherController@trips')->name('trips');
 	Route::get('/users', 'DispatcherController@users')->name('users');
+	Route::get('/providers', 'DispatcherController@providers')->name('providers');
 });
 
 Route::resource('user', 'Resource\UserResource');

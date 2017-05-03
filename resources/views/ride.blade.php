@@ -53,7 +53,7 @@
             <div class="col-md-4 content-block small">
                 <h2>Choose how to pay</h2>
                 <div class="title-divider"></div>
-                <p>When you arrive at your destination, either pay with cash or have your card automatically charged. With Uber, the choice is yours.</p>
+                <p>When you arrive at your destination, either pay with cash or have your card automatically charged. With {{ Setting::get('site_title', 'Tranxit') }}, the choice is yours.</p>
             </div>
 
             <div class="col-md-4 content-block small">
@@ -172,7 +172,7 @@
             <div class="col-md-6 content-block">
                 <h2>Safety Putting people first</h2>
                 <div class="title-divider"></div>
-                <p>Whether riding in the backseat or driving up front, every part of the Uber experience has been designed around your safety and security.</p>
+                <p>Whether riding in the backseat or driving up front, every part of the {{ Setting::get('site_title', 'Tranxit') }} experience has been designed around your safety and security.</p>
                 <a class="content-more" href="#">HOW WE KEEP YOU SAFE <i class="fa fa-chevron-right"></i></a>
             </div>
             <div class="col-md-6 img-block text-center"> 
