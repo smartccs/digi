@@ -2,15 +2,14 @@
 
 @section('content')
 
-<?php $login_user = asset('asset/img/login-user-bg.jpg'); ?>
-<div class="full-page-bg" style="background-image: url({{$login_user}});">
+<div class="full-page-bg" style="background-image: url({{ asset('asset/img/login-user-bg.jpg') }});">
     <div class="log-overlay"></div>
     <div class="full-page-bg-inner">
         <div class="row no-margin">
             <div class="col-md-6 log-left">
-                <span class="login-logo"><img src="{{ Setting::get('site_logo',asset('asset/img/logo.png'))}}"></span>
+                <span class="login-logo"><img src="{{ Setting::get('site_logo', asset('logo-black.png'))}}"></span>
                 <h2>Create your account and get moving in minutes</h2>
-                <p>Welcome to {{Setting::get('site_title','Tranxit')}}, the easiest way to get around at the tap of a button.</p>
+                <p>Welcome to {{Setting::get('site_title', 'Tranxit')}}, the easiest way to get around at the tap of a button.</p>
             </div>
             <div class="col-md-6 log-right">
                 <div class="login-box-outer">
@@ -56,7 +55,7 @@
                 </div>
 
 
-                <div class="log-copy"><p class="no-margin">&copy; {{date('Y')}} {{Setting::get('site_title')}}</p></div></div>
+                <div class="log-copy"><p class="no-margin">{{ Setting::get('site_copyright', '&copy; '.date('Y').' Appoets') }}</p></div></div>
             </div>
         </div>
     </div>

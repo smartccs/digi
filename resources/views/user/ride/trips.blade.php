@@ -45,7 +45,7 @@
                                     <div class="col-md-6">
                                         <div class="my-trip-left">
                                         <?php 
-                                    $map_icon = asset('asset/marker.png');
+                                    $map_icon = asset('asset/img/marker-start.png');
                                     $static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=600x450&maptype=roadmap&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$trip->s_latitude.",".$trip->s_longitude."&markers=icon:".$map_icon."%7C".$trip->d_latitude.",".$trip->d_longitude."&path=color:0x191919|weight:8|".$trip->s_latitude.",".$trip->s_longitude."|".$trip->d_latitude.",".$trip->d_longitude."&key=".env('GOOGLE_MAP_KEY'); ?>
                                             <div class="map-static" style="background-image: url({{$static_map}});">
                                                 

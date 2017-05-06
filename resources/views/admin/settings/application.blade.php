@@ -23,7 +23,7 @@
 					<label for="site_logo" class="col-xs-2 col-form-label">Site Logo</label>
 					<div class="col-xs-10">
 						@if(Setting::get('site_logo')!='')
-	                    <img style="height: 90px; margin-bottom: 15px;" src="{{ Setting::get('site_logo') }}">
+	                    <img style="height: 90px; margin-bottom: 15px;" src="{{ Setting::get('site_logo', asset('logo-black.png')) }}">
 	                    @endif
 						<input type="file" accept="image/*" name="site_logo" class="dropify form-control-file" id="site_logo" aria-describedby="fileHelp">
 					</div>
@@ -43,7 +43,7 @@
                 <div class="form-group row">
                     <label for="tax_percentage" class="col-xs-2 col-form-label">Copyright Content</label>
                     <div class="col-xs-10">
-                        <input class="form-control" type="text" value="{{ Setting::get('site_copyright', '&copy; 2017 Appoets') }}" name="site_copyright" id="site_copyright" placeholder="Site Copyright">
+                        <input class="form-control" type="text" value="{{ Setting::get('site_copyright', '&copy; '.date('Y').' Appoets') }}" name="site_copyright" id="site_copyright" placeholder="Site Copyright">
                     </div>
                 </div>
 

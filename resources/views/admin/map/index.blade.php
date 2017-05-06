@@ -61,6 +61,7 @@
     var mapIcons = {
         user: '{{ asset("asset/img/marker-user.png") }}',
         active: '{{ asset("asset/img/marker-car.png") }}',
+        riding: '{{ asset("asset/img/marker-car.png") }}',
         offline: '{{ asset("asset/img/marker-home.png") }}',
         unactivated: '{{ asset("asset/img/marker-plus.png") }}'
     }
@@ -119,6 +120,7 @@
     }
 
     function addMarkerToMap(element, index) {
+        
         marker = new google.maps.Marker({
             position: {
                 lat: element.latitude,

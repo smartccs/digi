@@ -68,7 +68,7 @@
                 </div>
 
 
-                <div class="log-copy"><p class="no-margin">&copy;{{date('Y')}} {{ Setting::get('site_title', 'Tranxit')  }}</p></div>
+                <div class="log-copy"><p class="no-margin">{{ Setting::get('site_copyright', '&copy; '.date('Y').' Appoets') }}</p></div>
                 </div>
             </div>
         </div>

@@ -1,17 +1,395 @@
 'use strict';
 
 class DispatcherPanel extends React.Component {
-    componentDidMount() {
-        this.requestPoll();
+    componentWillMount() {
+        this.setState({
+            bodyContent: 'dispatch-map'
+        });
     }
 
-    requestPoll(){
-        console.log('Polling');
+    handleUpdateBody(body) {
+        // console.log('Body Update Called', body);
+        this.setState({
+            bodyContent: body
+        });
     }
+
+    handleUpdateFilter(filter) {
+        console.log('Filter Update Called', filter);
+    }
+
     render() {
-        <h1>Hi</h1>
+
+        let bodyContent = null;
+
+        // console.log('DispatcherPanel', this.state.bodyContent);
+
+        switch(this.state.bodyContent) {
+            case 'dispatch-create':
+                bodyContent = <div className="col-md-8">
+                        <DispatcherRequest />
+                        <DispatcherMap body="dispatch-create" />
+                    </div>;
+                break;
+            case 'dispatch-map':
+                bodyContent = <div className="col-md-8">
+                        <DispatcherMap body="dispatch-map" />
+                    </div>;
+                break;
+        }
+
+        return (
+            <div className="container-fluid">
+                <h4>Dispatcher</h4>
+
+                <DispatcherNavbar updateBody={this.handleUpdateBody.bind(this)} updateFilter={this.handleUpdateFilter.bind(this)}/>
+
+                <div className="row">
+                    <div className="col-md-4">
+                        <DispatcherList />
+                    </div>
+
+                    { bodyContent }
+                </div>
+            </div>
+        );
+
     }
 };
+
+class DispatcherNavbar extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            body: 'dispatch-map'
+        };
+    }
+
+    filter(data) {
+        console.log('Navbar Filter', data);
+    }
+
+    handleFilterChange() {
+        var value = this.refs.filterInput.getDOMNode().value;
+        this.props.updateFilter(value);
+    }
+
+    handleBodyChange() {
+        console.log('handleBodyChange', this.state);
+        if(this.state.body == 'dispatch-map') {
+            this.props.updateBody('dispatch-create');
+            this.setState({
+                body: 'dispatch-create'
+            });
+        } else {
+            this.props.updateBody('dispatch-map');
+            this.setState({
+                body: 'dispatch-map'
+            });
+        }
+    }
+
+    render() {
+        return (
+            <nav className="navbar navbar-light bg-white b-a mb-2">
+                <button className="navbar-toggler hidden-md-up" 
+                    data-toggle="collapse"
+                    data-target="#process-filters"
+                    aria-controls="process-filters"
+                    aria-expanded="false"
+                    aria-label="Toggle Navigation"></button>
+
+                <form className="form-inline navbar-item ml-1 float-xs-right">
+                    <div className="input-group">
+                        <input type="text" className="form-control b-a" placeholder="Search for..." />
+                        <span className="input-group-btn">
+                            <button type="submit" className="btn btn-primary b-a">
+                                <i className="ti-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </form> 
+
+                <ul className="nav navbar-nav float-xs-right">
+                    <li className="nav-item">
+                        <button type="button" onClick={this.handleBodyChange.bind(this)} className="btn btn-success btn-md label-right b-a-0 waves-effect waves-light">
+                            <span className="btn-label"><i className="ti-plus"></i></span>
+                            ADD
+                        </button>
+                    </li>
+                </ul>
+
+                <div className="collapse navbar-toggleable-sm" id="process-filters">
+                    <ul className="nav navbar-nav dispatcher-nav">
+                        <li className="nav-item active" onClick={this.filter.bind(this, 'all')}>
+                            <span className="nav-link" href="#">All</span>
+                        </li>
+                        <li className="nav-item" onClick={this.filter.bind(this, 'waiting')}>
+                            <span className="nav-link" href="#">My</span>
+                        </li>
+                        <li className="nav-item" onClick={this.filter.bind(this, 'warning')}>
+                            <span className="nav-link" href="#">Warning</span>
+                        </li>
+                        <li className="nav-item" onClick={this.filter.bind(this, 'scheduled')}>
+                            <span className="nav-link" href="#">Scheduled</span>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        );
+    }
+}
+
+class DispatcherList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: {
+                data: []
+            }
+        };
+    }
+
+    componentDidMount() {
+        setInterval(
+            () => this.getTripsUpdate(),
+            1000
+        );
+    }
+
+    getTripsUpdate() {
+        $.get('/admin/dispatcher/trips', function(result) {
+            // console.log('Trips', result);
+            this.setState({
+                data: result
+            });
+        }.bind(this));
+    }
+
+    render() {
+        // console.log(this.state.data);
+        return (
+            <div className="card">
+                <div className="card-header text-uppercase"><b>List</b></div>
+                
+                <DispatcherListItem data={this.state.data.data} />
+            </div>
+        );
+    }
+}
+
+class DispatcherListItem extends React.Component {
+    handleClick(trip) {
+        ongoingRidesInitialize(trip);
+    }
+    render() {
+        var listItem = function(trip) {
+            return (
+                    <div className="il-item" key={trip.id} onClick={this.handleClick.bind(this, trip)}>
+                        <a className="text-black" href="#">
+                            <div className="media">
+                                <div className="media-body">
+                                    <p className="mb-0-5">{trip.user.first_name} {trip.user.last_name}</p>
+                                    <h6 className="media-heading">From:</h6>
+                                    <h6 className="media-heading">{trip.s_address}</h6>
+                                    <h6 className="media-heading">To:</h6>
+                                    <h6 className="media-heading">{trip.d_address ? trip.d_address : "Not Selected"}</h6>
+                                    <progress className="progress progress-success progress-sm" max="100"></progress>
+                                    <span className="text-muted">{trip.current_provider_id == 0 ? "Manual Assignment" : "Auto Search"} : {trip.created_at}</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                );
+        }.bind(this);
+
+        return (
+            <div className="items-list">
+                {this.props.data.map(listItem)}
+            </div>
+        );
+    }
+}
+
+class DispatcherRequest extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: []
+        };
+    }
+
+    componentDidMount() {
+
+        // Auto Assign Switch
+        new Switchery(document.getElementById('provider_auto_assign'));
+        
+        // Schedule Time Datepicker
+        $('#schedule_time').datetimepicker({
+            minDate: window.Tranxit.minDate,
+            maxDate: window.Tranxit.maxDate,
+        });
+
+        // Get Service Type List
+        $.get('/admin/service', function(result) {
+            this.setState({
+                data: result
+            });
+        }.bind(this));
+    }
+
+    createRide(event) {
+        event.preventDefault();
+        console.log('Hello', $("#form-create-ride").serialize());
+        $.ajax({
+            url: '/admin/dispatcher',
+            dataType: 'json',
+            headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken },
+            type: 'POST',
+            data: $("#form-create-ride").serialize(),
+            done: function(data) {
+                console.log('Accept', data);
+            }.bind(this)
+        });
+    }
+
+    render() {
+        return (
+            <div className="card card-block" id="create-ride">
+                <h3 className="card-title text-uppercase">Ride Details</h3>
+                <form id="form-create-ride" onSubmit={this.createRide.bind(this)} method="POST">
+                    <div className="row">
+                        <div className="col-sm-6">
+                            <div className="form-group">
+                                <label htmlFor="first_name">First Name</label>
+                                <input type="text" className="form-control" name="first_name" id="first_name" placeholder="First Name" required />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="last_name">Last Name</label>
+                                <input type="text" className="form-control" name="last_name" id="last_name" placeholder="Last Name" required />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="email">Email</label>
+                                <input type="email" className="form-control" name="email" id="email" placeholder="Email" required/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="mobile">Phone</label>
+                                <input type="text" className="form-control" name="mobile" id="mobile" placeholder="Phone" required />
+                            </div>
+                        </div>
+                        <div className="col-sm-6">
+                            <div className="form-group">
+                                <label htmlFor="s_address">Pickup Address</label>
+                                
+                                <input type="text"
+                                    name="s_address"
+                                    className="form-control"
+                                    id="s_address"
+                                    placeholder="Pickup Address"></input>
+
+                                <input type="hidden" name="s_latitude" id="s_latitude"></input>
+                                <input type="hidden" name="s_longitude" id="s_longitude"></input>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="d_address">Dropoff Address</label>
+                                
+                                <input type="text" 
+                                    name="d_address"
+                                    className="form-control"
+                                    id="d_address"
+                                    placeholder="Dropoff Address"></input>
+
+                                <input type="hidden" name="d_latitude" id="d_latitude"></input>
+                                <input type="hidden" name="d_longitude" id="d_longitude"></input>
+                                <input type="hidden" name="distance" id="distance"></input>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="schedule_time">Schedule Time</label>
+                                <input type="text" className="form-control" name="schedule_time" id="schedule_time" placeholder="Date" />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="service_types">Service Type</label>
+                                <ServiceTypes data={this.state.data} />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="provider_auto_assign">Auto Assign Provider</label>
+                                <br />
+                                <input type="checkbox" id="provider_auto_assign" name="provider_auto_assign" className="js-switch" data-color="#f59345" defaultChecked />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-xs-4">
+                            <button className="btn btn-lg btn-danger btn-block waves-effect waves-light">
+                                CANCEL
+                            </button>
+                        </div>
+                        <div className="col-xs-4 offset-xs-4">
+                            <button className="btn btn-lg btn-success btn-block waves-effect waves-light">
+                                SUBMIT
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        );
+    }
+}
+
+class ServiceTypes extends React.Component {
+    render() {
+        // console.log('ServiceTypes', this.props.data);
+        var mySelectOptions = function(result) {
+            return <ServiceTypesOption
+                    key={result.id}
+                    id={result.id}
+                    name={result.name} />
+        };
+        return (
+                <select 
+                    name="service_type"
+                    className="form-control">
+                    {this.props.data.map(mySelectOptions)}
+                </select>
+            )
+    }
+}
+
+class ServiceTypesOption extends React.Component {
+    render() {
+        return (
+            <option value={this.props.id}>{this.props.name}</option>
+        );
+    }
+};
+
+
+class DispatcherMap extends React.Component {
+    componentDidMount() {
+        // Google Maps Script Goes HERE
+        console.log(this.props.body);
+        if(this.props.body == 'dispatch-create') {
+            window.createRideInitialize();
+        } else if(this.props.body == 'dispatch-map') {
+            window.worldMapInitialize();
+        }
+    }
+
+    render() {
+        return (
+            <div className="card my-card">
+                <div className="card-header text-uppercase">
+                    <b>MAP</b>
+                </div>
+                <div className="card-body">
+                    <div id="map" style={{ height: '450px'}}></div>
+                </div>
+            </div>
+        );
+    }
+}
 
 ReactDOM.render(
     <DispatcherPanel />,

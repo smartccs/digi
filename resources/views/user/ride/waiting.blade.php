@@ -41,7 +41,7 @@
 		                    </div>
 		                </div>
 		                <?php 
-		                    $map_icon = asset('asset/marker.png');
+		                    $map_icon = asset('asset/img/marker-start.png');
 		                    $static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=600x450&maptype=roadmap&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$request->s_latitude.",".$request->s_longitude."&markers=icon:".$map_icon."%7C".$request->d_latitude.",".$request->d_longitude."&path=color:0x191919|weight:8|".$request->s_latitude.",".$request->s_longitude."|".$request->d_latitude.",".$request->d_longitude."&key=".env('GOOGLE_MAP_KEY'); ?>
 		                    <div class="map-static" style="background-image: url({{$static_map}});"></div>                               
 		            </div>                          

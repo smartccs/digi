@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('last_name');
             $table->enum('payment_mode', ['CASH', 'CARD', 'PAYPAL']);
             $table->string('email')->unique();
+            $table->string('mobile')->nullable();
             $table->string('password');
             $table->string('picture')->nullable();
             $table->string('device_token')->nullable();
@@ -26,7 +27,6 @@ class CreateUsersTable extends Migration
             $table->enum('device_type',array('android','ios'));
             $table->enum('login_by',array('manual','facebook','google'));
             $table->string('social_unique_id')->nullable();
-            $table->string('mobile')->nullable();
             $table->double('latitude', 15, 8)->nullable();
             $table->double('longitude',15,8)->nullable();
             $table->string('stripe_cust_id')->nullable();

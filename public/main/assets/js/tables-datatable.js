@@ -11,6 +11,7 @@ $(document).ready(function() {
     ================================================================= */
 
     $('#table-2').DataTable( {
+        responsive: true,
         dom: 'Bfrtip',
         buttons: [
             'copyHtml5',

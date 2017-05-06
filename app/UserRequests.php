@@ -14,13 +14,29 @@ class UserRequests extends Model
      * @var array
      */
     protected $fillable = [
-        'provider_id','user_id','current_provider_id',
-        'service_type_id','status','cancelled_by',
-        'paid','distance','s_latitude','d_latitude','s_longitude',
-        'd_longitude','paid','s_address', 'd_address',
-        'assigned_at','schedule_at','started_at',
-        'finished_at', 'use_wallet',
-        'user_rated', 'provider_rated','surge'
+        'provider_id',
+        'user_id',
+        'current_provider_id',
+        'service_type_id',
+        'status',
+        'cancelled_by',
+        'paid',
+        'distance',
+        's_latitude',
+        'd_latitude',
+        's_longitude',
+        'd_longitude',
+        'paid',
+        's_address',
+        'd_address',
+        'assigned_at',
+        'schedule_at',
+        'started_at',
+        'finished_at',
+        'use_wallet',
+        'user_rated',
+        'provider_rated',
+        'surge'
     ];
 
     /**
@@ -29,7 +45,7 @@ class UserRequests extends Model
      * @var array
      */
     protected $hidden = [
-         'created_at', 'updated_at'
+        // 'created_at', 'updated_at'
     ];
 
     /**

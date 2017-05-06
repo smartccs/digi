@@ -31,7 +31,7 @@
             <div class="full-page-bg-inner">
                 <div class="row no-margin">
                     <div class="col-md-6 log-left">
-                        <span class="login-logo"><img src="{{ Setting::get('site_logo', asset('asset/img/logo.png')) }}"></span>
+                        <span class="login-logo"><img src="{{ Setting::get('site_logo', asset('logo-black.png')) }}"></span>
                         <h2>{{Setting::get('site_title','Tranxit')}} needs partners like you.</h2>
                         <p>Drive with {{Setting::get('site_title','Tranxit')}} and earn great money as an independent contractor. Get paid weekly just for helping our community of riders get rides around town. Be your own boss and get paid in fares for driving on your own schedule.</p>
                     </div>
@@ -40,7 +40,7 @@
                             <div class="login-box row no-margin">
                                 @yield('content')
                             </div>
-                            <div class="log-copy"><p class="no-margin">&copy; {{date('Y')}} {{ Setting::get('site_title', '&copy; 2017 Appoets') }}</p></div>
+                            <div class="log-copy"><p class="no-margin">{{ Setting::get('site_copyright', '&copy; '.date('Y').' Appoets') }}</p></div>
                         </div>
                     </div>
                 </div>

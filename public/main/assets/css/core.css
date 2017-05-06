@@ -448,6 +448,14 @@ a:active {
   width: 120px;
   height: 40px;
   background: url(../img/logo.png) no-repeat;
+  background-size: contain!important;
+  background-position: center!important;
+}
+
+.compact-sidebar .site-header .navbar-brand .logo {
+  background-size: cover!important;
+  background-position: left!important;
+  width: 35px!important;
 }
 
 @media (min-width: 768px) {

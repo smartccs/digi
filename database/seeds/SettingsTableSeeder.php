@@ -32,7 +32,7 @@ class SettingsTableSeeder extends Seeder
             ],
             [
                 'key' => 'site_copyright',
-                'value' => '&copy; 2017 Appoets'
+                'value' => '&copy; '.date('Y').' Appoets'
             ],
             [
                 'key' => 'provider_select_timeout',
