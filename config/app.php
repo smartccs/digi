@@ -167,7 +167,12 @@ return [
          * Package Service Providers...
          */
 
-        //
+        Laravel\Passport\PassportServiceProvider::class,
+        Laravel\Socialite\SocialiteServiceProvider::class,
+        anlutro\LaravelSettings\ServiceProvider::class,
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+        Barryvdh\TranslationManager\ManagerServiceProvider::class,
+        Davibennun\LaravelPushNotification\LaravelPushNotificationServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -177,13 +182,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        anlutro\LaravelSettings\ServiceProvider::class,
-        Laravel\Socialite\SocialiteServiceProvider::class,
-        Laravel\Passport\PassportServiceProvider::class,
-        'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
-        'Barryvdh\TranslationManager\ManagerServiceProvider',
-        'Davibennun\LaravelPushNotification\LaravelPushNotificationServiceProvider'
-
     ],
 
     /*
@@ -233,8 +231,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Setting' => anlutro\LaravelSettings\Facade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-        'JWTAuth' => 'Tymon\JWTAuth\Facades\JWTAuth',
-        'JWTFactory' => 'Tymon\JWTAuth\Facades\JWTFactory',
-        'PushNotification' => 'Davibennun\LaravelPushNotification\Facades\PushNotification'
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'PushNotification' => Davibennun\LaravelPushNotification\Facades\PushNotification::class,
     ],
 ];

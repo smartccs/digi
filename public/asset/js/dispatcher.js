@@ -3,14 +3,14 @@
 class DispatcherPanel extends React.Component {
     componentWillMount() {
         this.setState({
-            bodyContent: 'dispatch-map'
+            listContent: 'dispatch-map'
         });
     }
 
     handleUpdateBody(body) {
-        // console.log('Body Update Called', body);
+        console.log('Body Update Called', body);
         this.setState({
-            bodyContent: body
+            listContent: body
         });
     }
 
@@ -18,22 +18,48 @@ class DispatcherPanel extends React.Component {
         console.log('Filter Update Called', filter);
     }
 
+    handleRequestShow(trip) {
+        console.log('Show Request', trip);
+        if(trip.current_provider_id == 0) {
+            this.setState({
+                listContent: 'dispatch-assign',
+                trip: trip
+            });
+        } else if(this.state.listContent == 'dispatch-create') {
+            this.setState({
+                listContent: 'dispatch-map',
+                trip: trip
+            });
+        }
+        ongoingRidesInitialize(trip);
+    }
+
+    handleRequestCancel(argument) {
+        this.setState({
+            listContent: 'dispatch-map'
+        });
+    }
+
     render() {
 
-        let bodyContent = null;
+        let listContent = null;
 
-        // console.log('DispatcherPanel', this.state.bodyContent);
+        console.log('DispatcherPanel', this.state.listContent);
 
-        switch(this.state.bodyContent) {
+        switch(this.state.listContent) {
             case 'dispatch-create':
-                bodyContent = <div className="col-md-8">
-                        <DispatcherRequest />
-                        <DispatcherMap body="dispatch-create" />
+                listContent = <div className="col-md-4">
+                        <DispatcherRequest completed={this.handleRequestShow.bind(this)} cancel={this.handleRequestCancel.bind(this)} />
                     </div>;
                 break;
             case 'dispatch-map':
-                bodyContent = <div className="col-md-8">
-                        <DispatcherMap body="dispatch-map" />
+                listContent = <div className="col-md-4">
+                        <DispatcherList clicked={this.handleRequestShow.bind(this)} />
+                    </div>;
+                break;
+            case 'dispatch-assign':
+                listContent = <div className="col-md-4">
+                        <DispatcherAssignList trip={this.state.trip} />
                     </div>;
                 break;
         }
@@ -42,14 +68,14 @@ class DispatcherPanel extends React.Component {
             <div className="container-fluid">
                 <h4>Dispatcher</h4>
 
-                <DispatcherNavbar updateBody={this.handleUpdateBody.bind(this)} updateFilter={this.handleUpdateFilter.bind(this)}/>
+                <DispatcherNavbar body={this.state.listContent} updateBody={this.handleUpdateBody.bind(this)} updateFilter={this.handleUpdateFilter.bind(this)}/>
 
                 <div className="row">
-                    <div className="col-md-4">
-                        <DispatcherList />
-                    </div>
+                    { listContent }
 
-                    { bodyContent }
+                    <div className="col-md-8">
+                        <DispatcherMap body={this.state.listContent} />
+                    </div>
                 </div>
             </div>
         );
@@ -76,7 +102,13 @@ class DispatcherNavbar extends React.Component {
     }
 
     handleBodyChange() {
-        console.log('handleBodyChange', this.state);
+        // console.log('handleBodyChange', this.state);
+        if(this.props.body != this.state.body) {
+            this.setState({
+                body: this.props.body
+            });
+        }
+
         if(this.state.body == 'dispatch-map') {
             this.props.updateBody('dispatch-create');
             this.setState({
@@ -113,7 +145,9 @@ class DispatcherNavbar extends React.Component {
 
                 <ul className="nav navbar-nav float-xs-right">
                     <li className="nav-item">
-                        <button type="button" onClick={this.handleBodyChange.bind(this)} className="btn btn-success btn-md label-right b-a-0 waves-effect waves-light">
+                        <button type="button" 
+                            onClick={this.handleBodyChange.bind(this)} 
+                            className="btn btn-success btn-md label-right b-a-0 waves-effect waves-light">
                             <span className="btn-label"><i className="ti-plus"></i></span>
                             ADD
                         </button>
@@ -152,19 +186,40 @@ class DispatcherList extends React.Component {
     }
 
     componentDidMount() {
-        setInterval(
+        // Mount Global Map
+        window.worldMapInitialize();
+
+        // Refresh trip details
+        window.Tranxit.TripTimer = setInterval(
             () => this.getTripsUpdate(),
             1000
         );
     }
 
+    componentWillUnmount() {
+        clearInterval(window.Tranxit.TripTimer);
+    }
+
     getTripsUpdate() {
         $.get('/admin/dispatcher/trips', function(result) {
-            // console.log('Trips', result);
-            this.setState({
-                data: result
-            });
+            // console.log('Trips', result.hasOwnProperty('data'));
+            if(result.hasOwnProperty('data')) {
+                this.setState({
+                    data: result
+                });
+            } else {
+                // Might wanna show an empty list when this happens
+                this.setState({
+                    data: {
+                        data: []
+                    }
+                });
+            }
         }.bind(this));
+    }
+
+    handleClick(trip) {
+        this.props.clicked(trip);
     }
 
     render() {
@@ -173,7 +228,7 @@ class DispatcherList extends React.Component {
             <div className="card">
                 <div className="card-header text-uppercase"><b>List</b></div>
                 
-                <DispatcherListItem data={this.state.data.data} />
+                <DispatcherListItem data={this.state.data.data} clicked={this.handleClick.bind(this)} />
             </div>
         );
     }
@@ -181,7 +236,7 @@ class DispatcherList extends React.Component {
 
 class DispatcherListItem extends React.Component {
     handleClick(trip) {
-        ongoingRidesInitialize(trip);
+        this.props.clicked(trip)
     }
     render() {
         var listItem = function(trip) {
@@ -238,6 +293,10 @@ class DispatcherRequest extends React.Component {
                 data: result
             });
         }.bind(this));
+
+        // Mount Ride Create Map
+
+        window.createRideInitialize();
     }
 
     createRide(event) {
@@ -249,10 +308,15 @@ class DispatcherRequest extends React.Component {
             headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken },
             type: 'POST',
             data: $("#form-create-ride").serialize(),
-            done: function(data) {
+            success: function(data) {
                 console.log('Accept', data);
+                this.props.completed(data);
             }.bind(this)
         });
+    }
+
+    cancelCreate() {
+        this.props.cancel(true);
     }
 
     render() {
@@ -261,25 +325,31 @@ class DispatcherRequest extends React.Component {
                 <h3 className="card-title text-uppercase">Ride Details</h3>
                 <form id="form-create-ride" onSubmit={this.createRide.bind(this)} method="POST">
                     <div className="row">
-                        <div className="col-sm-6">
+                        <div className="col-xs-6">
                             <div className="form-group">
                                 <label htmlFor="first_name">First Name</label>
                                 <input type="text" className="form-control" name="first_name" id="first_name" placeholder="First Name" required />
                             </div>
+                        </div>
+                        <div className="col-xs-6">
                             <div className="form-group">
                                 <label htmlFor="last_name">Last Name</label>
                                 <input type="text" className="form-control" name="last_name" id="last_name" placeholder="Last Name" required />
                             </div>
+                        </div>
+                        <div className="col-xs-6">
                             <div className="form-group">
                                 <label htmlFor="email">Email</label>
                                 <input type="email" className="form-control" name="email" id="email" placeholder="Email" required/>
                             </div>
+                        </div>
+                        <div className="col-xs-6">
                             <div className="form-group">
                                 <label htmlFor="mobile">Phone</label>
                                 <input type="text" className="form-control" name="mobile" id="mobile" placeholder="Phone" required />
                             </div>
                         </div>
-                        <div className="col-sm-6">
+                        <div className="col-xs-12">
                             <div className="form-group">
                                 <label htmlFor="s_address">Pickup Address</label>
                                 
@@ -321,18 +391,93 @@ class DispatcherRequest extends React.Component {
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-xs-4">
-                            <button className="btn btn-lg btn-danger btn-block waves-effect waves-light">
+                        <div className="col-xs-6">
+                            <button type="button" className="btn btn-lg btn-danger btn-block waves-effect waves-light" onClick={this.cancelCreate.bind(this)}>
                                 CANCEL
                             </button>
                         </div>
-                        <div className="col-xs-4 offset-xs-4">
+                        <div className="col-xs-6">
                             <button className="btn btn-lg btn-success btn-block waves-effect waves-light">
                                 SUBMIT
                             </button>
                         </div>
                     </div>
                 </form>
+            </div>
+        );
+    }
+};
+
+class DispatcherAssignList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: {
+                data: []
+            }
+        };
+    }
+
+    componentDidMount() {
+        $.get('/admin/dispatcher/providers', { 
+            latitude: this.props.trip.s_latitude,
+            longitude: this.props.trip.s_longitude
+        }, function(result) {
+            console.log('Providers', result);
+            if(result.hasOwnProperty('data')) {
+                this.setState({
+                    data: result
+                });
+            } else {
+                this.setState({
+                    data: {
+                        data: []
+                    }
+                });
+            }
+        }.bind(this));
+    }
+
+    render() {
+        console.log('DispatcherAssignList - render', this.state.data.data);
+        return (
+            <div className="card">
+                <div className="card-header text-uppercase"><b>Assign Provider</b></div>
+                
+                <DispatcherAssignListItem data={this.state.data.data} />
+            </div>
+        );
+    }
+}
+
+class DispatcherAssignListItem extends React.Component {
+    handleClick(trip) {
+        // this.props.clicked(trip)
+    }
+    render() {
+        var listItem = function(trip) {
+            return (
+                    <div className="il-item" key={trip.id} onClick={this.handleClick.bind(this, trip)}>
+                        <a className="text-black" href="#">
+                            <div className="media">
+                                <div className="media-body">
+                                    <p className="mb-0-5">{trip.user.first_name} {trip.user.last_name}</p>
+                                    <h6 className="media-heading">From:</h6>
+                                    <h6 className="media-heading">{trip.s_address}</h6>
+                                    <h6 className="media-heading">To:</h6>
+                                    <h6 className="media-heading">{trip.d_address ? trip.d_address : "Not Selected"}</h6>
+                                    <progress className="progress progress-success progress-sm" max="100"></progress>
+                                    <span className="text-muted">{trip.current_provider_id == 0 ? "Manual Assignment" : "Auto Search"} : {trip.created_at}</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                );
+        }.bind(this);
+
+        return (
+            <div className="items-list">
+                {this.props.data.map(listItem)}
             </div>
         );
     }
@@ -365,18 +510,7 @@ class ServiceTypesOption extends React.Component {
     }
 };
 
-
 class DispatcherMap extends React.Component {
-    componentDidMount() {
-        // Google Maps Script Goes HERE
-        console.log(this.props.body);
-        if(this.props.body == 'dispatch-create') {
-            window.createRideInitialize();
-        } else if(this.props.body == 'dispatch-map') {
-            window.worldMapInitialize();
-        }
-    }
-
     render() {
         return (
             <div className="card my-card">

@@ -85,7 +85,25 @@ class DispatcherController extends Controller
      */
     public function providers(Request $request)
     {
-        $Providers = Provider::paginate(10);
+        $Providers = new Provider;
+
+        if($request->has('latitude') && $request->has('longitude')) {
+            $ActiveProviders = ProviderService::AllAvailableServiceProvider($request->service_type)
+                    ->get()
+                    ->pluck('provider_id');
+
+            $distance = Setting::get('provider_search_radius', '10');
+            $latitude = $request->latitude;
+            $longitude = $request->longitude;
+
+            $Providers = Provider::whereIn('id', $ActiveProviders)
+                ->where('status', 'approved')
+                ->whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
+                ->get();
+
+            return $Providers;
+        }
+
         return $Providers;
     }
 
@@ -219,11 +237,7 @@ class DispatcherController extends Controller
             }
 
             if($request->ajax()) {
-                return response()->json([
-                        'message' => 'New request Created!',
-                        'request_id' => $UserRequest->id,
-                        'current_provider' => $UserRequest->current_provider_id,
-                    ]);
+                return $UserRequest;
             } else {
                 return redirect('dashboard');
             }

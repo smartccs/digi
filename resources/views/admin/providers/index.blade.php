@@ -54,11 +54,13 @@
                         <td>
                             <div class="input-group-btn">
                                 @if($provider->status == 'approved')
-                                    <a class="btn btn-danger btn-block" href="{{route('admin.provider.disapprove', $provider->id )}}">Disable</a>
+                                <a class="btn btn-danger btn-block" href="{{ route('admin.provider.disapprove', $provider->id ) }}">Disable</a>
                                 @else
-                                    <a class="btn btn-success btn-block" href="{{route('admin.provider.approve', $provider->id )}}">Enable</a>
+                                <a class="btn btn-success btn-block" href="{{ route('admin.provider.approve', $provider->id ) }}">Enable</a>
                                 @endif
-                                <button type="button" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Action
+                                <button type="button" 
+                                    class="btn btn-info btn-block dropdown-toggle"
+                                    data-toggle="dropdown">Action
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
