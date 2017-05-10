@@ -13,6 +13,7 @@ Route::group(['as' => 'dispatcher.', 'prefix' => 'dispatcher'], function () {
 	Route::get('/', 'DispatcherController@index')->name('index');
 	Route::post('/', 'DispatcherController@store')->name('store');
 	Route::get('/trips', 'DispatcherController@trips')->name('trips');
+	Route::get('/trips/{trip}/{provider}', 'DispatcherController@assign')->name('assign');
 	Route::get('/users', 'DispatcherController@users')->name('users');
 	Route::get('/providers', 'DispatcherController@providers')->name('providers');
 });

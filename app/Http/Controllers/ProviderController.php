@@ -38,8 +38,7 @@ class ProviderController extends Controller
      */
 
     public function incoming(Request $request) {
-        $API = new TripController(\Auth::guard('provider')->user());
-        return $API->index($request);
+        return (new TripController())->index($request);
     }
 
     /**
@@ -49,8 +48,7 @@ class ProviderController extends Controller
      */
 
     public function accept(Request $request, $id) {
-        $API = new TripController(\Auth::guard('provider')->user());
-        return $API->accept($request, $id);
+        return (new TripController())->accept($request, $id);
     }
 
     /**
@@ -60,8 +58,7 @@ class ProviderController extends Controller
      */
 
     public function reject(Request $request, $id) {
-        $API = new TripController(\Auth::guard('provider')->user());
-        return $API->destroy($request, $id);
+        return (new TripController())->destroy($request, $id);
     }
 
     /**
@@ -71,8 +68,7 @@ class ProviderController extends Controller
      */
 
     public function update(Request $request, $id) {
-        $API = new TripController(\Auth::guard('provider')->user());
-        return $API->update($request, $id);
+        return (new TripController())->update($request, $id);
     }
 
     /**
@@ -82,8 +78,7 @@ class ProviderController extends Controller
      */
 
     public function rating(Request $request, $id) {
-        $API = new TripController(\Auth::guard('provider')->user());
-        return $API->rate($request, $id);
+        return (new TripController())->rate($request, $id);
     }
 
     /**
@@ -93,7 +88,6 @@ class ProviderController extends Controller
      */
     public function earnings()
     {
-
         $provider = Provider::where('id',\Auth::guard('provider')->user()->id)
                     ->with('service','accepted','cancelled')
                     ->get();

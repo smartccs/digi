@@ -474,22 +474,18 @@ class UserApiController extends Controller
     public function request_status_check() {
 
         try{
+            $check_status = ['CANCELLED', 'SCHEDULED'];
 
-            $check_status = ['CANCELLED','SCHEDULED'];
-
-            $UserRequests = UserRequests::UserRequestStatusCheck(Auth::user()->id,$check_status)
+            $UserRequests = UserRequests::UserRequestStatusCheck(Auth::user()->id, $check_status)
                                         ->get()
                                         ->toArray();
 
             return response()->json(['data' => $UserRequests]);
 
-        }
-
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json(['error' => trans('api.something_went_wrong')], 500);
         }
-
-    } 
+    }
 
     /**
      * Show the application dashboard.

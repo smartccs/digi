@@ -15,23 +15,26 @@ class DispatcherPanel extends React.Component {
     }
 
     handleUpdateFilter(filter) {
-        console.log('Filter Update Called', filter);
+        console.log('Filter Update Called', this.state.listContent);
+        this.setState({
+            listContent: 'dispatch-map'
+        });
     }
 
     handleRequestShow(trip) {
-        console.log('Show Request', trip);
+        // console.log('Show Request', trip);
         if(trip.current_provider_id == 0) {
             this.setState({
                 listContent: 'dispatch-assign',
                 trip: trip
             });
-        } else if(this.state.listContent == 'dispatch-create') {
+        } else {
             this.setState({
                 listContent: 'dispatch-map',
                 trip: trip
             });
         }
-        ongoingRidesInitialize(trip);
+        ongoingInitialize(trip);
     }
 
     handleRequestCancel(argument) {
@@ -44,7 +47,7 @@ class DispatcherPanel extends React.Component {
 
         let listContent = null;
 
-        console.log('DispatcherPanel', this.state.listContent);
+        // console.log('DispatcherPanel', this.state.listContent);
 
         switch(this.state.listContent) {
             case 'dispatch-create':
@@ -94,11 +97,7 @@ class DispatcherNavbar extends React.Component {
 
     filter(data) {
         console.log('Navbar Filter', data);
-    }
-
-    handleFilterChange() {
-        var value = this.refs.filterInput.getDOMNode().value;
-        this.props.updateFilter(value);
+        this.props.updateFilter(data);
     }
 
     handleBodyChange() {
@@ -428,46 +427,47 @@ class DispatcherAssignList extends React.Component {
                 this.setState({
                     data: result
                 });
+                window.assignProviderShow(result.data, this.props.trip);
             } else {
                 this.setState({
                     data: {
                         data: []
                     }
                 });
+                window.providerMarkersClear();
             }
         }.bind(this));
     }
 
     render() {
-        console.log('DispatcherAssignList - render', this.state.data.data);
+        console.log('DispatcherAssignList - render', this.state.data);
         return (
             <div className="card">
                 <div className="card-header text-uppercase"><b>Assign Provider</b></div>
                 
-                <DispatcherAssignListItem data={this.state.data.data} />
+                <DispatcherAssignListItem data={this.state.data.data} trip={this.props.trip} />
             </div>
         );
     }
 }
 
 class DispatcherAssignListItem extends React.Component {
-    handleClick(trip) {
+    handleClick(provider) {
         // this.props.clicked(trip)
+        console.log('Provider Clicked');
+        window.assignProviderPopPicked(provider);
     }
     render() {
-        var listItem = function(trip) {
+        var listItem = function(provider) {
             return (
-                    <div className="il-item" key={trip.id} onClick={this.handleClick.bind(this, trip)}>
+                    <div className="il-item" key={provider.id} onClick={this.handleClick.bind(this, provider)}>
                         <a className="text-black" href="#">
                             <div className="media">
                                 <div className="media-body">
-                                    <p className="mb-0-5">{trip.user.first_name} {trip.user.last_name}</p>
-                                    <h6 className="media-heading">From:</h6>
-                                    <h6 className="media-heading">{trip.s_address}</h6>
-                                    <h6 className="media-heading">To:</h6>
-                                    <h6 className="media-heading">{trip.d_address ? trip.d_address : "Not Selected"}</h6>
-                                    <progress className="progress progress-success progress-sm" max="100"></progress>
-                                    <span className="text-muted">{trip.current_provider_id == 0 ? "Manual Assignment" : "Auto Search"} : {trip.created_at}</span>
+                                    <p className="mb-0-5">{provider.first_name} {provider.last_name}</p>
+                                    <h6 className="media-heading">Rating: {provider.rating}</h6>
+                                    <h6 className="media-heading">Phone: {provider.mobile}</h6>
+                                    <h6 className="media-heading">Type: {provider.service.service_type.name}</h6>
                                 </div>
                             </div>
                         </a>

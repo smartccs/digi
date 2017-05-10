@@ -31,11 +31,19 @@ class TripController extends Controller
     public function index(Request $request)
     {
         try{
+            if($request->ajax()) {
+                $Provider = Auth::user();
+            } else {
+                $Provider = Auth::guard('provider')->user();
+            }
+
             $IncomingRequests = RequestFilter::with(['request.user', 'request.payment', 'request'])
-                ->where('provider_id', Auth::user()->id)->where('status',0)->get();
+                ->where('provider_id', $Provider->id)
+                ->where('status', 0)
+                ->get();
 
             if(!empty($request->latitude)) {
-                Auth::user()->update([
+                $Provider->update([
                         'latitude' => $request->latitude,
                         'longitude' => $request->longitude,
                     ]);
@@ -47,14 +55,14 @@ class TripController extends Controller
                         $IncomingRequests[$i]->time_left_to_respond = $Timeout - (time() - strtotime($IncomingRequests[$i]->request->assigned_at));
                         if($IncomingRequests[$i]->request->status == 'SEARCHING' && $IncomingRequests[$i]->time_left_to_respond < 0) {
                             $this->assign_next_provider($IncomingRequests[$i]->id);
-                            return $this->index($request);
+                            // return $this->index($request);
                         }
                     }
                 }
 
             $Response = [
-                    'account_status' => Auth::user()->status,
-                    'service_status' => Auth::user()->service ? Auth::user()->service->status : 'offline',
+                    'account_status' => $Provider->status,
+                    'service_status' => $Provider->service ? Auth::user()->service->status : 'offline',
                     'requests' => $IncomingRequests,
                 ];
 
@@ -143,6 +151,44 @@ class TripController extends Controller
 
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Request not yet completed!'], 500);
+        }
+    }
+
+    /**
+     * Get the trip history of the provider
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function scheduled(Request $request)
+    {
+        
+        try{
+
+            $Jobs = UserRequests::where('provider_id', Auth::user()->id)
+                    ->where('status', 'SCHEDULED')
+                    ->with('service_type')
+                    ->get();
+
+            if(!empty($Jobs)){
+                $map_icon = asset('asset/marker.png');
+                foreach ($Jobs as $key => $value) {
+                    $Jobs[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?".
+                            "autoscale=1".
+                            "&size=320x130".
+                            "&maptype=terrian".
+                            "&format=png".
+                            "&visual_refresh=true".
+                            "&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude.
+                            "&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude.
+                            "&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude.
+                            "&key=".env('GOOGLE_MAP_KEY');
+                }
+            }
+
+            return $Jobs;
+            
+        } catch(Exception $e) {
+            return response()->json(['error' => "Something Went Wrong"]);
         }
     }
 

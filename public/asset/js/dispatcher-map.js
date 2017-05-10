@@ -1,6 +1,6 @@
 var destination_latitude=0, destination_longitude=0, source_latitude=0, source_longitude=0;
 
-var map;
+var map, mapMarkers = [];
 var source, destination;
 
 var s_input, d_input;
@@ -155,7 +155,6 @@ function createRideInitialize() {
         }, function(result, status) {
             if (status == google.maps.DirectionsStatus.OK) {
                 directionsDisplay.setDirections(result);
-                directionsDisplay
 
                 marker.setPosition(result.routes[0].legs[0].start_location);
                 markerSecond.setPosition(result.routes[0].legs[0].end_location);
@@ -232,7 +231,7 @@ function createRideInitialize() {
     }
 }
 
-function ongoingRidesInitialize(trip) {
+function ongoingInitialize(trip) {
     console.log('ongoingRidesInitialize', trip);
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 0, lng: 0},
@@ -241,21 +240,20 @@ function ongoingRidesInitialize(trip) {
 
     var marker = new google.maps.Marker({
         map: map,
-        anchorPoint: new google.maps.Point(0, -29)
+        anchorPoint: new google.maps.Point(0, -29),
+        icon: '/asset/img/marker-start.png'
     });
 
     var markerSecond = new google.maps.Marker({
         map: map,
-        anchorPoint: new google.maps.Point(0, -29)
+        anchorPoint: new google.maps.Point(0, -29),
+        icon: '/asset/img/marker-end.png'
     });
 
     source = new google.maps.LatLng(trip.s_latitude, trip.s_longitude);
     destination = new google.maps.LatLng(trip.d_latitude, trip.d_longitude);
 
-    marker.setVisible(false);
     marker.setPosition(source);
-
-    markerSecond.setVisible(false);
     markerSecond.setPosition(destination);
 
     var bounds = new google.maps.LatLngBounds();
@@ -264,16 +262,19 @@ function ongoingRidesInitialize(trip) {
     map.fitBounds(bounds);
 
     var directionsService = new google.maps.DirectionsService;
-    var directionsDisplay = new google.maps.DirectionsRenderer;
+    var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
     directionsDisplay.setMap(map);
 
     directionsService.route({
-        origin:source,
-        destination:destination,
+        origin: source,
+        destination: destination,
         travelMode: google.maps.TravelMode.DRIVING
     }, function(result, status) {
         if (status == google.maps.DirectionsStatus.OK) {
             directionsDisplay.setDirections(result);
+
+            marker.setPosition(result.routes[0].legs[0].start_location);
+            markerSecond.setPosition(result.routes[0].legs[0].end_location);
         }
     });
 
@@ -288,6 +289,57 @@ function ongoingRidesInitialize(trip) {
         markerProvider.setVisible(true);
         markerProvider.setPosition(provider);
     }
+}
+
+function assignProviderShow(providers, trip) {
+    console.log('assignProviderShow', trip, providers)
+
+    var bounds = new google.maps.LatLngBounds();
+    bounds.extend({lat: trip.s_latitude, lng: trip.s_longitude});
+    bounds.extend({lat: trip.d_latitude, lng: trip.d_longitude});
+
+    providers.forEach(function(provider) {
+        var marker = new google.maps.Marker({
+            position: {lat: provider.latitude, lng: provider.longitude},
+            map: map,
+            provider_id: provider.id,
+            title: provider.first_name + " " + provider.last_name,
+            icon: '/asset/img/marker-car.png'
+        });
+
+        var content = "<p>Name : "+provider.first_name+" "+provider.last_name+"</p>"+
+                "<p>Rating : "+provider.rating+"</p>"+
+                "<p>Service Type : "+provider.service.service_type.name+"</p>"+
+                "<p>Car Model  : "+provider.service.service_type.name+"</p>"+
+                "<a href='/admin/dispatcher/trips/"+trip.id+'/'+provider.id+"' class='btn btn-success'>Assign this Provider</a>";
+
+        marker.infowindow = new google.maps.InfoWindow({
+            content: content
+        });
+
+        marker.addListener('click', function(){ 
+            marker.infowindow.open(map, marker);
+        });
+
+        bounds.extend(marker.getPosition());
+        mapMarkers.push(marker);
+        
+    });
+
+    map.fitBounds(bounds);
+}
+
+function assignProviderPopPicked(provider) {
+    var index;
+    for (var i = mapMarkers.length - 1; i >= 0; i--) {
+        if(mapMarkers[i].provider_id == provider.id) {
+            index = i;
+        }
+        mapMarkers[i].infowindow.close();
+    }
+    console.log('index', index);
+    // mapMarkers[index].setPosition({lat: provider.latitude, lng: provider.longitude});
+    mapMarkers[index].infowindow.open(map, mapMarkers[index]);
 }
 
 function worldMapInitialize(argument) {

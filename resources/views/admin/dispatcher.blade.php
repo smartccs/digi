@@ -104,7 +104,10 @@
         }
     }
 
-
+    .items-list {
+        height: 450px;
+        overflow-y: scroll;
+    }
 </style>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/jquery.datetimepicker.min.css" />
 @endsection

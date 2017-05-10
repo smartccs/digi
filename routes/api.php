@@ -40,7 +40,6 @@ Route::group(['middleware' => ['auth:api']], function () {
 	Route::post('/cancel/request' , 'UserApiController@cancel_request');
 	
 	Route::get('/request/check' , 'UserApiController@request_status_check');
-
 	Route::get('/show/providers' , 'UserApiController@show_providers');
 
 	// history

@@ -99,12 +99,46 @@ class DispatcherController extends Controller
             $Providers = Provider::whereIn('id', $ActiveProviders)
                 ->where('status', 'approved')
                 ->whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
-                ->get();
+                ->with('service', 'service.service_type')
+                ->paginate(10);
 
             return $Providers;
         }
 
         return $Providers;
+    }
+
+    /**
+     * Create manual request.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function assign($request_id, $provider_id)
+    {
+        try {
+            $Request = UserRequests::findOrFail($request_id);
+            $Provider = Provider::findOrFail($provider_id);
+
+            $Request->current_provider_id = $Provider->id;
+            $Request->save();
+            (new SendPushNotification)->IncomingRequest($Request->current_provider_id);
+
+            try {
+                RequestFilter::where('request_id', $Request->id)
+                    ->where('provider_id', $Provider->id)
+                    ->firstOrFail();
+            } catch (Exception $e) {
+                $Filter = new RequestFilter;
+                $Filter->request_id = $Request->id;
+                $Filter->provider_id = $Provider->id; 
+                $Filter->save();
+            }
+
+            return redirect()->route('admin.dispatcher.index')->with('flash_success', 'Request Assigned to Provider!');
+
+        } catch (Exception $e) {
+            return redirect()->route('admin.dispatcher.index')->with('flash_error', 'Something Went Wrong!');
+        }
     }
 
 

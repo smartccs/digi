@@ -3,12 +3,18 @@
 namespace App\Http\Controllers\ProviderResources;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 use App\Http\Controllers\Controller;
 
 use Auth;
+use Setting;
 use Storage;
+use Exception;
+use Carbon\Carbon;
 
 use App\ProviderProfile;
+use App\UserRequests;
 
 class ProfileController extends Controller
 {
@@ -199,7 +205,7 @@ class ProfileController extends Controller
                 'longitude' => 'required|numeric',
             ]);
 
-        if($Provider = \Auth::user()){
+        if($Provider = Auth::user()){
 
             $Provider->latitude = $request->latitude;
             $Provider->longitude = $request->longitude;
@@ -248,7 +254,7 @@ class ProfileController extends Controller
                 'password_old' => 'required',
             ]);
 
-        $Provider = \Auth::user();
+        $Provider = Auth::user();
 
         if(password_verify($request->password_old, $Provider->password))
         {
@@ -258,6 +264,31 @@ class ProfileController extends Controller
             return response()->json(['message' => 'Password changed successfully!']);
         } else {
             return response()->json(['error' => 'Please enter correct password'], 422);
+        }
+    }
+
+    /**
+     * Show providers daily target.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function target(Request $request)
+    {
+        try {
+            $Rides = UserRequests::where('provider_id', Auth::user()->id)
+                    ->where('status', 'COMPLETED')
+                    ->where('created_at', '>=', Carbon::today())
+                    ->with('payment', 'service_type')
+                    ->get();
+
+            return response()->json([
+                    'rides' => $Rides,
+                    'rides_count' => $Rides->count(),
+                    'target' => Setting::get('daily_target','0')
+                ]);
+        } catch(Exception $e) {
+            return response()->json(['error' => "Something Went Wrong"]);
         }
     }
 }
