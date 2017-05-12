@@ -422,7 +422,7 @@ class TripController extends Controller
 
                 if($Wallet != 0){
 
-                    if($Total > $Wallet){
+                    if($Total > $Wallet) {
 
                         $Payment->wallet = $Wallet;
                         $Payable = $Total - $Wallet;
@@ -432,12 +432,16 @@ class TripController extends Controller
                         // charged wallet money push 
                         (new SendPushNotification)->ChargedWalletMoney($UserRequest->user_id,currency($Wallet));
 
-                    }else{
+                    } else {
 
                         $Payment->total = 0;
                         $WalletBalance = $Wallet - $Total;
                         User::where('id',$UserRequest->user_id)->update(['wallet_balance' => $WalletBalance]);
                         $Payment->wallet = $Total;
+                        $Payment->payment_id = 'WALLET';
+                        $Payment->payment_mode = $UserRequest->payment_mode;
+                        $UserRequest->paid = 1;
+                        $Payment->paid = 1;
 
                         // charged wallet money push 
                         (new SendPushNotification)->ChargedWalletMoney($UserRequest->user_id,currency($Total));
@@ -508,7 +512,18 @@ class TripController extends Controller
             if(!empty($Jobs)){
                 $map_icon = asset('asset/marker.png');
                 foreach ($Jobs as $key => $value) {
-                    $Jobs[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=320x130&maptype=terrian&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_MAP_KEY');
+                    $Jobs[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?".
+                        "autoscale=1".
+                        "&size=320x130".
+                        "&maptype=terrian".
+                        "&format=png".
+                        "&visual_refresh=true".
+                        "&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude.
+                        "&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude.
+                        "&path=color:0x000000|weight:3|".
+                            $value->s_latitude.",".$value->s_longitude."|".
+                            $value->d_latitude.",".$value->d_longitude.
+                        "&key=".env('GOOGLE_MAP_KEY');
                 }
             }
 

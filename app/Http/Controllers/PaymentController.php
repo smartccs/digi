@@ -3,15 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\UserRequestPayment;
-use App\UserRequests;
-use App\Card;
-use App\User;
 use App\Http\Controllers\SendPushNotification;
 
+use Stripe\Charge;
+use Stripe\Stripe;
+use Stripe\StripeInvalidRequestError;
+
+use Auth;
 use Setting;
 use Exception;
-use Auth;
+
+use App\Card;
+use App\User;
+use App\UserRequests;
+use App\UserRequestPayment;
 
 class PaymentController extends Controller
 {
@@ -35,13 +40,13 @@ class PaymentController extends Controller
 
             $StripeCharge = $RequestPayment->total * 100;
 
-            try{
+            try {
 
                 $Card = Card::where('user_id',Auth::user()->id)->where('is_default',1)->first();
 
-                \Stripe\Stripe::setApiKey(Setting::get('stripe_secret_key'));
+                Stripe::setApiKey(Setting::get('stripe_secret_key'));
 
-                $Charge = \Stripe\Charge::create(array(
+                $Charge = Charge::create(array(
                       "amount" => $StripeCharge,
                       "currency" => "usd",
                       "customer" => Auth::user()->stripe_cust_id,
@@ -64,11 +69,17 @@ class PaymentController extends Controller
                     return redirect('dashboard')->with('flash_success','Paid');
                 }
 
-            } catch(\Stripe\StripeInvalidRequestError $e){
+            } catch(StripeInvalidRequestError $e){
                 if($request->ajax()){
-                          return response()->json(['error' => $e->getMessage()], 500);
+                    return response()->json(['error' => $e->getMessage()], 500);
                 } else {
-                    return back()->with('flash_error',$e->getMessage());
+                    return back()->with('flash_error', $e->getMessage());
+                }
+            } catch(Exception $e) {
+                if($request->ajax()){
+                    return response()->json(['error' => $e->getMessage()], 500);
+                } else {
+                    return back()->with('flash_error', $e->getMessage());
                 }
             }
         }
@@ -91,9 +102,9 @@ class PaymentController extends Controller
             
             $StripeWalletCharge = $request->amount * 100;
 
-            \Stripe\Stripe::setApiKey(Setting::get('stripe_secret_key'));
+            Stripe::setApiKey(Setting::get('stripe_secret_key'));
 
-            $Charge = \Stripe\Charge::create(array(
+            $Charge = Charge::create(array(
                   "amount" => $StripeWalletCharge,
                   "currency" => "usd",
                   "customer" => Auth::user()->stripe_cust_id,
@@ -118,14 +129,18 @@ class PaymentController extends Controller
                 return redirect('wallet')->with('flash_success',currency($request->amount).' added to your wallet');
             }
 
-        } catch(\Stripe\StripeInvalidRequestError $e){
+        } catch(StripeInvalidRequestError $e) {
             if($request->ajax()){
                  return response()->json(['error' => $e->getMessage()], 500);
             }else{
                 return back()->with('flash_error',$e->getMessage());
             }
-        } 
-
+        } catch(Exception $e) {
+            if($request->ajax()) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            } else {
+                return back()->with('flash_error', $e->getMessage());
+            }
+        }
     }
-
 }

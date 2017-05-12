@@ -15,6 +15,7 @@ use Setting;
 
 use App\Provider;
 use App\ProviderDevice;
+use App\ProviderService;
 
 class TokenController extends Controller
 {
