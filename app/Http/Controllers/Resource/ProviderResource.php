@@ -212,12 +212,9 @@ class ProviderResource extends Controller
                     ->RequestHistory()
                     ->get();
 
-            return view('admin.request.request-history', compact('requests'));
+            return view('admin.request.index', compact('requests'));
+        } catch (Exception $e) {
+            return back()->with('flash_error','Something Went Wrong!');
         }
-
-        catch (Exception $e) {
-             return back()->with('flash_error','Something Went Wrong!');
-        }
-
     }
 }

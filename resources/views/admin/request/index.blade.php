@@ -53,22 +53,22 @@
                             @endif
                         </td>
                         <td>
-                            <div class="input-group-btn">
-                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Action
-                                    <span class="caret"></span>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-primary waves-effect dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    Action
                                 </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="{{ route('admin.requests.show', $request->id) }}" class="btn btn-default">
-                                            <i class="fa fa-search"></i> More Details
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('admin.requests.destroy', $request->id) }}" class="btn btn-danger">
+                                <div class="dropdown-menu">
+                                    <a href="{{ route('admin.requests.show', $request->id) }}" class="dropdown-item">
+                                        <i class="fa fa-search"></i> More Details
+                                    </a>
+                                    <form action="{{ route('admin.requests.destroy', $request->id) }}" method="POST">
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+                                        <button type="submit" class="dropdown-item">
                                             <i class="fa fa-trash"></i> Delete
-                                        </a>
-                                    </li>
-                                </ul>
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </td>
                     </tr>

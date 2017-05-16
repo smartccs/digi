@@ -438,10 +438,14 @@ class TripController extends Controller
                         $WalletBalance = $Wallet - $Total;
                         User::where('id',$UserRequest->user_id)->update(['wallet_balance' => $WalletBalance]);
                         $Payment->wallet = $Total;
+                        
                         $Payment->payment_id = 'WALLET';
                         $Payment->payment_mode = $UserRequest->payment_mode;
-                        $UserRequest->paid = 1;
                         $Payment->paid = 1;
+
+                        $UserRequest->paid = 1;
+                        $UserRequest->status = 'COMPLETED';
+                        $UserRequest->save();
 
                         // charged wallet money push 
                         (new SendPushNotification)->ChargedWalletMoney($UserRequest->user_id,currency($Total));

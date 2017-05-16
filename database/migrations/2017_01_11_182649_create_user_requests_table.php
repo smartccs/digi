@@ -66,6 +66,7 @@ class CreateUserRequestsTable extends Migration
             $table->boolean('use_wallet')->default(0);
             $table->boolean('surge')->default(0);
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

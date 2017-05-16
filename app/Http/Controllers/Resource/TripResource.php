@@ -123,6 +123,12 @@ class TripResource extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $Request = UserRequests::findOrFail($id);
+            $Request->delete();
+            return back()->with('flash_success','Request Deleted!');
+        } catch (Exception $e) {
+            return back()->with('flash_error','Something Went Wrong!');
+        }
     }
 }
