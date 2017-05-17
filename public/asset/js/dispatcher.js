@@ -296,10 +296,20 @@ class DispatcherRequest extends React.Component {
         // Mount Ride Create Map
 
         window.createRideInitialize();
+
+        function stopRKey(evt) { 
+            var evt = (evt) ? evt : ((event) ? event : null); 
+            var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null); 
+            if ((evt.keyCode == 13) && (node.type=="text"))  {return false;} 
+        } 
+
+        document.onkeypress = stopRKey; 
     }
 
     createRide(event) {
+        console.log(event);
         event.preventDefault();
+        event.stopPropagation();
         console.log('Hello', $("#form-create-ride").serialize());
         $.ajax({
             url: '/admin/dispatcher',
@@ -356,7 +366,8 @@ class DispatcherRequest extends React.Component {
                                     name="s_address"
                                     className="form-control"
                                     id="s_address"
-                                    placeholder="Pickup Address"></input>
+                                    placeholder="Pickup Address"
+                                    required></input>
 
                                 <input type="hidden" name="s_latitude" id="s_latitude"></input>
                                 <input type="hidden" name="s_longitude" id="s_longitude"></input>
@@ -368,7 +379,8 @@ class DispatcherRequest extends React.Component {
                                     name="d_address"
                                     className="form-control"
                                     id="d_address"
-                                    placeholder="Dropoff Address"></input>
+                                    placeholder="Dropoff Address"
+                                    required></input>
 
                                 <input type="hidden" name="d_latitude" id="d_latitude"></input>
                                 <input type="hidden" name="d_longitude" id="d_longitude"></input>
@@ -376,7 +388,7 @@ class DispatcherRequest extends React.Component {
                             </div>
                             <div className="form-group">
                                 <label htmlFor="schedule_time">Schedule Time</label>
-                                <input type="text" className="form-control" name="schedule_time" id="schedule_time" placeholder="Date" />
+                                <input type="text" className="form-control" name="schedule_time" id="schedule_time" placeholder="Date" required/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="service_types">Service Type</label>

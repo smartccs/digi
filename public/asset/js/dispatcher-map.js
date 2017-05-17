@@ -139,11 +139,6 @@ function createRideInitialize() {
     }
 
     function updateRoute() {
-        var bounds = new google.maps.LatLngBounds();
-        bounds.extend(marker.getPosition());
-        bounds.extend(markerSecond.getPosition());
-        map.fitBounds(bounds);
-
         directionsDisplay.setMap(null);
         directionsDisplay.setMap(map);
 
@@ -158,9 +153,6 @@ function createRideInitialize() {
 
                 marker.setPosition(result.routes[0].legs[0].start_location);
                 markerSecond.setPosition(result.routes[0].legs[0].end_location);
-
-                // console.log(result.routes[0].legs[0].distance);
-                // console.log(result.routes[0].legs[0].duration);
 
                 distance.value = result.routes[0].legs[0].distance.value / 1000;
             }
@@ -238,6 +230,8 @@ function ongoingInitialize(trip) {
         zoom: 2,
     });
 
+    var bounds = new google.maps.LatLngBounds();
+
     var marker = new google.maps.Marker({
         map: map,
         anchorPoint: new google.maps.Point(0, -29),
@@ -256,13 +250,8 @@ function ongoingInitialize(trip) {
     marker.setPosition(source);
     markerSecond.setPosition(destination);
 
-    var bounds = new google.maps.LatLngBounds();
-    bounds.extend(marker.getPosition());
-    bounds.extend(markerSecond.getPosition());
-    map.fitBounds(bounds);
-
     var directionsService = new google.maps.DirectionsService;
-    var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
+    var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true, preserveViewport: true});
     directionsDisplay.setMap(map);
 
     directionsService.route({
@@ -281,14 +270,19 @@ function ongoingInitialize(trip) {
     if(trip.provider) {
         var markerProvider = new google.maps.Marker({
             map: map,
-            icon: "{{ asset('img/map-marker-driver.png') }}",
+            icon: "/asset/img/marker-car.png",
             anchorPoint: new google.maps.Point(0, -29)
         });
 
         provider = new google.maps.LatLng(trip.provider.latitude, trip.provider.longitude);
         markerProvider.setVisible(true);
         markerProvider.setPosition(provider);
+        console.log('Provider Bounds', markerProvider.getPosition());
+        bounds.extend(markerProvider.getPosition());
     }
+    bounds.extend(marker.getPosition());
+    bounds.extend(markerSecond.getPosition());
+    map.fitBounds(bounds);
 }
 
 function assignProviderShow(providers, trip) {

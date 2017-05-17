@@ -38,13 +38,6 @@
 				</div>
 
 				<div class="form-group row">
-					<label for="mobile" class="col-xs-2 col-form-label">Mobile</label>
-					<div class="col-xs-10">
-						<input class="form-control" type="number" value="{{ isset(Auth::guard('admin')->user()->mobile) ? Auth::guard('admin')->user()->mobile : '' }}" name="mobile" required id="mobile" placeholder="Mobile">
-					</div>
-				</div>
-
-				<div class="form-group row">
 					<label for="zipcode" class="col-xs-2 col-form-label"></label>
 					<div class="col-xs-10">
 						<button type="submit" class="btn btn-primary">Update Profile</button>
