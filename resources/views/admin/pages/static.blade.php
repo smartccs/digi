@@ -3,8 +3,6 @@
 @section('title', 'Pages ')
 
 @section('content')
-
-@include('common.notify')
 <div class="content-area py-1">
     <div class="container-fluid">
         <div class="box box-block bg-white">
@@ -39,13 +37,8 @@
 @endsection
 
 @section('scripts')
-<script src="http://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.2/ckeditor.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.2/adapters/jquery.js"></script>
+<script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
 <script type="text/javascript">
-    $('textarea#myeditor').ckeditor({
-        height: "300px",
-        toolbarStartupExpanded: true,
-        width: "100%"
-    });
+    CKEDITOR.replace('myeditor');
 </script>
 @endsection
