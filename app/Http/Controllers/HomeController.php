@@ -152,5 +152,4 @@ class HomeController extends Controller
         $trips = $this->UserAPI->upcoming_trips();
         return view('user.ride.upcoming',compact('trips'));
     }
-
 }

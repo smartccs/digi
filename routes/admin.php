@@ -51,10 +51,14 @@ Route::post('password', 'AdminController@password_update')->name('password.updat
 
 Route::get('payment', 'AdminController@payment')->name('payment');
 
-Route::get('help', 'AdminController@help')->name('help');
+// Static Pages - Post updates to pages.update when adding new static pages.
+
+Route::get('/help', 'AdminController@help')->name('help');
+Route::get('/privacy', 'AdminController@privacy')->name('privacy');
+Route::post('/pages', 'AdminController@pages')->name('pages.update');
 
 Route::resource('requests', 'Resource\TripResource');
-Route::get('requests/scheduled', 'Resource\TripResource@scheduled')->name('requests.scheduled');
+Route::get('scheduled', 'Resource\TripResource@scheduled')->name('requests.scheduled');
 
 Route::get('push', 'AdminController@push_index')->name('push.index');
 Route::post('push', 'AdminController@push_store')->name('push.store');

@@ -64,6 +64,12 @@ Route::get('/drive', function () {
     return view('drive');
 });
 
+Route::get('privacy', function () {
+    $page = 'page_privacy';
+    $title = 'Privacy Policy';
+    return view('static', compact('page', 'title'));
+});
+
 /*
 |--------------------------------------------------------------------------
 | User Routes

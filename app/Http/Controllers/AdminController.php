@@ -408,4 +408,22 @@ class AdminController extends Controller
              return back()->with('flash_error','Something Went Wrong!');
         }
     }
+
+    public function privacy(){
+        return view('admin.pages.static')
+            ->with('title',"Privacy Page")
+            ->with('page', "privacy");
+    }
+
+    public function pages(Request $request){
+        $this->validate($request, [
+                'page' => 'required|in:page_privacy',
+                'content' => 'required',
+            ]);
+
+        Setting::set($request->page, $request->content);
+        Setting::save();
+
+        return back()->with('flash_success', 'Content Updated!');
+    }
 }

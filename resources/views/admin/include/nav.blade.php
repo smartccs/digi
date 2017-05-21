@@ -49,7 +49,7 @@
 				<a href="#" class="waves-effect  waves-light">
 					<span class="s-caret"><i class="fa fa-angle-down"></i></span>
 					<span class="s-icon"><i class="ti-view-grid"></i></span>
-					<span class="s-text">Ratings & Reviews</span>
+					<span class="s-text">Ratings &amp; Reviews</span>
 				</a>
 				<ul>
 					<li><a href="{{ route('admin.user.review') }}">User Ratings</a></li>

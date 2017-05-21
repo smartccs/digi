@@ -1,9 +1,7 @@
 @extends('user.layout.app')
 
 @section('content')
-
-    <?php $banner_bg = asset('asset/img/banner-bg.jpg'); ?>
-    <div class="banner row no-margin" style="background-image: url('{{$banner_bg}}');">
+    <div class="banner row no-margin" style="background-image: url('{{ asset('asset/img/banner-bg.jpg') }}');">
         <div class="banner-overlay"></div>
         <div class="container">
             <div class="col-md-8">
