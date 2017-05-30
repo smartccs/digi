@@ -30,6 +30,7 @@ Route::group(['as' => 'provider.'], function () {
     Route::get('provider/{id}/disapprove', 'Resource\ProviderResource@disapprove')->name('disapprove');
     Route::get('provider/{id}/request', 'Resource\ProviderResource@request')->name('request');
     Route::resource('provider/{provider}/document', 'Resource\ProviderDocumentResource');
+    Route::delete('provider/{provider}/service/{document}', 'Resource\ProviderDocumentResource@service_destroy')->name('document.service');
 });
 
 Route::get('review/user', 'AdminController@user_review')->name('user.review');

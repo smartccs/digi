@@ -57,8 +57,8 @@ class ProviderDocumentResource extends Controller
         
 
         try {
+            
             $ProviderService = ProviderService::where('provider_id', $provider)->firstOrFail();
-
             $ProviderService->update([
                     'service_type_id' => $request->service_type,
                     'status' => 'offline',
@@ -66,8 +66,7 @@ class ProviderDocumentResource extends Controller
                     'service_model' => $request->service_model,
                 ]);
 
-            // sending push to the provider
-
+            // Sending push to the provider
             (new SendPushNotification)->DocumentsVerfied($provider);
 
         } catch (ModelNotFoundException $e) {
@@ -124,12 +123,17 @@ class ProviderDocumentResource extends Controller
         try {
 
             $Document = ProviderDocument::where('provider_id', $provider)
-                ->findOrFail($id);
+                ->where('document_id', $id)
+                ->firstOrFail();
             $Document->update(['status' => 'ACTIVE']);
 
-            return redirect()->route('admin.provider.document.index', $provider)->with('flash_success', 'Provider document has been approved.');
+            return redirect()
+                ->route('admin.provider.document.index', $provider)
+                ->with('flash_success', 'Provider document has been approved.');
         } catch (ModelNotFoundException $e) {
-            return redirect()->route('admin.provider.document.index', $provider)->with('flash_error', 'Provider not found!');
+            return redirect()
+                ->route('admin.provider.document.index', $provider)
+                ->with('flash_error', 'Provider not found!');
         }
     }
 
@@ -144,12 +148,41 @@ class ProviderDocumentResource extends Controller
         try {
 
             $Document = ProviderDocument::where('provider_id', $provider)
-                ->findOrFail($id);
+                ->where('document_id', $id)
+                ->firstOrFail();
             $Document->delete();
 
-            return redirect()->route('admin.provider.document.index', $provider)->with('flash_success', 'Provider document has been deleted');
+            return redirect()
+                ->route('admin.provider.document.index', $provider)
+                ->with('flash_success', 'Provider document has been deleted');
         } catch (ModelNotFoundException $e) {
-            return redirect()->route('admin.provider.document.index', $provider)->with('flash_error', 'Provider not found!');
+            return redirect()
+                ->route('admin.provider.document.index', $provider)
+                ->with('flash_error', 'Provider not found!');
+        }
+    }
+
+    /**
+     * Delete the service type of the provider.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function service_destroy(Request $request, $provider, $id)
+    {
+        try {
+
+            $ProviderService = ProviderService::where('provider_id', $provider)->firstOrFail();
+            $ProviderService->delete();
+
+            return redirect()
+                ->route('admin.provider.document.index', $provider)
+                ->with('flash_success', 'Provider service has been deleted.');
+        } catch (ModelNotFoundException $e) {
+            return redirect()
+                ->route('admin.provider.document.index', $provider)
+                ->with('flash_error', 'Provider service not found!');
         }
     }
 }

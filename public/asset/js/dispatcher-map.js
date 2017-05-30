@@ -82,10 +82,6 @@ function createRideInitialize() {
                     console.log('Autocomplete Has No Property');
                     updateSource(results[0].geometry.location);
                     s_input.value = results[0].formatted_address;
-                    s_state.value = '';
-                    s_country.value = '';
-                    s_city.value = '';
-                    s_pin.value = '';
                 }
             });
         }
@@ -110,10 +106,6 @@ function createRideInitialize() {
 
                     console.log('destination', results[0]);
                     d_input.value = results[0].formatted_address;
-                    d_state.value = '';
-                    d_country.value = '';
-                    d_city.value = '';
-                    d_pin.value = '';
                 }
             });
         }
