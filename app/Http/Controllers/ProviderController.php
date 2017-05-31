@@ -18,7 +18,7 @@ class ProviderController extends Controller
      */
     public function __construct(Request $request)
     {
-        $this->middleware('provider');  
+        $this->middleware('provider');
     }
 
     /**
@@ -37,7 +37,8 @@ class ProviderController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function incoming(Request $request) {
+    public function incoming(Request $request)
+    {
         return (new TripController())->index($request);
     }
 
@@ -47,7 +48,8 @@ class ProviderController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function accept(Request $request, $id) {
+    public function accept(Request $request, $id)
+    {
         return (new TripController())->accept($request, $id);
     }
 
@@ -57,7 +59,8 @@ class ProviderController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function reject(Request $request, $id) {
+    public function reject(Request $request, $id)
+    {
         return (new TripController())->destroy($request, $id);
     }
 
@@ -67,7 +70,8 @@ class ProviderController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         return (new TripController())->update($request, $id);
     }
 
@@ -77,7 +81,8 @@ class ProviderController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function rating(Request $request, $id) {
+    public function rating(Request $request, $id)
+    {
         return (new TripController())->rate($request, $id);
     }
 
@@ -174,16 +179,11 @@ class ProviderController extends Controller
 
 
     public function cancel(Request $request) {
-
         try{
-
             (new ProviderResources\TripController)->cancel($request);
             return back();
-
         } catch (ModelNotFoundException $e) {
             return back()->with(['flash_error' => "Something Went Wrong"]);
         }
-
     }
-
 }

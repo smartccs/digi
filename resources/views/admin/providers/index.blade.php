@@ -6,7 +6,12 @@
 <div class="content-area py-1">
     <div class="container-fluid">
         <div class="box box-block bg-white">
-            <h5 class="mb-1">Providers</h5>
+            <h5 class="mb-1">
+                Providers
+                @if(Setting::get('demo_mode', 0) == 1)
+                <span class="pull-right">(*personal information hidden in demo)</span>
+                @endif
+            </h5>
             <a href="{{ route('admin.provider.create') }}" style="margin-left: 1em;" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Add New Provider</a>
             <table class="table table-striped table-bordered dataTable" id="table-2">
                 <thead>
@@ -26,13 +31,21 @@
                 <tbody>
                 @foreach($providers as $index => $provider)
                     <tr>
-                        <td>{{$index + 1}}</td>
-                        <td>{{$provider->first_name}} {{$provider->last_name}}</td>
-                        <td>{{$provider->email}}</td>
-                        <td>{{$provider->mobile}}</td>
-                        <td>{{$provider->total_requests}}</td>
-                        <td>{{$provider->accepted_requests}}</td>
-                        <td>{{$provider->total_requests - $provider->accepted_requests }}</td>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $provider->first_name }} {{ $provider->last_name }}</td>
+                        @if(Setting::get('demo_mode', 0) == 1)
+                        <td>xxx@yyy.com</td>
+                        @else
+                        <td>{{ $provider->email }}</td>
+                        @endif
+                        @if(Setting::get('demo_mode', 0) == 1)
+                        <td>+919876543210</td>
+                        @else
+                        <td>{{ $provider->mobile }}</td>
+                        @endif
+                        <td>{{ $provider->total_requests }}</td>
+                        <td>{{ $provider->accepted_requests }}</td>
+                        <td>{{ $provider->total_requests - $provider->accepted_requests }}</td>
                         <td>
                             @if($provider->pending_documents() > 0 || $provider->service == null)
                                 <a class="btn btn-danger btn-block label-right" href="{{route('admin.provider.document.index', $provider->id )}}">Attention! <span class="btn-label">{{ $provider->pending_documents() }}</span></a>
