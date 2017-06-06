@@ -23,9 +23,6 @@ class DocumentController extends Controller
 
         $Provider = \Auth::guard('provider')->user();
 
-        // dd($Provider->document(3)->toArray());
-        // dd($Provider->document(1) ? $Provider->document(1)->expires_at : 'N/A');
-
         return view('provider.document.index', compact('DriverDocuments', 'VehicleDocuments', 'Provider'));
     }
 

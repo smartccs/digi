@@ -32,6 +32,7 @@ class CreateUsersTable extends Migration
             $table->string('stripe_cust_id')->nullable();
             $table->float('wallet_balance')->default(0);
             $table->decimal('rating', 4, 2)->default(5);
+            $table->mediumInteger('otp')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

@@ -24,6 +24,7 @@ class CreateProvidersTable extends Migration
             $table->enum('status', ['onboarding', 'approved', 'banned']);
             $table->double('latitude', 15, 8)->nullable();
             $table->double('longitude', 15, 8)->nullable();
+            $table->mediumInteger('otp')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

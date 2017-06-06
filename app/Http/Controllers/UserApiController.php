@@ -14,6 +14,7 @@ use Exception;
 
 use Carbon\Carbon;
 use App\Http\Controllers\SendPushNotification;
+use App\Notifications\ResetPasswordOTP;
 
 use App\Card;
 use App\User;
@@ -26,6 +27,7 @@ use App\RequestFilter;
 use App\PromocodeUsage;
 use App\ProviderService;
 use App\UserRequestRating;
+
 
 class UserApiController extends Controller
 {
@@ -317,6 +319,14 @@ class UserApiController extends Controller
 
         try{
 
+            $details = "https://maps.googleapis.com/maps/api/directions/json?origin=".$request->s_latitude.",".$request->s_longitude."&destination=".$request->d_latitude.",".$request->d_longitude."&mode=driving&key=".env('GOOGLE_MAP_KEY');
+
+            $json = curl($details);
+
+            $details = json_decode($json, TRUE);
+
+            $route_key = $details['routes'][0]['overview_polyline']['points'];
+
             $UserRequest = new UserRequests;
             $UserRequest->user_id = Auth::user()->id;
             $UserRequest->current_provider_id = $Providers[0]->id;
@@ -338,6 +348,7 @@ class UserApiController extends Controller
             $UserRequest->use_wallet = $request->use_wallet ? : 0;
             
             $UserRequest->assigned_at = Carbon::now();
+            $UserRequest->route_key = $route_key;
 
             if($Providers->count() <= Setting::get('surge_trigger') && $Providers->count() > 0){
                 $UserRequest->surge = 1;
@@ -571,7 +582,16 @@ class UserApiController extends Controller
             if(!empty($UserRequests)){
                 $map_icon = asset('asset/marker.png');
                 foreach ($UserRequests as $key => $value) {
-                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=320x130&maptype=terrian&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_MAP_KEY');
+                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?".
+                            "autoscale=1".
+                            "&size=320x130".
+                            "&maptype=terrian".
+                            "&format=png".
+                            "&visual_refresh=true".
+                            "&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude.
+                            "&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude.
+                            "&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|enc:".$value->route_key.
+                            "&key=".env('GOOGLE_MAP_KEY');
                 }
             }
             return $UserRequests;
@@ -579,36 +599,6 @@ class UserApiController extends Controller
 
         catch (Exception $e) {
             return response()->json(['error' => trans('api.something_went_wrong')]);
-        }
-    }
-
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function forgot_password(Request $request){
-
-        $this->validate($request, [
-                'email' => 'required|email|exists:users,email',
-            ]);
-
-        try{  
-
-            // $user = User::where('email' , $email)->first();
-            // $new_password = uniqid();
-            // $user->password = Hash::make($new_password);
-
-            // send mail
-
-            return response()->json(['message' => 'New Password Sent to your mail!']);
-
-        }
-
-        catch(Exception $e){
-                return response()->json(['error' => trans('api.something_went_wrong')], 500);
         }
     }
 
@@ -631,9 +621,6 @@ class UserApiController extends Controller
         try{
 
             $details = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".$request->s_latitude.",".$request->s_longitude."&destinations=".$request->d_latitude.",".$request->d_longitude."&mode=driving&sensor=false&key=".env('GOOGLE_MAP_KEY');
-
-            // $client = new Client(); //GuzzleHttp\Client
-            // $result = $client->get($details);
 
             $json = curl($details);
 
@@ -717,7 +704,16 @@ class UserApiController extends Controller
             if(!empty($UserRequests)){
                 $map_icon = asset('asset/marker.png');
                 foreach ($UserRequests as $key => $value) {
-                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=320x130&maptype=terrian&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_MAP_KEY');
+                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?".
+                            "autoscale=1".
+                            "&size=320x130".
+                            "&maptype=terrian".
+                            "&format=png".
+                            "&visual_refresh=true".
+                            "&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude.
+                            "&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude.
+                            "&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|enc:".$value->route_key.
+                            "&key=".env('GOOGLE_MAP_KEY');
                 }
             }
             return $UserRequests;
@@ -852,7 +848,16 @@ class UserApiController extends Controller
             if(!empty($UserRequests)){
                 $map_icon = asset('asset/marker.png');
                 foreach ($UserRequests as $key => $value) {
-                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=320x130&maptype=terrian&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_MAP_KEY');
+                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?".
+                            "autoscale=1".
+                            "&size=320x130".
+                            "&maptype=terrian".
+                            "&format=png".
+                            "&visual_refresh=true".
+                            "&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude.
+                            "&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude.
+                            "&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|enc:".$value->route_key.
+                            "&key=".env('GOOGLE_MAP_KEY');
                 }
             }
             return $UserRequests;
@@ -880,7 +885,16 @@ class UserApiController extends Controller
             if(!empty($UserRequests)){
                 $map_icon = asset('asset/marker.png');
                 foreach ($UserRequests as $key => $value) {
-                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=320x130&maptype=terrian&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude."&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude."&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|".$value->d_latitude.",".$value->d_longitude."&key=".env('GOOGLE_MAP_KEY');
+                    $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?".
+                            "autoscale=1".
+                            "&size=320x130".
+                            "&maptype=terrian".
+                            "&format=png".
+                            "&visual_refresh=true".
+                            "&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude.
+                            "&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude.
+                            "&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|enc:".$value->route_key.
+                            "&key=".env('GOOGLE_MAP_KEY');
                 }
             }
             return $UserRequests;
@@ -934,6 +948,72 @@ class UserApiController extends Controller
                 return response()->json(['error' => trans('api.something_went_wrong')], 500);
             }else{
                 return back()->with('flash_error', 'Something went wrong while sending request. Please try again.');
+            }
+        }
+    }
+
+
+    /**
+     * Forgot Password.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+
+    public function forgot_password(Request $request){
+
+        $this->validate($request, [
+                'email' => 'required|email|exists:users,email',
+            ]);
+
+        try{  
+            
+            $user = User::where('email' , $request->email)->first();
+
+            $otp = mt_rand(100000, 999999);
+
+            $user->otp = $otp;
+            $user->save();
+
+            Notification::send($user, new ResetPasswordOTP($otp));
+
+            return response()->json([
+                'message' => 'OTP sent to your email!',
+                'user' => $user
+            ]);
+
+        }catch(Exception $e){
+                return response()->json(['error' => trans('api.something_went_wrong')], 500);
+        }
+    }
+
+
+    /**
+     * Reset Password.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function reset_password(Request $request){
+
+        $this->validate($request, [
+                'password' => 'required|confirmed|min:6',
+                'id' => 'required|numeric|exists:users,id'
+            ]);
+
+        try{
+
+            $User = User::findOrFail($request->id);
+            $User->password = bcrypt($request->password);
+            $User->save();
+
+            if($request->ajax()) {
+                return response()->json(['message' => 'Password Updated']);
+            }
+
+        }catch (Exception $e) {
+            if($request->ajax()) {
+                return response()->json(['error' => trans('api.something_went_wrong')]);
             }
         }
     }
