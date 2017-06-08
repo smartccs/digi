@@ -13,6 +13,9 @@
 
 Route::post('/signup' , 'UserApiController@signup');
 
+Route::post('/forgot/password',     'UserApiController@forgot_password');
+Route::post('/reset/password',      'UserApiController@reset_password');
+
 Route::group(['middleware' => ['auth:api']], function () {
 
 	// user profile

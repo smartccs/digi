@@ -13,6 +13,7 @@ use Auth;
 use Config;
 use JWTAuth;
 use Setting;
+use Notification;
 
 use App\Provider;
 use App\ProviderDevice;

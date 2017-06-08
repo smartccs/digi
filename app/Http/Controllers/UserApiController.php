@@ -11,6 +11,7 @@ use Hash;
 use Storage;
 use Setting;
 use Exception;
+use Notification;
 
 use Carbon\Carbon;
 use App\Http\Controllers\SendPushNotification;

@@ -299,13 +299,20 @@ class TripController extends Controller
                 ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status' =>'active']);
             } else {
                 $UserRequest->status = $request->status;
+
+                if($request->status == 'PICKEDUP'){
+                    $UserRequest->started_at = Carbon::now();
+                }
+
                 if($request->status == 'ARRIVED'){
                     (new SendPushNotification)->Arrived($UserRequest);
                 }
             }
+
             $UserRequest->save();
 
             if($request->status == 'DROPPED') {
+                $UserRequest->finished_at = Carbon::now();
                 $UserRequest->with('user')->findOrFail($id);
                 $UserRequest->invoice = $this->invoice($id);
                 return $UserRequest;

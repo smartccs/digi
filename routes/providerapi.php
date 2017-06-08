@@ -15,6 +15,11 @@
 Route::post('/register' , 'ProviderAuth\TokenController@register');
 Route::post('/oauth/token' , 'ProviderAuth\TokenController@authenticate');
 
+
+Route::post('/forgot/password',     'ProviderAuth\TokenController@forgot_password');
+Route::post('/reset/password',      'ProviderAuth\TokenController@reset_password');
+
+
 Route::group(['middleware' => ['provider.api']], function () {
 
     Route::group(['prefix' => 'profile'], function () {
