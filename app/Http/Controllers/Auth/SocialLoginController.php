@@ -220,8 +220,8 @@ class SocialLoginController extends Controller
                         if($AuthUser){ 
                             $AuthUser->social_unique_id=$google->id;
                             $AuthUser->save();  
-                             Auth::loginUsingId($AuthUser->id);
-                             return redirect()->to('dashboard');
+                            Auth::loginUsingId($AuthUser->id);
+                            return redirect()->to('dashboard');
                         }else{   
                             $new=new User();
                             $new->email=$google->email;
@@ -233,6 +233,7 @@ class SocialLoginController extends Controller
                             $new->picture=$google->avatar;
                             $new->login_by="google";
                             $new->save();
+                            Auth::loginUsingId($new->id);
                             return redirect()->route('dashboard');
                         }
                     }else{
