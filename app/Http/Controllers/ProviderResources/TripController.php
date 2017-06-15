@@ -371,9 +371,6 @@ class TripController extends Controller
         $UserRequest = UserRequests::find($id);
 
         try {
-
-            // Send Push Notification to User
-            // RequestFilter::where('request_id', $UserRequest->id)->where('provider_id', Auth::user()->id)->delete();
             $this->assign_next_provider($UserRequest->id);
             return $UserRequest->with('user')->get();
 

@@ -59,9 +59,9 @@ class ProviderController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function reject(Request $request, $id)
+    public function reject($id)
     {
-        return (new TripController())->destroy($request, $id);
+        return (new TripController())->destroy($id);
     }
 
     /**
