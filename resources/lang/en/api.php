@@ -34,5 +34,6 @@ return array (
 		'added_money_to_wallet' => ' Added to your Wallet',
 		'charged_from_wallet' => ' Charged from your Wallet',
 		'document_verfied' => 'Your Documents are verified, Now you are ready to Start your Business',
+		'provider_not_available' => 'Sorry for inconvience time, Our partner or busy. Please try after some time',
 	],
 );

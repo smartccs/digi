@@ -28,6 +28,7 @@ use App\RequestFilter;
 use App\PromocodeUsage;
 use App\ProviderService;
 use App\UserRequestRating;
+use App\Http\Controllers\ProviderResources\TripController;
 
 
 class UserApiController extends Controller
@@ -491,6 +492,25 @@ class UserApiController extends Controller
             $UserRequests = UserRequests::UserRequestStatusCheck(Auth::user()->id, $check_status)
                                         ->get()
                                         ->toArray();
+
+            $search_status = ['SEARCHING','SCHEDULED'];
+            $UserRequestsFilter = UserRequests::UserRequestAssignProvider(Auth::user()->id,$search_status)->get(); 
+
+            // Log::info($UserRequestsFilter);
+
+            $Timeout = Setting::get('provider_select_timeout', 180);
+
+            if(!empty($UserRequestsFilter)){
+                for ($i=0; $i < sizeof($UserRequestsFilter); $i++) {
+                    $ExpiredTime = $Timeout - (time() - strtotime($UserRequestsFilter[$i]->assigned_at));
+                    if($UserRequestsFilter[$i]->status == 'SEARCHING' && $ExpiredTime < 0) {
+                        $Providertrip = new TripController();
+                        $Providertrip->assign_next_provider($UserRequestsFilter[$i]->id);
+                    }else if($UserRequestsFilter[$i]->status == 'SEARCHING' && $ExpiredTime > 0){
+                        break;
+                    }
+                }
+            }
 
             return response()->json(['data' => $UserRequests]);
 

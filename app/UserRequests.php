@@ -74,6 +74,14 @@ class UserRequests extends Model
     }
 
     /**
+     * UserRequestRating Model Linked
+     */
+    public function filter()
+    {
+        return $this->hasMany('App\RequestFilter', 'request_id');
+    }
+
+    /**
      * The user who created the request.
      */
     public function user()
@@ -147,5 +155,15 @@ class UserRequests extends Model
                     ->whereNotIn('user_requests.status', $check_status)
                     ->select('user_requests.*')
                     ->with('user','provider','service_type','provider_service','rating','payment');
+    }
+
+    public function scopeUserRequestAssignProvider($query, $user_id, $check_status)
+    {
+        return $query->where('user_requests.user_id', $user_id)
+                    ->where('user_requests.user_rated',0)
+                    ->where('user_requests.provider_id',0)
+                    ->whereIn('user_requests.status', $check_status)
+                    ->select('user_requests.*')
+                    ->with('filter');
     }
 }
