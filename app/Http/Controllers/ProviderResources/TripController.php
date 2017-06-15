@@ -534,7 +534,7 @@ class TripController extends Controller
                                 ->with('payment','service_type','user','rating')
                                 ->get();
             if(!empty($Jobs)){
-                $map_icon = asset('asset/marker.png');
+                $map_icon = asset('asset/img/marker-start.png');
                 foreach ($Jobs as $key => $value) {
                     $Jobs[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?".
                             "autoscale=1".
@@ -544,7 +544,7 @@ class TripController extends Controller
                             "&visual_refresh=true".
                             "&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude.
                             "&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude.
-                            "&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|enc:".$value->route_key.
+                            "&path=color:0x000000|weight:3|enc:".$value->route_key.
                             "&key=".env('GOOGLE_MAP_KEY');
                 }
             }
@@ -572,7 +572,7 @@ class TripController extends Controller
                                 ->with('service_type','user')
                                 ->get();
             if(!empty($Jobs)){
-                $map_icon = asset('asset/marker.png');
+                $map_icon = asset('asset/img/marker-start.png');
                 foreach ($Jobs as $key => $value) {
                     $Jobs[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?".
                             "autoscale=1".
@@ -582,7 +582,7 @@ class TripController extends Controller
                             "&visual_refresh=true".
                             "&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude.
                             "&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude.
-                            "&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|enc:".$value->route_key.
+                            "&path=color:0x000000|weight:3|enc:".$value->route_key.
                             "&key=".env('GOOGLE_MAP_KEY');
                 }
             }
