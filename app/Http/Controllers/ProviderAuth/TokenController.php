@@ -14,6 +14,7 @@ use Config;
 use JWTAuth;
 use Setting;
 use Notification;
+use Socialite;
 
 use App\Provider;
 use App\ProviderDevice;
@@ -191,6 +192,160 @@ class TokenController extends Controller
             if($request->ajax()) {
                 return response()->json(['error' => trans('api.something_went_wrong')]);
             }
+        }
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function facebookViaAPI(Request $request) { 
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'device_type' => 'required|in:android,ios',
+                'device_token' => 'required',
+                'accessToken'=>'required',
+                'device_id' => 'required',
+                'login_by' => 'required|in:manual,facebook,google'
+            ]
+        );
+        
+        if($validator->fails()) {
+            return response()->json(['status'=>false,'message' => $validator->messages()->all()]);
+        }
+        $user = Socialite::driver('facebook')->stateless();
+        $FacebookDrive = $user->userFromToken( $request->accessToken);
+       
+        try{
+            $FacebookSql = Provider::where('social_unique_id',$FacebookDrive->id);
+            if($FacebookDrive->email !=""){
+                $FacebookSql->orWhere('email',$FacebookDrive->email);
+            }
+            $AuthUser = $FacebookSql->first();
+            if($AuthUser){ 
+                $AuthUser->social_unique_id=$FacebookDrive->id;
+                $AuthUser->login_by="facebook";
+                $AuthUser->save();  
+            }else{   
+                $AuthUser["email"]=$FacebookDrive->email;
+                $AuthUser["first_name"]=$FacebookDrive->name;
+                $AuthUser["last_name"]='';
+                $AuthUser["password"]=$FacebookDrive->id;
+                $AuthUser["social_unique_id"]=$FacebookDrive->id;
+                $AuthUser["avatar"]=$FacebookDrive->avatar;
+                $AuthUser["login_by"]="facebook";
+                $AuthUser = Provider::create($AuthUser);
+            }    
+            if($AuthUser){ 
+                $userToken = JWTAuth::fromUser($AuthUser);
+                $User = Provider::with('service', 'device')->find($AuthUser->id);
+                if($User->device) {
+                    if($User->device->token != $request->token) {
+                        $User->device->update([
+                                'udid' => $request->device_id,
+                                'token' => $request->device_token,
+                                'type' => $request->device_type,
+                            ]);
+                    }
+                } else {
+                    ProviderDevice::create([
+                        'provider_id' => $User->id,
+                        'udid' => $request->device_id,
+                        'token' => $request->device_token,
+                        'type' => $request->device_type,
+                    ]);
+                }
+                return response()->json([
+                            "status" => true,
+                            "token_type" => "Bearer",
+                            "access_token" => $userToken,
+                            'currency' => Setting::get('currency', '$')
+                        ]);
+            }else{
+                return response()->json(['status'=>false,'message' => "Invalid credentials!"]);
+            }  
+        } catch (Exception $e) {
+            return response()->json(['status'=>false,'message' => trans('api.something_went_wrong')]);
+        }
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function googleViaAPI(Request $request) { 
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'device_type' => 'required|in:android,ios',
+                'device_token' => 'required',
+                'accessToken'=>'required',
+                'device_id' => 'required',
+                'login_by' => 'required|in:manual,facebook,google'
+            ]
+        );
+        
+        if($validator->fails()) {
+            return response()->json(['status'=>false,'message' => $validator->messages()->all()]);
+        }
+        $user = Socialite::driver('google')->stateless();
+        $GoogleDrive = $user->userFromToken( $request->accessToken);
+       
+        try{
+            $GoogleSql = Provider::where('social_unique_id',$GoogleDrive->id);
+            if($GoogleDrive->email !=""){
+                $GoogleSql->orWhere('email',$GoogleDrive->email);
+            }
+            $AuthUser = $GoogleSql->first();
+            if($AuthUser){
+                $AuthUser->social_unique_id=$GoogleDrive->id;  
+                $AuthUser->login_by="google";
+                $AuthUser->save();
+            }else{   
+                $AuthUser["email"]=$GoogleDrive->email;
+                $AuthUser["first_name"]=$GoogleDrive->name;
+                $AuthUser["last_name"]='';
+                $AuthUser["password"]=$GoogleDrive->id;
+                $AuthUser["social_unique_id"]=$GoogleDrive->id;
+                $AuthUser["avatar"]=$GoogleDrive->avatar;
+                $AuthUser["login_by"]="google";
+                $AuthUser = Provider::create($AuthUser);
+            }    
+            if($AuthUser){ 
+                $userToken = JWTAuth::fromUser($AuthUser);
+                $User = Provider::with('service', 'device')->find($AuthUser->id);
+                if($User->device) {
+                    if($User->device->token != $request->token) {
+                        $User->device->update([
+                            'udid' => $request->device_id,
+                            'token' => $request->device_token,
+                            'type' => $request->device_type,
+                        ]);
+                    }
+                } else {
+                    ProviderDevice::create([
+                        'provider_id' => $User->id,
+                        'udid' => $request->device_id,
+                        'token' => $request->device_token,
+                        'type' => $request->device_type,
+                    ]);
+                }
+                return response()->json([
+                            "status" => true,
+                            "token_type" => "Bearer",
+                            "access_token" => $userToken,
+                            'currency' => Setting::get('currency', '$')
+                        ]);
+            }else{
+                return response()->json(['status'=>false,'message' => "Invalid credentials!"]);
+            }  
+        } catch (Exception $e) {
+            return response()->json(['status'=>false,'message' => trans('api.something_went_wrong')]);
         }
     }
 }

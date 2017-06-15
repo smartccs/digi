@@ -180,7 +180,7 @@ class ProviderController extends Controller
 
     public function cancel(Request $request) {
         try{
-            (new ProviderResources\TripController)->cancel($request);
+            (new TripController)->cancel($request);
             return back();
         } catch (ModelNotFoundException $e) {
             return back()->with(['flash_error' => "Something Went Wrong"]);

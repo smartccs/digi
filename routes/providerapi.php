@@ -15,6 +15,8 @@
 Route::post('/register' , 'ProviderAuth\TokenController@register');
 Route::post('/oauth/token' , 'ProviderAuth\TokenController@authenticate');
 
+Route::post('/auth/facebook', 'ProviderAuth\TokenController@facebookViaAPI');
+Route::post('/auth/google', 'ProviderAuth\TokenController@googleViaAPI');
 
 Route::post('/forgot/password',     'ProviderAuth\TokenController@forgot_password');
 Route::post('/reset/password',      'ProviderAuth\TokenController@reset_password');
