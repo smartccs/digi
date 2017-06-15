@@ -14,6 +14,7 @@ use Config;
 use JWTAuth;
 use Setting;
 use Notification;
+use Validator;
 use Socialite;
 
 use App\Provider;
