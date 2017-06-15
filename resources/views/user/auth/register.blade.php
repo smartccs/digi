@@ -48,6 +48,15 @@
                                 </span>
                             @endif                        
                         </div>
+                       <div class="col-md-12">
+                            <input type="text" class="form-control" placeholder="Mobile" name="mobile" value="{{ old('mobile') }}">
+
+                            @if ($errors->has('mobile'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('mobile') }}</strong>
+                                </span>
+                            @endif
+                        </div>
                         <div class="col-md-12">
                             <input type="password" class="form-control" name="password" placeholder="Password">
 

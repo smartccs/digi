@@ -63,7 +63,7 @@
                                     <div class="prof-sub-col col-sm-6 col-xs-12 no-left-padding">
                                         <div class="form-group">
                                             <label>Phone</label>
-                                            <input type="text" class="form-control" placeholder="Contact Number" name="mobile" value="{{ Auth::guard('provider')->user()->mobile }}">
+                                            <input type="text" class="form-control" required placeholder="Contact Number" name="mobile" value="{{ Auth::guard('provider')->user()->mobile }}">
                                         </div>
                                     </div>
                                     <div class="prof-sub-col col-sm-6 col-xs-12 no-right-padding">

@@ -26,6 +26,14 @@
             </span>
         @endif
 
+        <input id="mobile" type="mobile" class="form-control" name="mobile" value="{{ old('mobile') }}" placeholder="Mobile">
+
+        @if ($errors->has('mobile'))
+            <span class="help-block">
+                <strong>{{ $errors->first('mobile') }}</strong>
+            </span>
+        @endif
+
         <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="E-Mail Address">
 
         @if ($errors->has('email'))
