@@ -43,7 +43,7 @@ return [
     'google' => [
         'client_id' => '481922396339-ohem13usmmu66gmotlmrn5kq8njb0umd.apps.googleusercontent.com',
         'client_secret' => '5go6DYXJ8lXRW-LAeEYay5MO',
-        'redirect' => 'https://demo.tranxit.co/auth/facebook/callback',
+        'redirect' => 'https://demo.tranxit.co/auth/google/callback',
     ]
 
 ];

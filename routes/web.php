@@ -9,6 +9,11 @@
 
 Auth::routes();
 
+Route::get('auth/facebook', 'Auth\SocialLoginController@redirectToFaceBook');
+Route::get('auth/facebook/callback', 'Auth\SocialLoginController@handleFacebookCallback');
+Route::get('auth/google', 'Auth\SocialLoginController@redirectToGoogle');
+Route::get('auth/google/callback', 'Auth\SocialLoginController@handleGoogleCallback');
+
 /*
 |--------------------------------------------------------------------------
 | Provider Authentication Routes
