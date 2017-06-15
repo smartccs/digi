@@ -44,8 +44,8 @@
     <div class="col-md-12">
         <a href="{{ url('provider/auth/facebook') }}"><button type="submit" class="log-teal-btn">LOGIN WITH FACEBOOK</button></a>
     </div>  
-    <div class="col-md-12">
+    <!-- <div class="col-md-12">
         <a href="{{ url('provider/auth/google') }}"><button type="submit" class="log-teal-btn">LOGIN WITH GOOGLE+</button></a>
-    </div>
+    </div> -->
 </div>
 @endsection
