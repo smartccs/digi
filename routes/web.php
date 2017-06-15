@@ -21,6 +21,10 @@ Route::get('auth/google/callback', 'Auth\SocialLoginController@handleGoogleCallb
 */
 
 Route::group(['prefix' => 'provider'], function () {
+
+    Route::get('auth/facebook', 'Auth\SocialLoginController@providerToFaceBook');
+    Route::get('auth/google', 'Auth\SocialLoginController@providerToGoogle');
+
     Route::get('/login', 'ProviderAuth\LoginController@showLoginForm');
     Route::post('/login', 'ProviderAuth\LoginController@login');
     Route::post('/logout', 'ProviderAuth\LoginController@logout');

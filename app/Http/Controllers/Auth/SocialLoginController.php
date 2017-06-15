@@ -9,6 +9,7 @@ use App\Http\Requests;
 
 use Socialite;
 use App\User;
+use App\Provider;
 use Exception;
 use Validator;
 
@@ -18,7 +19,10 @@ class SocialLoginController extends Controller
     public function redirectToFaceBook(){
         return Socialite::driver('facebook')->redirect();
     }
-
+    
+    public function providerToFaceBook(){
+        return Socialite::driver('facebook')->with(['state' => 'provider'])->redirect();
+    }
 
     public function handleFacebookCallback(Request $request){
         $AccessToken = Socialite::driver('facebook')->getAccessTokenResponse($request->code);
@@ -28,33 +32,65 @@ class SocialLoginController extends Controller
         $token=$AccessToken['access_token'];
         if($token){
             $facebook = Socialite::driver('facebook')->userFromToken($token);
-            if($facebook->id){
-                $FacebookSql = User::where('social_unique_id',$facebook->id);
-                if($facebook->email !=""){
-                    $FacebookSql->orWhere('email',$facebook->email);
+            $guard = request()->input('state');
+            if($guard == 'provider') {
+                if($facebook->id){
+                    $FacebookSql = Provider::where('social_unique_id',$facebook->id);
+                    if($facebook->email !=""){
+                        $FacebookSql->orWhere('email',$facebook->email);
+                    }
+                    $AuthUser = $FacebookSql->first();
+                    if($AuthUser){
+                        $AuthUser->social_unique_id=$facebook->id;
+                        $AuthUser->save();
+                        Auth::guard('provider')->loginUsingId($AuthUser->id);
+                        return redirect('provider');
+                    }else{   
+                        $new=new Provider();
+                        $new->email=$facebook->email;
+                        $new->first_name=$facebook->name;
+                        $new->last_name='';
+                        $new->password=$facebook->id;
+                        $new->social_unique_id=$facebook->id;
+                        //$new->mobile=$facebook->mobile;
+                        $new->avatar=$facebook->avatar;
+                        $new->login_by="facebook";
+                        $new->save();
+                        Auth::guard('provider')->loginUsingId($new->id);
+                        return redirect('provider');
+                    }
+                } else {
+                    return redirect('provider');
                 }
-                $AuthUser = $FacebookSql->first();
-                if($AuthUser){
-                    $AuthUser->social_unique_id=$facebook->id;
-                    $AuthUser->save();
-                    Auth::loginUsingId($AuthUser->id);
-                    return redirect('dashboard');
-                }else{   
-                    $new=new User();
-                    $new->email=$facebook->email;
-                    $new->first_name=$facebook->name;
-                    $new->last_name='';
-                    $new->password=$facebook->id;
-                    $new->social_unique_id=$facebook->id;
-                    //$new->mobile=$facebook->mobile;
-                    $new->picture=$facebook->avatar;
-                    $new->login_by="facebook";
-                    $new->save();
-                    Auth::loginUsingId($new->id);
+            } else {
+                if($facebook->id){
+                    $FacebookSql = User::where('social_unique_id',$facebook->id);
+                    if($facebook->email !=""){
+                        $FacebookSql->orWhere('email',$facebook->email);
+                    }
+                    $AuthUser = $FacebookSql->first();
+                    if($AuthUser){
+                        $AuthUser->social_unique_id=$facebook->id;
+                        $AuthUser->save();
+                        Auth::loginUsingId($AuthUser->id);
+                        return redirect('dashboard');
+                    }else{   
+                        $new=new User();
+                        $new->email=$facebook->email;
+                        $new->first_name=$facebook->name;
+                        $new->last_name='';
+                        $new->password=$facebook->id;
+                        $new->social_unique_id=$facebook->id;
+                        //$new->mobile=$facebook->mobile;
+                        $new->picture=$facebook->avatar;
+                        $new->login_by="facebook";
+                        $new->save();
+                        Auth::loginUsingId($new->id);
+                        return redirect('dashboard');
+                    }
+                }else{
                     return redirect('dashboard');
                 }
-            }else{
-                return redirect('dashboard');
             }
         }else{
            return redirect()->route('/register');
@@ -135,41 +171,77 @@ class SocialLoginController extends Controller
         return Socialite::driver('google')->redirect();
     }
 
+    public function providerToGoogle(){
+        return Socialite::driver('google')->with(['state' => 'provider'])->redirect();
+    }
+
     public function handleGoogleCallback(){
 
         try{
-            $google = Socialite::driver('google')->user();
-            if($google){
-                if($google->id){
-                    $GoogleSql = User::where('social_unique_id',$google->id);
-                    if($google->email !=""){
-                        $GoogleSql->orWhere('email',$google->email);
-                    }
-                    $AuthUser = $GoogleSql->first();
-                    if($AuthUser){ 
-                        $AuthUser->social_unique_id=$google->id;
-                        $AuthUser->save();  
-                         Auth::loginUsingId($AuthUser->id);
-                         return redirect()->to('dashboard');
-                    }else{   
-                        $new=new User();
-                        $new->email=$google->email;
-                        $new->first_name=$google->name;
-                        $new->last_name='';
-                        $new->password=$google->id;
-                        $new->social_unique_id=$google->id;
-                        //$new->mobile=$google->mobile;
-                        $new->picture=$google->avatar;
-                        $new->login_by="google";
-                        $new->save();
-                        return redirect()->route('dashboard');
+                $google = Socialite::driver('google')->user();
+                if($google){
+                    $guard = request()->input('state');
+                    if($guard == 'provider') {
+                        if($google->id){
+                            $GoogleSql = Provider::where('social_unique_id',$google->id);
+                            if($google->email !=""){
+                                $GoogleSql->orWhere('email',$google->email);
+                            }
+                            $AuthUser = $GoogleSql->first();
+                            if($AuthUser){ 
+                                $AuthUser->social_unique_id=$google->id;
+                                $AuthUser->save();  
+                                 Auth::loginUsingId($AuthUser->id);
+                                 return redirect()->to('provider');
+                            }else{   
+                                $new=new Provider();
+                                $new->email=$google->email;
+                                $new->first_name=$google->name;
+                                $new->last_name='';
+                                $new->password=$google->id;
+                                $new->social_unique_id=$google->id;
+                                //$new->mobile=$google->mobile;
+                                $new->avatar=$google->avatar;
+                                $new->login_by="google";
+                                $new->save();
+                                return redirect()->route('provider');
+                            }
+                        }else{
+                            return redirect()->route('provider');
+                        }
+                    } else {
+                        if($google->id){
+                            $GoogleSql = User::where('social_unique_id',$google->id);
+                            if($google->email !=""){
+                                $GoogleSql->orWhere('email',$google->email);
+                            }
+                            $AuthUser = $GoogleSql->first();
+                            if($AuthUser){ 
+                                $AuthUser->social_unique_id=$google->id;
+                                $AuthUser->save();  
+                                 Auth::loginUsingId($AuthUser->id);
+                                 return redirect()->to('dashboard');
+                            }else{   
+                                $new=new User();
+                                $new->email=$google->email;
+                                $new->first_name=$google->name;
+                                $new->last_name='';
+                                $new->password=$google->id;
+                                $new->social_unique_id=$google->id;
+                                //$new->mobile=$google->mobile;
+                                $new->picture=$google->avatar;
+                                $new->login_by="google";
+                                $new->save();
+                                return redirect()->route('dashboard');
+                            }
+                        }else{
+                            return redirect()->route('dashboard');
+                        }
                     }
                 }else{
-                    return redirect()->route('dashboard');
+                   return redirect()->route('/register');
                 }
-            }else{
-               return redirect()->route('/register');
-            }
+
         } catch (Exception $e) {
             return back()->with('flash_errors', 'Google driver not found');
         }
