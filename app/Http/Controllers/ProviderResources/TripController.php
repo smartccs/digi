@@ -94,6 +94,8 @@ class TripController extends Controller
 
              RequestFilter::where('request_id', $UserRequest->id)->delete();
 
+             ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status' =>'active']);
+
              // Send Push Notification to User
             (new SendPushNotification)->ProviderCancellRide($UserRequest);
 
@@ -144,6 +146,8 @@ class TripController extends Controller
 
             // Delete from filter so that it doesn't show up in status checks.
             RequestFilter::where('request_id', $id)->delete();
+
+            ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status' =>'active']);
 
             // Send Push Notification to Provider 
             $average = UserRequestRating::where('provider_id', $UserRequest->provider_id)->avg('provider_rating');
@@ -203,7 +207,12 @@ class TripController extends Controller
     public function history(Request $request)
     {
         if($request->ajax()) {
-            $Jobs = UserRequests::where('provider_id', Auth::user()->id)->with('payment')->get();
+
+            $Jobs = UserRequests::where('provider_id', Auth::user()->id)
+                    ->orderBy('created_at','desc')
+                    ->with('payment')
+                    ->get();
+
             if(!empty($Jobs)){
                 $map_icon = asset('asset/marker.png');
                 foreach ($Jobs as $key => $value) {
@@ -299,7 +308,7 @@ class TripController extends Controller
             } else if ($request->status == 'COMPLETED' && $UserRequest->payment_mode == 'CASH') {
                 $UserRequest->status = $request->status;
                 $UserRequest->paid = 1;
-                ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status' =>'active']);
+                // ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status' =>'active']);
             } else {
                 $UserRequest->status = $request->status;
 
