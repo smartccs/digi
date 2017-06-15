@@ -34,7 +34,7 @@
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $provider->first_name }} {{ $provider->last_name }}</td>
                         @if(Setting::get('demo_mode', 0) == 1)
-                        <td>{{ substr($user->email, 0, 3).'****'.substr($user->email, strpos($user->email, "@")) }}</td>
+                        <td>{{ substr($provider->email, 0, 3).'****'.substr($provider->email, strpos($provider->email, "@")) }}</td>
                         @else
                         <td>{{ $provider->email }}</td>
                         @endif
