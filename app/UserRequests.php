@@ -118,6 +118,7 @@ class UserRequests extends Model
     {
         return $query->where('user_requests.user_id', '=', $user_id)
                     ->where('user_requests.status', '=', 'COMPLETED')
+                    ->orderBy('user_requests.created_at','desc')
                     ->select('user_requests.*')
                     ->with('payment','service_type');
     }
@@ -126,6 +127,7 @@ class UserRequests extends Model
     {
         return $query->where('user_requests.user_id', '=', $user_id)
                     ->where('user_requests.status', '=', 'SCHEDULED')
+                    ->orderBy('user_requests.created_at','desc')
                     ->select('user_requests.*')
                     ->with('service_type','provider');
     }

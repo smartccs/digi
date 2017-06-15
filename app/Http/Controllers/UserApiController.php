@@ -364,8 +364,7 @@ class UserApiController extends Controller
 
             Log::info('New Request id : '. $UserRequest->id .' Assigned to provider : '. $UserRequest->current_provider_id);
 
-            // incoming request push to provider
-            (new SendPushNotification)->IncomingRequest($UserRequest->current_provider_id);
+
 
             // update payment mode 
 
@@ -382,9 +381,8 @@ class UserApiController extends Controller
 
                 $Filter = new RequestFilter;
                 // Send push notifications to the first provider
-                // $title = Helper::get_push_message(604);
-                // $message = "You got a new request from".$user->name;
-
+                // incoming request push to provider
+                (new SendPushNotification)->IncomingRequest($Provider->id);
                 $Filter->request_id = $UserRequest->id;
                 $Filter->provider_id = $Provider->id; 
                 $Filter->save();
@@ -449,7 +447,6 @@ class UserApiController extends Controller
 
                         ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status' => 'active']);
 
-                        // send push and email
                     }
                 }
 
