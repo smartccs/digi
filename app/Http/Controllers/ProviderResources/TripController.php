@@ -37,16 +37,33 @@ class TripController extends Controller
                 $Provider = Auth::guard('provider')->user();
             }
 
-            $IncomingRequests = RequestFilter::with(['request.user', 'request.payment', 'request'])
+            $provider = $Provider->id;
+
+            $AfterAssignProvider = RequestFilter::with(['request.user', 'request.payment', 'request'])
                 ->where('provider_id', $Provider->id)
-                ->where('status', 0)
-                ->get();
+                ->whereHas('request', function($query) use ($provider) {
+                    $query->where('status','<>','SCHEDULED');
+                    $query->where('status','<>','CANCELLED');
+                    $query->whereNotNull('current_provider_id');
+                    $query->where('provider_id', $provider );
+                    $query->where('current_provider_id', $provider);
+                    });
+
+            $BeforeAssignProvider = RequestFilter::with(['request.user', 'request.payment', 'request'])
+                ->where('provider_id', $Provider->id)
+                ->whereHas('request', function($query) use ($provider){
+                    $query->where('status','<>','CANCELLED');
+                    $query->where('status','<>','SCHEDULED');
+                    $query->whereNotNull('current_provider_id');
+                    $query->where('current_provider_id',$provider);
+                    });
+            $IncomingRequests =$BeforeAssignProvider->union($AfterAssignProvider)->get();
 
             if(!empty($request->latitude)) {
                 $Provider->update([
                         'latitude' => $request->latitude,
                         'longitude' => $request->longitude,
-                    ]);
+                ]);
             }
 
             $Timeout = Setting::get('provider_select_timeout', 180);
@@ -54,11 +71,11 @@ class TripController extends Controller
                     for ($i=0; $i < sizeof($IncomingRequests); $i++) {
                         $IncomingRequests[$i]->time_left_to_respond = $Timeout - (time() - strtotime($IncomingRequests[$i]->request->assigned_at));
                         if($IncomingRequests[$i]->request->status == 'SEARCHING' && $IncomingRequests[$i]->time_left_to_respond < 0) {
-                            $this->assign_next_provider($IncomingRequests[$i]->id);
-                            // return $this->index($request);
+                            $this->assign_next_provider($IncomingRequests[$i]->request->id);
                         }
                     }
                 }
+
 
             $Response = [
                     'account_status' => $Provider->status,
@@ -375,7 +392,7 @@ class TripController extends Controller
             return false;
         }
 
-        RequestFilter::where('provider_id', Auth::user()->id)
+        $RequestFilter = RequestFilter::where('provider_id', $UserRequest->current_provider_id)
             ->where('request_id', $UserRequest->id)
             ->delete();
 
@@ -390,13 +407,17 @@ class TripController extends Controller
             $UserRequest->save();
 
             // incoming request push to provider
-            (new SendPushNotification)->IncomingRequest($UserRequest->current_provider_id);
+            (new SendPushNotification)->IncomingRequest($next_provider->provider_id);
             
         } catch (ModelNotFoundException $e) {
+
             UserRequests::where('id', $UserRequest->id)->update(['status' => 'CANCELLED']);
 
             // No longer need request specific rows from RequestMeta
             RequestFilter::where('request_id', $UserRequest->id)->delete();
+
+            //  request push to user provider not available
+            (new SendPushNotification)->ProviderNotAvailable($UserRequest->user_id);
         }
     }
 

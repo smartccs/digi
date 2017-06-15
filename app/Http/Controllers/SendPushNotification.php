@@ -51,6 +51,16 @@ class SendPushNotification extends Controller
     }
 
     /**
+     * Money added to user wallet.
+     *
+     * @return void
+     */
+    public function ProviderNotAvailable($user_id){
+
+        return $this->sendPushToUser($user_id,trans('api.push.provider_not_available'));
+    }
+
+    /**
      * New Incoming request
      *
      * @return void
