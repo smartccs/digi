@@ -178,69 +178,70 @@ class SocialLoginController extends Controller
     public function handleGoogleCallback(){
 
         try{
-                $google = Socialite::driver('google')->user();
-                if($google){
-                    $guard = request()->input('state');
-                    if($guard == 'provider') {
-                        if($google->id){
-                            $GoogleSql = Provider::where('social_unique_id',$google->id);
-                            if($google->email !=""){
-                                $GoogleSql->orWhere('email',$google->email);
-                            }
-                            $AuthUser = $GoogleSql->first();
-                            if($AuthUser){ 
-                                $AuthUser->social_unique_id=$google->id;
-                                $AuthUser->save();  
-                                 Auth::loginUsingId($AuthUser->id);
-                                 return redirect()->to('provider');
-                            }else{   
-                                $new=new Provider();
-                                $new->email=$google->email;
-                                $new->first_name=$google->name;
-                                $new->last_name='';
-                                $new->password=$google->id;
-                                $new->social_unique_id=$google->id;
-                                //$new->mobile=$google->mobile;
-                                $new->avatar=$google->avatar;
-                                $new->login_by="google";
-                                $new->save();
-                                return redirect()->route('provider');
-                            }
-                        }else{
+            $google = Socialite::driver('google')->user();
+            if($google){
+                $guard = request()->input('state');
+                if($guard == 'provider') {
+                    if($google->id){
+                        $GoogleSql = Provider::where('social_unique_id',$google->id);
+                        if($google->email !=""){
+                            $GoogleSql->orWhere('email',$google->email);
+                        }
+                        $AuthUser = $GoogleSql->first();
+                        if($AuthUser){ 
+                            $AuthUser->social_unique_id=$google->id;
+                            $AuthUser->save();  
+                            Auth::guard('provider')->loginUsingId($AuthUser->id);
+                            return redirect()->to('provider');
+                        }else{   
+                            $new=new Provider();
+                            $new->email=$google->email;
+                            $new->first_name=$google->name;
+                            $new->last_name='';
+                            $new->password=$google->id;
+                            $new->social_unique_id=$google->id;
+                            //$new->mobile=$google->mobile;
+                            $new->avatar=$google->avatar;
+                            $new->login_by="google";
+                            $new->save();
+                            Auth::guard('provider')->loginUsingId($new->id);
                             return redirect()->route('provider');
                         }
-                    } else {
-                        if($google->id){
-                            $GoogleSql = User::where('social_unique_id',$google->id);
-                            if($google->email !=""){
-                                $GoogleSql->orWhere('email',$google->email);
-                            }
-                            $AuthUser = $GoogleSql->first();
-                            if($AuthUser){ 
-                                $AuthUser->social_unique_id=$google->id;
-                                $AuthUser->save();  
-                                 Auth::loginUsingId($AuthUser->id);
-                                 return redirect()->to('dashboard');
-                            }else{   
-                                $new=new User();
-                                $new->email=$google->email;
-                                $new->first_name=$google->name;
-                                $new->last_name='';
-                                $new->password=$google->id;
-                                $new->social_unique_id=$google->id;
-                                //$new->mobile=$google->mobile;
-                                $new->picture=$google->avatar;
-                                $new->login_by="google";
-                                $new->save();
-                                return redirect()->route('dashboard');
-                            }
-                        }else{
+                    }else{
+                        return redirect()->route('provider');
+                    }
+                } else {
+                    if($google->id){
+                        $GoogleSql = User::where('social_unique_id',$google->id);
+                        if($google->email !=""){
+                            $GoogleSql->orWhere('email',$google->email);
+                        }
+                        $AuthUser = $GoogleSql->first();
+                        if($AuthUser){ 
+                            $AuthUser->social_unique_id=$google->id;
+                            $AuthUser->save();  
+                             Auth::loginUsingId($AuthUser->id);
+                             return redirect()->to('dashboard');
+                        }else{   
+                            $new=new User();
+                            $new->email=$google->email;
+                            $new->first_name=$google->name;
+                            $new->last_name='';
+                            $new->password=$google->id;
+                            $new->social_unique_id=$google->id;
+                            //$new->mobile=$google->mobile;
+                            $new->picture=$google->avatar;
+                            $new->login_by="google";
+                            $new->save();
                             return redirect()->route('dashboard');
                         }
+                    }else{
+                        return redirect()->route('dashboard');
                     }
-                }else{
-                   return redirect()->route('/register');
                 }
+            }else{
+               return redirect()->route('/register');
+            }
 
         } catch (Exception $e) {
             return back()->with('flash_errors', 'Google driver not found');
