@@ -95,6 +95,7 @@ class HomeController extends Controller
     public function trips()
     {
         $trips = $this->UserAPI->trips();
+        // dd($trips);
         return view('user.ride.trips',compact('trips'));
     }
 
