@@ -150,7 +150,8 @@ class TokenController extends Controller
 
             $otp = mt_rand(100000, 999999);
 
-            $provider->update(['otp' => $otp]);
+            $provider->otp = $otp;
+            $provider->save();
 
             Notification::send($provider, new ResetPasswordOTP($otp));
 

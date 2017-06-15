@@ -244,11 +244,10 @@ class DispatcherListItem extends React.Component {
                         <a className="text-black" href="#">
                             <div className="media">
                                 <div className="media-body">
-                                    <p className="mb-0-5">{trip.user.first_name} {trip.user.last_name}</p>
-                                    <h6 className="media-heading">From:</h6>
-                                    <h6 className="media-heading">{trip.s_address}</h6>
-                                    <h6 className="media-heading">To:</h6>
-                                    <h6 className="media-heading">{trip.d_address ? trip.d_address : "Not Selected"}</h6>
+                                    <p className="mb-0-5">{trip.user.first_name} {trip.user.last_name} <span className="label label-info pull-right">Status: {trip.status}</span></p>
+                                    <h6 className="media-heading">From: {trip.s_address}</h6>
+                                    <h6 className="media-heading">To: {trip.d_address ? trip.d_address : "Not Selected"}</h6>
+                                    <h6 className="media-heading">Payment: {trip.payment_mode}</h6>
                                     <progress className="progress progress-success progress-sm" max="100"></progress>
                                     <span className="text-muted">{trip.current_provider_id == 0 ? "Manual Assignment" : "Auto Search"} : {trip.created_at}</span>
                                 </div>
