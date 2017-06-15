@@ -14,6 +14,7 @@ use Config;
 use JWTAuth;
 use Setting;
 use Notification;
+use Validator;
 use Socialite;
 
 use App\Provider;
@@ -150,7 +151,8 @@ class TokenController extends Controller
 
             $otp = mt_rand(100000, 999999);
 
-            $provider->update(['otp' => $otp]);
+            $provider->otp = $otp;
+            $provider->save();
 
             Notification::send($provider, new ResetPasswordOTP($otp));
 

@@ -601,7 +601,7 @@ class UserApiController extends Controller
         try{
             $UserRequests = UserRequests::UserTrips(Auth::user()->id)->get();
             if(!empty($UserRequests)){
-                $map_icon = asset('asset/marker.png');
+                $map_icon = asset('asset/img/marker-start.png');
                 foreach ($UserRequests as $key => $value) {
                     $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?".
                             "autoscale=1".
@@ -611,7 +611,7 @@ class UserApiController extends Controller
                             "&visual_refresh=true".
                             "&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude.
                             "&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude.
-                            "&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|enc:".$value->route_key.
+                            "&path=color:0x191919|weight:8|enc:".$value->route_key.
                             "&key=".env('GOOGLE_MAP_KEY');
                 }
             }
@@ -723,7 +723,7 @@ class UserApiController extends Controller
         try{
             $UserRequests = UserRequests::UserTripDetails(Auth::user()->id,$request->request_id)->get();
             if(!empty($UserRequests)){
-                $map_icon = asset('asset/marker.png');
+                $map_icon = asset('asset/img/marker-start.png');
                 foreach ($UserRequests as $key => $value) {
                     $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?".
                             "autoscale=1".
@@ -733,7 +733,7 @@ class UserApiController extends Controller
                             "&visual_refresh=true".
                             "&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude.
                             "&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude.
-                            "&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|enc:".$value->route_key.
+                            "&path=color:0x191919|weight:8|enc:".$value->route_key.
                             "&key=".env('GOOGLE_MAP_KEY');
                 }
             }
@@ -867,7 +867,7 @@ class UserApiController extends Controller
         try{
             $UserRequests = UserRequests::UserUpcomingTrips(Auth::user()->id)->get();
             if(!empty($UserRequests)){
-                $map_icon = asset('asset/marker.png');
+                $map_icon = asset('asset/img/marker-start.png');
                 foreach ($UserRequests as $key => $value) {
                     $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?".
                             "autoscale=1".
@@ -877,7 +877,7 @@ class UserApiController extends Controller
                             "&visual_refresh=true".
                             "&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude.
                             "&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude.
-                            "&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|enc:".$value->route_key.
+                            "&path=color:0x000000|weight:3|enc:".$value->route_key.
                             "&key=".env('GOOGLE_MAP_KEY');
                 }
             }
@@ -904,7 +904,7 @@ class UserApiController extends Controller
         try{
             $UserRequests = UserRequests::UserUpcomingTripDetails(Auth::user()->id,$request->request_id)->get();
             if(!empty($UserRequests)){
-                $map_icon = asset('asset/marker.png');
+                $map_icon = asset('asset/img/marker-start.png');
                 foreach ($UserRequests as $key => $value) {
                     $UserRequests[$key]->static_map = "https://maps.googleapis.com/maps/api/staticmap?".
                             "autoscale=1".
@@ -914,7 +914,7 @@ class UserApiController extends Controller
                             "&visual_refresh=true".
                             "&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude.
                             "&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude.
-                            "&path=color:0x000000|weight:3|".$value->s_latitude.",".$value->s_longitude."|enc:".$value->route_key.
+                            "&path=color:0x000000|weight:3|enc:".$value->route_key.
                             "&key=".env('GOOGLE_MAP_KEY');
                 }
             }
