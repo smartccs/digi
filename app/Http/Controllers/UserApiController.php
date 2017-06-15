@@ -452,6 +452,9 @@ class UserApiController extends Controller
                     }
                 }
 
+                 // Send Push Notification to User
+                (new SendPushNotification)->UserCancellRide($UserRequest);
+
                 if($request->ajax()) {
                     return response()->json(['message' => trans('api.ride.ride_cancelled')]); 
                 }else{

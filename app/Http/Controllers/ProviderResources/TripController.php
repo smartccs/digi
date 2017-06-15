@@ -94,6 +94,9 @@ class TripController extends Controller
 
              RequestFilter::where('request_id', $UserRequest->id)->delete();
 
+             // Send Push Notification to User
+            (new SendPushNotification)->ProviderCancellRide($UserRequest);
+
             return $UserRequest;
 
         } catch (ModelNotFoundException $e) {
@@ -300,13 +303,13 @@ class TripController extends Controller
             } else {
                 $UserRequest->status = $request->status;
 
-                if($request->status == 'PICKEDUP'){
-                    $UserRequest->started_at = Carbon::now();
-                }
-
                 if($request->status == 'ARRIVED'){
                     (new SendPushNotification)->Arrived($UserRequest);
                 }
+            }
+
+            if($request->status == 'PICKEDUP'){
+                $UserRequest->started_at = Carbon::now();
             }
 
             $UserRequest->save();
@@ -317,6 +320,8 @@ class TripController extends Controller
                 $UserRequest->invoice = $this->invoice($id);
                 return $UserRequest;
             }
+
+            $UserRequest->save();
 
             // Send Push Notification to User
        

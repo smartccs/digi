@@ -20,6 +20,27 @@ class SendPushNotification extends Controller
     }
 
     /**
+     * New Ride Accepted by a Driver.
+     *
+     * @return void
+     */
+    public function UserCancellRide($request){
+
+        return $this->sendPushToProvider($request->provider_id, trans('api.push.user_cancelled'));
+    }
+
+
+    /**
+     * New Ride Accepted by a Driver.
+     *
+     * @return void
+     */
+    public function ProviderCancellRide($request){
+
+        return $this->sendPushToUser($request->user_id, trans('api.push.provider_cancelled'));
+    }
+
+    /**
      * Driver Arrived at your location.
      *
      * @return void
