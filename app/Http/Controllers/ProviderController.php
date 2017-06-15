@@ -59,9 +59,9 @@ class ProviderController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function reject(Request $request, $id)
+    public function reject($id)
     {
-        return (new TripController())->destroy($request, $id);
+        return (new TripController())->destroy($id);
     }
 
     /**
@@ -180,7 +180,7 @@ class ProviderController extends Controller
 
     public function cancel(Request $request) {
         try{
-            (new ProviderResources\TripController)->cancel($request);
+            (new TripController)->cancel($request);
             return back();
         } catch (ModelNotFoundException $e) {
             return back()->with(['flash_error' => "Something Went Wrong"]);

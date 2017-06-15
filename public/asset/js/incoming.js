@@ -52,6 +52,9 @@ class MainComponent extends React.Component {
                     // console.log('data.requests[0]', data.requests[0].request);
                     this.setState({request: data.requests[0].request});
                 }else{
+                    if($('#incoming').is(':visible')) {
+                        window.location.replace("/provider");
+                    }
                     this.setState({account_status: data.account_status, service_status: data.service_status});
                 }
                     console.log('ss'+this.state.service_status);

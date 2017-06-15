@@ -13,7 +13,7 @@
         </div>
             @include('common.notify')
         <div class="row no-margin edit-pro">
-            <form action="{{url('change/password')}}" method="post">          
+            <form action="{{url('change/password')}}" method="post">
             {{ csrf_field() }}
                 <div class="col-md-6">
                     <div class="form-group">
