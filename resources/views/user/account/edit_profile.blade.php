@@ -28,11 +28,11 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label>@lang('user.profile.first_name')</label>
-                    <input type="text" class="form-control" name="first_name" placeholder="@lang('user.profile.first_name')" value="{{Auth::user()->first_name}}">
+                    <input type="text" class="form-control" name="first_name" required placeholder="@lang('user.profile.first_name')" value="{{Auth::user()->first_name}}">
                 </div>
                 <div class="form-group col-md-6">
                     <label>@lang('user.profile.last_name')</label>
-                    <input type="text" class="form-control" name="last_name" placeholder="@lang('user.profile.last_name')" value="{{Auth::user()->last_name}}">
+                    <input type="text" class="form-control" name="last_name" required placeholder="@lang('user.profile.last_name')" value="{{Auth::user()->last_name}}">
                 </div>
 
                 <div class="form-group col-md-6">
@@ -42,7 +42,7 @@
 
                 <div class="form-group col-md-6">
                     <label>@lang('user.profile.mobile')</label>
-                    <input type="text" class="form-control" name="mobile" placeholder="@lang('user.profile.mobile')" value="{{Auth::user()->mobile}}">
+                    <input type="text" class="form-control" name="mobile" required placeholder="@lang('user.profile.mobile')" value="{{Auth::user()->mobile}}">
                 </div>
               
                 <div class="col-md-6 pull-right">
