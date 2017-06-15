@@ -19,40 +19,48 @@ class SocialLoginController extends Controller
         return Socialite::driver('facebook')->redirect();
     }
 
-    public function handleFacebookCallback(){
 
-        if($facebook = Socialite::driver('facebook')->user()){
-            if($facebook->getId()){
-            	$FacebookSql = User::where('social_unique_id',$facebook->id);
+    public function handleFacebookCallback(Request $request){
+        $AccessToken = Socialite::driver('facebook')->getAccessTokenResponse($request->code);
+        // $AccessParam = array_keys($AccessToken);
+        // $AccessField = array_shift($AccessParam);
+        // $FacebookToken = json_decode($AccessField);
+        $token=$AccessToken['access_token'];
+        if($token){
+            $facebook = Socialite::driver('facebook')->userFromToken($token);
+            if($facebook->id){
+                $FacebookSql = User::where('social_unique_id',$facebook->id);
                 if($facebook->email !=""){
                     $FacebookSql->orWhere('email',$facebook->email);
                 }
                 $AuthUser = $FacebookSql->first();
-	            if($AuthUser){
-                     $AuthUser->social_unique_id=$facebook->id;
-                     $AuthUser->save();   
-	                 Auth::loginUsingId($AuthUser->id);
-	                 return redirect()->to('/dashboard');
-	            }else{   
-	                $new=new User();
-	                $new->email=$facebook->email;
-	                $new->first_name=$facebook->name;
-	                $new->last_name='';
-	                $new->password=$facebook->id;
-	                $new->social_unique_id=$facebook->id;
-	                //$new->mobile=$facebook->mobile;
-	                $new->picture=$facebook->avatar;
-	                $new->login_by="facebook";
-	                $new->save();
-	                return redirect()->route('/dashboard');
-	            }
-	        }else{
-	            return redirect()->route('/dashboard');
-	        }
+                if($AuthUser){
+                    $AuthUser->social_unique_id=$facebook->id;
+                    $AuthUser->save();
+                    Auth::loginUsingId($AuthUser->id);
+                    return redirect('dashboard');
+                }else{   
+                    $new=new User();
+                    $new->email=$facebook->email;
+                    $new->first_name=$facebook->name;
+                    $new->last_name='';
+                    $new->password=$facebook->id;
+                    $new->social_unique_id=$facebook->id;
+                    //$new->mobile=$facebook->mobile;
+                    $new->picture=$facebook->avatar;
+                    $new->login_by="facebook";
+                    $new->save();
+                    Auth::loginUsingId($new->id);
+                    return redirect('dashboard');
+                }
+            }else{
+                return redirect('dashboard');
+            }
         }else{
            return redirect()->route('/register');
         }
     }
+
 
     /**
      * Show the application dashboard.
@@ -129,39 +137,39 @@ class SocialLoginController extends Controller
 
     public function handleGoogleCallback(){
 
-    try{
-    		$google = Socialite::driver('google')->user();
-	        if($google){
-	            if($google->getId()){
-	            	$GoogleSql = User::where('social_unique_id',$google->id);
+        try{
+            $google = Socialite::driver('google')->user();
+            if($google){
+                if($google->id){
+                    $GoogleSql = User::where('social_unique_id',$google->id);
                     if($google->email !=""){
                         $GoogleSql->orWhere('email',$google->email);
                     }
                     $AuthUser = $GoogleSql->first();
-		            if($AuthUser){ 
+                    if($AuthUser){ 
                         $AuthUser->social_unique_id=$google->id;
                         $AuthUser->save();  
-		                 Auth::loginUsingId($AuthUser->id);
-		                 return redirect()->to('/dashboard');
-		            }else{   
-		                $new=new User();
-		                $new->email=$google->email;
-		                $new->first_name=$google->name;
-		                $new->last_name='';
-		                $new->password=$google->id;
-		                $new->social_unique_id=$google->id;
-		                //$new->mobile=$google->mobile;
-		                $new->picture=$google->avatar;
-		                $new->login_by="google";
-		                $new->save();
-		                return redirect()->route('/dashboard');
-		            }
-		        }else{
-		            return redirect()->route('/dashboard');
-		        }
-	        }else{
-	           return redirect()->route('/register');
-	        }
+                         Auth::loginUsingId($AuthUser->id);
+                         return redirect()->to('dashboard');
+                    }else{   
+                        $new=new User();
+                        $new->email=$google->email;
+                        $new->first_name=$google->name;
+                        $new->last_name='';
+                        $new->password=$google->id;
+                        $new->social_unique_id=$google->id;
+                        //$new->mobile=$google->mobile;
+                        $new->picture=$google->avatar;
+                        $new->login_by="google";
+                        $new->save();
+                        return redirect()->route('dashboard');
+                    }
+                }else{
+                    return redirect()->route('dashboard');
+                }
+            }else{
+               return redirect()->route('/register');
+            }
         } catch (Exception $e) {
             return back()->with('flash_errors', 'Google driver not found');
         }
