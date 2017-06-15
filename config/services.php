@@ -35,15 +35,15 @@ return [
     ],
 
     'facebook' => [
-        'client_id' => '1742363032455520',
-        'client_secret' => '02a21bc6e5992575ab3eafb9a451912b',
-        'redirect' => 'https://demo.tranxit.co/auth/facebook/callback',
+        'client_id' => '227306957774573',
+        'client_secret' => 'eae1e333047be8d92d8556b6af2ff917',
+        'redirect' => 'http://schedule.tranxit.co/auth/facebook/callback',
     ],
 
     'google' => [
         'client_id' => '481922396339-ohem13usmmu66gmotlmrn5kq8njb0umd.apps.googleusercontent.com',
         'client_secret' => '5go6DYXJ8lXRW-LAeEYay5MO',
-        'redirect' => 'https://demo.tranxit.co/auth/google/callback',
+        'redirect' => 'http://schedule.tranxit.co/auth/google/callback',
     ]
 
 ];
