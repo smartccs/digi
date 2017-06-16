@@ -8,10 +8,13 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 
 use Socialite;
-use App\User;
-use App\Provider;
+use Setting;
 use Exception;
 use Validator;
+
+use App\User;
+use App\Provider;
+use App\ProviderService;
 
 class SocialLoginController extends Controller
 {
@@ -48,14 +51,26 @@ class SocialLoginController extends Controller
                     }else{   
                         $new=new Provider();
                         $new->email=$facebook->email;
-                        $new->first_name=$facebook->name;
-                        $new->last_name='';
+                        $name = explode(' ', $facebook->name, 2);
+                        $new->first_name=$name[0];
+                        $new->last_name= isset($name[1]) ? $name[1] : '';
                         $new->password=$facebook->id;
                         $new->social_unique_id=$facebook->id;
                         //$new->mobile=$facebook->mobile;
                         $new->avatar=$facebook->avatar;
                         $new->login_by="facebook";
                         $new->save();
+
+                        if(Setting::get('demo_mode', 0) == 1) {
+                            $new->update(['status' => 'approved']);
+                            ProviderService::create([
+                                'provider_id' => $new->id,
+                                'service_type_id' => '1',
+                                'status' => 'active',
+                                'service_number' => '4pp03ets',
+                                'service_model' => 'Audi R8',
+                            ]);
+                        }
                         Auth::guard('provider')->loginUsingId($new->id);
                         return redirect('provider');
                     }
@@ -77,8 +92,9 @@ class SocialLoginController extends Controller
                     }else{   
                         $new=new User();
                         $new->email=$facebook->email;
-                        $new->first_name=$facebook->name;
-                        $new->last_name='';
+                        $name = explode(' ', $facebook->name, 2);
+                        $new->first_name=$name[0];
+                        $new->last_name= isset($name[1]) ? $name[1] : '';
                         $new->password=$facebook->id;
                         $new->social_unique_id=$facebook->id;
                         //$new->mobile=$facebook->mobile;
@@ -140,8 +156,9 @@ class SocialLoginController extends Controller
             }else{   
                 $AuthUser=new User();
                 $AuthUser->email=$FacebookDrive->email;
-                $AuthUser->first_name=$FacebookDrive->name;
-                $AuthUser->last_name='';
+                $name = explode(' ', $FacebookDrive->name, 2);
+                $AuthUser->first_name=$name[0];
+                $AuthUser->last_name= isset($name[1]) ? $name[1] : '';
                 $AuthUser->password=$FacebookDrive->id;
                 $AuthUser->social_unique_id=$FacebookDrive->id;
                 $AuthUser->device_type=$request->device_type;
@@ -196,14 +213,26 @@ class SocialLoginController extends Controller
                         }else{   
                             $new=new Provider();
                             $new->email=$google->email;
-                            $new->first_name=$google->name;
-                            $new->last_name='';
+                            $name = explode(' ', $google->name, 2);
+                            $new->first_name=$name[0];
+                            $new->last_name= isset($name[1]) ? $name[1] : '';
                             $new->password=$google->id;
                             $new->social_unique_id=$google->id;
                             //$new->mobile=$google->mobile;
                             $new->avatar=$google->avatar;
                             $new->login_by="google";
                             $new->save();
+
+                            if(Setting::get('demo_mode', 0) == 1) {
+                                $new->update(['status' => 'approved']);
+                                ProviderService::create([
+                                    'provider_id' => $new->id,
+                                    'service_type_id' => '1',
+                                    'status' => 'active',
+                                    'service_number' => '4pp03ets',
+                                    'service_model' => 'Audi R8',
+                                ]);
+                            }
                             Auth::guard('provider')->loginUsingId($new->id);
                             return redirect()->route('provider');
                         }
@@ -225,8 +254,9 @@ class SocialLoginController extends Controller
                         }else{   
                             $new=new User();
                             $new->email=$google->email;
-                            $new->first_name=$google->name;
-                            $new->last_name='';
+                            $name = explode(' ', $google->name, 2);
+                            $new->first_name=$name[0];
+                            $new->last_name= isset($name[1]) ? $name[1] : '';
                             $new->password=$google->id;
                             $new->social_unique_id=$google->id;
                             //$new->mobile=$google->mobile;
@@ -291,8 +321,9 @@ class SocialLoginController extends Controller
             }else{   
                 $AuthUser=new User();
                 $AuthUser->email=$GoogleDrive->email;
-                $AuthUser->first_name=$GoogleDrive->name;
-                $AuthUser->last_name='';
+                $name = explode(' ', $GoogleDrive->name, 2);
+                $AuthUser->first_name=$name[0];
+                $AuthUser->last_name= isset($name[1]) ? $name[1] : '';
                 $AuthUser->password=$GoogleDrive->id;
                 $AuthUser->social_unique_id=$GoogleDrive->id;
                 $AuthUser->device_type=$request->device_type;
