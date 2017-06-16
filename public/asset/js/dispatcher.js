@@ -244,7 +244,19 @@ class DispatcherListItem extends React.Component {
                         <a className="text-black" href="#">
                             <div className="media">
                                 <div className="media-body">
-                                    <p className="mb-0-5">{trip.user.first_name} {trip.user.last_name} <span className="tag tag-info pull-right"> {trip.status} </span></p>
+                                    <p className="mb-0-5">{trip.user.first_name} {trip.user.last_name} 
+                                    {trip.status == 'COMPLETED' ?
+                                        <span className="tag tag-success pull-right"> {trip.status} </span>
+                                    : trip.status == 'CANCELLED' ?
+                                        <span className="tag tag-danger pull-right"> {trip.status} </span>
+                                    : trip.status == 'SEARCHING' ?
+                                        <span className="tag tag-warning pull-right"> {trip.status} </span>
+                                    : trip.status == 'SCHEDULED' ?
+                                        <span className="tag tag-primary pull-right"> {trip.status} </span>
+                                    : 
+                                        <span className="tag tag-info pull-right"> {trip.status} </span>
+                                    }
+                                    </p>
                                     <h6 className="media-heading">From: {trip.s_address}</h6>
                                     <h6 className="media-heading">To: {trip.d_address ? trip.d_address : "Not Selected"}</h6>
                                     <h6 className="media-heading">Payment: {trip.payment_mode}</h6>

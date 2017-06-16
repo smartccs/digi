@@ -42,6 +42,7 @@ class CustomCommand extends Command
         $UserRequest = DB::table('user_requests')->where('status','SCHEDULED')
                         ->where('schedule_at', '>=', \Carbon\Carbon::now()->subHour())
                         ->get();
+        \Log::info('schedule trigger');
 
         if(!empty($UserRequest)){
             foreach($UserRequest as $ride){
