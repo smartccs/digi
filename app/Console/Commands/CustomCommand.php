@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use DB;
+use App\Http\Controllers\SendPushNotification;
 use Carbon\Carbon;
 
 class CustomCommand extends Command

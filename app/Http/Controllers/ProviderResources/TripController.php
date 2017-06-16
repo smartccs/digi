@@ -40,23 +40,20 @@ class TripController extends Controller
             $provider = $Provider->id;
 
             $AfterAssignProvider = RequestFilter::with(['request.user', 'request.payment', 'request'])
-                ->where('provider_id', $Provider->id)
+                ->where('provider_id', $provider)
                 ->whereHas('request', function($query) use ($provider) {
-                    $query->where('status','<>','SCHEDULED');
-                    $query->where('status','<>','CANCELLED');
-                    $query->whereNotNull('current_provider_id');
-                    $query->where('provider_id', $provider );
-                    $query->where('current_provider_id', $provider);
+                        $query->whereIn('status','<>',['CANCELLED', 'SCHEDULED']);
+                        $query->where('provider_id', $provider );
+                        $query->where('current_provider_id', $provider);
                     });
 
             $BeforeAssignProvider = RequestFilter::with(['request.user', 'request.payment', 'request'])
-                ->where('provider_id', $Provider->id)
+                ->where('provider_id', $provider)
                 ->whereHas('request', function($query) use ($provider){
-                    $query->where('status','<>','CANCELLED');
-                    $query->where('status','<>','SCHEDULED');
-                    $query->whereNotNull('current_provider_id');
-                    $query->where('current_provider_id',$provider);
+                        $query->whereIn('status','<>',['CANCELLED', 'SCHEDULED']);
+                        $query->where('current_provider_id',$provider);
                     });
+
             $IncomingRequests =$BeforeAssignProvider->union($AfterAssignProvider)->get();
 
             if(!empty($request->latitude)) {
