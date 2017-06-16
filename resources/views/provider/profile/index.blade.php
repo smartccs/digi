@@ -86,24 +86,34 @@
                                     <input type="text" class="form-control" placeholder="Enter Suite, Floor, Apt (optional)" style="border-top: none;" name="address_secondary" value="{{ Auth::guard('provider')->user()->profile ? Auth::guard('provider')->user()->profile->address_secondary : "" }}">
                                 </div>
 
-                                <div class="form-group">
-                                    <label>City</label>
-                                    <input type="text" class="form-control" placeholder="Enter City" name="city" value="{{ Auth::guard('provider')->user()->profile ? Auth::guard('provider')->user()->profile->city : "" }}">
-                                </div>
-
                                 <div class="row no-margin">
                                     <div class="prof-sub-col col-sm-6 col-xs-12 no-left-padding">
                                         <div class="form-group no-margin">
+                                            <label>City</label>
+                                            <input type="text" class="form-control" placeholder="Enter City" name="city" value="{{ Auth::guard('provider')->user()->profile ? Auth::guard('provider')->user()->profile->city : "" }}">
+                                        </div>
+                                    </div>
+                                    <div class="prof-sub-col col-sm-6 col-xs-12 no-right-padding">
+                                        <div class="form-group">
                                             <label>Country</label>
                                             <select class="form-control" name="country">
                                                 <option value="US">United States</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="prof-sub-col col-sm-6 col-xs-12 no-right-padding">
-                                        <div class="form-group">
+                                </div>
+
+                                <div class="row no-margin">
+                                    <div class="prof-sub-col col-sm-6 col-xs-12 no-left-padding">
+                                        <div class="form-group no-margin">
                                             <label>Postal Code</label>
                                             <input type="text" class="form-control" placeholder="Postal Code" name="postal_code" value="{{ Auth::guard('provider')->user()->profile ? Auth::guard('provider')->user()->profile->postal_code : "" }}">
+                                        </div>
+                                    </div>
+                                    <div class="prof-sub-col col-sm-6 col-xs-12 no-right-padding">
+                                        <div class="form-group">
+                                            <label>Service</label>
+                                            <input type="text" readonly="readonly" class="form-control" value="{{ Auth::guard('provider')->user()->service->service_type->name ? Auth::guard('provider')->user()->service->service_type->name : "" }}">
                                         </div>
                                     </div>
                                 </div>

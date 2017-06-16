@@ -167,7 +167,7 @@ class ProviderController extends Controller
      */
     public function upcoming_trips()
     {
-        $fully = (new ProviderApiController)->upcoming_request();
+        $fully = (new ProviderResources\TripController)->upcoming_trips();
         return view('provider.payment.upcoming',compact('fully'));
     }
 
