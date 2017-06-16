@@ -26,7 +26,8 @@ class Provider extends Authenticatable
         'gender',
         'latitude',
         'longitude',
-        'status'
+        'status',
+        'avatar',
     ];
 
     /**
