@@ -233,13 +233,25 @@ class TokenController extends Controller
                 $AuthUser->save();  
             }else{   
                 $AuthUser["email"]=$FacebookDrive->email;
-                $AuthUser["first_name"]=$FacebookDrive->name;
-                $AuthUser["last_name"]='';
+                $name = explode(' ', $FacebookDrive->name, 2);
+                $AuthUser["first_name"]=$name[0];
+                $AuthUser["last_name"]=isset($name[1]) ? $name[1] : '';
                 $AuthUser["password"]=$FacebookDrive->id;
                 $AuthUser["social_unique_id"]=$FacebookDrive->id;
                 $AuthUser["avatar"]=$FacebookDrive->avatar;
                 $AuthUser["login_by"]="facebook";
                 $AuthUser = Provider::create($AuthUser);
+
+                if(Setting::get('demo_mode', 0) == 1) {
+                    $AuthUser->update(['status' => 'approved']);
+                    ProviderService::create([
+                        'provider_id' => $AuthUser->id,
+                        'service_type_id' => '1',
+                        'status' => 'active',
+                        'service_number' => '4pp03ets',
+                        'service_model' => 'Audi R8',
+                    ]);
+                }
             }    
             if($AuthUser){ 
                 $userToken = JWTAuth::fromUser($AuthUser);
@@ -310,13 +322,25 @@ class TokenController extends Controller
                 $AuthUser->save();
             }else{   
                 $AuthUser["email"]=$GoogleDrive->email;
-                $AuthUser["first_name"]=$GoogleDrive->name;
-                $AuthUser["last_name"]='';
+                $name = explode(' ', $GoogleDrive->name, 2);
+                $AuthUser["first_name"]=$name[0];
+                $AuthUser["last_name"]=isset($name[1]) ? $name[1] : '';
                 $AuthUser["password"]=$GoogleDrive->id;
                 $AuthUser["social_unique_id"]=$GoogleDrive->id;
                 $AuthUser["avatar"]=$GoogleDrive->avatar;
                 $AuthUser["login_by"]="google";
                 $AuthUser = Provider::create($AuthUser);
+
+                if(Setting::get('demo_mode', 0) == 1) {
+                    $AuthUser->update(['status' => 'approved']);
+                    ProviderService::create([
+                        'provider_id' => $AuthUser->id,
+                        'service_type_id' => '1',
+                        'status' => 'active',
+                        'service_number' => '4pp03ets',
+                        'service_model' => 'Audi R8',
+                    ]);
+                }
             }    
             if($AuthUser){ 
                 $userToken = JWTAuth::fromUser($AuthUser);
