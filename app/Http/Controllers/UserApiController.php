@@ -280,11 +280,13 @@ class UserApiController extends Controller
 
         if($request->has('schedule_date') && $request->has('schedule_time')){
             $schedule_timestamp = strtotime("$request->schedule_date $request->schedule_time");
+
+            $beforeschedule_time = strtotime($schedule_timestamp."- 1 hour");
+            $afterschedule_time = strtotime($schedule_timestamp."+ 1 hour");
             
             $CheckScheduling = UserRequests::where('status','SCHEDULED')
                             ->where('user_id', Auth::user()->id)
-                            ->where('schedule_at', '>', strtotime($schedule_timestamp."- 1 hour"))
-                            ->orWhere('schedule_at', '<', strtotime($schedule_timestamp."+ 1 hour"))
+                            ->whereBetween('schedule_at',[$beforeschedule_time,$afterschedule_time])
                             ->count();
 
             if($CheckScheduling > 0){

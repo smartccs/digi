@@ -20,6 +20,27 @@ class SendPushNotification extends Controller
     }
 
     /**
+     * Driver Arrived at your location.
+     *
+     * @return void
+     */
+    public function user_schedule($user){
+
+        return $this->sendPushToUser($user, trans('api.push.schedule_start'));
+    }
+
+    /**
+     * New Incoming request
+     *
+     * @return void
+     */
+    public function provider_schedule($provider){
+
+        return $this->sendPushToProvider($provider, trans('api.push.schedule_start'));
+
+    }
+
+    /**
      * New Ride Accepted by a Driver.
      *
      * @return void

@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use DB;
+use App\Http\Controllers\SendPushNotification;
 use Carbon\Carbon;
 
 class CustomCommand extends Command
@@ -40,15 +41,25 @@ class CustomCommand extends Command
     public function handle()
     {
         $UserRequest = DB::table('user_requests')->where('status','SCHEDULED')
-                        ->where('schedule_at', '>=', \Carbon\Carbon::now()->subHour())
+                        ->where('schedule_at','<=',\Carbon\Carbon::now()->addMinutes(5))
                         ->get();
-        \Log::info('schedule trigger');
+
+        $hour =  \Carbon\Carbon::now()->subHour();
+        $futurehours = \Carbon\Carbon::now()->addMinutes(5);
+        $date =  \Carbon\Carbon::now();           
+
+        \Log::info("Schedule Service Request Started.".$date."==".$hour."==".$futurehours);
 
         if(!empty($UserRequest)){
             foreach($UserRequest as $ride){
                 DB::table('user_requests')
                         ->where('id',$ride->id)
                         ->update(['status' => 'STARTED', 'assigned_at' =>Carbon::now() , 'schedule_at' => null ]);
+
+                 //scehule start request push to user
+                (new SendPushNotification)->user_schedule($ride->user_id);
+                 //scehule start request push to provider
+                (new SendPushNotification)->provider_schedule($ride->provider_id);
 
                 DB::table('provider_services')->where('provider_id',$ride->provider_id)->update(['status' =>'riding']);
             }

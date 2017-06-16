@@ -40,23 +40,20 @@ class TripController extends Controller
             $provider = $Provider->id;
 
             $AfterAssignProvider = RequestFilter::with(['request.user', 'request.payment', 'request'])
-                ->where('provider_id', $Provider->id)
+                ->where('provider_id', $provider)
                 ->whereHas('request', function($query) use ($provider) {
-                    $query->where('status','<>','SCHEDULED');
-                    $query->where('status','<>','CANCELLED');
-                    $query->whereNotNull('current_provider_id');
-                    $query->where('provider_id', $provider );
-                    $query->where('current_provider_id', $provider);
+                        $query->whereIn('status','<>',['CANCELLED', 'SCHEDULED']);
+                        $query->where('provider_id', $provider );
+                        $query->where('current_provider_id', $provider);
                     });
 
             $BeforeAssignProvider = RequestFilter::with(['request.user', 'request.payment', 'request'])
-                ->where('provider_id', $Provider->id)
+                ->where('provider_id', $provider)
                 ->whereHas('request', function($query) use ($provider){
-                    $query->where('status','<>','CANCELLED');
-                    $query->where('status','<>','SCHEDULED');
-                    $query->whereNotNull('current_provider_id');
-                    $query->where('current_provider_id',$provider);
+                        $query->whereIn('status','<>',['CANCELLED', 'SCHEDULED']);
+                        $query->where('current_provider_id',$provider);
                     });
+
             $IncomingRequests =$BeforeAssignProvider->union($AfterAssignProvider)->get();
 
             if(!empty($request->latitude)) {
@@ -270,6 +267,23 @@ class TripController extends Controller
             $UserRequest->provider_id = Auth::user()->id;
 
             if($UserRequest->schedule_at != ""){
+
+                $beforeschedule_time = strtotime($UserRequest->schedule_at."- 1 hour");
+                $afterschedule_time = strtotime($UserRequest->schedule_at."+ 1 hour");
+
+                $CheckScheduling = UserRequests::where('status','SCHEDULED')
+                            ->where('provider_id', Auth::user()->id)
+                            ->whereBetween('schedule_at',[$beforeschedule_time,$afterschedule_time])
+                            ->count();
+
+                if($CheckScheduling > 0 ){
+                    if($request->ajax()) {
+                        return response()->json(['error' => trans('api.ride.request_already_scheduled')]);
+                    }else{
+                        return redirect('dashboard')->with('flash_error', 'If the ride is already scheduled then we cannot schedule/request another ride for the after 1 hour or before 1 hour');
+                    }
+                }
+
                 RequestFilter::where('request_id',$UserRequest->id)->where('provider_id',Auth::user()->id)->update(['status' => 2]);
 
                 $UserRequest->status = "SCHEDULED";
@@ -290,6 +304,16 @@ class TripController extends Controller
                     $Filter->delete();
                 }
             }
+
+            $UnwantedRequest = RequestFilter::where('request_id','!=' ,$UserRequest->id)
+                                ->where('provider_id',Auth::user()->id )
+                                ->whereHas('request', function($query){
+                                    $query->where('status','<>','SCHEDULED');
+                                });
+
+            if($UnwantedRequest->count() > 0){
+                $UnwantedRequest->delete();
+            }  
 
             // Send Push Notification to User
             (new SendPushNotification)->RideAccepted($UserRequest);
@@ -397,8 +421,8 @@ class TripController extends Controller
         try {
 
             $next_provider = RequestFilter::where('request_id', $UserRequest->id)
-                ->orderBy('id')
-                ->firstOrFail();
+                            ->orderBy('id')
+                            ->firstOrFail();
 
             $UserRequest->current_provider_id = $next_provider->provider_id;
             $UserRequest->assigned_at = Carbon::now();

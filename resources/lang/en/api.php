@@ -19,6 +19,7 @@ return array (
 		'already_onride' => 'Already You are Onride',
 		'provider_rated' => 'Driver Rated',
 		'request_scheduled' => 'Ride Scheduled',
+		'request_already_scheduled' => 'Ride Already Scheduled',
 	],
 	'something_went_wrong' => 'Something Went Wrong',
 	'services_not_found' => 'Services Not Found',
@@ -36,6 +37,7 @@ return array (
 		'document_verfied' => 'Your Documents are verified, Now you are ready to Start your Business',
 		'provider_not_available' => 'Sorry for inconvience time, Our partner or busy. Please try after some time',
 		'user_cancelled' => 'User Cancelled the Ride',
-		'provider_cancelled' => 'Driver Cancelled the Ride'
+		'provider_cancelled' => 'Driver Cancelled the Ride',
+		'schedule_start' => 'Your schedule ride has been started',
 	],
 );
