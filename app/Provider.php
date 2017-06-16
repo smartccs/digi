@@ -28,6 +28,7 @@ class Provider extends Authenticatable
         'longitude',
         'status',
         'avatar',
+        'social_unique_id',
     ];
 
     /**
