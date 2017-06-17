@@ -1,7 +1,7 @@
 <div class="site-sidebar">
 	<div class="custom-scroll custom-scroll-light">
 		<ul class="sidebar-menu">
-			<li class="menu-title">Main</li>
+			<li class="menu-title">Fleet Dashboard</li>
 			<li>
 				<a href="{{ route('fleet.dashboard') }}" class="waves-effect waves-light">
 					<span class="s-icon"><i class="ti-anchor"></i></span>
@@ -77,22 +77,6 @@
                 <form id="logout-form" action="{{ url('/fleet/logout') }}" method="POST" style="display: none;">
                     {{ csrf_field() }}
                 </form>
-			</li>
-			
-			<li class="menu-title compact-hide">System usage</li>
-			<li class="compact-hide">
-				<div class="progress-widget progress-widget-light">
-					<div class="mb-0-5">
-						SSD
-						<span class="float-xs-right">5 GB</span>
-					</div>
-					<progress class="progress progress-rounded progress-success progress-sm" value="60" max="100">100%</progress>
-					<div class="mb-0-5">
-						CPU
-						<span class="float-xs-right">80%</span>
-					</div>
-					<progress class="progress progress-rounded progress-danger progress-sm mb-0-5" value="80" max="100">100%</progress>
-				</div>
 			</li>
 			
 		</ul>

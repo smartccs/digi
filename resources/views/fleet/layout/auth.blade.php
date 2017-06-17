@@ -29,7 +29,7 @@
 </head>
 <body>
 
-    <?php $background = asset('main/assets/img/photos-1/2.jpg'); ?>
+    <?php $background = asset('main/assets/img/photos-1/3.jpg'); ?>
 
     <body class="img-cover" style="background-image: url({{$background}});">
     

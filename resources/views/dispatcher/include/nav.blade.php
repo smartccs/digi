@@ -1,7 +1,7 @@
 <div class="site-sidebar">
 	<div class="custom-scroll custom-scroll-light">
 		<ul class="sidebar-menu">
-			<li class="menu-title">Main</li>
+			<li class="menu-title">Dispatcher Dashboard</li>
 			<li>
 				<a href="{{ route('dispatcher.index') }}" class="waves-effect waves-light">
 					<span class="s-icon"><i class="ti-target"></i></span>

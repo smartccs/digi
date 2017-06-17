@@ -45,7 +45,8 @@
                             <form action="{{ route('admin.fleet.destroy', $fleet->id) }}" method="POST">
                                 {{ csrf_field() }}
                                 <input type="hidden" name="_method" value="DELETE">
-                                <a href="{{ route('admin.fleet.edit', $fleet->id) }}" class="btn btn-info"><i class="fa fa-pencil"></i> Edit</a>
+                                <a href="{{ route('admin.provider.index') }}?fleet={{$fleet->id}}" class="btn btn-info"><i class="fa fa-pencil"></i> Show Provider</a>
+                                 <a href="{{ route('admin.fleet.edit', $fleet->id) }}" class="btn btn-info"><i class="fa fa-pencil"></i> Edit</a>
                                 <button class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class="fa fa-trash"></i> Delete</button>
                             </form>
                         </td>

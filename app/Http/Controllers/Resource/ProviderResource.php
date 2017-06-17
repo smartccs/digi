@@ -20,12 +20,17 @@ class ProviderResource extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $providers = Provider::with('service','accepted','cancelled')
-                    ->orderBy('id', 'DESC')
-                    ->get();
+        $AllProviders = Provider::with('service','accepted','cancelled')
+                    ->orderBy('id', 'DESC');
 
+        if(request()->has('fleet')){
+            $providers = $AllProviders->where('fleet',$request->fleet)->get();
+        }else{
+            $providers = $AllProviders->get();
+        }
+                    
         return view('admin.providers.index', compact('providers'));
     }
 
@@ -52,7 +57,7 @@ class ProviderResource extends Controller
             'last_name' => 'required|max:255',
             'email' => 'required|unique:providers,email|email|max:255',
             'mobile' => 'digits_between:6,13',
-            'picture' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
+            'avatar' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
             'password' => 'required|min:6|confirmed',
         ]);
 
@@ -61,8 +66,8 @@ class ProviderResource extends Controller
             $provider = $request->all();
 
             $provider['password'] = bcrypt($request->password);
-            if($request->hasFile('picture')) {
-                $provider->picture = $request->picture->store('provider/profile');
+            if($request->hasFile('avatar')) {
+                $provider['avatar'] = $request->avatar->store('provider/profile');
             }
 
             $provider = Provider::create($provider);
@@ -121,18 +126,18 @@ class ProviderResource extends Controller
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
             'mobile' => 'digits_between:6,13',
-            'picture' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
+            'avatar' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
         ]);
 
         try {
 
             $provider = Provider::findOrFail($id);
 
-            if($request->hasFile('picture')) {
-                if($provider->picture) {
-                    Storage::delete($provider->picture);
+            if($request->hasFile('avatar')) {
+                if($provider->avatar) {
+                    Storage::delete($provider->avatar);
                 }
-                $provider->picture = $request->picture->store('provider/profile');                    
+                $provider->avatar = $request->avatar->store('provider/profile');                    
             }
 
             $provider->first_name = $request->first_name;

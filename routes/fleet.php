@@ -34,9 +34,6 @@ Route::post('password', 'FleetController@password_update')->name('password.updat
 
 // Static Pages - Post updates to pages.update when adding new static pages.
 
-Route::get('/privacy', 'FleetController@privacy')->name('privacy');
-Route::post('/pages', 'FleetController@pages')->name('pages.update');
-
 Route::get('requests', 'Resource\TripResource@Fleetindex')->name('requests.index');
 Route::delete('requests/{id}', 'Resource\TripResource@Fleetdestroy')->name('requests.destroy');
 Route::get('requests/{id}', 'Resource\TripResource@Fleetshow')->name('requests.show');
@@ -44,13 +41,3 @@ Route::get('scheduled', 'Resource\TripResource@Fleetscheduled')->name('requests.
 
 Route::get('push', 'FleetController@push_index')->name('push.index');
 Route::post('push', 'FleetController@push_store')->name('push.store');
-// Route::get('/home', function () {
-//     $users[] = Auth::user();
-//     $users[] = Auth::guard()->user();
-//     $users[] = Auth::guard('fleet')->user();
-
-//     //dd($users);
-
-//     return view('fleet.home');
-// })->name('home');
-
