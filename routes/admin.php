@@ -20,6 +20,8 @@ Route::group(['as' => 'dispatcher.', 'prefix' => 'dispatcher'], function () {
 });
 
 Route::resource('user', 'Resource\UserResource');
+Route::resource('dispatcher', 'Resource\DispatcherResource');
+Route::resource('fleet', 'Resource\FleetResource');
 Route::resource('provider', 'Resource\ProviderResource');
 Route::resource('document', 'Resource\DocumentResource');
 Route::resource('service', 'Resource\ServiceResource');

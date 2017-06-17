@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Resource;
 
-use App\Dispatcher;
+use App\Fleet;
 use Illuminate\Http\Request;
+use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Controllers\Controller;
 use Exception;
 
-class DispatcherResource extends Controller
+class FleetResource extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,8 +18,8 @@ class DispatcherResource extends Controller
      */
     public function index()
     {
-        $dispatchers = Dispatcher::orderBy('created_at' , 'desc')->get();
-        return view('admin.dispatcher.index', compact('dispatchers'));
+        $fleets = Fleet::orderBy('created_at' , 'desc')->get();
+        return view('admin.fleet.index', compact('fleets'));
     }
 
     /**
@@ -28,7 +29,7 @@ class DispatcherResource extends Controller
      */
     public function create()
     {
-        return view('admin.dispatcher.create');
+        return view('admin.fleet.create');
     }
 
     /**
@@ -41,49 +42,54 @@ class DispatcherResource extends Controller
     {
         $this->validate($request, [
             'name' => 'required|max:255',
+            'company' => 'required|max:255',
+            'email' => 'required|unique:fleets,email|email|max:255',
             'mobile' => 'digits_between:6,13',
-            'email' => 'required|unique:dispatchers,email|email|max:255',
+            'logo' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
             'password' => 'required|min:6|confirmed',
         ]);
 
         try{
 
-            $Dispatcher = $request->all();
-            $Dispatcher['password'] = bcrypt($request->password);
+            $fleet = $request->all();
+            $fleet['password'] = bcrypt($request->password);
+            if($request->hasFile('logo')) {
+                $fleet['logo'] = $request->logo->store('fleet');
+            }
 
-            $Dispatcher = Dispatcher::create($Dispatcher);
+            $fleet = Fleet::create($fleet);
 
-            return back()->with('flash_success','Dispatcher Details Saved Successfully');
+            return back()->with('flash_success','Fleet Details Saved Successfully');
 
         } 
 
         catch (Exception $e) {
-            return back()->with('flash_error', 'Dispatcher Not Found');
+            return back()->with('flash_error', 'Fleet Not Found');
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Dispatcher  $dispatcher
+     * @param  \App\Fleet  $fleet
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-
+        // 
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Dispatcher  $dispatcher
+     * @param  \App\Fleet  $fleet
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         try {
-            $dispatcher = Dispatcher::findOrFail($id);
-            return view('admin.dispatcher.edit',compact('dispatcher'));
+            $fleet = Fleet::findOrFail($id);
+            return view('admin.fleet.edit',compact('fleet'));
         } catch (ModelNotFoundException $e) {
             return $e;
         }
@@ -93,45 +99,54 @@ class DispatcherResource extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Dispatcher  $dispatcher
+     * @param  \App\Fleet  $fleet
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         $this->validate($request, [
             'name' => 'required|max:255',
+            'company' => 'required|max:255',
             'mobile' => 'digits_between:6,13',
+            'logo' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
         ]);
 
         try {
 
-            $dispatcher = Dispatcher::findOrFail($id);
-            $dispatcher->name = $request->name;
-            $dispatcher->mobile = $request->mobile;
-            $dispatcher->save();
+            $fleet = Fleet::findOrFail($id);
 
-            return redirect()->route('admin.dispatcher.index')->with('flash_success', 'Dispatcher Updated Successfully');    
+            if($request->hasFile('logo')) {
+                \Storage::delete($fleet->logo);
+                $fleet->logo = $request->logo->store('fleet');
+            }
+
+            $fleet->name = $request->name;
+            $fleet->company = $request->company;
+            $fleet->mobile = $request->mobile;
+            $fleet->save();
+
+            return redirect()->route('admin.fleet.index')->with('flash_success', 'Fleet Updated Successfully');    
         } 
 
         catch (ModelNotFoundException $e) {
-            return back()->with('flash_error', 'Dispatcher Not Found');
+            return back()->with('flash_error', 'Fleet Not Found');
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Dispatcher  $dispatcher
+     * @param  \App\Fleet  $Fleet
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         try {
-            Dispatcher::find($id)->delete();
-            return back()->with('message', 'Dispatcher deleted successfully');
+            Fleet::find($id)->delete();
+            return back()->with('message', 'Fleet deleted successfully');
         } 
         catch (Exception $e) {
-            return back()->with('flash_error', 'Dispatcher Not Found');
+            return back()->with('flash_error', 'Fleet Not Found');
         }
     }
 

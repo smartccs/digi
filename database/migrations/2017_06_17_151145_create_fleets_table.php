@@ -17,6 +17,9 @@ class CreateFleetsTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('company')->nullable();
+            $table->string('mobile')->nullable();
+            $table->string('logo')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

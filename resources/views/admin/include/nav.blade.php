@@ -11,7 +11,7 @@
 			<li>
 				<a href="{{ route('admin.dispatcher.index') }}" class="waves-effect waves-light">
 					<span class="s-icon"><i class="ti-target"></i></span>
-					<span class="s-text">Dispatcher</span>
+					<span class="s-text">Dispatcher Panel</span>
 				</a>
 			</li>
 			
@@ -37,12 +37,34 @@
 			<li class="with-sub">
 				<a href="#" class="waves-effect  waves-light">
 					<span class="s-caret"><i class="fa fa-angle-down"></i></span>
+					<span class="s-icon"><i class="ti-crown"></i></span>
+					<span class="s-text">Dispatcher</span>
+				</a>
+				<ul>
+					<li><a href="{{ route('admin.dispatcher.index') }}">List Dispatcher</a></li>
+					<li><a href="{{ route('admin.dispatcher.create') }}">Add New Dispatcher</a></li>
+				</ul>
+			</li>
+			<li class="with-sub">
+				<a href="#" class="waves-effect  waves-light">
+					<span class="s-caret"><i class="fa fa-angle-down"></i></span>
 					<span class="s-icon"><i class="ti-car"></i></span>
 					<span class="s-text">Providers</span>
 				</a>
 				<ul>
 					<li><a href="{{ route('admin.provider.index') }}">List Providers</a></li>
 					<li><a href="{{ route('admin.provider.create') }}">Add New Provider</a></li>
+				</ul>
+			</li>
+			<li class="with-sub">
+				<a href="#" class="waves-effect  waves-light">
+					<span class="s-caret"><i class="fa fa-angle-down"></i></span>
+					<span class="s-icon"><i class="ti-crown"></i></span>
+					<span class="s-text">Fleet Owner</span>
+				</a>
+				<ul>
+					<li><a href="{{ route('admin.fleet.index') }}">List Fleets</a></li>
+					<li><a href="{{ route('admin.fleet.create') }}">Add New Fleet Owner</a></li>
 				</ul>
 			</li>
 			<li class="menu-title">Details</li>
