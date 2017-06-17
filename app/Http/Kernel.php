@@ -46,6 +46,10 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
+        'fleet' => \App\Http\Middleware\RedirectIfNotFleet::class,
+        'fleet.guest' => \App\Http\Middleware\RedirectIfFleet::class,
+        'dispatcher' => \App\Http\Middleware\RedirectIfNotDispatcher::class,
+        'dispatcher.guest' => \App\Http\Middleware\RedirectIfDispatcher::class,
         'provider' => \App\Http\Middleware\RedirectIfNotProvider::class,
         'provider.guest' => \App\Http\Middleware\RedirectIfProvider::class,
         'provider.api' => \App\Http\Middleware\ProviderApiMiddleware::class,

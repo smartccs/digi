@@ -8,6 +8,7 @@
 
 Route::get('/', 'AdminController@dashboard')->name('index');
 Route::get('/dashboard', 'AdminController@dashboard')->name('dashboard');
+Route::get('/heatmap', 'AdminController@heatmap')->name('heatmap');
 
 Route::group(['as' => 'dispatcher.', 'prefix' => 'dispatcher'], function () {
 	Route::get('/', 'DispatcherController@index')->name('index');

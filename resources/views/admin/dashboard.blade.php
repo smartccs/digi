@@ -99,29 +99,6 @@
 
 		</div>
 
-		<div class="box box-block bg-white">
-				<div class="clearfix mb-1">
-					<h5 class="float-xs-left">Rides statistics</h5>
-					<div class="float-xs-right">
-						<button class="btn btn-link btn-sm text-muted" type="button"><i class="ti-close"></i></button>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-8">
-						<div id="world" style="height: 400px;"></div>
-					</div>
-					<div class="col-md-4 demo-progress">
-							<h5 class="mb-2">Drivers Rating</h5>
-							@if($providers->count() > 0)
-								@foreach($providers as $provider)
-								<p class="mb-0-5">{{$provider->first_name}} {{$provider->last_name}} <span class="float-xs-right">{{($provider->rating/5)*100}}%</span></p>
-								<progress class="progress progress{{$diff[array_rand($diff)]}} progress-sm" value="{{$provider->rating}}" max="5"></progress>
-								@endforeach
-							@endif
-					</div>
-				</div>
-			</div>
-
 	</div>
 </div>
 @endsection

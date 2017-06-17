@@ -36,6 +36,16 @@ return [
     */
 
     'guards' => [
+        'fleet' => [
+            'driver' => 'session',
+            'provider' => 'fleets',
+        ],
+
+        'dispatcher' => [
+            'driver' => 'session',
+            'provider' => 'dispatchers',
+        ],
+
         'provider' => [
             'driver' => 'session',
             'provider' => 'providers',
@@ -81,7 +91,27 @@ return [
     */
 
     'providers' => [
+        'fleets' => [
+            'driver' => 'eloquent',
+            'model' => App\Fleet::class,
+        ],
+
+        'dispatchers' => [
+            'driver' => 'eloquent',
+            'model' => App\Dispatcher::class,
+        ],
+
         'providers' => [
+        'fleets' => [
+            'driver' => 'eloquent',
+            'model' => App\Fleet::class,
+        ],
+
+        'dispatchers' => [
+            'driver' => 'eloquent',
+            'model' => App\Dispatcher::class,
+        ],
+
             'driver' => 'eloquent',
             'model' => App\Provider::class,
         ],
@@ -118,7 +148,29 @@ return [
     */
 
     'passwords' => [
+        'fleets' => [
+            'provider' => 'fleets',
+            'table' => 'fleet_password_resets',
+            'expire' => 60,
+        ],
+
+        'dispatchers' => [
+            'provider' => 'dispatchers',
+            'table' => 'dispatcher_password_resets',
+            'expire' => 60,
+        ],
+
         'providers' => [
+        'fleets' => [
+            'driver' => 'eloquent',
+            'model' => App\Fleet::class,
+        ],
+
+        'dispatchers' => [
+            'driver' => 'eloquent',
+            'model' => App\Dispatcher::class,
+        ],
+
             'provider' => 'providers',
             'table' => 'password_resets',
             'expire' => 60,

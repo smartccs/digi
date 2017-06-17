@@ -15,6 +15,13 @@
 				</a>
 			</li>
 			
+			<li>
+				<a href="{{ route('admin.heatmap') }}" class="waves-effect waves-light">
+					<span class="s-icon"><i class="ti-map"></i></span>
+					<span class="s-text">Heat Map</span>
+				</a>
+			</li>
+			
 			<li class="menu-title">Members</li>
 			<li class="with-sub">
 				<a href="#" class="waves-effect  waves-light">
