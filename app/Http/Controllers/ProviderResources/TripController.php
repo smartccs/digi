@@ -464,10 +464,10 @@ class TripController extends Controller
             $Wallet = 0;
             $Surge = 0;
 
-            $Commision = ( $Fixed + $Distance ) * (Setting::get('payment_commision', 10) / 100);
+            $Commision = ( $Fixed + $Distance ) * (Setting::get('commission_percentage', 10) / 100);
 
-            $Tax = $Fixed + $Distance + $Commision * (Setting::get('payment_tax', 10) / 100);
-            $Total = $Fixed + $Distance - $Discount + $Commision + $Tax;
+            $Tax = $Fixed + $Distance * (Setting::get('tax_percentage', 10) / 100);
+            $Total = $Fixed + $Distance - $Discount + $Tax;
 
             if($UserRequest->surge){
                 $Surge = (Setting::get('surge_percentage')/100) * $Total;

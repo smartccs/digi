@@ -675,7 +675,7 @@ class UserApiController extends Controller
                 $price = ($kilometer * $service_type->price);
             }
 
-            $price += ( $commission_percentage/100 ) * $price;
+            $commission_price = ( $commission_percentage/100 ) * $price;
             $tax_price = ( $tax_percentage/100 ) * $price;
             $total = $price + $tax_price;
 
