@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 
 use Log;
 use Setting;
+use Auth;
 use Exception;
 use Carbon\Carbon;
 
 use App\User;
+use App\Dispatcher;
 use App\Provider;
 use App\UserRequests;
 use App\RequestFilter;
@@ -18,15 +20,6 @@ use App\ProviderService;
 
 class DispatcherController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('admin');
-    }
 
     /**
      * Dispatcher Panel.
@@ -36,7 +29,11 @@ class DispatcherController extends Controller
      */
     public function index()
     {
-        return view('admin.dispatcher');
+        if(Auth::guard('admin')->user()){
+            return view('admin.dispatcher');
+        }elseif(Auth::guard('dispatcher')->user()){
+            return view('dispatcher.dispatcher');
+        }
     }
 
     /**
@@ -134,10 +131,24 @@ class DispatcherController extends Controller
                 $Filter->save();
             }
 
-            return redirect()->route('admin.dispatcher.index')->with('flash_success', 'Request Assigned to Provider!');
+            if(Auth::guard('admin')->user()){
+                return redirect()
+                        ->route('admin.dispatcher.index')
+                        ->with('flash_success', 'Request Assigned to Provider!');
+
+            }elseif(Auth::guard('dispatcher')->user()){
+                return redirect()
+                        ->route('dispatcher.index')
+                        ->with('flash_success', 'Request Assigned to Provider!');
+
+            }
 
         } catch (Exception $e) {
-            return redirect()->route('admin.dispatcher.index')->with('flash_error', 'Something Went Wrong!');
+            if(Auth::guard('admin')->user()){
+                return redirect()->route('admin.dispatcher.index')->with('flash_error', 'Something Went Wrong!');
+            }elseif(Auth::guard('dispatcher')->user()){
+                return redirect()->route('dispatcher.index')->with('flash_error', 'Something Went Wrong!');
+            }
         }
     }
 
@@ -197,6 +208,14 @@ class DispatcherController extends Controller
 
         try{
 
+            $details = "https://maps.googleapis.com/maps/api/directions/json?origin=".$request->s_latitude.",".$request->s_longitude."&destination=".$request->d_latitude.",".$request->d_longitude."&mode=driving&key=".env('GOOGLE_MAP_KEY');
+
+            $json = curl($details);
+
+            $details = json_decode($json, TRUE);
+
+            $route_key = $details['routes'][0]['overview_polyline']['points'];
+
             $UserRequest = new UserRequests;
             $UserRequest->user_id = $User->id;
             $UserRequest->current_provider_id = 0;
@@ -212,6 +231,7 @@ class DispatcherController extends Controller
             $UserRequest->d_address = $request->d_address ? : "";
             $UserRequest->d_latitude = $request->d_latitude;
             $UserRequest->d_longitude = $request->d_longitude;
+            $UserRequest->route_key = $route_key;
 
             $UserRequest->distance = $request->distance;
 
@@ -282,6 +302,94 @@ class DispatcherController extends Controller
             }else{
                 return back()->with('flash_error', 'Something went wrong while sending request. Please try again.');
             }
+        }
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function profile()
+    {
+        return view('dispatcher.account.profile');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function profile_update(Request $request)
+    {
+        if(Setting::get('demo_mode', 0) == 1) {
+            return back()->with('flash_error', 'Disabled for demo purposes! Please contact us at info@appoets.com');
+        }
+
+        $this->validate($request,[
+            'name' => 'required|max:255',
+            'mobile' => 'required|digits_between:6,13',
+        ]);
+
+        try{
+            $dispatcher = Auth::guard('dispatcher')->user();
+            $dispatcher->name = $request->name;
+            $dispatcher->mobile = $request->mobile;
+            $dispatcher->save();
+
+            return redirect()->back()->with('flash_success','Profile Updated');
+        }
+
+        catch (Exception $e) {
+             return back()->with('flash_error','Something Went Wrong!');
+        }
+        
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function password()
+    {
+        return view('dispatcher.account.change-password');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function password_update(Request $request)
+    {
+        if(Setting::get('demo_mode', 0) == 1) {
+            return back()->with('flash_error','Disabled for demo purposes! Please contact us at info@appoets.com');
+        }
+
+        $this->validate($request,[
+            'old_password' => 'required',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        try {
+
+           $Dispatcher = Dispatcher::find(Auth::guard('dispatcher')->user()->id);
+
+            if(password_verify($request->old_password, $Dispatcher->password))
+            {
+                $Dispatcher->password = bcrypt($request->password);
+                $Dispatcher->save();
+
+                return redirect()->back()->with('flash_success','Password Updated');
+            }
+        } catch (Exception $e) {
+             return back()->with('flash_error','Something Went Wrong!');
         }
     }
 }

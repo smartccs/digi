@@ -18,7 +18,7 @@ class RedirectIfDispatcher
 	public function handle($request, Closure $next, $guard = 'dispatcher')
 	{
 	    if (Auth::guard($guard)->check()) {
-	        return redirect('dispatcher/home');
+	        return redirect('dispatcher/');
 	    }
 
 	    return $next($request);

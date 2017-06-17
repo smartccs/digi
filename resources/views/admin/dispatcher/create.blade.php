@@ -7,11 +7,11 @@
 <div class="content-area py-1">
     <div class="container-fluid">
     	<div class="box box-block bg-white">
-            <a href="{{ route('admin.dispatcher.index') }}" class="btn btn-default pull-right"><i class="fa fa-angle-left"></i> Back</a>
+            <a href="{{ route('admin.dispatch-manager.index') }}" class="btn btn-default pull-right"><i class="fa fa-angle-left"></i> Back</a>
 
 			<h5 style="margin-bottom: 2em;">Add Dispatcher</h5>
 
-            <form class="form-horizontal" action="{{route('admin.dispatcher.store')}}" method="POST" enctype="multipart/form-data" role="form">
+            <form class="form-horizontal" action="{{route('admin.dispatch-manager.store')}}" method="POST" enctype="multipart/form-data" role="form">
             	{{csrf_field()}}
 				<div class="form-group row">
 					<label for="name" class="col-xs-12 col-form-label">Full Name</label>
@@ -52,7 +52,7 @@
 					<label for="zipcode" class="col-xs-12 col-form-label"></label>
 					<div class="col-xs-10">
 						<button type="submit" class="btn btn-primary">Add Dispatcher</button>
-						<a href="{{route('admin.dispatcher.index')}}" class="btn btn-default">Cancel</a>
+						<a href="{{route('admin.dispatch-manager.index')}}" class="btn btn-default">Cancel</a>
 					</div>
 				</div>
 			</form>

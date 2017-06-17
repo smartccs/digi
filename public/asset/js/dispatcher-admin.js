@@ -200,7 +200,7 @@ class DispatcherList extends React.Component {
     }
 
     getTripsUpdate() {
-        $.get('/dispatcher/dispatcher/trips', function(result) {
+        $.get('/admin/dispatcher/trips', function(result) {
             // console.log('Trips', result.hasOwnProperty('data'));
             if(result.hasOwnProperty('data')) {
                 this.setState({
@@ -298,7 +298,7 @@ class DispatcherRequest extends React.Component {
         });
 
         // Get Service Type List
-        $.get('/dispatcher/service', function(result) {
+        $.get('/admin/service', function(result) {
             this.setState({
                 data: result
             });
@@ -323,7 +323,7 @@ class DispatcherRequest extends React.Component {
         event.stopPropagation();
         console.log('Hello', $("#form-create-ride").serialize());
         $.ajax({
-            url: '/dispatcher/dispatcher',
+            url: '/admin/dispatcher',
             dataType: 'json',
             headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken },
             type: 'POST',
@@ -441,7 +441,7 @@ class DispatcherAssignList extends React.Component {
     }
 
     componentDidMount() {
-        $.get('/dispatcher/dispatcher/providers', { 
+        $.get('/admin/dispatcher/providers', { 
             latitude: this.props.trip.s_latitude,
             longitude: this.props.trip.s_longitude
         }, function(result) {

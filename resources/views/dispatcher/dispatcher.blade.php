@@ -1,4 +1,4 @@
-@extends('admin.layout.base')
+@extends('dispatcher.layout.base')
 
 @section('title', 'Dispatcher ')
 
@@ -26,8 +26,8 @@
     });
 </script>
 
-<script type="text/javascript" src="{{ asset('asset/js/dispatcher-map-admin.js') }}"></script>
-<script type="text/babel" src="{{ asset('asset/js/dispatcher-admin.js') }}"></script>
+<script type="text/javascript" src="{{ asset('asset/js/dispatcher-map.js') }}"></script>
+<script type="text/babel" src="{{ asset('asset/js/dispatcher.js') }}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAP_KEY') }}&libraries=places&callback=initMap" async defer></script>
 @endsection
 

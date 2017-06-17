@@ -12,7 +12,7 @@
                 <span class="pull-right">(*personal information hidden in demo)</span>
                 @endif
             </h5>
-            <a href="{{ route('admin.dispatcher.create') }}" style="margin-left: 1em;" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Add New Dispatcher</a>
+            <a href="{{ route('admin.dispatch-manager.create') }}" style="margin-left: 1em;" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Add New Dispatcher</a>
             <table class="table table-striped table-bordered dataTable" id="table-2">
                 <thead>
                     <tr>
@@ -39,10 +39,10 @@
                         <td>{{ $dispatcher->mobile }}</td>
                         @endif
                         <td>
-                            <form action="{{ route('admin.dispatcher.destroy', $dispatcher->id) }}" method="POST">
+                            <form action="{{ route('admin.dispatch-manager.destroy', $dispatcher->id) }}" method="POST">
                                 {{ csrf_field() }}
                                 <input type="hidden" name="_method" value="DELETE">
-                                <a href="{{ route('admin.dispatcher.edit', $dispatcher->id) }}" class="btn btn-info"><i class="fa fa-pencil"></i> Edit</a>
+                                <a href="{{ route('admin.dispatch-manager.edit', $dispatcher->id) }}" class="btn btn-info"><i class="fa fa-pencil"></i> Edit</a>
                                 <button class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class="fa fa-trash"></i> Delete</button>
                             </form>
                         </td>

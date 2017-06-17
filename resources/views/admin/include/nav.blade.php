@@ -41,8 +41,8 @@
 					<span class="s-text">Dispatcher</span>
 				</a>
 				<ul>
-					<li><a href="{{ route('admin.dispatcher.index') }}">List Dispatcher</a></li>
-					<li><a href="{{ route('admin.dispatcher.create') }}">Add New Dispatcher</a></li>
+					<li><a href="{{ route('admin.dispatch-manager.index') }}">List Dispatcher</a></li>
+					<li><a href="{{ route('admin.dispatch-manager.create') }}">Add New Dispatcher</a></li>
 				</ul>
 			</li>
 			<li class="with-sub">
