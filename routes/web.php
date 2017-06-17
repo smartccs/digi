@@ -124,3 +124,30 @@ Route::resource('card', 'Resource\CardResource');
 // promotions
 Route::get('/promotions', 'HomeController@promotions_index')->name('promocodes.index');
 Route::post('/promotions', 'HomeController@promotions_store')->name('promocodes.store');
+Route::group(['prefix' => 'dispatcher'], function () {
+  Route::get('/login', 'DispatcherAuth\LoginController@showLoginForm');
+  Route::post('/login', 'DispatcherAuth\LoginController@login');
+  Route::post('/logout', 'DispatcherAuth\LoginController@logout');
+
+  Route::get('/register', 'DispatcherAuth\RegisterController@showRegistrationForm');
+  Route::post('/register', 'DispatcherAuth\RegisterController@register');
+
+  Route::post('/password/email', 'DispatcherAuth\ForgotPasswordController@sendResetLinkEmail');
+  Route::post('/password/reset', 'DispatcherAuth\ResetPasswordController@reset');
+  Route::get('/password/reset', 'DispatcherAuth\ForgotPasswordController@showLinkRequestForm');
+  Route::get('/password/reset/{token}', 'DispatcherAuth\ResetPasswordController@showResetForm');
+});
+
+Route::group(['prefix' => 'fleet'], function () {
+  Route::get('/login', 'FleetAuth\LoginController@showLoginForm');
+  Route::post('/login', 'FleetAuth\LoginController@login');
+  Route::post('/logout', 'FleetAuth\LoginController@logout');
+
+  Route::get('/register', 'FleetAuth\RegisterController@showRegistrationForm');
+  Route::post('/register', 'FleetAuth\RegisterController@register');
+
+  Route::post('/password/email', 'FleetAuth\ForgotPasswordController@sendResetLinkEmail');
+  Route::post('/password/reset', 'FleetAuth\ResetPasswordController@reset');
+  Route::get('/password/reset', 'FleetAuth\ForgotPasswordController@showLinkRequestForm');
+  Route::get('/password/reset/{token}', 'FleetAuth\ResetPasswordController@showResetForm');
+});

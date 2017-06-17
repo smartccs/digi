@@ -39,6 +39,10 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
+        $this->mapFleetRoutes();
+
+        $this->mapDispatcherRoutes();
+
         $this->mapProviderRoutes();
 
         $this->mapAdminRoutes();
@@ -83,6 +87,44 @@ class RouteServiceProvider extends ServiceProvider
             'namespace' => $this->namespace,
         ], function ($router) {
             require base_path('routes/provider.php');
+        });
+    }
+
+    /**
+     * Define the "dispatcher" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapDispatcherRoutes()
+    {
+        Route::group([
+            'middleware' => ['web', 'dispatcher', 'auth:dispatcher'],
+            'prefix' => 'dispatcher',
+            'as' => 'dispatcher.',
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require base_path('routes/dispatcher.php');
+        });
+    }
+
+    /**
+     * Define the "fleet" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapFleetRoutes()
+    {
+        Route::group([
+            'middleware' => ['web', 'fleet', 'auth:fleet'],
+            'prefix' => 'fleet',
+            'as' => 'fleet.',
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require base_path('routes/fleet.php');
         });
     }
 

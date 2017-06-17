@@ -34,7 +34,7 @@ class AdminController extends Controller
 
 
     /**
-     * Remove the specified resource from storage.
+     * Dashboard.
      *
      * @param  \App\Provider  $provider
      * @return \Illuminate\Http\Response
@@ -48,6 +48,25 @@ class AdminController extends Controller
             $revenue = UserRequestPayment::sum('total');
             $providers = Provider::take(10)->orderBy('rating','desc')->get();
             return view('admin.dashboard',compact('providers','service','rides','cancel_rides','revenue'));
+        }
+        catch(Exception $e){
+            return redirect()->route('admin.user.index')->with('flash_error','Something Went Wrong with Dashboard!');
+        }
+    }
+
+
+    /**
+     * Heat Map.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function heatmap()
+    {
+        try{
+            $rides = UserRequests::has('user')->orderBy('id','desc')->get();
+            $providers = Provider::take(10)->orderBy('rating','desc')->get();
+            return view('admin.heatmap',compact('providers','rides'));
         }
         catch(Exception $e){
             return redirect()->route('admin.user.index')->with('flash_error','Something Went Wrong with Dashboard!');
