@@ -29,6 +29,7 @@ class Provider extends Authenticatable
         'status',
         'avatar',
         'social_unique_id',
+        'fleet',
     ];
 
     /**

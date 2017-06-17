@@ -24,6 +24,16 @@ class TripResource extends Controller
         }
     }
 
+    public function Fleetindex()
+    {
+        try {
+            $requests = UserRequests::RequestHistory()->get();
+            return view('fleet.request.index', compact('requests'));
+        } catch (Exception $e) {
+            return back()->with('flash_error','Something Went Wrong!');
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -37,6 +47,24 @@ class TripResource extends Controller
                         ->get();
 
             return view('admin.request.scheduled', compact('requests'));
+        } catch (Exception $e) {
+             return back()->with('flash_error','Something Went Wrong!');
+        }
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function Fleetscheduled()
+    {
+        try{
+            $requests = UserRequests::where('status' , 'SCHEDULED')
+                        ->RequestHistory()
+                        ->get();
+
+            return view('fleet.request.scheduled', compact('requests'));
         } catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
@@ -92,6 +120,16 @@ class TripResource extends Controller
         }
     }
 
+    public function Fleetshow($id)
+    {
+        try {
+            $request = UserRequests::findOrFail($id);
+            return view('fleet.request.show', compact('request'));
+        } catch (Exception $e) {
+             return back()->with('flash_error','Something Went Wrong!');
+        }
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -122,6 +160,17 @@ class TripResource extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
+    {
+        try {
+            $Request = UserRequests::findOrFail($id);
+            $Request->delete();
+            return back()->with('flash_success','Request Deleted!');
+        } catch (Exception $e) {
+            return back()->with('flash_error','Something Went Wrong!');
+        }
+    }
+
+    public function Fleetdestroy($id)
     {
         try {
             $Request = UserRequests::findOrFail($id);
