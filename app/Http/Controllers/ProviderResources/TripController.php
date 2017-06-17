@@ -42,7 +42,8 @@ class TripController extends Controller
             $AfterAssignProvider = RequestFilter::with(['request.user', 'request.payment', 'request'])
                 ->where('provider_id', $provider)
                 ->whereHas('request', function($query) use ($provider) {
-                        $query->whereIn('status','<>',['CANCELLED', 'SCHEDULED']);
+                        $query->where('status','<>', 'CANCELLED');
+                        $query->where('status','<>', 'SCHEDULED');
                         $query->where('provider_id', $provider );
                         $query->where('current_provider_id', $provider);
                     });
@@ -50,7 +51,8 @@ class TripController extends Controller
             $BeforeAssignProvider = RequestFilter::with(['request.user', 'request.payment', 'request'])
                 ->where('provider_id', $provider)
                 ->whereHas('request', function($query) use ($provider){
-                        $query->whereIn('status','<>',['CANCELLED', 'SCHEDULED']);
+                        $query->where('status','<>', 'CANCELLED');
+                        $query->where('status','<>', 'SCHEDULED');
                         $query->where('current_provider_id',$provider);
                     });
 
