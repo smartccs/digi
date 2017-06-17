@@ -279,15 +279,15 @@ class UserApiController extends Controller
         }
 
         if($request->has('schedule_date') && $request->has('schedule_time')){
-            $schedule_timestamp = strtotime("$request->schedule_date $request->schedule_time");
+        
+            $beforeschedule_time = (new Carbon("$request->schedule_date $request->schedule_time"))->subHour(1);
+            $afterschedule_time = (new Carbon("$request->schedule_date $request->schedule_time"))->addHour(1);
 
-            $beforeschedule_time = strtotime($schedule_timestamp."- 1 hour");
-            $afterschedule_time = strtotime($schedule_timestamp."+ 1 hour");
-            
             $CheckScheduling = UserRequests::where('status','SCHEDULED')
                             ->where('user_id', Auth::user()->id)
                             ->whereBetween('schedule_at',[$beforeschedule_time,$afterschedule_time])
-                            ->count();
+                            ->get();
+
 
             if($CheckScheduling > 0){
                 if($request->ajax()) {
