@@ -204,7 +204,7 @@ class FleetController extends Controller
              return back()->with('flash_error','Something Went Wrong!');
         }
     }
-    
+
     /**
      * Provider Rating.
      *
@@ -237,6 +237,9 @@ class FleetController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destory_provider_service($id){
+        if(Setting::get('demo_mode', 0) == 1) {
+            return back()->with('flash_error', 'Disabled for demo purposes! Please contact us at info@appoets.com');
+        }
         try {
             ProviderService::find($id)->delete();
             return back()->with('message', 'Service deleted successfully');

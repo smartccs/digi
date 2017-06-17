@@ -375,15 +375,15 @@ class UserApiController extends Controller
 
                 Card::where('user_id',Auth::user()->id)->update(['is_default' => 0]);
                 Card::where('card_id',$request->card_id)->update(['is_default' => 1]);
-                
             }
+
+            (new SendPushNotification)->IncomingRequest($Providers[0]->id);
 
             foreach ($Providers as $key => $Provider) {
 
                 $Filter = new RequestFilter;
                 // Send push notifications to the first provider
                 // incoming request push to provider
-                (new SendPushNotification)->IncomingRequest($Provider->id);
                 $Filter->request_id = $UserRequest->id;
                 $Filter->provider_id = $Provider->id; 
                 $Filter->save();

@@ -29,11 +29,7 @@ class SocialLoginController extends Controller
 
     public function handleFacebookCallback(Request $request){
         $AccessToken = Socialite::driver('facebook')->getAccessTokenResponse($request->code);
-        $AccessParam = array_keys($AccessToken);
-        $AccessField = array_shift($AccessParam);
-        $FacebookToken = json_decode($AccessField);
-        $token=$FacebookToken->access_token;
-        if($token){
+        if($token = $AccessToken['access_token']){
             $facebook = Socialite::driver('facebook')->userFromToken($token);
             $guard = request()->input('state');
             if($guard == 'provider') {
@@ -109,7 +105,7 @@ class SocialLoginController extends Controller
                 }
             }
         }else{
-           return redirect()->route('/register');
+           return redirect()->to('register');
         }
     }
 
@@ -271,7 +267,7 @@ class SocialLoginController extends Controller
                     }
                 }
             }else{
-               return redirect()->route('/register');
+               return redirect()->url('register');
             }
 
         } catch (Exception $e) {
