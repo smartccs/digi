@@ -67,7 +67,7 @@
     <script type="text/jsx">
 		var MainComponent = React.createClass({
 			getInitialState: function () {
-                    return {data: [], currency : "{{currency()}}"};
+                    return {data: [], currency : "{{Setting::get('currency')}}"};
                 },
 			componentDidMount: function(){
 				$.ajax({
@@ -350,10 +350,10 @@
 		            	<dl className="dl-horizontal left-right">
                             <dt>@lang('user.ride.base_price')</dt>
                             <dd>{this.props.currency}{this.props.checkState.payment.fixed}</dd>
-                            <dt>@lang('user.ride.tax_price')</dt>
-                            <dd>{this.props.currency}{this.props.checkState.payment.tax}</dd>
                             <dt>@lang('user.ride.distance_price')</dt>
                             <dd>{this.props.currency}{this.props.checkState.payment.distance}</dd>
+                            <dt>@lang('user.ride.tax_price')</dt>
+                            <dd>{this.props.currency}{this.props.checkState.payment.tax}</dd>
                             {this.props.checkState.use_wallet ?
 								<span>
 								<dt>@lang('user.ride.detection_wallet')</dt>
@@ -414,10 +414,10 @@
 		            	<dl className="dl-horizontal left-right">
                             <dt>@lang('user.ride.base_price')</dt>
                             <dd>{this.props.currency}{this.props.checkState.payment.fixed}</dd>
-                            <dt>@lang('user.ride.tax_price')</dt>
-                            <dd>{this.props.currency}{this.props.checkState.payment.tax}</dd>
                             <dt>@lang('user.ride.distance_price')</dt>
                             <dd>{this.props.currency}{this.props.checkState.payment.distance}</dd>
+                            <dt>@lang('user.ride.tax_price')</dt>
+                            <dd>{this.props.currency}{this.props.checkState.payment.tax}</dd>
                             <dt>@lang('user.ride.total')</dt>
                             {this.props.checkState.use_wallet ?
 								<span>

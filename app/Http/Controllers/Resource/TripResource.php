@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Resource;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
 use App\UserRequests;
+use Auth;
 
 class TripResource extends Controller
 {
@@ -27,7 +27,10 @@ class TripResource extends Controller
     public function Fleetindex()
     {
         try {
-            $requests = UserRequests::RequestHistory()->get();
+            $requests = UserRequests::RequestHistory()
+                        ->whereHas('provider', function($query) {
+                            $query->where('fleet', Auth::user()->id );
+                        })->get();
             return view('fleet.request.index', compact('requests'));
         } catch (Exception $e) {
             return back()->with('flash_error','Something Went Wrong!');
@@ -61,6 +64,9 @@ class TripResource extends Controller
     {
         try{
             $requests = UserRequests::where('status' , 'SCHEDULED')
+                         ->whereHas('provider', function($query) {
+                            $query->where('fleet', Auth::user()->id );
+                        })
                         ->RequestHistory()
                         ->get();
 

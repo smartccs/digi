@@ -42,11 +42,24 @@ class FleetController extends Controller
     public function dashboard()
     {
         try{
-            $rides = UserRequests::has('user')->orderBy('id','desc')->get();
-            $cancel_rides = UserRequests::where('status','CANCELLED')->count();
+
+            $getting_ride = UserRequests::has('user')
+                    ->whereHas('provider', function($query) {
+                            $query->where('fleet', Auth::user()->id );
+                        })
+                    ->orderBy('id','desc');
+
+            $rides = $getting_ride->get();
+            $all_rides = $getting_ride->get()->pluck('id');
+            $cancel_rides = UserRequests::where('status','CANCELLED') 
+                            ->whereHas('provider', function($query) {
+                                $query->where('fleet', Auth::user()->id );
+                            })->count();
+
             $service = ServiceType::count();
-            $revenue = UserRequestPayment::sum('total');
+            $revenue = UserRequestPayment::whereIn('request_id',$all_rides)->sum('total');
             $providers = Provider::where('fleet', Auth::user()->id)->take(10)->orderBy('rating','desc')->get();
+
             return view('fleet.dashboard',compact('providers','service','rides','cancel_rides','revenue'));
         }
         catch(Exception $e){
@@ -75,10 +88,12 @@ class FleetController extends Controller
 
             $Providers = Provider::where('latitude', '!=', 0)
                     ->where('longitude', '!=', 0)
+                    ->where('fleet', Auth::user()->id)
                     ->with('service')
                     ->get();
 
             $Users = User::where('latitude', '!=', 0)
+                    ->where('fleet', Auth::user()->id)
                     ->where('longitude', '!=', 0)
                     ->get();
 
@@ -189,22 +204,7 @@ class FleetController extends Controller
              return back()->with('flash_error','Something Went Wrong!');
         }
     }
-
-    /**
-     * User Rating.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function user_review()
-    {
-        try {
-            $Reviews = UserRequestRating::where('user_id', '!=', 0)->has('user', 'provider')->get();
-            return view('fleet.review.user_review',compact('Reviews'));
-        } catch(Exception $e) {
-            return back()->with('flash_error','Something Went Wrong!');
-        }
-    }
-
+    
     /**
      * Provider Rating.
      *
@@ -213,8 +213,18 @@ class FleetController extends Controller
     public function provider_review()
     {
         try {
-            $Reviews = UserRequestRating::where('provider_id','!=',0)->with('user','provider')->get();
+
+            $rides = UserRequests::whereHas('provider', function($query) {
+                            $query->where('fleet', Auth::user()->id );
+                        })->get()->pluck('id');
+
+            $Reviews = UserRequestRating::whereIn('request_id',$rides)
+                        ->where('provider_id','!=',0)
+                        ->with('user','provider')
+                        ->get();
+
             return view('fleet.review.provider_review',compact('Reviews'));
+
         } catch(Exception $e) {
             return back()->with('flash_error','Something Went Wrong!');
         }
@@ -233,61 +243,5 @@ class FleetController extends Controller
         } catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
-    }
-
-    /**
-     * Testing page for push notifications.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function push_index()
-    {
-        $data = PushNotification::app('IOSUser')
-            ->to('163e4c0ca9fe084aabeb89372cf3f664790ffc660c8b97260004478aec61212c')
-            ->send('Hello World, i`m a push message');
-        dd($data);
-
-        $data = PushNotification::app('AndroidProvider')
-            ->to('daIar7y9pME:APA91bFzpfRysjv8w5rlsH4XQbOPwHj8Djo6PxiMdn2MIDMuV3SiENuM2cRvFSv-jweMVD-Xr9dIIKIaKJrbhb6PfuETGARTboCwdh3WL7I3apUu0Q3JJkk-S4kZP41EKkqpYnEXUkBn')
-            ->send('poda panni');
-        dd($data);
-
-        $data = PushNotification::app('IOSProvider')
-            ->to('a9b9a16c5984afc0ea5b681cc51ada13fc5ce9a8c895d14751de1a2dba7994e7')
-            ->send('Hello World, i`m a push message');
-        dd($data);
-    }
-
-    /**
-     * Testing page for push notifications.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function push_store(Request $request)
-    {
-        try {
-            ProviderService::find($id)->delete();
-            return back()->with('message', 'Service deleted successfully');
-        } catch (Exception $e) {
-             return back()->with('flash_error','Something Went Wrong!');
-        }
-    }
-
-    public function privacy(){
-        return view('admin.pages.static')
-            ->with('title',"Privacy Page")
-            ->with('page', "privacy");
-    }
-
-    public function pages(Request $request){
-        $this->validate($request, [
-                'page' => 'required|in:page_privacy',
-                'content' => 'required',
-            ]);
-
-        Setting::set($request->page, $request->content);
-        Setting::save();
-
-        return back()->with('flash_success', 'Content Updated!');
     }
 }

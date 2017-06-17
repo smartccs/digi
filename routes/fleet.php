@@ -20,7 +20,6 @@ Route::group(['as' => 'provider.'], function () {
     Route::delete('provider/{provider}/service/{document}', 'Resource\ProviderFleetDocumentResource@service_destroy')->name('document.service');
 });
 
-Route::get('review/user', 'FleetController@user_review')->name('user.review');
 Route::get('user/{id}/request', 'Resource\UserResource@request')->name('user.request');
 
 Route::get('map', 'FleetController@map_index')->name('map.index');
@@ -38,6 +37,3 @@ Route::get('requests', 'Resource\TripResource@Fleetindex')->name('requests.index
 Route::delete('requests/{id}', 'Resource\TripResource@Fleetdestroy')->name('requests.destroy');
 Route::get('requests/{id}', 'Resource\TripResource@Fleetshow')->name('requests.show');
 Route::get('scheduled', 'Resource\TripResource@Fleetscheduled')->name('requests.scheduled');
-
-Route::get('push', 'FleetController@push_index')->name('push.index');
-Route::post('push', 'FleetController@push_store')->name('push.store');

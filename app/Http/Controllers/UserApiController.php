@@ -612,7 +612,7 @@ class UserApiController extends Controller
                             "&visual_refresh=true".
                             "&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude.
                             "&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude.
-                            "&path=color:0x191919|weight:8|enc:".$value->route_key.
+                            "&path=color:0x191919|weight:3|enc:".$value->route_key.
                             "&key=".env('GOOGLE_MAP_KEY');
                 }
             }
@@ -734,7 +734,7 @@ class UserApiController extends Controller
                             "&visual_refresh=true".
                             "&markers=icon:".$map_icon."%7C".$value->s_latitude.",".$value->s_longitude.
                             "&markers=icon:".$map_icon."%7C".$value->d_latitude.",".$value->d_longitude.
-                            "&path=color:0x191919|weight:8|enc:".$value->route_key.
+                            "&path=color:0x191919|weight:3|enc:".$value->route_key.
                             "&key=".env('GOOGLE_MAP_KEY');
                 }
             }

@@ -35,7 +35,6 @@
 					<span class="s-text">Ratings &amp; Reviews</span>
 				</a>
 				<ul>
-					<li><a href="{{ route('fleet.user.review') }}">User Ratings</a></li>
 					<li><a href="{{ route('fleet.provider.review') }}">Provider Ratings</a></li>
 				</ul>
 			</li>
