@@ -1,0 +1,293 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+use App\Helpers\Helper;
+
+use Auth;
+use Setting;
+use Exception;
+
+use App\User;
+use App\Fleet;
+use App\Provider;
+use App\UserPayment;
+use App\ServiceType;
+use App\UserRequests;
+use App\ProviderService;
+use App\UserRequestRating;
+use App\UserRequestPayment;
+
+class FleetController extends Controller
+{
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('fleet');
+    }
+
+
+    /**
+     * Dashboard.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function dashboard()
+    {
+        try{
+            $rides = UserRequests::has('user')->orderBy('id','desc')->get();
+            $cancel_rides = UserRequests::where('status','CANCELLED')->count();
+            $service = ServiceType::count();
+            $revenue = UserRequestPayment::sum('total');
+            $providers = Provider::where('fleet', Auth::user()->id)->take(10)->orderBy('rating','desc')->get();
+            return view('fleet.dashboard',compact('providers','service','rides','cancel_rides','revenue'));
+        }
+        catch(Exception $e){
+            return redirect()->route('fleet.user.index')->with('flash_error','Something Went Wrong with Dashboard!');
+        }
+    }
+
+    /**
+     * Map of all Users and Drivers.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function map_index()
+    {
+        return view('fleet.map.index');
+    }
+
+    /**
+     * Map of all Users and Drivers.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function map_ajax()
+    {
+        try {
+
+            $Providers = Provider::where('latitude', '!=', 0)
+                    ->where('longitude', '!=', 0)
+                    ->with('service')
+                    ->get();
+
+            $Users = User::where('latitude', '!=', 0)
+                    ->where('longitude', '!=', 0)
+                    ->get();
+
+            for ($i=0; $i < sizeof($Users); $i++) { 
+                $Users[$i]->status = 'user';
+            }
+
+            $All = $Users->merge($Providers);
+
+            return $All;
+
+        } catch (Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function profile()
+    {
+        return view('fleet.account.profile');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function profile_update(Request $request)
+    {
+        if(Setting::get('demo_mode', 0) == 1) {
+            return back()->with('flash_error', 'Disabled for demo purposes! Please contact us at info@appoets.com');
+        }
+
+        $this->validate($request,[
+            'name' => 'required|max:255',
+            'company' => 'required|max:255',
+            'mobile' => 'required|digits_between:6,13',
+            'logo' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
+        ]);
+
+        try{
+            $fleet = Auth::guard('fleet')->user();
+            $fleet->name = $request->name;
+            $fleet->mobile = $request->mobile;
+            $fleet->company = $request->company;
+            if($request->hasFile('logo')){
+                $fleet->logo = $request->logo->store('fleet/profile');  
+            }
+            $fleet->save();
+
+            return redirect()->back()->with('flash_success','Profile Updated');
+        }
+
+        catch (Exception $e) {
+             return back()->with('flash_error','Something Went Wrong!');
+        }
+        
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function password()
+    {
+        return view('fleet.account.change-password');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function password_update(Request $request)
+    {
+        if(Setting::get('demo_mode', 0) == 1) {
+            return back()->with('flash_error','Disabled for demo purposes! Please contact us at info@appoets.com');
+        }
+
+        $this->validate($request,[
+            'old_password' => 'required',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        try {
+
+           $Fleet = Fleet::find(Auth::guard('fleet')->user()->id);
+
+            if(password_verify($request->old_password, $Fleet->password))
+            {
+                $Fleet->password = bcrypt($request->password);
+                $Fleet->save();
+
+                return redirect()->back()->with('flash_success','Password Updated');
+            } else {
+                return back()->with('flash_error','Password entered doesn\'t match');
+            }
+        } catch (Exception $e) {
+             return back()->with('flash_error','Something Went Wrong!');
+        }
+    }
+
+    /**
+     * User Rating.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function user_review()
+    {
+        try {
+            $Reviews = UserRequestRating::where('user_id', '!=', 0)->has('user', 'provider')->get();
+            return view('fleet.review.user_review',compact('Reviews'));
+        } catch(Exception $e) {
+            return back()->with('flash_error','Something Went Wrong!');
+        }
+    }
+
+    /**
+     * Provider Rating.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function provider_review()
+    {
+        try {
+            $Reviews = UserRequestRating::where('provider_id','!=',0)->with('user','provider')->get();
+            return view('fleet.review.provider_review',compact('Reviews'));
+        } catch(Exception $e) {
+            return back()->with('flash_error','Something Went Wrong!');
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\ProviderService
+     * @return \Illuminate\Http\Response
+     */
+    public function destory_provider_service($id){
+        try {
+            ProviderService::find($id)->delete();
+            return back()->with('message', 'Service deleted successfully');
+        } catch (Exception $e) {
+             return back()->with('flash_error','Something Went Wrong!');
+        }
+    }
+
+    /**
+     * Testing page for push notifications.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function push_index()
+    {
+        $data = PushNotification::app('IOSUser')
+            ->to('163e4c0ca9fe084aabeb89372cf3f664790ffc660c8b97260004478aec61212c')
+            ->send('Hello World, i`m a push message');
+        dd($data);
+
+        $data = PushNotification::app('AndroidProvider')
+            ->to('daIar7y9pME:APA91bFzpfRysjv8w5rlsH4XQbOPwHj8Djo6PxiMdn2MIDMuV3SiENuM2cRvFSv-jweMVD-Xr9dIIKIaKJrbhb6PfuETGARTboCwdh3WL7I3apUu0Q3JJkk-S4kZP41EKkqpYnEXUkBn')
+            ->send('poda panni');
+        dd($data);
+
+        $data = PushNotification::app('IOSProvider')
+            ->to('a9b9a16c5984afc0ea5b681cc51ada13fc5ce9a8c895d14751de1a2dba7994e7')
+            ->send('Hello World, i`m a push message');
+        dd($data);
+    }
+
+    /**
+     * Testing page for push notifications.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function push_store(Request $request)
+    {
+        try {
+            ProviderService::find($id)->delete();
+            return back()->with('message', 'Service deleted successfully');
+        } catch (Exception $e) {
+             return back()->with('flash_error','Something Went Wrong!');
+        }
+    }
+
+    public function privacy(){
+        return view('admin.pages.static')
+            ->with('title',"Privacy Page")
+            ->with('page', "privacy");
+    }
+
+    public function pages(Request $request){
+        $this->validate($request, [
+                'page' => 'required|in:page_privacy',
+                'content' => 'required',
+            ]);
+
+        Setting::set($request->page, $request->content);
+        Setting::save();
+
+        return back()->with('flash_success', 'Content Updated!');
+    }
+}

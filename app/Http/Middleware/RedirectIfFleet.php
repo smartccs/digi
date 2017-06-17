@@ -18,7 +18,7 @@ class RedirectIfFleet
 	public function handle($request, Closure $next, $guard = 'fleet')
 	{
 	    if (Auth::guard($guard)->check()) {
-	        return redirect('fleet/home');
+	        return redirect('fleet/dashboard');
 	    }
 
 	    return $next($request);
