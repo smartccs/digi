@@ -94,7 +94,7 @@ class UserRequests extends Model
      */
     public function provider()
     {
-        return $this->belongsTo('App\Provider', 'id', 'provider_id');
+        return $this->belongsTo('App\Provider');
     }
 
     public function provider_service()
