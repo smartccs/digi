@@ -67,7 +67,6 @@ class TripResource extends Controller
                          ->whereHas('provider', function($query) {
                             $query->where('fleet', Auth::user()->id );
                         })
-                        ->RequestHistory()
                         ->get();
 
             return view('fleet.request.scheduled', compact('requests'));

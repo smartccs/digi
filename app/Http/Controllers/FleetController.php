@@ -93,7 +93,6 @@ class FleetController extends Controller
                     ->get();
 
             $Users = User::where('latitude', '!=', 0)
-                    ->where('fleet', Auth::user()->id)
                     ->where('longitude', '!=', 0)
                     ->get();
 

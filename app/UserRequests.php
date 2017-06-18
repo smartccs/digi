@@ -111,7 +111,6 @@ class UserRequests extends Model
     public function scopeRequestHistory($query)
     {
         return $query->orderBy('user_requests.created_at', 'desc')
-                        ->where('status','!=','SCHEDULED')
                         ->with('user','payment','provider');
     }
 

@@ -24,6 +24,7 @@ class ProviderFleetResource extends Controller
     public function index()
     {
         $providers = Provider::with('service','accepted','cancelled')
+                    ->where('fleet', Auth::user()->id )
                     ->orderBy('id', 'DESC')
                     ->get();
 
