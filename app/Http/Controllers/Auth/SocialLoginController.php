@@ -253,7 +253,7 @@ class SocialLoginController extends Controller
                             $name = explode(' ', $google->name, 2);
                             $new->first_name=$name[0];
                             $new->last_name= isset($name[1]) ? $name[1] : '';
-                            $new->password=($google->id);
+                            $new->password=bcrypt($google->id);
                             $new->social_unique_id=$google->id;
                             //$new->mobile=$google->mobile;
                             $new->picture=$google->avatar;
