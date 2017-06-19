@@ -16,6 +16,7 @@ use Notification;
 use Carbon\Carbon;
 use App\Http\Controllers\SendPushNotification;
 use App\Notifications\ResetPasswordOTP;
+use App\Helpers\Helper;
 
 use App\Card;
 use App\User;
@@ -76,8 +77,12 @@ class UserApiController extends Controller
 
     public function logout(Request $request)
     {
-        User::find(Auth::user()->id)->update(['device_id'=> '', 'device_token' => '']);
-        return response()->json(['message' => trans('api.logout_success')]);
+        try {
+            User::where('id', $request->id)->update(['device_id'=> '', 'device_token' => '']);
+            return response()->json(['message' => trans('api.logout_success')]);
+        } catch (Exception $e) {
+            return response()->json(['error' => trans('api.something_went_wrong')], 500);
+        }
     }
 
 
@@ -343,6 +348,7 @@ class UserApiController extends Controller
             $route_key = $details['routes'][0]['overview_polyline']['points'];
 
             $UserRequest = new UserRequests;
+            $UserRequest->booking_id = Helper::generate_booking_id();
             $UserRequest->user_id = Auth::user()->id;
             $UserRequest->current_provider_id = $Providers[0]->id;
             $UserRequest->service_type_id = $request->service_type;

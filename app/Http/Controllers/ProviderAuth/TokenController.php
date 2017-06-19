@@ -140,8 +140,12 @@ class TokenController extends Controller
 
     public function logout(Request $request)
     {
-        ProviderDevice::where('provider_id', Auth::user()->id)->update(['udid'=> '', 'token' => '']);
-        return response()->json(['message' => trans('api.logout_success')]);
+        try {
+            ProviderDevice::where('provider_id', $request->id)->update(['udid'=> '', 'token' => '']);
+            return response()->json(['message' => trans('api.logout_success')]);
+        } catch (Exception $e) {
+            return response()->json(['error' => trans('api.something_went_wrong')], 500);
+        }
     }
 
  /**

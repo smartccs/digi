@@ -75,6 +75,7 @@ return array (
   'payment_mode' => 'Payment Mode',
   'add_money' => 'Add Money',
   'date' => 'Date',
+  'booking_id' => 'Booking Id',
   'schedule_date' => 'Scheduled Date',
   'amount' => 'Total Amount',
   'type' => 'Type',

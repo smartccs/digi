@@ -130,6 +130,20 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="booking_prefix" class="col-xs-4 col-form-label">Booking ID Prefix</label>
+                            <div class="col-xs-8">
+                                <input class="form-control"
+                                    type="text"
+                                    value="{{ Setting::get('booking_prefix', '0') }}"
+                                    id="booking_prefix"
+                                    name="booking_prefix"
+                                    min="0"
+                                    max="4"
+                                    placeholder="Booking ID Prefix">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="base_price" class="col-xs-4 col-form-label">
                                 Currency ( <strong>{{ Setting::get('currency', '$')  }} </strong>)
                             </label>

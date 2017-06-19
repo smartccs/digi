@@ -50,10 +50,10 @@
                     </form>
 
                     <div class="col-md-12">
-                        <a href="{{ url('/auth/facebook') }}"><button type="submit" class="log-teal-btn">LOGIN WITH FACEBOOK</button></a>
+                        <a href="{{ url('/auth/facebook') }}"><button type="submit" class="log-teal-btn fb"><i class="fa fa-facebook"></i>LOGIN WITH FACEBOOK</button></a>
                     </div>  
                     <div class="col-md-12">
-                        <a href="{{ url('/auth/google') }}"><button type="submit" class="log-teal-btn">LOGIN WITH GOOGLE+</button></a>
+                        <a href="{{ url('/auth/google') }}"><button type="submit" class="log-teal-btn gp"><i class="fa fa-google-plus"></i>LOGIN WITH GOOGLE+</button></a>
                     </div>
 
                     <div class="col-md-12">

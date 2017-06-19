@@ -9,6 +9,7 @@ use Setting;
 use Auth;
 use Exception;
 use Carbon\Carbon;
+use App\Helpers\Helper;
 
 use App\User;
 use App\Dispatcher;
@@ -217,6 +218,7 @@ class DispatcherController extends Controller
             $route_key = $details['routes'][0]['overview_polyline']['points'];
 
             $UserRequest = new UserRequests;
+            $UserRequest->booking_id = Helper::generate_booking_id();
             $UserRequest->user_id = $User->id;
             $UserRequest->current_provider_id = 0;
             $UserRequest->service_type_id = $request->service_type;

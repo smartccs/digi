@@ -206,6 +206,7 @@
                                 <thead>
                                     <tr>
                                         <th>Pickup Time</th>
+                                        <th>Booking Id</th>
                                         <th>Vehicle</th>
                                         <th>Duration</th>
                                         <th>Status</th>
@@ -219,6 +220,7 @@
                                 @foreach($fully as $each)
                                     <tr>
                                         <td>{{date('Y D, M d - H:i A',strtotime($each->created_at))}}</td>
+                                        <td>{{ $each->booking_id }}</td>
                                         <td>
                                         	@if($each->service_type)
                                         		{{$each->service_type->name}}

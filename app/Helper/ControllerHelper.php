@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use File;
+use Setting;
 
 class Helper
 {
@@ -28,6 +29,10 @@ class Helper
     public static function delete_picture($picture) {
         File::delete( public_path() . "/uploads/" . basename($picture));
         return true;
+    }
+
+    public static function generate_booking_id() {
+        return Setting::get('booking_prefix').mt_rand(100000, 999999);
     }
 
 }

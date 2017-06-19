@@ -122,6 +122,10 @@ class SettingsTableSeeder extends Seeder
                 'key' => 'demo_mode',
                 'value' => 0
             ],
+            [
+                'key' => 'booking_prefix',
+                'value' => 'TRNX'
+            ],
         ]);
     }
 }
