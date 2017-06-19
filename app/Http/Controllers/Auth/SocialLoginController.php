@@ -189,7 +189,6 @@ class SocialLoginController extends Controller
     }
 
     public function handleGoogleCallback(){
-
         try{
             $google = Socialite::driver('google')->user();
             if($google){

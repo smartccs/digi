@@ -52,9 +52,9 @@
                     <div class="col-md-12">
                         <a href="{{ url('/auth/facebook') }}"><button type="submit" class="log-teal-btn">LOGIN WITH FACEBOOK</button></a>
                     </div>  
-                    <!-- <div class="col-md-12">
+                    <div class="col-md-12">
                         <a href="{{ url('/auth/google') }}"><button type="submit" class="log-teal-btn">LOGIN WITH GOOGLE+</button></a>
-                    </div> -->
+                    </div>
 
                     <div class="col-md-12">
                         <p class="helper"> <a href="{{ url('/password/reset') }}">Forgot Password</a></p>   
