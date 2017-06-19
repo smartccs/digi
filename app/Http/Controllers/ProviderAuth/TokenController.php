@@ -236,7 +236,7 @@ class TokenController extends Controller
                 $name = explode(' ', $FacebookDrive->name, 2);
                 $AuthUser["first_name"]=$name[0];
                 $AuthUser["last_name"]=isset($name[1]) ? $name[1] : '';
-                $AuthUser["password"]=$FacebookDrive->id;
+                $AuthUser["password"]=bcrypt($FacebookDrive->id);
                 $AuthUser["social_unique_id"]=$FacebookDrive->id;
                 $AuthUser["avatar"]=$FacebookDrive->avatar;
                 $AuthUser["login_by"]="facebook";
@@ -325,7 +325,7 @@ class TokenController extends Controller
                 $name = explode(' ', $GoogleDrive->name, 2);
                 $AuthUser["first_name"]=$name[0];
                 $AuthUser["last_name"]=isset($name[1]) ? $name[1] : '';
-                $AuthUser["password"]=$GoogleDrive->id;
+                $AuthUser["password"]=($GoogleDrive->id);
                 $AuthUser["social_unique_id"]=$GoogleDrive->id;
                 $AuthUser["avatar"]=$GoogleDrive->avatar;
                 $AuthUser["login_by"]="google";
@@ -342,7 +342,7 @@ class TokenController extends Controller
                     ]);
                 }
             }    
-            if($AuthUser){ 
+            if($AuthUser){
                 $userToken = JWTAuth::fromUser($AuthUser);
                 $User = Provider::with('service', 'device')->find($AuthUser->id);
                 if($User->device) {

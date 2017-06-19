@@ -50,7 +50,7 @@ class SocialLoginController extends Controller
                         $name = explode(' ', $facebook->name, 2);
                         $new->first_name=$name[0];
                         $new->last_name= isset($name[1]) ? $name[1] : '';
-                        $new->password=$facebook->id;
+                        $new->password=bcrypt($facebook->id);
                         $new->social_unique_id=$facebook->id;
                         //$new->mobile=$facebook->mobile;
                         $new->avatar=$facebook->avatar;
@@ -91,7 +91,7 @@ class SocialLoginController extends Controller
                         $name = explode(' ', $facebook->name, 2);
                         $new->first_name=$name[0];
                         $new->last_name= isset($name[1]) ? $name[1] : '';
-                        $new->password=$facebook->id;
+                        $new->password=bcrypt($facebook->id);
                         $new->social_unique_id=$facebook->id;
                         //$new->mobile=$facebook->mobile;
                         $new->picture=$facebook->avatar;
@@ -155,7 +155,7 @@ class SocialLoginController extends Controller
                 $name = explode(' ', $FacebookDrive->name, 2);
                 $AuthUser->first_name=$name[0];
                 $AuthUser->last_name= isset($name[1]) ? $name[1] : '';
-                $AuthUser->password=$FacebookDrive->id;
+                $AuthUser->password=bcrypt($FacebookDrive->id);
                 $AuthUser->social_unique_id=$FacebookDrive->id;
                 $AuthUser->device_type=$request->device_type;
                 $AuthUser->device_token=$request->device_token;
@@ -165,7 +165,7 @@ class SocialLoginController extends Controller
                 $AuthUser->login_by="facebook";
                 $AuthUser->save();
             }    
-            if($AuthUser){ 
+            if($AuthUser){
                 $userToken = $AuthUser->token()?:$AuthUser->createToken('socialLogin');
                 return response()->json([
                         "status" => true,
@@ -212,7 +212,7 @@ class SocialLoginController extends Controller
                             $name = explode(' ', $google->name, 2);
                             $new->first_name=$name[0];
                             $new->last_name= isset($name[1]) ? $name[1] : '';
-                            $new->password=$google->id;
+                            $new->password=bcrypt($google->id);
                             $new->social_unique_id=$google->id;
                             //$new->mobile=$google->mobile;
                             $new->avatar=$google->avatar;
@@ -253,7 +253,7 @@ class SocialLoginController extends Controller
                             $name = explode(' ', $google->name, 2);
                             $new->first_name=$name[0];
                             $new->last_name= isset($name[1]) ? $name[1] : '';
-                            $new->password=$google->id;
+                            $new->password=($google->id);
                             $new->social_unique_id=$google->id;
                             //$new->mobile=$google->mobile;
                             $new->picture=$google->avatar;
@@ -320,7 +320,7 @@ class SocialLoginController extends Controller
                 $name = explode(' ', $GoogleDrive->name, 2);
                 $AuthUser->first_name=$name[0];
                 $AuthUser->last_name= isset($name[1]) ? $name[1] : '';
-                $AuthUser->password=$GoogleDrive->id;
+                $AuthUser->password=bcrypt($GoogleDrive->id);
                 $AuthUser->social_unique_id=$GoogleDrive->id;
                 $AuthUser->device_type=$request->device_type;
                 $AuthUser->device_token=$request->device_token;
