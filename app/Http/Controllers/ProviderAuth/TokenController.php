@@ -132,6 +132,18 @@ class TokenController extends Controller
         return response()->json($User);
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function logout(Request $request)
+    {
+        ProviderDevice::where('provider_id', Auth::user()->id)->update(['udid'=> '', 'token', '']);
+        return response()->json(['message' => trans('api.logout_success')]);
+    }
+
  /**
      * Forgot Password.
      *

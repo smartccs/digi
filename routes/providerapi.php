@@ -14,6 +14,7 @@
 // Authentication
 Route::post('/register' , 'ProviderAuth\TokenController@register');
 Route::post('/oauth/token' , 'ProviderAuth\TokenController@authenticate');
+Route::post('/logout' , 'ProviderAuth\TokenController@logout');
 
 Route::post('/auth/facebook', 'ProviderAuth\TokenController@facebookViaAPI');
 Route::post('/auth/google', 'ProviderAuth\TokenController@googleViaAPI');

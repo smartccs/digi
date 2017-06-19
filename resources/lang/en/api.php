@@ -22,6 +22,7 @@ return array (
 		'request_already_scheduled' => 'Ride Already Scheduled',
 	],
 	'something_went_wrong' => 'Something Went Wrong',
+	'logout_success' => 'Logged out Successfully',
 	'services_not_found' => 'Services Not Found',
 	'promocode_applied' => 'Promocode Applied',
 	'promocode_expired' => 'Promocode Expired',
