@@ -14,7 +14,7 @@ class AddFleetToProvidersTable extends Migration
     public function up()
     {
         Schema::table('providers', function (Blueprint $table) {
-            $table->integer('fleet')->nullable()->after('status');
+            $table->integer('fleet')->default(0)->after('status');
         });
     }
 
