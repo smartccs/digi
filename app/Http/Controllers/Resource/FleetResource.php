@@ -8,6 +8,7 @@ use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Controllers\Controller;
 use Exception;
+use Setting;
 
 class FleetResource extends Controller
 {

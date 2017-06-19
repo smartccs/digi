@@ -32,5 +32,7 @@ Route::post('/profile', 'ProviderResources\ProfileController@store')->name('prof
 Route::get('/location', 'ProviderController@location_edit')->name('location.index');
 Route::post('/location', 'ProviderController@location_update')->name('location.update');
 
-Route::get('/profile/password', 'ProviderController@index')->name('password');
+Route::get('/profile/password', 'ProviderController@change_password')->name('change.password');
+Route::post('/change/password', 'ProviderController@update_password')->name('password.update');
+
 Route::post('/profile/available', 'ProviderController@available')->name('available');

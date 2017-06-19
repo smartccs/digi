@@ -368,9 +368,9 @@ class TripController extends Controller
 
             if($request->status == 'DROPPED') {
                 $UserRequest->finished_at = Carbon::now();
+                $UserRequest->save();
                 $UserRequest->with('user')->findOrFail($id);
                 $UserRequest->invoice = $this->invoice($id);
-                return $UserRequest;
             }
 
             $UserRequest->save();

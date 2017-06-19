@@ -9,6 +9,7 @@ use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Controllers\Controller;
 use Exception;
+use Setting;
 
 class UserResource extends Controller
 {
@@ -177,7 +178,7 @@ class UserResource extends Controller
                     ->RequestHistory()
                     ->get();
 
-            return view('admin.request.request-history', compact('requests'));
+            return view('admin.request.index', compact('requests'));
         }
 
         catch (Exception $e) {
