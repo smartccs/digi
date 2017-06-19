@@ -68,6 +68,18 @@ class UserApiController extends Controller
         }
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function logout(Request $request)
+    {
+        User::find(Auth::user()->id)->update(['device_id'=> '', 'device_token' => '']);
+        return response()->json(['message' => trans('api.logout_success')]);
+    }
+
 
     /**
      * Show the application dashboard.
