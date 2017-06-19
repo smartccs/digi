@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use App\ProviderProfile;
 use App\UserRequests;
 use App\ProviderService;
+use App\Fleet;
 
 class ProfileController extends Controller
 {
@@ -37,10 +38,19 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        Auth::user()->service = ProviderService::where('provider_id',Auth::user()->id)
-                                        ->with('service_type')
-                                        ->first();
-        return Auth::user();
+        try {
+
+            Auth::user()->service = ProviderService::where('provider_id',Auth::user()->id)
+                                            ->with('service_type')
+                                            ->first();
+            Auth::user()->fleet = Fleet::find(Auth::user()->fleet);
+            Auth::user()->currency = Setting::get('currency', '$');
+
+            return Auth::user();
+
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     /**
