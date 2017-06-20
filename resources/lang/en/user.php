@@ -22,6 +22,7 @@ return array (
     'name' => 'Name',
   ),
   'cash' => 'CASH',
+  'booking_id' => 'Booking ID',
   'service_number' => 'Car Number',
   'service_model' => 'Car Model',
   'card' => 

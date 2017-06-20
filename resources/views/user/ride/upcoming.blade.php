@@ -20,6 +20,7 @@
                     <thead>
                         <tr>
                             <th>&nbsp;</th>
+                            <th>@lang('user.booking_id')</th>
                             <th>@lang('user.schedule_date')</th>
                             <th>@lang('user.type')</th>
                             <th>@lang('user.payment')</th>
@@ -31,6 +32,7 @@
 
                         <tr data-toggle="collapse" data-target="#trip_{{$trip->id}}" class="accordion-toggle collapsed">
                             <td><span class="arrow-icon fa fa-chevron-right"></span></td>
+                            <td>{{$trip->booking_id}}</td>
                             <td>{{date('d-m-Y H:i:s',strtotime($trip->schedule_at))}}</td>
                             <td>{{$trip->service_type->name}}</td>
                             <td>@lang('user.paid_via') {{$trip->payment_mode}}</td>
@@ -42,7 +44,7 @@
                                         <div class="my-trip-left">
                                         <?php 
                                     $map_icon = asset('asset/img/marker-start.png');
-                                    $static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=600x450&maptype=roadmap&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$trip->s_latitude.",".$trip->s_longitude."&markers=icon:".$map_icon."%7C".$trip->d_latitude.",".$trip->d_longitude."&path=color:0x191919|weight:8|".$trip->s_latitude.",".$trip->s_longitude."|".$trip->d_latitude.",".$trip->d_longitude."&key=".env('GOOGLE_MAP_KEY'); ?>
+                                    $static_map = "https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=600x450&maptype=terrain&format=png&visual_refresh=true&markers=icon:".$map_icon."%7C".$trip->s_latitude.",".$trip->s_longitude."&markers=icon:".$map_icon."%7C".$trip->d_latitude.",".$trip->d_longitude."&path=color:0x191919|weight:8|enc:".$trip->route_key."&key=".env('GOOGLE_MAP_KEY'); ?>
                                             <div class="map-static" style="background-image: url({{$static_map}});">
                                                 
                                             </div>
