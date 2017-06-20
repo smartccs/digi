@@ -14,7 +14,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Request Id</th>
+                            <th>Booking Id</th>
                             <th>User Name</th>
                             <th>Provider Name</th>
                             <th>Scheduled Date & Time</th>
@@ -29,7 +29,7 @@
                         <tr>
                             <td>{{$index + 1}}</td>
 
-                            <td>{{$request->id}}</td>
+                            <td>{{$request->booking_id}}</td>
                             <td>{{$request->user->first_name}} {{$request->user->last_name}}</td>
                             <td>
                                 @if($request->provider_id)

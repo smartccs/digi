@@ -1,4 +1,4 @@
-@extends('fleet.layout.base')
+@extends('account.layout.base')
 
 @section('title', 'Request details ')
 
@@ -7,9 +7,6 @@
     <div class="container-fluid">
         <div class="box box-block bg-white">
             <h4>Request details</h4>
-            <a href="{{ route('fleet.requests.index') }}" class="btn btn-default pull-right">
-                <i class="fa fa-angle-left"></i> Back
-            </a>
             <div class="row">
                 <div class="col-md-6">
                     <dl class="row">
