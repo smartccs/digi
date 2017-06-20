@@ -67,6 +67,21 @@
 					<li><a href="{{ route('admin.fleet.create') }}">Add New Fleet Owner</a></li>
 				</ul>
 			</li>
+			<li class="menu-title">Accounts</li>
+			<li class="with-sub">
+				<a href="#" class="waves-effect  waves-light">
+					<span class="s-caret"><i class="fa fa-angle-down"></i></span>
+					<span class="s-icon"><i class="ti-crown"></i></span>
+					<span class="s-text">Statements</span>
+				</a>
+				<ul>
+					<li><a href="{{ route('admin.ride.statement') }}">Overall Ride Statments</a></li>
+					<li><a href="{{ route('admin.ride.statement.provider') }}">Provider Statement</a></li>
+					<li><a href="{{ route('admin.ride.statement.today') }}">Daily Statement</a></li>
+					<li><a href="{{ route('admin.ride.statement.monthly') }}">Monthly Statement</a></li>
+					<li><a href="{{ route('admin.ride.statement.yearly') }}">Yearly Statement</a></li>
+				</ul>
+			</li>
 			<li class="menu-title">Details</li>
 			<li>
 				<a href="{{ route('admin.map.index') }}" class="waves-effect waves-light">

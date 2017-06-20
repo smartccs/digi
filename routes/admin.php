@@ -32,6 +32,7 @@ Route::group(['as' => 'provider.'], function () {
     Route::get('provider/{id}/approve', 'Resource\ProviderResource@approve')->name('approve');
     Route::get('provider/{id}/disapprove', 'Resource\ProviderResource@disapprove')->name('disapprove');
     Route::get('provider/{id}/request', 'Resource\ProviderResource@request')->name('request');
+    Route::get('provider/{id}/statement', 'Resource\ProviderResource@statement')->name('statement');
     Route::resource('provider/{provider}/document', 'Resource\ProviderDocumentResource');
     Route::delete('provider/{provider}/service/{document}', 'Resource\ProviderDocumentResource@service_destroy')->name('document.service');
 });
@@ -54,6 +55,15 @@ Route::get('password', 'AdminController@password')->name('password');
 Route::post('password', 'AdminController@password_update')->name('password.update');
 
 Route::get('payment', 'AdminController@payment')->name('payment');
+
+// statements
+
+Route::get('/statement', 'AdminController@statement')->name('ride.statement');
+Route::get('/statement/provider', 'AdminController@statement_provider')->name('ride.statement.provider');
+Route::get('/statement/today', 'AdminController@statement_today')->name('ride.statement.today');
+Route::get('/statement/monthly', 'AdminController@statement_monthly')->name('ride.statement.monthly');
+Route::get('/statement/yearly', 'AdminController@statement_yearly')->name('ride.statement.yearly');
+
 
 // Static Pages - Post updates to pages.update when adding new static pages.
 

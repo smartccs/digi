@@ -9,6 +9,7 @@ use App\Helpers\Helper;
 use Auth;
 use Setting;
 use Exception;
+use \Carbon\Carbon;
 
 use App\User;
 use App\Admin;
@@ -406,11 +407,6 @@ class AdminController extends Controller
             ->send('Hello World, i`m a push message');
         dd($data);
 
-        $data = PushNotification::app('AndroidProvider')
-            ->to('daIar7y9pME:APA91bFzpfRysjv8w5rlsH4XQbOPwHj8Djo6PxiMdn2MIDMuV3SiENuM2cRvFSv-jweMVD-Xr9dIIKIaKJrbhb6PfuETGARTboCwdh3WL7I3apUu0Q3JJkk-S4kZP41EKkqpYnEXUkBn')
-            ->send('poda panni');
-        dd($data);
-
         $data = PushNotification::app('IOSProvider')
             ->to('a9b9a16c5984afc0ea5b681cc51ada13fc5ce9a8c895d14751de1a2dba7994e7')
             ->send('Hello World, i`m a push message');
@@ -432,12 +428,25 @@ class AdminController extends Controller
         }
     }
 
+    /**
+     * privacy.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+
     public function privacy(){
         return view('admin.pages.static')
             ->with('title',"Privacy Page")
             ->with('page', "privacy");
     }
 
+    /**
+     * pages.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
     public function pages(Request $request){
         $this->validate($request, [
                 'page' => 'required|in:page_privacy',
@@ -448,5 +457,130 @@ class AdminController extends Controller
         Setting::save();
 
         return back()->with('flash_success', 'Content Updated!');
+    }
+
+    /**
+     * account statements.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function statement($type = 'individual'){
+
+        try{
+
+            $page = 'Ride Statement';
+
+            if($type == 'individual'){
+                $page = 'Provider Ride Statement';
+            }elseif($type == 'today'){
+                $page = 'Today Statement - '. date('d M Y');
+            }elseif($type == 'monthly'){
+                $page = 'This Month Statement - '. date('F');
+            }elseif($type == 'yearly'){
+                $page = 'This Year Statement - '. date('Y');
+            }
+
+            $rides = UserRequests::with('payment')->orderBy('id','desc');
+            $cancel_rides = UserRequests::where('status','CANCELLED');
+            $revenue = UserRequestPayment::select(\DB::raw(
+                           'SUM(ROUND(fixed) + ROUND(distance)) as overall, SUM(ROUND(commision)) as commission' 
+                       ));
+
+            if($page == 'today'){
+
+                $rides->where('created_at', '>=', Carbon::today());
+                $cancel_rides->where('created_at', '>=', Carbon::today());
+                $revenue->where('created_at', '>=', Carbon::today());
+
+            }elseif($page == 'monthly'){
+
+                $rides->where('created_at', '>=', Carbon::now()->month);
+                $cancel_rides->where('created_at', '>=', Carbon::now()->month);
+                $revenue->where('created_at', '>=', Carbon::now()->month);
+
+            }elseif($page == 'yearly'){
+
+                $rides->where('created_at', '>=', Carbon::now()->year);
+                $cancel_rides->where('created_at', '>=', Carbon::now()->year);
+                $revenue->where('created_at', '>=', Carbon::now()->year);
+
+            }
+
+            $rides = $rides->get();
+            $cancel_rides = $cancel_rides->count();
+            $revenue = $revenue->get();
+
+            return view('admin.providers.statement', compact('rides','cancel_rides','revenue'))
+                    ->with('page',$page);
+
+        } catch (Exception $e) {
+            return back()->with('flash_error','Something Went Wrong!');
+        }
+    }
+
+
+    /**
+     * account statements today.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function statement_today(){
+        return $this->statement('today');
+    }
+
+    /**
+     * account statements monthly.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function statement_monthly(){
+        return $this->statement('monthly');
+    }
+
+     /**
+     * account statements monthly.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function statement_yearly(){
+        return $this->statement('yearly');
+    }
+
+
+    /**
+     * account statements.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function statement_provider(){
+
+        try{
+
+            $Providers = Provider::all();
+
+            foreach($Providers as $index => $Provider){
+
+                $Rides = UserRequests::where('provider_id',$Provider->id)
+                            ->where('status','<>','CANCELLED')
+                            ->get()->pluck('id');
+
+                $Providers[$index]->rides_count = $Rides->count();
+
+                $Providers[$index]->payment = UserRequestPayment::whereIn('request_id', $Rides)
+                                ->select(\DB::raw(
+                                   'SUM(ROUND(fixed) + ROUND(distance)) as overall, SUM(ROUND(commision)) as commission' 
+                                ))->get();
+            }
+
+            return view('admin.providers.provider-statement', compact('Providers'))->with('page','Providers Statement');
+
+        } catch (Exception $e) {
+            return back()->with('flash_error','Something Went Wrong!');
+        }
     }
 }

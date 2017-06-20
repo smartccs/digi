@@ -27,7 +27,13 @@
                 @foreach($requests as $index => $request)
                     <tr>
                         <td>{{ $request->id }}</td>
-                        <td>{{ $request->user->first_name }} {{ $request->user->last_name }}</td>
+                        <td>
+                            @if($request->provider)
+                                {{ $request->user->first_name }} {{ $request->user->last_name }}
+                            @else
+                                N/A
+                            @endif
+                        </td>
                         <td>
                             @if($request->provider)
                                 {{ $request->provider->first_name }} {{ $request->provider->last_name }}
@@ -35,7 +41,13 @@
                                 N/A
                             @endif
                         </td>
-                        <td>{{ $request->created_at }}</td>
+                        <td>
+                            @if($request->created_at)
+                                <span class="text-muted">{{$request->created_at->diffForHumans()}}</span>
+                            @else
+                                -
+                            @endif
+                        </td>
                         <td>{{ $request->status }}</td>
                         <td>
                             @if($request->payment != "")

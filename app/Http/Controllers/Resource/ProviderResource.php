@@ -10,6 +10,7 @@ use DB;
 use Exception;
 
 use App\Provider;
+use App\UserRequestPayment;
 use App\UserRequests;
 use App\Helpers\Helper;
 
@@ -234,6 +235,35 @@ class ProviderResource extends Controller
                     ->get();
 
             return view('admin.request.index', compact('requests'));
+        } catch (Exception $e) {
+            return back()->with('flash_error','Something Went Wrong!');
+        }
+    }
+
+    /**
+     * account statements.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function statement($id){
+
+        try{
+
+            $requests = UserRequests::where('provider_id',$id)
+                        ->where('status','COMPLETED')
+                        ->with('payment')
+                        ->get();
+
+            $rides = UserRequests::where('provider_id',$id)->with('payment')->orderBy('id','desc')->paginate(10);
+            $cancel_rides = UserRequests::where('status','CANCELLED')->where('provider_id',$id)->count();
+            $revenue = UserRequestPayment::whereHas('request', function($query) use($id) {
+                                    $query->where('provider_id', $id );
+                                })->select(\DB::raw(
+                                   'SUM(ROUND(fixed) + ROUND(distance)) as overall, SUM(ROUND(commision)) as commission' 
+                               ))->get();
+
+            return view('admin.providers.statement', compact('rides','cancel_rides','revenue'))->with('page','Provider Statement');
         } catch (Exception $e) {
             return back()->with('flash_error','Something Went Wrong!');
         }

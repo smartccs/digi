@@ -33,4 +33,20 @@ class UserRequestPayment extends Model
     protected $hidden = [
         'status', 'password', 'remember_token', 'created_at', 'updated_at'
     ];
+
+    /**
+     * The services that belong to the user.
+     */
+    public function request()
+    {
+        return $this->belongsTo('App\UserRequests');
+    }
+
+    /**
+     * The services that belong to the user.
+     */
+    public function provider()
+    {
+        return $this->belongsTo('App\Provider');
+    }
 }
