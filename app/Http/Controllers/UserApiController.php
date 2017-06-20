@@ -178,6 +178,7 @@ class UserApiController extends Controller
                 $user->save();
 
                 $user->currency = Setting::get('currency');
+                $user->sos = Setting::get('sos_number', '911');
                 return $user;
 
             } else {
@@ -436,8 +437,8 @@ class UserApiController extends Controller
     public function cancel_request(Request $request) {
 
         $this->validate($request, [
-                'request_id' => 'required|numeric|exists:user_requests,id,user_id,'.Auth::user()->id,
-            ]);
+            'request_id' => 'required|numeric|exists:user_requests,id,user_id,'.Auth::user()->id,
+        ]);
 
         try{
 
@@ -454,7 +455,14 @@ class UserApiController extends Controller
 
             if(in_array($UserRequest->status, ['SEARCHING','STARTED','ARRIVED','SCHEDULED'])) {
 
+                if($UserRequest->status != 'SEARCHING'){
+                    $this->validate($request, [
+                        'cancel_reason'=> 'max:255',
+                    ]);
+                }
+
                 $UserRequest->status = 'CANCELLED';
+                $UserRequest->cancel_reason = $request->cancel_reason;
                 $UserRequest->cancelled_by = 'USER';
                 $UserRequest->save();
 

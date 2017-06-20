@@ -126,6 +126,10 @@ class SettingsTableSeeder extends Seeder
                 'key' => 'booking_prefix',
                 'value' => 'TRNX'
             ],
+            [
+                'key' => 'sos_number',
+                'value' => '911'
+            ],
         ]);
     }
 }

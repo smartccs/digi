@@ -58,6 +58,19 @@
             </span>
         @endif
 
+        <select class="form-control" name="service_type" id="service_type">
+            <option value="">Select Service</option>
+            @foreach(get_all_service_types() as $type)
+                <option value="{{$type->id}}">{{$type->name}}</option>
+            @endforeach
+        </select>
+
+        @if ($errors->has('service_type'))
+            <span class="help-block">
+                <strong>{{ $errors->first('service_type') }}</strong>
+            </span>
+        @endif
+
         <button type="submit" class="log-teal-btn">
             Register
         </button>

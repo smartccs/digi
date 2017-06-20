@@ -95,6 +95,9 @@ class TripController extends Controller
      */
     public function cancel(Request $request)
     {
+        $this->validate($request, [
+            'cancel_reason'=> 'max:255',
+        ]);
         try{
 
             $UserRequest = UserRequests::findOrFail($request->id);
@@ -105,6 +108,7 @@ class TripController extends Controller
             }
 
             $UserRequest->status = "CANCELLED";
+            $UserRequest->cancel_reason = $request->cancel_reason;
             $UserRequest->cancelled_by = "PROVIDER";
             $UserRequest->save();
 

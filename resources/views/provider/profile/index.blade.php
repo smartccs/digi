@@ -117,6 +117,21 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="row no-margin">
+                                    <div class="prof-sub-col col-sm-6 col-xs-12 no-left-padding">
+                                        <div class="form-group no-margin">
+                                            <label>Car Number</label>
+                                            <input type="text" class="form-control" placeholder="Car Number" name="service_number" value="{{ Auth::guard('provider')->user()->service->service_number ? Auth::guard('provider')->user()->service->service_number : "" }}">
+                                        </div>
+                                    </div>
+                                    <div class="prof-sub-col col-sm-6 col-xs-12 no-right-padding">
+                                        <div class="form-group">
+                                            <label>Car Model</label>
+                                            <input type="text"  placeholder="Car Model" class="form-control" name="service_model" value="{{ Auth::guard('provider')->user()->service->service_model ? Auth::guard('provider')->user()->service->service_model : "" }}">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <!-- End of prof-sub-sec -->
 

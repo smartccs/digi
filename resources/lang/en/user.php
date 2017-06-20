@@ -62,6 +62,7 @@ return array (
     'promotion_applied' => 'Promotion Applied',
     'request_inprogress' => 'Ride Already in Progress',
     'request_scheduled' => 'Ride Already Scheduled on this time',
+    'cancel_reason' => 'Cancel Reason',
   ),
   'dashboard' => 'Dashboard',
   'payment' => 'Payment',

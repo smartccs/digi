@@ -111,6 +111,7 @@ class TokenController extends Controller
 
         $User->access_token = $token;
         $User->currency = Setting::get('currency', '$');
+        $User->sos = Setting::get('sos_number', '911');
 
         if($User->device) {
             if($User->device->token != $request->token) {
@@ -292,7 +293,8 @@ class TokenController extends Controller
                             "status" => true,
                             "token_type" => "Bearer",
                             "access_token" => $userToken,
-                            'currency' => Setting::get('currency', '$')
+                            'currency' => Setting::get('currency', '$'),
+                            'sos' => Setting::get('sos_number', '911')
                         ]);
             }else{
                 return response()->json(['status'=>false,'message' => "Invalid credentials!"]);
@@ -381,7 +383,8 @@ class TokenController extends Controller
                             "status" => true,
                             "token_type" => "Bearer",
                             "access_token" => $userToken,
-                            'currency' => Setting::get('currency', '$')
+                            'currency' => Setting::get('currency', '$'),
+                            'sos' => Setting::get('sos_number', '911')
                         ]);
             }else{
                 return response()->json(['status'=>false,'message' => "Invalid credentials!"]);
