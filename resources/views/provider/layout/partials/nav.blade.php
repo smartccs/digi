@@ -3,15 +3,15 @@
         <li>
             <a href="{{ route('provider.earnings') }}">Patner Earnings</a>
         </li>
-        <li>
+        <!-- <li>
             <a href="#">Invite</a>
-        </li>
+        </li> -->
         <li>
             <a href="{{ route('provider.profile.index') }}">Profile</a>
         </li>
-        <li>
+        <!-- <li>
             <a href="#">Help</a>
-        </li>
+        </li> -->
         <li>
             <a href="{{ url('/provider/logout') }}"
                 onclick="event.preventDefault();
