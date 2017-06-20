@@ -22,7 +22,7 @@ Route::delete('/request/{id}', 'ProviderController@reject')->name('reject');
 
 Route::get('/earnings', 'ProviderController@earnings')->name('earnings');
 Route::get('/upcoming', 'ProviderController@upcoming_trips')->name('upcoming');
-Route::get('/cancel', 'ProviderController@cancel')->name('cancel');
+Route::post('/cancel', 'ProviderController@cancel')->name('cancel');
 
 Route::resource('documents', 'ProviderResources\DocumentController');
 
@@ -32,5 +32,7 @@ Route::post('/profile', 'ProviderResources\ProfileController@store')->name('prof
 Route::get('/location', 'ProviderController@location_edit')->name('location.index');
 Route::post('/location', 'ProviderController@location_update')->name('location.update');
 
-Route::get('/profile/password', 'ProviderController@index')->name('password');
+Route::get('/profile/password', 'ProviderController@change_password')->name('change.password');
+Route::post('/change/password', 'ProviderController@update_password')->name('password.update');
+
 Route::post('/profile/available', 'ProviderController@available')->name('available');

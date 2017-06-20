@@ -76,6 +76,13 @@
 				</div>
 
 				<div class="form-group row">
+					<label for="sos_number" class="col-xs-2 col-form-label">SOS Number</label>
+					<div class="col-xs-10">
+						<input class="form-control" type="number" value="{{ Setting::get('sos_number', '911')  }}" name="sos_number" required id="sos_number" placeholder="SOS Number">
+					</div>
+				</div>
+
+				<div class="form-group row">
 					<label for="zipcode" class="col-xs-2 col-form-label"></label>
 					<div class="col-xs-10">
 						<button type="submit" class="btn btn-primary">Update Site Settings</button>

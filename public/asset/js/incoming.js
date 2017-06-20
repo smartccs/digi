@@ -222,11 +222,45 @@ class TripEmptyOffline extends React.Component {
 };
 
 class TripArrivedButton extends React.Component {
+    
+    constructor(props) {
+        super(props);
+        this.state = {
+            reason: ''
+        };
+
+        this.handleCancelReason = this.handleCancelReason.bind(this);
+    }
+
+    handleCancelButton(event) {
+        this.props.cancel(this.state.reason);
+    }
+
+    handleCancelReason(event) {
+        this.setState({reason: event.target.value});
+    }
+
     render() {
         return (
             <div>
                 <button type="submit" className="full-primary-btn fare-btn" onClick={this.props.submit.bind(this)}>Arrived</button>
-                <button type="submit" className="full-primary-btn fare-btn reg-btn" onClick={this.props.cancel.bind(this)}>Cancel</button>
+                <div id="cancel-reason" className="modal fade" role="dialog">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal">&times;</button>
+                                <h4 className="modal-title">Cancel Reason</h4>
+                            </div>
+                            <div className="modal-body">
+                                <textarea className="form-control" onChange={this.handleCancelReason} name="cancel_reason" placeholder="Cancel Reason">{this.state.reason}</textarea>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="submit" className="full-primary-btn fare-btn reg-btn" onClick={this.handleCancelButton.bind(this)}>Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" className="full-primary-btn fare-btn reg-btn" data-toggle="modal" data-target="#cancel-reason">Cancel</button>
             </div>
         );
     }    
@@ -471,18 +505,20 @@ class TripComponent extends React.Component {
         });
     }
 
-    _cancel(event) {
-        event.preventDefault();
+    _cancel(reason) {
+        // event.preventDefault();
+        console.log("Reason", reason);
         $.ajax({
-            url: '/provider/request/'+this.props.request.id,
+            url: '/provider/cancel',
             dataType: 'json',
+            data: {cancel_reason:reason, id: this.props.request.id},
             headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken },
             type: 'POST',
             success: function(data) {
-                console.log('Accept', data);
+                window.location.replace("/provider");
             }.bind(this),
-            error: function(xhr, status, err) {
-                console.error(this.props.url, status, err.toString());
+            error: function(xhr) {
+                window.location.replace("/provider");
             }.bind(this)
         });
     }

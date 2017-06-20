@@ -1,6 +1,7 @@
 <?php
 
-use App\PromocodeUsage; 
+use App\PromocodeUsage;
+use App\ServiceType;
 
 function currency($value = '')
 {
@@ -51,4 +52,9 @@ function curl($url)
     $return = curl_exec($ch);
     curl_close ($ch);
     return $return;
+}
+
+function get_all_service_types()
+{
+	return ServiceType::all();
 }

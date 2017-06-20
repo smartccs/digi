@@ -111,6 +111,7 @@ class TokenController extends Controller
 
         $User->access_token = $token;
         $User->currency = Setting::get('currency', '$');
+        $User->sos = Setting::get('sos_number', '911');
 
         if($User->device) {
             if($User->device->token != $request->token) {
@@ -140,8 +141,12 @@ class TokenController extends Controller
 
     public function logout(Request $request)
     {
-        ProviderDevice::where('provider_id', Auth::user()->id)->update(['udid'=> '', 'token' => '']);
-        return response()->json(['message' => trans('api.logout_success')]);
+        try {
+            ProviderDevice::where('provider_id', $request->id)->update(['udid'=> '', 'token' => '']);
+            return response()->json(['message' => trans('api.logout_success')]);
+        } catch (Exception $e) {
+            return response()->json(['error' => trans('api.something_went_wrong')], 500);
+        }
     }
 
  /**
@@ -288,7 +293,8 @@ class TokenController extends Controller
                             "status" => true,
                             "token_type" => "Bearer",
                             "access_token" => $userToken,
-                            'currency' => Setting::get('currency', '$')
+                            'currency' => Setting::get('currency', '$'),
+                            'sos' => Setting::get('sos_number', '911')
                         ]);
             }else{
                 return response()->json(['status'=>false,'message' => "Invalid credentials!"]);
@@ -377,7 +383,8 @@ class TokenController extends Controller
                             "status" => true,
                             "token_type" => "Bearer",
                             "access_token" => $userToken,
-                            'currency' => Setting::get('currency', '$')
+                            'currency' => Setting::get('currency', '$'),
+                            'sos' => Setting::get('sos_number', '911')
                         ]);
             }else{
                 return response()->json(['status'=>false,'message' => "Invalid credentials!"]);

@@ -43,7 +43,7 @@
                                 </div>
                             </li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="{{ route('provider.password')}}">Change Password</a></li>
+                            <li><a href="{{ route('provider.change.password')}}">Change Password</a></li>
                             <li>
                                 <a href="{{ url('/provider/logout') }}"
                                     onclick="event.preventDefault();

@@ -16,6 +16,7 @@ use Notification;
 use Carbon\Carbon;
 use App\Http\Controllers\SendPushNotification;
 use App\Notifications\ResetPasswordOTP;
+use App\Helpers\Helper;
 
 use App\Card;
 use App\User;
@@ -76,8 +77,12 @@ class UserApiController extends Controller
 
     public function logout(Request $request)
     {
-        User::find(Auth::user()->id)->update(['device_id'=> '', 'device_token' => '']);
-        return response()->json(['message' => trans('api.logout_success')]);
+        try {
+            User::where('id', $request->id)->update(['device_id'=> '', 'device_token' => '']);
+            return response()->json(['message' => trans('api.logout_success')]);
+        } catch (Exception $e) {
+            return response()->json(['error' => trans('api.something_went_wrong')], 500);
+        }
     }
 
 
@@ -173,6 +178,7 @@ class UserApiController extends Controller
                 $user->save();
 
                 $user->currency = Setting::get('currency');
+                $user->sos = Setting::get('sos_number', '911');
                 return $user;
 
             } else {
@@ -343,6 +349,7 @@ class UserApiController extends Controller
             $route_key = $details['routes'][0]['overview_polyline']['points'];
 
             $UserRequest = new UserRequests;
+            $UserRequest->booking_id = Helper::generate_booking_id();
             $UserRequest->user_id = Auth::user()->id;
             $UserRequest->current_provider_id = $Providers[0]->id;
             $UserRequest->service_type_id = $request->service_type;
@@ -430,8 +437,8 @@ class UserApiController extends Controller
     public function cancel_request(Request $request) {
 
         $this->validate($request, [
-                'request_id' => 'required|numeric|exists:user_requests,id,user_id,'.Auth::user()->id,
-            ]);
+            'request_id' => 'required|numeric|exists:user_requests,id,user_id,'.Auth::user()->id,
+        ]);
 
         try{
 
@@ -448,7 +455,14 @@ class UserApiController extends Controller
 
             if(in_array($UserRequest->status, ['SEARCHING','STARTED','ARRIVED','SCHEDULED'])) {
 
+                if($UserRequest->status != 'SEARCHING'){
+                    $this->validate($request, [
+                        'cancel_reason'=> 'max:255',
+                    ]);
+                }
+
                 $UserRequest->status = 'CANCELLED';
+                $UserRequest->cancel_reason = $request->cancel_reason;
                 $UserRequest->cancelled_by = 'USER';
                 $UserRequest->save();
 
@@ -956,16 +970,21 @@ class UserApiController extends Controller
 
         try{
 
-            $ActiveProviders = ProviderService::AvailableServiceProvider($request->service)->get()->pluck('provider_id');
-
             $distance = Setting::get('provider_search_radius', '10');
             $latitude = $request->latitude;
             $longitude = $request->longitude;
 
-            $Providers = Provider::whereIn('id', $ActiveProviders)
-                ->where('status', 'approved')
-                ->whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
-                ->get();
+            if($request->has('service')){
+                $ActiveProviders = ProviderService::AvailableServiceProvider($request->service)->get()->pluck('provider_id');
+                $Providers = Provider::whereIn('id', $ActiveProviders)
+                    ->where('status', 'approved')
+                    ->whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
+                    ->get();
+            } else {
+                $Providers = Provider::where('status', 'approved')
+                    ->whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
+                    ->get();
+            }
 
             if(count($Providers) == 0) {
                 if($request->ajax()) {

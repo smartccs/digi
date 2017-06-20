@@ -221,7 +221,8 @@
 			                <h6>@lang('user.status')</h6>
 			                <p>@lang('user.ride.accepted_ride')</p>
 			            </div>
-		            	<button type="submit" className="full-primary-btn fare-btn">@lang('user.ride.cancel_request')</button> 
+			            <CancelReason/>
+		            	<button type="button" className="full-primary-btn" data-toggle="modal" data-target="#cancel-reason">@lang('user.ride.cancel_request')</button>
 		            	<br/>
 		            		<h5><strong>@lang('user.ride.ride_details')</strong></h5>
 		            	<div className="driver-details">
@@ -248,6 +249,29 @@
 			}
 		});
 
+		var CancelReason = React.createClass({
+			render: function(){
+				return (
+					<div id="cancel-reason" className="modal fade" role="dialog">
+						<div className="modal-dialog">
+							<div className="modal-content">
+								<div className="modal-header">
+									<button type="button" className="close" data-dismiss="modal">&times;</button>
+									<h4 className="modal-title">@lang('user.ride.cancel_request')</h4>
+								</div>
+								<div className="modal-body">
+									<textarea className="form-control" name="cancel_reason" placeholder="@lang('user.ride.cancel_reason')" row="5"></textarea>
+								</div>
+								<div className="modal-footer">
+									<button type="submit" className="full-primary-btn fare-btn">@lang('user.ride.cancel_request')</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				);
+			}
+		});
+
 		var Arrived = React.createClass({
 			render: function(){
 				return (
@@ -258,7 +282,8 @@
 			                <h6>@lang('user.status')</h6>
 			                <p>@lang('user.ride.arrived_ride')</p>
 			            </div>
-		            	<button type="submit" className="full-primary-btn fare-btn">@lang('user.ride.cancel_request')</button> 
+			            <CancelReason/>
+		            	<button type="button" className="full-primary-btn" data-toggle="modal" data-target="#cancel-reason">@lang('user.ride.cancel_request')</button> 
 		            	<br/>
 		            		<h5><strong>@lang('user.ride.ride_details')</strong></h5>
 		            	<div className="driver-details">

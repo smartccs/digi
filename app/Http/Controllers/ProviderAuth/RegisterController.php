@@ -58,6 +58,7 @@ class RegisterController extends Controller
             'mobile' => 'required',
             'email' => 'required|email|max:255|unique:providers',
             'password' => 'required|min:6|confirmed',
+            'service_type' => 'required',
         ]);
     }
 
@@ -77,14 +78,17 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
         ]);
 
+        $provider_service = ProviderService::create([
+            'provider_id' => $Provider->id,
+            'service_type_id' => $data['service_type'],
+        ]);
+
         if(Setting::get('demo_mode', 0) == 1) {
             $Provider->update(['status' => 'approved']);
-            ProviderService::create([
-                'provider_id' => $Provider->id,
-                'service_type_id' => '1',
+            $provider_service->update([
                 'status' => 'active',
                 'service_number' => '4pp03ets',
-                'service_model' => 'Audi R8',
+                'service_model' => 'Audi R8'
             ]);
         }
         

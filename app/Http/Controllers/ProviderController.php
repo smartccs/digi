@@ -125,6 +125,41 @@ class ProviderController extends Controller
     }
 
     /**
+     * Show the application change password.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function change_password()
+    {
+        return view('provider.profile.change_password');
+    }
+
+    /**
+     * Change Password.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update_password(Request $request)
+    {
+        $this->validate($request, [
+                'password' => 'required|confirmed',
+                'old_password' => 'required',
+            ]);
+
+        $Provider = \Auth::user();
+
+        if(password_verify($request->old_password, $Provider->password))
+        {
+            $Provider->password = bcrypt($request->password);
+            $Provider->save();
+
+            return back()->with('flash_success','Password changed successfully!');
+        } else {
+            return back()->with('flash_error','Please enter correct password');
+        }
+    }
+
+    /**
      * Display the specified resource.
      *
      * @return \Illuminate\Http\Response

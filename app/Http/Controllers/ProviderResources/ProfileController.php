@@ -45,6 +45,7 @@ class ProfileController extends Controller
                                             ->first();
             Auth::user()->fleet = Fleet::find(Auth::user()->fleet);
             Auth::user()->currency = Setting::get('currency', '$');
+            Auth::user()->sos = Setting::get('sos_number', '911');
 
             return Auth::user();
 
@@ -90,6 +91,15 @@ class ProfileController extends Controller
             if ($request->hasFile('avatar')) {
                 Storage::delete($Provider->avatar);
                 $Provider->avatar = $request->avatar->store('provider/profile');
+            }
+
+            if ($request->has('service_number')) {
+                $ProviderService = ProviderService::find(Auth::user()->id);
+                $ProviderService->service_number = $request->service_number;
+                if ($request->has('service_model')) {
+                    $ProviderService->service_model = $request->service_model;
+                }
+                $ProviderService->save();
             }
 
             if($Provider->profile) {
@@ -172,6 +182,15 @@ class ProfileController extends Controller
             if ($request->hasFile('avatar')) {
                 Storage::delete($Provider->avatar);
                 $Provider->avatar = $request->avatar->store('provider/profile');
+            }
+
+            if ($request->has('service_number')) {
+                $ProviderService = ProviderService::find(Auth::user()->id);
+                $ProviderService->service_number = $request->service_number;
+                if ($request->has('service_model')) {
+                    $ProviderService->service_model = $request->service_model;
+                }
+                $ProviderService->save();
             }
 
             if($Provider->profile) {

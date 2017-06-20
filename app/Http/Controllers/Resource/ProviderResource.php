@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use DB;
 use Exception;
+use Setting;
 
 use App\Provider;
 use App\UserRequestPayment;

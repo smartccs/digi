@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddFleetToProvidersTable extends Migration
+class AddCancelReasonToUserRequest extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddFleetToProvidersTable extends Migration
      */
     public function up()
     {
-        Schema::table('providers', function (Blueprint $table) {
-            $table->integer('fleet')->default(0)->after('status');
+        Schema::table('user_requests', function (Blueprint $table) {
+            $table->string('cancel_reason')->nullable()->after('cancelled_by');
         });
     }
 
@@ -25,8 +25,8 @@ class AddFleetToProvidersTable extends Migration
      */
     public function down()
     {
-        Schema::table('providers', function (Blueprint $table) {
-            $table->dropColumn('fleet');
+        Schema::table('user_requests', function (Blueprint $table) {
+            $table->dropColumn('cancel_reason');
         });
     }
 }

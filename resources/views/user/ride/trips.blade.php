@@ -20,6 +20,7 @@
                     <thead>
                         <tr>
                             <th>&nbsp;</th>
+                            <th>@lang('user.booking_id')</th>
                             <th>@lang('user.date')</th>
                             <th>@lang('user.profile.name')</th>
                             <th>@lang('user.amount')</th>
@@ -33,6 +34,7 @@
 
                         <tr data-toggle="collapse" data-target="#trip_{{$trip->id}}" class="accordion-toggle collapsed">
                             <td><span class="arrow-icon fa fa-chevron-right"></span></td>
+                            <td>{{ $trip->booking_id }}</td>
                             <td>{{date('d-m-Y',strtotime($trip->assigned_at))}}</td>
                             <td>{{$trip->provider->first_name}} {{$trip->provider->last_name}}</td>
                             <td>{{currency($trip->payment->total)}}</td>
