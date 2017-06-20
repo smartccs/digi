@@ -13,6 +13,9 @@
             <div class="row">
                 <div class="col-md-6">
                     <dl class="row">
+                        <dt class="col-sm-4">Booking ID :</dt>
+                        <dd class="col-sm-8">{{ $request->booking_id }}</dd>
+
                         <dt class="col-sm-4">User Name :</dt>
                         <dd class="col-sm-8">{{ $request->user->first_name }}</dd>
 

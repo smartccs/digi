@@ -12,7 +12,7 @@
             <table class="table table-striped table-bordered dataTable" id="table-2">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>Booking ID</th>
                         <th>User Name</th>
                         <th>Provider Name</th>
                         <th>Date &amp; Time</th>
@@ -26,7 +26,7 @@
                 <tbody>
                 @foreach($requests as $index => $request)
                     <tr>
-                        <td>{{ $request->id }}</td>
+                        <td>{{ $request->booking_id }}</td>
                         <td>{{ $request->user->first_name }} {{ $request->user->last_name }}</td>
                         <td>
                             @if($request->provider)
