@@ -46,6 +46,8 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
+        'account' => \App\Http\Middleware\RedirectIfNotAccount::class,
+        'account.guest' => \App\Http\Middleware\RedirectIfAccount::class,
         'fleet' => \App\Http\Middleware\RedirectIfNotFleet::class,
         'fleet.guest' => \App\Http\Middleware\RedirectIfFleet::class,
         'dispatcher' => \App\Http\Middleware\RedirectIfNotDispatcher::class,

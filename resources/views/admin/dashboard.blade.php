@@ -36,7 +36,7 @@
 			<div class="box box-block bg-white tile tile-1 mb-2">
 				<div class="t-icon right"><span class="bg-primary"></span><i class="ti-view-grid"></i></div>
 				<div class="t-content">
-					<h6 class="text-uppercase mb-1">Service Types</h6>
+					<h6 class="text-uppercase mb-1">No. of Service Types</h6>
 					<h1 class="mb-1">{{$service}}</h1>
 				</div>
 			</div>
@@ -45,9 +45,45 @@
 			<div class="box box-block bg-white tile tile-1 mb-2">
 				<div class="t-icon right"><span class="bg-warning"></span><i class="ti-archive"></i></div>
 				<div class="t-content">
-					<h6 class="text-uppercase mb-1">Cancelled Rides</h6>
+					<h6 class="text-uppercase mb-1">Total Cancelled Rides</h6>
 					<h1 class="mb-1">{{$cancel_rides}}</h1>
 					<i class="fa fa-caret-down text-danger mr-0-5"></i><span>for @if($cancel_rides == 0) 0.00 @else {{round($cancel_rides/$rides->count(),2)}}% @endif Rides</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-6 col-xs-12">
+			<div class="box box-block bg-white tile tile-1 mb-2">
+				<div class="t-icon right"><span class="bg-primary"></span><i class="ti-view-grid"></i></div>
+				<div class="t-content">
+					<h6 class="text-uppercase mb-1">User Cancelled Count</h6>
+					<h1 class="mb-1">{{$user_cancelled}}</h1>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-6 col-xs-12">
+			<div class="box box-block bg-white tile tile-1 mb-2">
+				<div class="t-icon right"><span class="bg-danger"></span><i class="ti-bar-chart"></i></div>
+				<div class="t-content">
+					<h6 class="text-uppercase mb-1">Provider Cancelled Count</h6>
+					<h1 class="mb-1">{{$provider_cancelled}}</h1>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-6 col-xs-12">
+			<div class="box box-block bg-white tile tile-1 mb-2">
+				<div class="t-icon right"><span class="bg-warning"></span><i class="ti-rocket"></i></div>
+				<div class="t-content">
+					<h6 class="text-uppercase mb-1">No. of Fleets</h6>
+					<h1 class="mb-1">{{$fleet}}</h1>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-6 col-xs-12">
+			<div class="box box-block bg-white tile tile-1 mb-2">
+				<div class="t-icon right"><span class="bg-success"></span><i class="ti-bar-chart"></i></div>
+				<div class="t-content">
+					<h6 class="text-uppercase mb-1">No. of Scheduled Rides</h6>
+					<h1 class="mb-1">{{$scheduled_rides}}</h1>
 				</div>
 			</div>
 		</div>

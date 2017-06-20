@@ -172,6 +172,12 @@
 			
 			<li class="menu-title">Others</li>
 			<li>
+				<a href="{{ route('admin.privacy') }}" class="waves-effect waves-light">
+					<span class="s-icon"><i class="ti-help"></i></span>
+					<span class="s-text">Privacy Policy</span>
+				</a>
+			</li>
+			<li>
 				<a href="{{ route('admin.help') }}" class="waves-effect waves-light">
 					<span class="s-icon"><i class="ti-help"></i></span>
 					<span class="s-text">Help</span>
@@ -207,22 +213,6 @@
                 <form id="logout-form" action="{{ url('/admin/logout') }}" method="POST" style="display: none;">
                     {{ csrf_field() }}
                 </form>
-			</li>
-			
-			<li class="menu-title compact-hide">System usage</li>
-			<li class="compact-hide">
-				<div class="progress-widget progress-widget-light">
-					<div class="mb-0-5">
-						SSD
-						<span class="float-xs-right">5 GB</span>
-					</div>
-					<progress class="progress progress-rounded progress-success progress-sm" value="60" max="100">100%</progress>
-					<div class="mb-0-5">
-						CPU
-						<span class="float-xs-right">80%</span>
-					</div>
-					<progress class="progress progress-rounded progress-danger progress-sm mb-0-5" value="80" max="100">100%</progress>
-				</div>
 			</li>
 			
 		</ul>

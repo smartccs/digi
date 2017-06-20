@@ -36,6 +36,11 @@ return [
     */
 
     'guards' => [
+        'account' => [
+            'driver' => 'session',
+            'provider' => 'accounts',
+        ],
+
         'fleet' => [
             'driver' => 'session',
             'provider' => 'fleets',
@@ -91,6 +96,11 @@ return [
     */
 
     'providers' => [
+        'accounts' => [
+            'driver' => 'eloquent',
+            'model' => App\Account::class,
+        ],
+
         'fleets' => [
             'driver' => 'eloquent',
             'model' => App\Fleet::class,
@@ -102,6 +112,11 @@ return [
         ],
 
         'providers' => [
+        'accounts' => [
+            'driver' => 'eloquent',
+            'model' => App\Account::class,
+        ],
+
         'fleets' => [
             'driver' => 'eloquent',
             'model' => App\Fleet::class,
@@ -148,6 +163,12 @@ return [
     */
 
     'passwords' => [
+        'accounts' => [
+            'provider' => 'accounts',
+            'table' => 'account_password_resets',
+            'expire' => 60,
+        ],
+
         'fleets' => [
             'provider' => 'fleets',
             'table' => 'fleet_password_resets',
@@ -161,6 +182,11 @@ return [
         ],
 
         'providers' => [
+        'accounts' => [
+            'driver' => 'eloquent',
+            'model' => App\Account::class,
+        ],
+
         'fleets' => [
             'driver' => 'eloquent',
             'model' => App\Fleet::class,

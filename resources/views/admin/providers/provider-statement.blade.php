@@ -31,6 +31,7 @@
 														<td>Total Earning</td>
 														<td>Commission</td>
 														<td>Joined at</td>
+														<td>Details</td>
 													</tr>
 								                </thead>
 								                <tbody>
@@ -81,6 +82,9 @@
 																	 	-
 																	@endif
 																</td>
+																<td>
+																	<a href="{{route('admin.provider.statement', $provider->id)}}">View by Ride</a>
+																</td>
 															</tr>
 														@endforeach
 															
@@ -93,6 +97,7 @@
 														<td>Total Earning</td>
 														<td>Commission</td>
 														<td>Joined at</td>
+														<td>Details</td>
 													</tr>
 								                </tfoot>
 								            </table>

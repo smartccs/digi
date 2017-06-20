@@ -159,3 +159,17 @@ Route::resource('card', 'Resource\CardResource');
 // promotions
 Route::get('/promotions', 'HomeController@promotions_index')->name('promocodes.index');
 Route::post('/promotions', 'HomeController@promotions_store')->name('promocodes.store');
+
+Route::group(['prefix' => 'account'], function () {
+  Route::get('/login', 'AccountAuth\LoginController@showLoginForm');
+  Route::post('/login', 'AccountAuth\LoginController@login');
+  Route::post('/logout', 'AccountAuth\LoginController@logout');
+
+  Route::get('/register', 'AccountAuth\RegisterController@showRegistrationForm');
+  Route::post('/register', 'AccountAuth\RegisterController@register');
+
+  Route::post('/password/email', 'AccountAuth\ForgotPasswordController@sendResetLinkEmail');
+  Route::post('/password/reset', 'AccountAuth\ResetPasswordController@reset');
+  Route::get('/password/reset', 'AccountAuth\ForgotPasswordController@showLinkRequestForm');
+  Route::get('/password/reset/{token}', 'AccountAuth\ResetPasswordController@showResetForm');
+});

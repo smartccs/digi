@@ -12,6 +12,7 @@ use Exception;
 use \Carbon\Carbon;
 
 use App\User;
+use App\Fleet;
 use App\Admin;
 use App\Provider;
 use App\UserPayment;
@@ -43,12 +44,19 @@ class AdminController extends Controller
     public function dashboard()
     {
         try{
+
             $rides = UserRequests::has('user')->orderBy('id','desc')->get();
-            $cancel_rides = UserRequests::where('status','CANCELLED')->count();
+            $cancel_rides = UserRequests::where('status','CANCELLED');
+            $scheduled_rides = UserRequests::where('status','SCHEDULED')->count();
+            $user_cancelled = $cancel_rides->where('cancelled_by','USER')->count();
+            $provider_cancelled = $cancel_rides->where('cancelled_by','PROVIDER')->count();
+            $cancel_rides = $cancel_rides->count();
             $service = ServiceType::count();
+            $fleet = Fleet::count();
             $revenue = UserRequestPayment::sum('total');
             $providers = Provider::take(10)->orderBy('rating','desc')->get();
-            return view('admin.dashboard',compact('providers','service','rides','cancel_rides','revenue'));
+
+            return view('admin.dashboard',compact('providers','fleet','scheduled_rides','service','rides','user_cancelled','provider_cancelled','cancel_rides','revenue'));
         }
         catch(Exception $e){
             return redirect()->route('admin.user.index')->with('flash_error','Something Went Wrong with Dashboard!');
@@ -488,19 +496,19 @@ class AdminController extends Controller
                            'SUM(ROUND(fixed) + ROUND(distance)) as overall, SUM(ROUND(commision)) as commission' 
                        ));
 
-            if($page == 'today'){
+            if($type == 'today'){
 
                 $rides->where('created_at', '>=', Carbon::today());
                 $cancel_rides->where('created_at', '>=', Carbon::today());
                 $revenue->where('created_at', '>=', Carbon::today());
 
-            }elseif($page == 'monthly'){
+            }elseif($type == 'monthly'){
 
                 $rides->where('created_at', '>=', Carbon::now()->month);
                 $cancel_rides->where('created_at', '>=', Carbon::now()->month);
                 $revenue->where('created_at', '>=', Carbon::now()->month);
 
-            }elseif($page == 'yearly'){
+            }elseif($type == 'yearly'){
 
                 $rides->where('created_at', '>=', Carbon::now()->year);
                 $cancel_rides->where('created_at', '>=', Carbon::now()->year);
