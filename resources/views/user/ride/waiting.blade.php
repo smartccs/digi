@@ -227,6 +227,8 @@
 		            		<h5><strong>@lang('user.ride.ride_details')</strong></h5>
 		            	<div className="driver-details">
 			            	<dl className="dl-horizontal left-right">
+			            		<dt>@lang('user.booking_id')</dt>
+				                <dd>{this.props.checkState.booking_id}</dd>
 				                <dt>@lang('user.driver_name')</dt>
 				                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
 				                <dt>@lang('user.service_number')</dt>
@@ -288,6 +290,8 @@
 		            		<h5><strong>@lang('user.ride.ride_details')</strong></h5>
 		            	<div className="driver-details">
 			            	<dl className="dl-horizontal left-right">
+			            		<dt>@lang('user.booking_id')</dt>
+				                <dd>{this.props.checkState.booking_id}</dd>
 				                <dt>@lang('user.driver_name')</dt>
 				                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
 				                <dt>@lang('user.service_number')</dt>
@@ -321,6 +325,8 @@
 	            		<h5><strong>@lang('user.ride.ride_details')</strong></h5>
 	            	<div className="driver-details">
 		            	<dl className="dl-horizontal left-right">
+		            		<dt>@lang('user.booking_id')</dt>
+				            <dd>{this.props.checkState.booking_id}</dd>
 			                <dt>@lang('user.driver_name')</dt>
 			                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
 			                <dt>@lang('user.service_number')</dt>
@@ -354,6 +360,8 @@
 		            <br/>
 		            	<h5><strong>@lang('user.ride.ride_details')</strong></h5>
 		            	<dl className="dl-horizontal left-right">
+		            		<dt>@lang('user.booking_id')</dt>
+				            <dd>{this.props.checkState.booking_id}</dd>
 		            		<dt>@lang('user.driver_name')</dt>
 			                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
 			                <dt>@lang('user.service_number')</dt>
@@ -417,6 +425,8 @@
 		            	<br/>
 		            	<h5><strong>@lang('user.ride.ride_details')</strong></h5>
 		            	<dl className="dl-horizontal left-right">
+		            		<dt>@lang('user.booking_id')</dt>
+				            <dd>{this.props.checkState.booking_id}</dd>
 		            		<dt>@lang('user.driver_name')</dt>
 			                <dd>{this.props.checkState.provider.first_name} {this.props.checkState.provider.last_name}</dd>
 			                <dt>@lang('user.service_number')</dt>

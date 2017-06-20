@@ -98,7 +98,13 @@
                                         <?php $sum_weekly = 0; ?>
                                         @foreach($weekly as $day)
                                             <tr>
-                                                <td>{{date('Y-m-d',strtotime($day->created_at))}} - {{$day->created_at->diffForHumans()}}</td>
+                                                <td>
+                                                @if($day->created_at)
+                                                    {{date('Y-m-d',strtotime($day->created_at))}} - {{$day->created_at->diffForHumans()}}
+                                                @else
+                                                    -
+                                                @endif
+                                                </td>
                                                 <td class="text-right">
                                                 @if($day->payment != "")
                                                 <?php 
@@ -156,13 +162,7 @@
                                     </form>
                                 </div>
                                 <!-- View tab -->
-                                <!-- <div class="display-inline view-tab row no-margin">
-                                    <p class="display-inline view-txt">View</p>
-                                    <div class="view-options display-inline">
-                                        <a href="javascript:void(0)" class="view-icon list-btn active"><i class="ion-ios-more"></i></a>
-                                        <a href="javascript:void(0)" class="view-icon grid-btn"><i class="ion-navicon-round"></i></a>
-                                    </div>
-                                </div> -->
+
                                 <!-- End of view tab -->
                             </div>
                         </div>
@@ -172,36 +172,7 @@
                     <!-- Earning-section content -->
                     <div class="tab-content list-content">
                         <div class="list-view pad30 ">
-                            <!-- <div class="week-list row no-margin">
-                                <a href="#" class="week-list-item">
-                                    <span>Mon, Feb 1</span>
-                                    <span>-</span>
-                                </a>
-                                <a href="#" class="week-list-item">
-                                    <span>Tues, Feb 2</span>
-                                    <span>-</span>
-                                </a>
-                                <a href="#" class="week-list-item">
-                                    <span>Wed, Feb 3</span>
-                                    <span>-</span>
-                                </a>
-                                <a href="#" class="week-list-item">
-                                    <span>Thurs, Feb 4</span>
-                                    <span>-</span>
-                                </a>
-                                <a href="#" class="week-list-item">
-                                    <span>Fri, Feb 5</span>
-                                    <span>-</span>
-                                </a>
-                                <a href="#" class="week-list-item">
-                                    <span>Sat, Feb 6</span>
-                                    <span>-</span>
-                                </a>
-                                <a href="#" class="week-list-item">
-                                    <span>Sun, Feb 7</span>
-                                    <span>-</span>
-                                </a>
-                            </div> -->
+
                             <table class="earning-table table table-responsive">
                                 <thead>
                                     <tr>
@@ -253,55 +224,6 @@
                             </table>
                         </div>
 
-                        <!-- <div class="grid-view" style="display: none;">
-                        
-                            <div class="earning-acc grid-view-item pad20">
-                                <div class="grid-view-head row no-margin">
-                                    <div class="pull-left">
-                                        <h3 data-toggle="collapse" data-target="#grid1" class="accordion-toggle collapsed acc-tit">
-                                            <span class="arrow-icon fa fa-chevron-right"></span>
-                                        </h3>
-                                    </div>
-                                    <div class="pull-right">
-                                        <p class="earning-cost no-margin"></p>
-                                    </div>
-                                </div>
-                                <div class="accordian-body grid-view-section earning-acc-body collapse row" id="grid1">
-                                    <table class="earning-table table table-responsive">
-                                        <thead>
-                                            <tr>
-                                                <th>Pickup Time</th>
-                                                <th>Vehicle</th>
-                                                <th>Duration</th>
-                                                <th>Distance(KM)</th>
-                                                <th>Cash Collected</th>
-                                                <th>Total Earnings</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>03.00PM</td>
-                                                <td>Audi</td>
-                                                <td></td>
-                                                <td>10</td>
-                                                <td>$10.00</td>
-                                                <td>$100.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>03.00PM</td>
-                                                <td>Audi</td>
-                                                <td>30Mins</td>
-                                                <td>10</td>
-                                                <td>$10.00</td>
-                                                <td>$100.00</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            
-                        </div> -->
                     </div>
                 <!-- End of earning section -->
             </div>
