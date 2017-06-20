@@ -18,7 +18,7 @@ class RedirectIfAccount
 	public function handle($request, Closure $next, $guard = 'account')
 	{
 	    if (Auth::guard($guard)->check()) {
-	        return redirect('account/home');
+	        return redirect('account/dashboard');
 	    }
 
 	    return $next($request);

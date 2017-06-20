@@ -275,4 +275,33 @@ class ProviderResource extends Controller
             return back()->with('flash_error','Something Went Wrong!');
         }
     }
+
+    public function Accountstatement($id){
+
+        try{
+
+            $requests = UserRequests::where('provider_id',$id)
+                        ->where('status','COMPLETED')
+                        ->with('payment')
+                        ->get();
+
+            $rides = UserRequests::where('provider_id',$id)->with('payment')->orderBy('id','desc')->paginate(10);
+            $cancel_rides = UserRequests::where('status','CANCELLED')->where('provider_id',$id)->count();
+            $Provider = Provider::find($id);
+            $revenue = UserRequestPayment::whereHas('request', function($query) use($id) {
+                                    $query->where('provider_id', $id );
+                                })->select(\DB::raw(
+                                   'SUM(ROUND(fixed) + ROUND(distance)) as overall, SUM(ROUND(commision)) as commission' 
+                               ))->get();
+
+
+            $Joined = $Provider->created_at ? '- Joined '.$Provider->created_at->diffForHumans() : '';
+
+            return view('account.providers.statement', compact('rides','cancel_rides','revenue'))
+                        ->with('page',$Provider->first_name."'s Overall Statement ". $Joined);
+
+        } catch (Exception $e) {
+            return back()->with('flash_error','Something Went Wrong!');
+        }
+    }
 }

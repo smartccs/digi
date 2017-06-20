@@ -135,6 +135,16 @@ class TripResource extends Controller
         }
     }
 
+    public function Accountshow($id)
+    {
+        try {
+            $request = UserRequests::findOrFail($id);
+            return view('account.request.show', compact('request'));
+        } catch (Exception $e) {
+             return back()->with('flash_error','Something Went Wrong!');
+        }
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
