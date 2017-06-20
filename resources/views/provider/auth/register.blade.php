@@ -71,6 +71,22 @@
             </span>
         @endif
 
+        <input id="service-number" type="text" class="form-control" name="service_number" value="{{ old('service_number') }}" placeholder="Car Number">
+
+        @if ($errors->has('service_number'))
+            <span class="help-block">
+                <strong>{{ $errors->first('service_number') }}</strong>
+            </span>
+        @endif
+
+        <input id="service-model" type="text" class="form-control" name="service_model" value="{{ old('service_model') }}" placeholder="Car Model">
+
+        @if ($errors->has('service_model'))
+            <span class="help-block">
+                <strong>{{ $errors->first('service_model') }}</strong>
+            </span>
+        @endif
+
         <button type="submit" class="log-teal-btn">
             Register
         </button>

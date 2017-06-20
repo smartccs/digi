@@ -965,7 +965,7 @@ class UserApiController extends Controller
         $this->validate($request, [
                 'latitude' => 'required|numeric',
                 'longitude' => 'required|numeric',
-                'service' => 'required|numeric|exists:service_types,id',
+                'service' => 'numeric|exists:service_types,id',
             ]);
 
         try{

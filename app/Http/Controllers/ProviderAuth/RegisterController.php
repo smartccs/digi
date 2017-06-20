@@ -59,6 +59,8 @@ class RegisterController extends Controller
             'email' => 'required|email|max:255|unique:providers',
             'password' => 'required|min:6|confirmed',
             'service_type' => 'required',
+            'service_number' => 'required',
+            'service_model' => 'required',
         ]);
     }
 
@@ -81,14 +83,14 @@ class RegisterController extends Controller
         $provider_service = ProviderService::create([
             'provider_id' => $Provider->id,
             'service_type_id' => $data['service_type'],
+            'service_number' => $data['service_number'],
+            'service_model' => $data['service_model'],
         ]);
 
         if(Setting::get('demo_mode', 0) == 1) {
             $Provider->update(['status' => 'approved']);
             $provider_service->update([
                 'status' => 'active',
-                'service_number' => '4pp03ets',
-                'service_model' => 'Audi R8'
             ]);
         }
         

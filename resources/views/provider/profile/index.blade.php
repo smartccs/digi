@@ -112,8 +112,13 @@
                                     </div>
                                     <div class="prof-sub-col col-sm-6 col-xs-12 no-right-padding">
                                         <div class="form-group">
-                                            <label>Service</label>
-                                            <input type="text" readonly="readonly" class="form-control" value="{{ Auth::guard('provider')->user()->service->service_type->name ? Auth::guard('provider')->user()->service->service_type->name : "" }}">
+                                            <label>Service Type</label>
+                                            <select class="form-control" name="service_type">
+                                                <option value="">Select Service</option>
+                                                @foreach(get_all_service_types() as $type)
+                                                    <option @if(Auth::guard('provider')->user()->service->service_type->id == $type->id) selected="selected" @endif value="{{$type->id}}">{{$type->name}}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                 </div>

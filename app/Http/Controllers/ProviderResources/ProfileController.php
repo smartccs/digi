@@ -93,13 +93,26 @@ class ProfileController extends Controller
                 $Provider->avatar = $request->avatar->store('provider/profile');
             }
 
-            if ($request->has('service_number')) {
-                $ProviderService = ProviderService::find(Auth::user()->id);
-                $ProviderService->service_number = $request->service_number;
-                if ($request->has('service_model')) {
+            if($request->has('service_type')) {
+                if($Provider->service) {
+                    if($Provider->service->service_type_id != $request->service_type) {
+                        $Provider->status = 'banned';
+                    }
+                    $ProviderService = ProviderService::find(Auth::user()->id);
+                    $ProviderService->service_type_id = $request->service_type;
+                    $ProviderService->service_number = $request->service_number;
                     $ProviderService->service_model = $request->service_model;
+                    $ProviderService->save();
+
+                } else {
+                    ProviderService::create([
+                        'provider_id' => $Provider->id,
+                        'service_type_id' => $request->service_type,
+                        'service_number' => $request->service_number,
+                        'service_model' => $request->service_model,
+                    ]);
+                    $Provider->status = 'banned';
                 }
-                $ProviderService->save();
             }
 
             if($Provider->profile) {
@@ -182,15 +195,6 @@ class ProfileController extends Controller
             if ($request->hasFile('avatar')) {
                 Storage::delete($Provider->avatar);
                 $Provider->avatar = $request->avatar->store('provider/profile');
-            }
-
-            if ($request->has('service_number')) {
-                $ProviderService = ProviderService::find(Auth::user()->id);
-                $ProviderService->service_number = $request->service_number;
-                if ($request->has('service_model')) {
-                    $ProviderService->service_model = $request->service_model;
-                }
-                $ProviderService->save();
             }
 
             if($Provider->profile) {
