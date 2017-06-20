@@ -163,6 +163,7 @@ class AdminController extends Controller
         Setting::set('store_link_ios', $request->store_link_ios);
         Setting::set('provider_select_timeout', $request->provider_select_timeout);
         Setting::set('provider_search_radius', $request->provider_search_radius);
+        Setting::set('sos_number', $request->sos_number);
         Setting::save();
         
         return back()->with('flash_success','Settings Updated Successfully');

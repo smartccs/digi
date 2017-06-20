@@ -970,16 +970,21 @@ class UserApiController extends Controller
 
         try{
 
-            $ActiveProviders = ProviderService::AvailableServiceProvider($request->service)->get()->pluck('provider_id');
-
             $distance = Setting::get('provider_search_radius', '10');
             $latitude = $request->latitude;
             $longitude = $request->longitude;
 
-            $Providers = Provider::whereIn('id', $ActiveProviders)
-                ->where('status', 'approved')
-                ->whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
-                ->get();
+            if($request->has('service')){
+                $ActiveProviders = ProviderService::AvailableServiceProvider($request->service)->get()->pluck('provider_id');
+                $Providers = Provider::whereIn('id', $ActiveProviders)
+                    ->where('status', 'approved')
+                    ->whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
+                    ->get();
+            } else {
+                $Providers = Provider::where('status', 'approved')
+                    ->whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
+                    ->get();
+            }
 
             if(count($Providers) == 0) {
                 if($request->ajax()) {
