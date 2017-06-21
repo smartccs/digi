@@ -4,13 +4,13 @@ return array(
 
     'IOSUser'     => array(
         'environment' => env('IOS_USER_ENV', 'development'),
-        'certificate' => app_path().'/apns/user/tranxit_user.pem',
+        'certificate' => app_path().'/apns/user/tranxit_user_dev.pem',
         'passPhrase'  => env('IOS_USER_PUSH_PASS', 'appoets123$'),
         'service'     => 'apns'
     ),
     'IOSProvider' => array(
         'environment' => env('IOS_PROVIDER_ENV', 'development'),
-        'certificate' => app_path().'/apns/provider/tranxit_provider.pem',
+        'certificate' => app_path().'/apns/provider/tranxit_provider_dev.pem',
         'passPhrase'  => env('IOS_PROVIDER_PUSH_PASS', 'appoets123$'),
         'service'     => 'apns'
     ),

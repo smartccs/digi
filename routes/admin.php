@@ -21,6 +21,7 @@ Route::group(['as' => 'dispatcher.', 'prefix' => 'dispatcher'], function () {
 
 Route::resource('user', 'Resource\UserResource');
 Route::resource('dispatch-manager', 'Resource\DispatcherResource');
+Route::resource('account-manager', 'Resource\AccountResource');
 Route::resource('fleet', 'Resource\FleetResource');
 Route::resource('provider', 'Resource\ProviderResource');
 Route::resource('document', 'Resource\DocumentResource');

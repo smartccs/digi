@@ -377,8 +377,7 @@ class TripController extends Controller
                 $UserRequest->invoice = $this->invoice($id);
             }
 
-            $UserRequest->save();
-
+           
             // Send Push Notification to User
        
             return $UserRequest;
