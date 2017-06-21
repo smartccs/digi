@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\UserRequests;
 use Auth;
+use Setting;
 
 class TripResource extends Controller
 {

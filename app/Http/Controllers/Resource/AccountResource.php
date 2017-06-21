@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Resource;
 
-use App\Dispatcher;
+use App\Account;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Controllers\Controller;
 use Exception;
 use Setting;
 
-class DispatcherResource extends Controller
+class AccountResource extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,8 +18,8 @@ class DispatcherResource extends Controller
      */
     public function index()
     {
-        $dispatchers = Dispatcher::orderBy('created_at' , 'desc')->get();
-        return view('admin.dispatcher.index', compact('dispatchers'));
+        $accounts = Account::orderBy('created_at' , 'desc')->get();
+        return view('admin.account-manager.index', compact('accounts'));
     }
 
     /**
@@ -29,7 +29,7 @@ class DispatcherResource extends Controller
      */
     public function create()
     {
-        return view('admin.dispatcher.create');
+        return view('admin.account-manager.create');
     }
 
     /**
@@ -44,30 +44,30 @@ class DispatcherResource extends Controller
         $this->validate($request, [
             'name' => 'required|max:255',
             'mobile' => 'digits_between:6,13',
-            'email' => 'required|unique:dispatchers,email|email|max:255',
+            'email' => 'required|unique:accounts,email|email|max:255',
             'password' => 'required|min:6|confirmed',
         ]);
 
         try{
 
-            $Dispatcher = $request->all();
-            $Dispatcher['password'] = bcrypt($request->password);
+            $Account = $request->all();
+            $Account['password'] = bcrypt($request->password);
 
-            $Dispatcher = Dispatcher::create($Dispatcher);
+            $Account = Account::create($Account);
 
-            return back()->with('flash_success','Dispatcher Details Saved Successfully');
+            return back()->with('flash_success','Account Manager Details Saved Successfully');
 
         } 
 
         catch (Exception $e) {
-            return back()->with('flash_error', 'Dispatcher Not Found');
+            return back()->with('flash_error', 'Account Manager Not Found');
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Dispatcher  $dispatcher
+     * @param  \App\Dispatcher  $account
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -78,14 +78,14 @@ class DispatcherResource extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Dispatcher  $dispatcher
+     * @param  \App\account  $account
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         try {
-            $dispatcher = Dispatcher::findOrFail($id);
-            return view('admin.dispatcher.edit',compact('dispatcher'));
+            $account = Account::findOrFail($id);
+            return view('admin.account-manager.edit',compact('account'));
         } catch (ModelNotFoundException $e) {
             return $e;
         }
@@ -95,7 +95,7 @@ class DispatcherResource extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Dispatcher  $dispatcher
+     * @param  \App\account  $account
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -112,23 +112,23 @@ class DispatcherResource extends Controller
 
         try {
 
-            $dispatcher = Dispatcher::findOrFail($id);
-            $dispatcher->name = $request->name;
-            $dispatcher->mobile = $request->mobile;
-            $dispatcher->save();
+            $Account = Account::findOrFail($id);
+            $Account->name = $request->name;
+            $Account->mobile = $request->mobile;
+            $Account->save();
 
-            return redirect()->route('admin.dispatcher.index')->with('flash_success', 'Dispatcher Updated Successfully');    
+            return redirect()->route('admin.account-manager.index')->with('flash_success', 'Account Manager Updated Successfully');    
         } 
 
         catch (ModelNotFoundException $e) {
-            return back()->with('flash_error', 'Dispatcher Not Found');
+            return back()->with('flash_error', 'Account Manager Not Found');
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Dispatcher  $dispatcher
+     * @param  \App\Account  $dispatcher
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -139,11 +139,11 @@ class DispatcherResource extends Controller
         
 
         try {
-            Dispatcher::find($id)->delete();
-            return back()->with('message', 'Dispatcher deleted successfully');
+            Account::find($id)->delete();
+            return back()->with('message', 'Account Manager deleted successfully');
         } 
         catch (Exception $e) {
-            return back()->with('flash_error', 'Dispatcher Not Found');
+            return back()->with('flash_error', 'Account Not Found');
         }
     }
 
