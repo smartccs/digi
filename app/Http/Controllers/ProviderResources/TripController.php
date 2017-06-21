@@ -655,4 +655,39 @@ class TripController extends Controller
 
     }
 
+    /**
+     * Get the trip history details of the provider
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function summary(Request $request)
+    {
+        // $this->validate($request, [
+        //         'id' => 'required|integer|exists:providers,id',
+        //     ]);
+
+        try{
+            if($request->ajax()) {
+                $rides = UserRequests::where('provider_id', Auth::user()->id)->count();
+                $revenue = UserRequestPayment::whereHas('request', function($query) use ($request) {
+                                $query->where('provider_id', Auth::user()->id);
+                            })
+                        ->sum('total');
+                $cancel_rides = UserRequests::where('status','CANCELLED')->where('provider_id', Auth::user()->id)->count();
+                $scheduled_rides = UserRequests::where('status','SCHEDULED')->where('provider_id', Auth::user()->id)->count();
+
+                return response()->json([
+                    'rides' => $rides, 
+                    'revenue' => $revenue,
+                    'cancel_rides' => $cancel_rides,
+                    'scheduled_rides' => $scheduled_rides,
+                ]);
+            }
+
+        } catch (Exception $e) {
+            return response()->json(['error' => trans('api.something_went_wrong')]);
+        }
+
+    }
+
 }
