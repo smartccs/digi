@@ -661,10 +661,6 @@ class TripController extends Controller
      */
     public function summary(Request $request)
     {
-        // $this->validate($request, [
-        //         'id' => 'required|integer|exists:providers,id',
-        //     ]);
-
         try{
             if($request->ajax()) {
                 $rides = UserRequests::where('provider_id', Auth::user()->id)->count();
