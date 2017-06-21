@@ -716,15 +716,18 @@ class UserApiController extends Controller
                 ->whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
                 ->get();
 
+            $surge = 0;
             if($Providers->count() <= Setting::get('surge_trigger') && $Providers->count() > 0){
                 $surge_price = (Setting::get('surge_percentage')/100) * $total;
                 $total += $surge_price;
+                $surge = 1;
             }
 
             return response()->json([
                     'estimated_fare' => round($total,2), 
                     'distance' => $kilometer,
                     'time' => $time,
+                    'surge' => $surge,
                     'tax_price' => $tax_price,
                     'base_price' => $service_type->fixed,
                     'wallet_balance' => Auth::user()->wallet_balance

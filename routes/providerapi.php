@@ -41,6 +41,8 @@ Route::group(['middleware' => ['provider.api']], function () {
 
     Route::post('cancel', 'ProviderResources\TripController@cancel');
 
+    Route::post('summary', 'ProviderResources\TripController@summary');
+
     Route::group(['prefix' => 'trip'], function () {
 
         Route::post('{id}', 'ProviderResources\TripController@accept');
