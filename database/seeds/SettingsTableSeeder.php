@@ -129,6 +129,12 @@ class SettingsTableSeeder extends Seeder
             [
                 'key' => 'sos_number',
                 'value' => '911'
+            ],[
+                'key' => 'contact_number',
+                'value' => ''
+            ],[
+                'key' => 'contact_email',
+                'value' => ''
             ],
         ]);
     }

@@ -2,6 +2,25 @@
 
 @section('title', 'Ride Confirmation ')
 
+@section('styles')
+<style type="text/css">
+    .surge-block{
+        background-color: black;
+        width: 50px;
+        height: 50px;
+        border-radius: 25px;
+        margin: 0 auto;
+        padding: 10px;
+        padding-top: 15px;
+    }
+    .surge-text{
+        top: 11px;
+        font-weight: bold;
+        color: white;
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="col-md-9">
     <div class="dash-content">
@@ -14,6 +33,7 @@
         <div class="row no-margin">
             <div class="col-md-6">
                 <form action="{{url('create/ride')}}" method="POST" id="create_ride">
+
                 {{ csrf_field() }}
                     <dl class="dl-horizontal left-right">
                         <dt>@lang('user.type')</dt>
@@ -64,6 +84,14 @@
                           @endforeach
                         </select>
                         @endif
+                    @endif
+
+                    @if($fare->surge == 1)
+
+                        <span><em>Note : Due to High Demand the fare may vary!</em></span>
+                        <div class="surge-block"><span class="surge-text">{{$fare->surge_value}}</span>
+                        </div>
+                    
                     @endif
 
                     <button type="submit" class="half-primary-btn fare-btn">@lang('user.ride.ride_now')</button>

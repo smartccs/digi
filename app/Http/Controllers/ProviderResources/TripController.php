@@ -13,6 +13,7 @@ use App\Helpers\Helper;
 use App\Http\Controllers\SendPushNotification;
 
 use App\User;
+use App\Admin;
 use App\Promocode;
 use App\UserRequests;
 use App\RequestFilter;
@@ -683,6 +684,31 @@ class TripController extends Controller
             return response()->json(['error' => trans('api.something_went_wrong')]);
         }
 
+    }
+
+
+    /**
+     * help Details.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function help_details(Request $request){
+
+        try{
+
+            if($request->ajax()) {
+                return response()->json([
+                    'contact_number' => Setting::get('contact_number',''), 
+                    'contact_email' => Setting::get('contact_email','')
+                     ]);
+            }
+
+        }catch (Exception $e) {
+            if($request->ajax()) {
+                return response()->json(['error' => trans('api.something_went_wrong')]);
+            }
+        }
     }
 
 }

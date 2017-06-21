@@ -83,6 +83,20 @@
 				</div>
 
 				<div class="form-group row">
+					<label for="contact_number" class="col-xs-2 col-form-label">Contact Number</label>
+					<div class="col-xs-10">
+						<input class="form-control" type="number" value="{{ Setting::get('contact_number', '911')  }}" name="contact_number" required id="contact_number" placeholder="SOS Number">
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label for="contact_email" class="col-xs-2 col-form-label">Contact Email</label>
+					<div class="col-xs-10">
+						<input class="form-control" type="number" value="{{ Setting::get('contact_email', '911')  }}" name="contact_email" required id="contact_email" placeholder="SOS Number">
+					</div>
+				</div>
+
+				<div class="form-group row">
 					<label for="zipcode" class="col-xs-2 col-form-label"></label>
 					<div class="col-xs-10">
 						<button type="submit" class="btn btn-primary">Update Site Settings</button>

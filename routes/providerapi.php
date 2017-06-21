@@ -43,6 +43,8 @@ Route::group(['middleware' => ['provider.api']], function () {
 
     Route::post('summary', 'ProviderResources\TripController@summary');
 
+    Route::get('help', 'ProviderResources\TripController@help_details');
+
     Route::group(['prefix' => 'trip'], function () {
 
         Route::post('{id}', 'ProviderResources\TripController@accept');

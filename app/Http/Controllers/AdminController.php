@@ -173,6 +173,8 @@ class AdminController extends Controller
         Setting::set('provider_select_timeout', $request->provider_select_timeout);
         Setting::set('provider_search_radius', $request->provider_search_radius);
         Setting::set('sos_number', $request->sos_number);
+        Setting::set('contact_number', $request->contact_number);
+        Setting::set('contact_email', $request->contact_email);
         Setting::save();
         
         return back()->with('flash_success','Settings Updated Successfully');

@@ -15,6 +15,7 @@
     <link href="{{asset('asset/css/bootstrap-datepicker.min.css')}}" rel="stylesheet">
     <link href="{{asset('asset/css/bootstrap-timepicker.css')}}" rel="stylesheet">
     <link href="{{asset('asset/css/dashboard-style.css')}}" rel="stylesheet">
+    @yield('styles')
 </head>
 
 <body>

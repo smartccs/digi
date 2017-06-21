@@ -728,6 +728,7 @@ class UserApiController extends Controller
                     'distance' => $kilometer,
                     'time' => $time,
                     'surge' => $surge,
+                    'surge_value' => '1.4X',
                     'tax_price' => $tax_price,
                     'base_price' => $service_type->fixed,
                     'wallet_balance' => Auth::user()->wallet_balance
@@ -1065,6 +1066,30 @@ class UserApiController extends Controller
 
             if($request->ajax()) {
                 return response()->json(['message' => 'Password Updated']);
+            }
+
+        }catch (Exception $e) {
+            if($request->ajax()) {
+                return response()->json(['error' => trans('api.something_went_wrong')]);
+            }
+        }
+    }
+
+    /**
+     * help Details.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function help_details(Request $request){
+
+        try{
+
+            if($request->ajax()) {
+                return response()->json([
+                    'contact_number' => Setting::get('contact_number',''), 
+                    'contact_email' => Setting::get('contact_email','')
+                     ]);
             }
 
         }catch (Exception $e) {

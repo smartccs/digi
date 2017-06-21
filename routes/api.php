@@ -67,6 +67,10 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 	Route::get('/estimated/fare' , 'UserApiController@estimated_fare');
 
+	// help
+
+	Route::get('/help' , 'UserApiController@help_details');
+
 	// promocode
 
 	Route::get('/promocodes' , 'UserApiController@promocodes');
