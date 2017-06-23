@@ -85,14 +85,14 @@
 				<div class="form-group row">
 					<label for="contact_number" class="col-xs-2 col-form-label">Contact Number</label>
 					<div class="col-xs-10">
-						<input class="form-control" type="number" value="{{ Setting::get('contact_number', '911')  }}" name="contact_number" required id="contact_number" placeholder="SOS Number">
+						<input class="form-control" type="number" value="{{ Setting::get('contact_number', '911')  }}" name="contact_number" required id="contact_number" placeholder="Contact Number">
 					</div>
 				</div>
 
 				<div class="form-group row">
 					<label for="contact_email" class="col-xs-2 col-form-label">Contact Email</label>
 					<div class="col-xs-10">
-						<input class="form-control" type="number" value="{{ Setting::get('contact_email', '911')  }}" name="contact_email" required id="contact_email" placeholder="SOS Number">
+						<input class="form-control" type="email" value="{{ Setting::get('contact_email', '')  }}" name="contact_email" required id="contact_email" placeholder="Contact Email">
 					</div>
 				</div>
 

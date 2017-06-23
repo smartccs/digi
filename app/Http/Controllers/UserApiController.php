@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+use DB;
 use Log;
 use Auth;
 use Hash;
@@ -222,6 +223,9 @@ class UserApiController extends Controller
             
             if($request->has('email')){
                 $user->email = $request->email;
+            }
+        
+            if($request->has('mobile')){
                 $user->mobile = $request->mobile;
             }
 
@@ -316,15 +320,20 @@ class UserApiController extends Controller
 
         }
 
-        $ActiveProviders = ProviderService::AvailableServiceProvider($request->service_type)->get()->pluck('provider_id');
-
         $distance = Setting::get('provider_search_radius', '10');
         $latitude = $request->s_latitude;
         $longitude = $request->s_longitude;
+        $service_type = $request->service_type;
 
-        $Providers = Provider::whereIn('id', $ActiveProviders)
+        $Providers = Provider::with('service')
+            ->select(DB::Raw("(6371 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) AS distance"),'id')
             ->where('status', 'approved')
-            ->whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
+            ->whereRaw("(6371 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
+            ->whereHas('service', function($query) use ($service_type){
+                        $query->where('status','active');
+                        $query->where('service_type_id',$service_type);
+                    })
+            ->orderBy('distance')
             ->get();
 
         // List Providers who are currently busy and add them to the filter list.
@@ -383,7 +392,6 @@ class UserApiController extends Controller
             $UserRequest->save();
 
             Log::info('New Request id : '. $UserRequest->id .' Assigned to provider : '. $UserRequest->current_provider_id);
-
 
 
             // update payment mode 

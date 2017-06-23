@@ -15,9 +15,9 @@ function currency($value = '')
 function distance($value = '')
 {
     if($value == ""){
-        return "0".Setting::get('unit_distance', 'Km');
+        return "0".Setting::get('distance', 'Km');
     }else{
-        return $value.Setting::get('unit_distance', 'Km');
+        return $value.Setting::get('distance', 'Km');
     }
 }
 

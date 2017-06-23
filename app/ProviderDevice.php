@@ -15,7 +15,7 @@ class ProviderDevice extends Model
         'provider_id',
         'udid',
         'token',
-        'device_type',
+        'type',
     ];
 
     /**
