@@ -48,7 +48,22 @@ class UserRequests extends Model
     protected $hidden = [
         // 'created_at', 'updated_at'
     ];
-
+    
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'assigned_at',
+        'schedule_at',
+        'started_at',
+        'finished_at',
+    ];
+    
     /**
      * ServiceType Model Linked
      */
