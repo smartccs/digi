@@ -57,7 +57,7 @@ class TripController extends Controller
                         $query->where('current_provider_id',$provider);
                     });
 
-            $IncomingRequests =$BeforeAssignProvider->union($AfterAssignProvider)->get();
+            $IncomingRequests = $BeforeAssignProvider->union($AfterAssignProvider)->get();
 
             if(!empty($request->latitude)) {
                 $Provider->update([

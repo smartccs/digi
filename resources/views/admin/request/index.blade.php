@@ -13,6 +13,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>Booking ID</th>
                         <th>User Name</th>
                         <th>Provider Name</th>
                         <th>Date &amp; Time</th>

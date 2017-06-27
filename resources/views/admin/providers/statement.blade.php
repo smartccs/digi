@@ -80,7 +80,7 @@
 								                <?php $diff = ['-success','-info','-warning','-danger']; ?>
 														@foreach($rides as $index => $ride)
 															<tr>
-																<td>Booking</td>
+																<td>{{$ride->booking_id}}</td>
 																<td>
 																	@if($ride->s_address != '')
 																		{{$ride->s_address}}
