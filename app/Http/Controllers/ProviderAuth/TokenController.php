@@ -114,13 +114,13 @@ class TokenController extends Controller
         $User->sos = Setting::get('sos_number', '911');
 
         if($User->device) {
-            if($User->device->token != $request->token) {
-                $User->device->update([
-                        'udid' => $request->device_id,
-                        'token' => $request->device_token,
-                        'type' => $request->device_type,
-                    ]);
-            }
+            ProviderDevice::where('id',$User->device->id)->update([
+        
+                'udid' => $request->device_id,
+                'token' => $request->device_token,
+                'type' => $request->device_type,
+            ]);
+            
         } else {
             ProviderDevice::create([
                     'provider_id' => $User->id,
@@ -274,13 +274,13 @@ class TokenController extends Controller
                 $userToken = JWTAuth::fromUser($AuthUser);
                 $User = Provider::with('service', 'device')->find($AuthUser->id);
                 if($User->device) {
-                    if($User->device->token != $request->token) {
-                        $User->device->update([
-                                'udid' => $request->device_id,
-                                'token' => $request->device_token,
-                                'type' => $request->device_type,
-                            ]);
-                    }
+                    ProviderDevice::where('id',$User->device->id)->update([
+                        
+                        'udid' => $request->device_id,
+                        'token' => $request->device_token,
+                        'type' => $request->device_type,
+                    ]);
+                    
                 } else {
                     ProviderDevice::create([
                         'provider_id' => $User->id,
@@ -364,13 +364,13 @@ class TokenController extends Controller
                 $userToken = JWTAuth::fromUser($AuthUser);
                 $User = Provider::with('service', 'device')->find($AuthUser->id);
                 if($User->device) {
-                    if($User->device->token != $request->token) {
-                        $User->device->update([
-                            'udid' => $request->device_id,
-                            'token' => $request->device_token,
-                            'type' => $request->device_type,
-                        ]);
-                    }
+                    ProviderDevice::where('id',$User->device->id)->update([
+                        
+                        'udid' => $request->device_id,
+                        'token' => $request->device_token,
+                        'type' => $request->device_type,
+                    ]);
+                    
                 } else {
                     ProviderDevice::create([
                         'provider_id' => $User->id,

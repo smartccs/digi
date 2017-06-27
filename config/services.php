@@ -37,13 +37,13 @@ return [
     'facebook' => [
         'client_id' => '227306957774573',
         'client_secret' => 'eae1e333047be8d92d8556b6af2ff917',
-        'redirect' => 'http://schedule.tranxit.co/auth/facebook/callback',
+        'redirect' => 'http://104.131.18.141/auth/facebook/callback',
     ],
 
     'google' => [
-        'client_id' => '770330255573-bd4ncoksl3clqeiherhv636r6k69folh.apps.googleusercontent.com',
-        'client_secret' => '9uh3U0-nLzD0E6UsizWE5beW',
-        'redirect' => 'http://schedule.tranxit.co/auth/google/callback',
+        'client_id' => '1041994393323-i53c5qdtm13dvr8ao4m1agu1ek1gklg3.apps.googleusercontent.com',
+        'client_secret' => 'AZn3a5njioUr8ZeuMBRfAyRA',
+        'redirect' => 'http://104.131.18.141/auth/google/callback',
     ]
 
 ];
