@@ -46,11 +46,24 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
+        'account' => \App\Http\Middleware\RedirectIfNotAccount::class,
+        'account.guest' => \App\Http\Middleware\RedirectIfAccount::class,
+        'fleet' => \App\Http\Middleware\RedirectIfNotFleet::class,
+        'fleet.guest' => \App\Http\Middleware\RedirectIfFleet::class,
+        'dispatcher' => \App\Http\Middleware\RedirectIfNotDispatcher::class,
+        'dispatcher.guest' => \App\Http\Middleware\RedirectIfDispatcher::class,
+        'provider' => \App\Http\Middleware\RedirectIfNotProvider::class,
+        'provider.guest' => \App\Http\Middleware\RedirectIfProvider::class,
+        'provider.api' => \App\Http\Middleware\ProviderApiMiddleware::class,
+        'admin' => \App\Http\Middleware\RedirectIfNotAdmin::class,
+        'admin.guest' => \App\Http\Middleware\RedirectIfAdmin::class,
         'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'jwt.auth' => 'Tymon\JWTAuth\Middleware\GetUserFromToken',
+        'jwt.refresh' => 'Tymon\JWTAuth\Middleware\RefreshToken',
     ];
 }

@@ -36,15 +36,46 @@ return [
     */
 
     'guards' => [
+        'account' => [
+            'driver' => 'session',
+            'provider' => 'accounts',
+        ],
+
+        'fleet' => [
+            'driver' => 'session',
+            'provider' => 'fleets',
+        ],
+
+        'dispatcher' => [
+            'driver' => 'session',
+            'provider' => 'dispatchers',
+        ],
+
+        'provider' => [
+            'driver' => 'session',
+            'provider' => 'providers',
+        ],
+
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
         ],
 
         'api' => [
-            'driver' => 'token',
+            'driver' => 'passport',
             'provider' => 'users',
         ],
+
+        'providerapi' => [
+            'driver' => 'passport',
+            'provider' => 'providers',
+        ],
+
     ],
 
     /*
@@ -65,6 +96,46 @@ return [
     */
 
     'providers' => [
+        'accounts' => [
+            'driver' => 'eloquent',
+            'model' => App\Account::class,
+        ],
+
+        'fleets' => [
+            'driver' => 'eloquent',
+            'model' => App\Fleet::class,
+        ],
+
+        'dispatchers' => [
+            'driver' => 'eloquent',
+            'model' => App\Dispatcher::class,
+        ],
+
+        'providers' => [
+        'accounts' => [
+            'driver' => 'eloquent',
+            'model' => App\Account::class,
+        ],
+
+        'fleets' => [
+            'driver' => 'eloquent',
+            'model' => App\Fleet::class,
+        ],
+
+        'dispatchers' => [
+            'driver' => 'eloquent',
+            'model' => App\Dispatcher::class,
+        ],
+
+            'driver' => 'eloquent',
+            'model' => App\Provider::class,
+        ],
+
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Admin::class,
+        ],
+
         'users' => [
             'driver' => 'eloquent',
             'model' => App\User::class,
@@ -92,6 +163,51 @@ return [
     */
 
     'passwords' => [
+        'accounts' => [
+            'provider' => 'accounts',
+            'table' => 'account_password_resets',
+            'expire' => 60,
+        ],
+
+        'fleets' => [
+            'provider' => 'fleets',
+            'table' => 'fleet_password_resets',
+            'expire' => 60,
+        ],
+
+        'dispatchers' => [
+            'provider' => 'dispatchers',
+            'table' => 'dispatcher_password_resets',
+            'expire' => 60,
+        ],
+
+        'providers' => [
+        'accounts' => [
+            'driver' => 'eloquent',
+            'model' => App\Account::class,
+        ],
+
+        'fleets' => [
+            'driver' => 'eloquent',
+            'model' => App\Fleet::class,
+        ],
+
+        'dispatchers' => [
+            'driver' => 'eloquent',
+            'model' => App\Dispatcher::class,
+        ],
+
+            'provider' => 'providers',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+
+        'admins' => [
+            'provider' => 'admins',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+
         'users' => [
             'provider' => 'users',
             'table' => 'password_resets',
