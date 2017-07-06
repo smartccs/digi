@@ -75,7 +75,6 @@ return [
             'driver' => 'passport',
             'provider' => 'providers',
         ],
-
     ],
 
     /*
@@ -112,21 +111,6 @@ return [
         ],
 
         'providers' => [
-        'accounts' => [
-            'driver' => 'eloquent',
-            'model' => App\Account::class,
-        ],
-
-        'fleets' => [
-            'driver' => 'eloquent',
-            'model' => App\Fleet::class,
-        ],
-
-        'dispatchers' => [
-            'driver' => 'eloquent',
-            'model' => App\Dispatcher::class,
-        ],
-
             'driver' => 'eloquent',
             'model' => App\Provider::class,
         ],
@@ -140,11 +124,6 @@ return [
             'driver' => 'eloquent',
             'model' => App\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
@@ -182,21 +161,6 @@ return [
         ],
 
         'providers' => [
-        'accounts' => [
-            'driver' => 'eloquent',
-            'model' => App\Account::class,
-        ],
-
-        'fleets' => [
-            'driver' => 'eloquent',
-            'model' => App\Fleet::class,
-        ],
-
-        'dispatchers' => [
-            'driver' => 'eloquent',
-            'model' => App\Dispatcher::class,
-        ],
-
             'provider' => 'providers',
             'table' => 'password_resets',
             'expire' => 60,
