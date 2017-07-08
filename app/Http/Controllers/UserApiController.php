@@ -696,20 +696,19 @@ class UserApiController extends Controller
             $price = $service_type->fixed;
 
             if($service_type->calculator == 'MIN') {
-                $price = $service_type->minute * $minutes;
+                $price += $service_type->minute * $minutes;
             } else if($service_type->calculator == 'HOUR') {
-                $price = $service_type->minute * 60;
+                $price += $service_type->minute * 60;
             } else if($service_type->calculator == 'DISTANCE') {
-                $price = ($kilometer * $service_type->price);
+                $price += ($kilometer * $service_type->price);
             } else if($service_type->calculator == 'DISTANCEMIN') {
-                $price = ($kilometer * $service_type->price) + ($service_type->minute * $minutes);
+                $price += ($kilometer * $service_type->price) + ($service_type->minute * $minutes);
             } else if($service_type->calculator == 'DISTANCEHOUR') {
-                $price = ($kilometer * $service_type->price) + ($service_type->minute * $minutes * 60);
+                $price += ($kilometer * $service_type->price) + ($service_type->minute * $minutes * 60);
             } else {
-                $price = ($kilometer * $service_type->price);
+                $price += ($kilometer * $service_type->price);
             }
 
-            $commission_price = ( $commission_percentage/100 ) * $price;
             $tax_price = ( $tax_percentage/100 ) * $price;
             $total = $price + $tax_price;
 
@@ -725,6 +724,7 @@ class UserApiController extends Controller
                 ->get();
 
             $surge = 0;
+            
             if($Providers->count() <= Setting::get('surge_trigger') && $Providers->count() > 0){
                 $surge_price = (Setting::get('surge_percentage')/100) * $total;
                 $total += $surge_price;

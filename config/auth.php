@@ -111,7 +111,6 @@ return [
             'model' => App\Dispatcher::class,
         ],
 
-        'providers' => [
         'accounts' => [
             'driver' => 'eloquent',
             'model' => App\Account::class,
@@ -126,7 +125,7 @@ return [
             'driver' => 'eloquent',
             'model' => App\Dispatcher::class,
         ],
-
+        'providers' => [
             'driver' => 'eloquent',
             'model' => App\Provider::class,
         ],
@@ -181,7 +180,6 @@ return [
             'expire' => 60,
         ],
 
-        'providers' => [
         'accounts' => [
             'driver' => 'eloquent',
             'model' => App\Account::class,
@@ -196,7 +194,8 @@ return [
             'driver' => 'eloquent',
             'model' => App\Dispatcher::class,
         ],
-
+        
+        'providers' => [
             'provider' => 'providers',
             'table' => 'password_resets',
             'expire' => 60,

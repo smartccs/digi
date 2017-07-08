@@ -198,11 +198,16 @@
                                         	@endif
                                         </td>
                                         <td>
-                                        	@if($each->finished_at != "" && $each->started_at != "") 
-                                        		{{$each->finished_at->diffForHumans($each->started_at)}}
-                                        	@else
-                                        		-
-                                        	@endif
+                                        	@if($each->finished_at != null && $each->started_at != null) 
+                                                <?php 
+                                                $StartTime = \Carbon\Carbon::parse($each->started_at);
+                                                $EndTime = \Carbon\Carbon::parse($each->finished_at);
+                                                echo $StartTime->diffInHours($EndTime). " Hours";
+                                                echo " ".$StartTime->diffInMinutes($EndTime). " Minutes";
+                                                ?>
+                                            @else
+                                                -
+                                            @endif
                                         </td>
                                         <td>{{$each->status}}</td>
                                         <td>{{$each->distance}}Kms</td>

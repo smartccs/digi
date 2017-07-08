@@ -169,7 +169,9 @@
         });
     </script>
     <script type="text/javascript">
-        $('#datepicker').datepicker();
+        $('#datepicker').datepicker({  
+             minDate:new Date()
+          });
          $('#timepicker').timepicker({showMeridian : false});
     </script>
     <script type="text/javascript">

@@ -36,13 +36,9 @@ Route::group(['middleware' => ['provider.api']], function () {
     });
 
     Route::get('/target' , 'ProviderResources\ProfileController@target');
-
     Route::resource('trip', 'ProviderResources\TripController');
-
     Route::post('cancel', 'ProviderResources\TripController@cancel');
-
     Route::post('summary', 'ProviderResources\TripController@summary');
-
     Route::get('help', 'ProviderResources\TripController@help_details');
 
     Route::group(['prefix' => 'trip'], function () {

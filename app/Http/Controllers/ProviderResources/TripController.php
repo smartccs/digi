@@ -453,10 +453,31 @@ class TripController extends Controller
     {
         try {
             $UserRequest = UserRequests::findOrFail($request_id);
+            $tax_percentage = Setting::get('tax_percentage',10);
+            $commission_percentage = Setting::get('commission_percentage',10);
+            $service_type = ServiceType::findOrFail($UserRequest->service_type_id);
             
-            $Fixed = $UserRequest->service_type->fixed ? : 0;
-            $Distance = ceil($UserRequest->distance) * $UserRequest->service_type->price;
+            $kilometer = $UserRequest->distance;
+            $Fixed = $service_type->fixed;
+            $Distance = 0;
+            $minutes = 0;
             $Discount = 0; // Promo Code discounts should be added here.
+            $Wallet = 0;
+            $Surge = 0;
+
+            if($service_type->calculator == 'MIN') {
+                $Distance = $service_type->minute * $minutes;
+            } else if($service_type->calculator == 'HOUR') {
+                $Distance = $service_type->minute * 60;
+            } else if($service_type->calculator == 'DISTANCE') {
+                $Distance = ($kilometer * $service_type->price);
+            } else if($service_type->calculator == 'DISTANCEMIN') {
+                $Distance = ($kilometer * $service_type->price) + ($service_type->minute * $minutes);
+            } else if($service_type->calculator == 'DISTANCEHOUR') {
+                $Distance = ($kilometer * $service_type->price) + ($service_type->minute * $minutes * 60);
+            } else {
+                $Distance = ($kilometer * $service_type->price);
+            }
 
             if($PromocodeUsage = PromocodeUsage::where('user_id',$UserRequest->user_id)->where('status','ADDED')->first()){
                 if($Promocode = Promocode::find($PromocodeUsage->promocode_id)){
@@ -465,13 +486,10 @@ class TripController extends Controller
                     $PromocodeUsage->save();
                 }
             }
-            $Wallet = 0;
-            $Surge = 0;
 
-            $Commision = ( $Fixed + $Distance ) * (Setting::get('commission_percentage', 10) / 100);
-
-            $Tax = $Fixed + $Distance * (Setting::get('tax_percentage', 10) / 100);
-            $Total = $Fixed + $Distance - $Discount + $Tax;
+            $Commision = ($Distance + $Fixed) * ( $commission_percentage/100 );
+            $Tax = ($Distance + $Fixed) * ( $tax_percentage/100 );
+            $Total = $Fixed + $Distance + $Tax - $Discount;
 
             if($UserRequest->surge){
                 $Surge = (Setting::get('surge_percentage')/100) * $Total;

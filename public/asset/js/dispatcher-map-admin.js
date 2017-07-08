@@ -297,7 +297,7 @@ function assignProviderShow(providers, trip) {
                 "<p>Rating : "+provider.rating+"</p>"+
                 "<p>Service Type : "+provider.service.service_type.name+"</p>"+
                 "<p>Car Model  : "+provider.service.service_type.name+"</p>"+
-                "<a href='/admin/dispatch/trips/"+trip.id+'/'+provider.id+"' class='btn btn-success'>Assign this Provider</a>";
+                "<a href='/admin/dispatcher/trips/"+trip.id+'/'+provider.id+"' class='btn btn-success'>Assign this Provider</a>";
 
         marker.infowindow = new google.maps.InfoWindow({
             content: content
