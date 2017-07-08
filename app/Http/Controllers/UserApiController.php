@@ -52,7 +52,7 @@ class UserApiController extends Controller
                 'first_name' => 'required|max:255',
                 'last_name' => 'required|max:255',
                 'email' => 'required|email|max:255|unique:users',
-                'mobile' => 'required|digits_between:6,13',
+                'mobile' => 'required',
                 'password' => 'required|min:6',
             ]);
 
@@ -205,7 +205,7 @@ class UserApiController extends Controller
                 'first_name' => 'required|max:255',
                 'last_name' => 'max:255',
                 'email' => 'email|unique:users,email,'.Auth::user()->id,
-                'mobile' => 'required|digits_between:6,13',
+                'mobile' => 'required',
                 'picture' => 'mimes:jpeg,bmp,png',
             ]);
 
