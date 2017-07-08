@@ -174,7 +174,6 @@ return [
             'expire' => 60,
         ],
 
-<<<<<<< HEAD
         'accounts' => [
             'driver' => 'eloquent',
             'model' => App\Account::class,
@@ -190,8 +189,6 @@ return [
             'model' => App\Dispatcher::class,
         ],
         
-=======
->>>>>>> a2cc5fb3789799053489df3a7fc9c9fafcf21934
         'providers' => [
             'provider' => 'providers',
             'table' => 'password_resets',
