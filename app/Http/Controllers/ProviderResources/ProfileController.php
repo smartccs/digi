@@ -65,7 +65,7 @@ class ProfileController extends Controller
         $this->validate($request, [
                 'first_name' => 'required|max:255',
                 'last_name' => 'required|max:255',
-                'mobile' => 'required|digits_between:6,13',
+                'mobile' => 'required',
                 'avatar' => 'mimes:jpeg,bmp,png',
                 'language' => 'max:255',
                 'address' => 'max:255',
@@ -169,7 +169,7 @@ class ProfileController extends Controller
         $this->validate($request, [
                 'first_name' => 'required|max:255',
                 'last_name' => 'required|max:255',
-                'mobile' => 'required|digits_between:6,13',
+                'mobile' => 'required',
                 'avatar' => 'mimes:jpeg,bmp,png',
                 'language' => 'max:255',
                 'address' => 'max:255',
