@@ -38,7 +38,7 @@ class TokenController extends Controller
                 'first_name' => 'required|max:255',
                 'last_name' => 'required|max:255',
                 'email' => 'required|email|max:255|unique:providers',
-                'mobile' => 'required|digits_between:6,13',
+                'mobile' => 'required',
                 'password' => 'required|min:6|confirmed',
             ]);
 
