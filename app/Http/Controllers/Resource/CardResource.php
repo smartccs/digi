@@ -54,17 +54,28 @@ class CardResource extends Controller
 
         try{
 
-            $customer_id = $this->customer_id();
-            $this->set_stripe();
-            $customer = \Stripe\Customer::retrieve($customer_id);
-            $card = $customer->sources->create(["source" => $request->stripe_token]);
+                $customer_id = $this->customer_id();
+                $this->set_stripe();
+                $customer = \Stripe\Customer::retrieve($customer_id);
+                $card = $customer->sources->create(["source" => $request->stripe_token]);
 
-            $create_card = new Card;
-            $create_card->user_id = Auth::user()->id;
-            $create_card->card_id = $card['id'];
-            $create_card->last_four = $card['last4'];
-            $create_card->brand = $card['brand'];
-            $create_card->save();
+                $exist = Card::where('user_id',Auth::user()->id)
+                                ->where('last_four',$card['last4'])
+                                ->where('brand',$card['brand'])
+                                ->count();
+
+                if($exist == 0){
+
+                    $create_card = new Card;
+                    $create_card->user_id = Auth::user()->id;
+                    $create_card->card_id = $card['id'];
+                    $create_card->last_four = $card['last4'];
+                    $create_card->brand = $card['brand'];
+                    $create_card->save();
+
+                }else{
+                    return response()->json(['message' => 'Card Already Added']); 
+                }
 
             if($request->ajax()){
                 return response()->json(['message' => 'Card Added']); 
