@@ -195,7 +195,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="{{url('translations') }}" class="waves-effect waves-light">
+				<a href="{{route('admin.translation') }}" class="waves-effect waves-light">
 					<span class="s-icon"><i class="ti-smallcap"></i></span>
 					<span class="s-text">Translations</span>
 				</a>

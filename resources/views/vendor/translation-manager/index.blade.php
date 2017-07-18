@@ -1,7 +1,4 @@
-@extends('admin.layout.base')
 
-@section('title', 'Dashboard ')
-@section('scripts')
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -74,11 +71,6 @@
 
         })
     </script>
-    @endsection
-
-
-
-@section('content')
 <div style="width: 80%; margin: auto;">
     <h1>Translation Manager</h1>
     <p>Warning, translations are not visible until they are exported back to the app/lang file, using publish button.</p>
@@ -179,7 +171,3 @@
     <?php endif; ?>
 </div>
 
-@endsection
-
-</body>
-</html>

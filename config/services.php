@@ -33,17 +33,17 @@ return [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
-
+    
     'facebook' => [
-        'client_id' => '227306957774573',
-        'client_secret' => 'eae1e333047be8d92d8556b6af2ff917',
-        'redirect' => 'http://schedule.tranxit.co/auth/facebook/callback',
+        'client_id' => env('FB_CLIENT_ID'),
+        'client_secret' => env('FB_CLIENT_SECRET'),
+        'redirect' => env('FB_REDIRECT'),
     ],
 
     'google' => [
-        'client_id' => '770330255573-bd4ncoksl3clqeiherhv636r6k69folh.apps.googleusercontent.com',
-        'client_secret' => '9uh3U0-nLzD0E6UsizWE5beW',
-        'redirect' => 'http://schedule.tranxit.co/auth/google/callback',
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT'),
     ]
 
 ];

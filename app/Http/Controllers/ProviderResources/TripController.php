@@ -21,6 +21,7 @@ use App\PromocodeUsage;
 use App\ProviderService;
 use App\UserRequestRating;
 use App\UserRequestPayment;
+use App\ServiceType;
 
 class TripController extends Controller
 {

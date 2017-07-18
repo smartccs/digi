@@ -28,6 +28,7 @@
                 @foreach($requests as $index => $request)
                     <tr>
                         <td>{{ $request->id }}</td>
+                        <td>{{ $request->booking_id }}</td>
                         <td>
                             @if($request->provider)
                                 {{ $request->user->first_name }} {{ $request->user->last_name }}
@@ -89,7 +90,8 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th>#</th>
+                         <th>#</th>
+                        <th>Booking ID</th>
                         <th>User Name</th>
                         <th>Provider Name</th>
                         <th>Date &amp; Time</th>

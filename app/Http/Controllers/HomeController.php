@@ -129,7 +129,7 @@ class HomeController extends Controller
      */
     public function promotions_index(Request $request)
     {
-        $promocodes = $this->UserAPI->promocodes()->getData();
+        $promocodes = $this->UserAPI->promocodes();
         return view('user.account.promotions', compact('promocodes'));
     }
 
