@@ -36,9 +36,21 @@
                             <td><span class="arrow-icon fa fa-chevron-right"></span></td>
                             <td>{{ $trip->booking_id }}</td>
                             <td>{{date('d-m-Y',strtotime($trip->assigned_at))}}</td>
-                            <td>{{$trip->provider->first_name}} {{$trip->provider->last_name}}</td>
-                            <td>{{currency($trip->payment->total)}}</td>
-                            <td>{{$trip->service_type->name}}</td>
+                            @if($trip->provider)
+                                <td>{{$trip->provider->first_name}} {{$trip->provider->last_name}}</td>
+                            @else
+                                <td>-</td>
+                            @endif
+                            @if($trip->payment)
+                                <td>{{currency($trip->payment->total)}}</td>
+                            @else
+                                <td>-</td>
+                            @endif
+                            @if($trip->service_type)
+                                <td>{{$trip->service_type->name}}</td>
+                            @else
+                                <td>-</td>
+                            @endif
                             <td>@lang('user.paid_via') {{$trip->payment_mode}}</td>
                         </tr>
                         <tr class="hiddenRow">
@@ -73,11 +85,28 @@
 
                                             <div class="fare-break">
 
-                                                <h4 class="text-center"><strong>{{$trip->service_type->name}} - @lang('user.fare_breakdown')</strong></h4>
+                                                <h4 class="text-center">
+                                                <strong>
+                                                @if($trip->service_type)
+                                                    {{$trip->service_type->name}}
+                                                @endif
+                                                 - @lang('user.fare_breakdown')</strong></h4>
 
-                                                <h5>@lang('user.ride.base_price') <span>{{currency($trip->payment->fixed)}}</span></h5>
-                                                <h5><strong>@lang('user.ride.tax_price') </strong><span><strong>{{currency($trip->payment->tax)}}</strong></span></h5>
-                                                <h5 class="big"><strong>@lang('user.charged') - {{$trip->payment_mode}} </strong><span><strong>{{currency($trip->payment->total)}}</strong></span></h5>
+                                                <h5>@lang('user.ride.base_price') <span>
+                                                @if($trip->payment)
+                                                    {{currency($trip->payment->fixed)}}
+                                                @endif
+                                                </span></h5>
+                                                <h5><strong>@lang('user.ride.tax_price') </strong><span><strong>
+                                                @if($trip->payment)
+                                                {{currency($trip->payment->tax)}}
+                                                @endif
+                                                </strong></span></h5>
+                                                <h5 class="big"><strong>@lang('user.charged') - {{$trip->payment_mode}} </strong><span><strong>
+                                                @if($trip->payment)
+                                                {{currency($trip->payment->total)}}
+                                                @endif
+                                                </strong></span></h5>
 
                                             </div>
 
@@ -85,11 +114,20 @@
                                                 <div class="user-img" style="background-image: url({{img($trip->provider->avatar)}});">
                                                 </div>
                                                 <div class="user-right">
-                                                    <h5>{{$trip->provider->first_name}} {{$trip->provider->last_name}}</h5>
+                                                    @if($trip->provider)
+                                                        <h5>{{$trip->provider->first_name}} {{$trip->provider->last_name}}</h5>
+                                                    @else
+                                                    <h5>- </h5>
+                                                    @endif
+                                                    @if($trip->rating)
                                                     <div class="rating-outer">
                                                         <input type="hidden" class="rating" value="{{$trip->rating->user_rated}}" />
+
                                                     </div>
                                                     <p>{{$trip->rating->user_comment}}</p>
+                                                     @else
+                                                        -
+                                                    @endif
                                                 </div>
                                             </div>
 

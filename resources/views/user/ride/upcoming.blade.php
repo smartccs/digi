@@ -34,7 +34,11 @@
                             <td><span class="arrow-icon fa fa-chevron-right"></span></td>
                             <td>{{$trip->booking_id}}</td>
                             <td>{{date('d-m-Y H:i:s',strtotime($trip->schedule_at))}}</td>
-                            <td>{{$trip->service_type->name}}</td>
+                            @if($trip->service_type)
+                                 <td>{{$trip->service_type->name}}</td>
+                            @else
+                                <td>-</td>
+                            @endif
                             <td>@lang('user.paid_via') {{$trip->payment_mode}}</td>
                         </tr>
                         <tr class="hiddenRow">
@@ -69,7 +73,9 @@
                                                 <div class="user-img" style="background-image: url({{img($trip->provider->avatar)}});">
                                                 </div>
                                                 <div class="user-right">
+                                                @if($trip->provider)
                                                     <h5>{{$trip->provider->first_name}} {{$trip->provider->last_name}}</h5>
+                                                @endif
                                                     <p>{{$trip->status}}</p>
                                                 </div>
                                             </div>
