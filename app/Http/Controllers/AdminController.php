@@ -175,7 +175,7 @@ class AdminController extends Controller
         Setting::set('sos_number', $request->sos_number);
         Setting::set('contact_number', $request->contact_number);
         Setting::set('contact_email', $request->contact_email);
-        Setting::set('booking_prefix', $request->booking_prefix);
+        Setting::set('site_copyright', $request->site_copyright);
         Setting::save();
         
         return back()->with('flash_success','Settings Updated Successfully');
@@ -227,7 +227,7 @@ class AdminController extends Controller
         Setting::set('commission_percentage', $request->commission_percentage);
         Setting::set('surge_trigger', $request->surge_trigger);
         Setting::set('currency', $request->currency);
-        Setting::set('site_copyright', $request->site_copyright);
+        Setting::set('booking_prefix', $request->booking_prefix);
         Setting::save();
 
         return back()->with('flash_success','Settings Updated Successfully');
@@ -258,14 +258,14 @@ class AdminController extends Controller
 
         $this->validate($request,[
             'name' => 'required|max:255',
-            'mobile' => 'required|digits_between:6,13',
+            'email' => 'required|digits_between:6,13',
             'picture' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
         ]);
 
         try{
             $admin = Auth::guard('admin')->user();
             $admin->name = $request->name;
-            $admin->mobile = $request->mobile;
+            $admin->email = $request->email;
             if($request->hasFile('picture')){
                 $admin->picture = $request->picture->store('admin/profile');  
             }

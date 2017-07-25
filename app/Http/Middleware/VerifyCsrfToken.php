@@ -13,6 +13,7 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = [
         '/provider/request/*',
-        '/provider/profile/available'
+        '/provider/profile/available',
+        '/account/kit'
     ];
 }

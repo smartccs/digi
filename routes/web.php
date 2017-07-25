@@ -13,6 +13,7 @@ Route::get('auth/facebook', 'Auth\SocialLoginController@redirectToFaceBook');
 Route::get('auth/facebook/callback', 'Auth\SocialLoginController@handleFacebookCallback');
 Route::get('auth/google', 'Auth\SocialLoginController@redirectToGoogle');
 Route::get('auth/google/callback', 'Auth\SocialLoginController@handleGoogleCallback');
+Route::post('account/kit', 'Auth\SocialLoginController@account_kit')->name('account.kit');
 
 /*
 |--------------------------------------------------------------------------
