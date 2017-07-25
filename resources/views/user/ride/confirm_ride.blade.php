@@ -169,10 +169,12 @@
         });
     </script>
     <script type="text/javascript">
+        var date = new Date();
+        date.setDate(date.getDate()-1);
         $('#datepicker').datepicker({  
-             minDate:new Date()
-          });
-         $('#timepicker').timepicker({showMeridian : false});
+            startDate: date
+        });
+        $('#timepicker').timepicker({showMeridian : false});
     </script>
     <script type="text/javascript">
         function card(value){

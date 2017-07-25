@@ -72,6 +72,8 @@ $('.car-detail').slick({
     slidesToShow: 3,
     slidesToScroll: 1,
     autoplay: false,
+    swipeToSlide: true,
+    infinite: false
 })
 
 .on("mousewheel", function (event) {
