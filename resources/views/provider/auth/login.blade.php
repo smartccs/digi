@@ -40,11 +40,13 @@
 
         <p class="helper"><a href="{{ url('/provider/password/reset') }}">Forgot Your Password?</a></p>   
     </form>
+    @if(Setting::get('social_login', 0) == 1)
     <div class="col-md-12">
         <a href="{{ url('provider/auth/facebook') }}"><button type="submit" class="log-teal-btn fb"><i class="fa fa-facebook"></i>LOGIN WITH FACEBOOK</button></a>
     </div>  
     <!-- <div class="col-md-12">
         <a href="{{ url('provider/auth/google') }}"><button type="submit" class="log-teal-btn gp"><i class="fa fa-google-plus"></i>LOGIN WITH GOOGLE+</button></a>
     </div> -->
+    @endif
 </div>
 @endsection

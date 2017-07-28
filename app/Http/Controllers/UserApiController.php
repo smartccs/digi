@@ -815,6 +815,8 @@ class UserApiController extends Controller
                     $promo->status = 'EXPIRED';
                     $promo->save();
                     PromocodeUsage::where('promocode_id', $promo->id)->update(['status' => 'EXPIRED']);
+                }else{
+                    PromocodeUsage::where('promocode_id', $promo->id)->update(['status' => 'ADDED']);
                 }
             }
         } catch (Exception $e) {

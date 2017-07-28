@@ -97,6 +97,16 @@
 				</div>
 
 				<div class="form-group row">
+					<label for="social_login" class="col-xs-2 col-form-label">Social Login</label>
+					<div class="col-xs-10">
+						<select class="form-control" id="social_login" name="social_login">
+							<option value="1" @if(Setting::get('social_login', 0) == 1) selected @endif>Enable</option>
+							<option value="0" @if(Setting::get('social_login', 0) == 0) selected @endif>Disable</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group row">
 					<label for="zipcode" class="col-xs-2 col-form-label"></label>
 					<div class="col-xs-10">
 						<button type="submit" class="btn btn-primary">Update Site Settings</button>

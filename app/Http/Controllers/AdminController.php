@@ -176,6 +176,7 @@ class AdminController extends Controller
         Setting::set('contact_number', $request->contact_number);
         Setting::set('contact_email', $request->contact_email);
         Setting::set('site_copyright', $request->site_copyright);
+        Setting::set('social_login', $request->social_login);
         Setting::save();
         
         return back()->with('flash_success','Settings Updated Successfully');
