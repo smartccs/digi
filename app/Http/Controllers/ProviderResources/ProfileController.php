@@ -313,6 +313,7 @@ class ProfileController extends Controller
     public function target(Request $request)
     {
         try {
+            
             $Rides = UserRequests::where('provider_id', Auth::user()->id)
                     ->where('status', 'COMPLETED')
                     ->where('created_at', '>=', Carbon::today())
@@ -324,6 +325,7 @@ class ProfileController extends Controller
                     'rides_count' => $Rides->count(),
                     'target' => Setting::get('daily_target','0')
                 ]);
+
         } catch(Exception $e) {
             return response()->json(['error' => "Something Went Wrong"]);
         }

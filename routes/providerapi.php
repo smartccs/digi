@@ -25,6 +25,8 @@ Route::post('/reset/password',      'ProviderAuth\TokenController@reset_password
 
 Route::group(['middleware' => ['provider.api']], function () {
 
+Route::post('/refresh/token' , 'ProviderAuth\TokenController@refresh_token');
+
     Route::group(['prefix' => 'profile'], function () {
 
         Route::get ('/' , 'ProviderResources\ProfileController@index');

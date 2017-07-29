@@ -143,6 +143,7 @@ class TokenController extends Controller
     {
         try {
             ProviderDevice::where('provider_id', $request->id)->update(['udid'=> '', 'token' => '']);
+            ProviderService::where('provider_id',$request->id)->update(['status' => 'offline']);
             return response()->json(['message' => trans('api.logout_success')]);
         } catch (Exception $e) {
             return response()->json(['error' => trans('api.something_went_wrong')], 500);
@@ -392,5 +393,32 @@ class TokenController extends Controller
         } catch (Exception $e) {
             return response()->json(['status'=>false,'message' => trans('api.something_went_wrong')]);
         }
+    }
+
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function refresh_token(Request $request)
+    {
+
+        Config::set('auth.providers.users.model', 'App\Provider');
+
+        $Provider = Provider::with('service', 'device')->find(Auth::user()->id);
+
+        try {
+            if (!$token = JWTAuth::fromUser($Provider)) {
+                return response()->json(['error' => 'Unauthenticated'], 401);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
+
+        $Provider->access_token = $token;
+
+        return response()->json($Provider);
     }
 }
