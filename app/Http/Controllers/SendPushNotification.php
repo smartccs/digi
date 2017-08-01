@@ -137,6 +137,8 @@ class SendPushNotification extends Controller
 
             if($user->device_token != ""){
 
+                \Log::info('sending push for user : '. $user->firstname);
+
     	    	if($user->device_type == 'ios'){
 
     	    		return \PushNotification::app('IOSUser')
@@ -172,7 +174,9 @@ class SendPushNotification extends Controller
             if($provider->token != ""){
 
             	if($provider->type == 'ios'){
-            		
+
+                \Log::info('sending push for provider : '. $user->firstname);
+
             		return \PushNotification::app('IOSProvider')
         	            ->to($provider->token)
         	            ->send($push_message);
