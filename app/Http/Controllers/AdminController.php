@@ -10,6 +10,7 @@ use Auth;
 use Setting;
 use Exception;
 use \Carbon\Carbon;
+use App\Http\Controllers\SendPushNotification;
 
 use App\User;
 use App\Fleet;
@@ -615,4 +616,62 @@ class AdminController extends Controller
              return back()->with('flash_error','Something Went Wrong!');
         }
     }
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function push(){
+
+        try{
+            return view('admin.push');
+        }
+
+        catch (Exception $e) {
+             return back()->with('flash_error','Something Went Wrong!');
+        }
+    }
+
+
+    /**
+     * pages.
+     *
+     * @param  \App\Provider  $provider
+     * @return \Illuminate\Http\Response
+     */
+    public function send_push(Request $request){
+
+        $this->validate($request, [
+                'segment' => 'required|in:users,providers',
+                'message' => 'required',
+            ]);
+
+        try{
+
+            if($request->segement == 'users'){
+
+                $Users = User::all();
+                foreach ($Users as $key => $user) {
+                    (new SendPushNotification)->sendPushToUser($user->id, $request->message);
+                }
+
+            }elseif($request->segement == 'providers'){
+                $Providers = Provider::all();
+                foreach ($Providers as $key => $provider) {
+                    (new SendPushNotification)->sendPushToProvider($provider->id, $request->message);
+                }
+            }
+
+            return back()->with('flash_success', 'Message Sent to all '.$request->segment);
+        }
+
+        catch (Exception $e) {
+             return back()->with('flash_error','Something Went Wrong!');
+        }
+    }
+
+
 }
