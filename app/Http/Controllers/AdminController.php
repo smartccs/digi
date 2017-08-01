@@ -655,14 +655,14 @@ class AdminController extends Controller
 
         try{
 
-            if($request->segement == 'users'){
+            if($request->segment == 'users'){
 
                 $Users = User::all();
                 foreach ($Users as $key => $user) {
                     (new SendPushNotification)->sendPushToUser($user->id, $request->message);
                 }
 
-            }elseif($request->segement == 'providers'){
+            }elseif($request->segment == 'providers'){
                 $Providers = Provider::all();
                 foreach ($Providers as $key => $provider) {
                     (new SendPushNotification)->sendPushToProvider($provider->id, $request->message);
