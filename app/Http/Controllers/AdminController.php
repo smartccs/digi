@@ -650,7 +650,7 @@ class AdminController extends Controller
 
         $this->validate($request, [
                 'segment' => 'required|in:users,providers',
-                'message' => 'required',
+                'message' => 'required|max:100',
             ]);
 
         try{

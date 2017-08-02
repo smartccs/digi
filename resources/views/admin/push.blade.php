@@ -26,7 +26,8 @@
 					<div class="form-group row">
 						<label for="message" class="col-xs-2 col-form-label">Message</label>
 						<div class="col-xs-10">
-							<textarea class="form-control" cols="10" rows="10" name="message" required id="message" placeholder="Enter Message"></textarea>
+							<textarea class="form-control" rows="3" name="message" required id="message" placeholder="Enter Message" maxlength="200"></textarea>
+							<div id="characterLeftDesc"></div>
 						</div>
 					</div>
 
@@ -43,4 +44,23 @@
         </div>
     </div>
 
+@endsection
+
+@section('scripts')
+<script type="text/javascript">
+
+	$('#characterLeftDesc').text('100 characters left');
+
+	$('#message').keyup(function () {
+	    var max = 100;
+	    var len = $(this).val().length;
+	    if (len >= max) {
+	        $('#characterLeftDesc').text(' You have reached the limit');
+	    } else {
+	        var ch = max - len;
+	        $('#characterLeftDesc').text(ch + ' characters left');
+	    }
+	});
+
+</script>
 @endsection
