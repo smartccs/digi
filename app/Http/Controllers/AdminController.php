@@ -700,10 +700,15 @@ class AdminController extends Controller
                 }
             }
 
+            if($request->has('schedule_date') && $request->has('schedule_time')){
+                $CustomPush->schedule_at = date("Y-m-d H:i:s",strtotime("$request->schedule_date $request->schedule_time"));
+            }
 
             $CustomPush->save();
 
-            $this->SendCustomPush($CustomPush->id);
+            if($CustomPush->schedule_at != ''){
+                $this->SendCustomPush($CustomPush->id);
+            }
 
             return back()->with('flash_success', 'Message Sent to all '.$request->segment);
         }

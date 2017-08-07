@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use DB;
 use App\Http\Controllers\SendPushNotification;
+use App\Http\Controllers\AdminController;
 use Carbon\Carbon;
 
 class CustomCommand extends Command
@@ -64,5 +65,22 @@ class CustomCommand extends Command
                 DB::table('provider_services')->where('provider_id',$ride->provider_id)->update(['status' =>'riding']);
             }
         }
+
+        $CustomPush = DB::table('custom_pushes')
+                        ->where('schedule_at','<=',\Carbon\Carbon::now()->addMinutes(5))
+                        ->get();
+
+        if(!empty($UserRequest)){
+            foreach($CustomPush as $Push){
+                DB::table('custom_pushes')
+                        ->where('id',$Push->id)
+                        ->update(['schedule_at' => null ]);
+
+                // sending push
+                (new AdminController)->SendCustomPush($Push->id);
+            }
+        }
+
+
     }
 }

@@ -14,7 +14,7 @@
             <div class="box box-block bg-white">
             	<h5 style="margin-bottom: 2em;">Push Notification</h5>
 
-	            <form class="form-horizontal" action="{{route('admin.send.push')}}" method="POST" role="form">
+	            <form class="form-horizontal" action="{{route('admin.send.push')}}" method="POST" role="form" id="create_push">
 	            
 	            	{{csrf_field()}}
 
@@ -28,7 +28,6 @@
 							</select>
 						</div>
 					</div>
-
 
 					<div class="form-group row" id="for_users" style="display: none;">
 						<label class="col-xs-2 col-form-label">User Conditions</label>
@@ -114,12 +113,10 @@
 						<div class="col-xs-10">
 							<button type="submit" class="btn btn-primary">Push Now</button>
 							&nbsp;
-							<!-- <button data-toggle="modal" data-target="#schedule_modal" type="button" class="btn btn-success">Schedule Push</button> -->
+							<button data-toggle="modal" data-target="#schedule_modal" type="button" class="btn btn-success">Schedule Push</button>
 						</div>
 					</div>
-
 				</form>
-
             </div>
 
 	        <div class="box box-block bg-white">
@@ -301,9 +298,9 @@
     <script type="text/javascript">
         $(document).ready(function(){
             $('#schedule_button').click(function(){
-                $("#datepicker").clone().attr('type','hidden').appendTo($('#create_ride'));
-                $("#timepicker").clone().attr('type','hidden').appendTo($('#create_ride'));
-                document.getElementById('create_ride').submit();
+                $("#datepicker").clone().attr('type','hidden').appendTo($('#create_push'));
+                $("#timepicker").clone().attr('type','hidden').appendTo($('#create_push'));
+                document.getElementById('create_push').submit();
             });
         });
     </script>
