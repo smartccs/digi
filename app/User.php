@@ -34,7 +34,7 @@ class User extends Authenticatable
      */
     public function trips()
     {
-        return $this->hasMany('App\UserRequests');
+        return $this->hasMany('App\UserRequests','user_id','id');
     }
 
 }

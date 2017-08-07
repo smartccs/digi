@@ -728,31 +728,32 @@ class AdminController extends Controller
 
                     if($Push->condition_data == 'HOUR'){
 
-                        $Users = User::whereHas('trips', function($query) use ($provider){
-                            $query->where('created_at',Carbon::now()->subHour());
+                        $Users = User::whereHas('trips', function($query) {
+                            $query->where('created_at','>=',Carbon::now()->subHour());
                         })->get();
                         
                     }elseif($Push->condition_data == 'WEEK'){
 
-                        $Users = User::whereHas('trips', function($query) use ($provider){
-                            $query->where('created_at',Carbon::now()->subWeek());
+                        $Users = User::whereHas('trips', function($query){
+                            $query->where('created_at','>=',Carbon::now()->subWeek());
                         })->get();
 
                     }elseif($Push->condition_data == 'MONTH'){
 
-                        $Users = User::whereHas('trips', function($query) use ($provider){
-                            $query->where('created_at',Carbon::now()->subMonth());
+                        $Users = User::whereHas('trips', function($query){
+                            $query->where('created_at','>=',Carbon::now()->subMonth());
                         })->get();
 
                     }
 
                 }elseif($Push->condition == 'RIDES'){
 
-                    $Users = User::whereHas('trips', function($query) use ($provider){
+                    $Users = User::whereHas('trips', function($query) use ($Push){
                                 $query->where('status','COMPLETED');
-                                $query->groupBy('user_id');
-                                $query->havingRaw('count(*) > '. $request->condition_data);
+                                $query->groupBy('id');
+                                $query->havingRaw('COUNT(*) >= '.$Push->condition_data);
                             })->get();
+
 
                 }elseif($Push->condition == 'LOCATION'){
 
@@ -781,30 +782,30 @@ class AdminController extends Controller
 
                     if($Push->condition_data == 'HOUR'){
 
-                        $Providers = Provider::whereHas('trips', function($query) use ($provider){
-                            $query->where('created_at',Carbon::now()->subHour());
+                        $Providers = Provider::whereHas('trips', function($query){
+                            $query->where('created_at','>=',Carbon::now()->subHour());
                         })->get();
                         
                     }elseif($Push->condition_data == 'WEEK'){
 
-                        $Providers = Provider::whereHas('trips', function($query) use ($provider){
-                            $query->where('created_at',Carbon::now()->subWeek());
+                        $Providers = Provider::whereHas('trips', function($query){
+                            $query->where('created_at','>=',Carbon::now()->subWeek());
                         })->get();
 
                     }elseif($Push->condition_data == 'MONTH'){
 
-                        $Providers = Provider::whereHas('trips', function($query) use ($provider){
-                            $query->where('created_at',Carbon::now()->subMonth());
+                        $Providers = Provider::whereHas('trips', function($query){
+                            $query->where('created_at','>=',Carbon::now()->subMonth());
                         })->get();
 
                     }
 
                 }elseif($Push->condition == 'RIDES'){
 
-                    $Providers = Provider::whereHas('trips', function($query) use ($provider){
-                                $query->where('status','COMPLETED');
-                                $query->groupBy('provider_id');
-                                $query->havingRaw('count(*) > '. $request->condition_data);
+                    $Providers = Provider::whereHas('trips', function($query) use ($Push){
+                               $query->where('status','COMPLETED');
+                                $query->groupBy('id');
+                                $query->havingRaw('COUNT(*) >= '.$Push->condition_data);
                             })->get();
 
                 }elseif($Push->condition == 'LOCATION'){
@@ -824,9 +825,20 @@ class AdminController extends Controller
                 foreach ($Providers as $key => $provider) {
                     (new SendPushNotification)->sendPushToProvider($provider->id, $Push->message);
                 }
+
+            }elseif($Push->send_to == 'ALL'){
+
+                $Users = User::all();
+                foreach ($Users as $key => $user) {
+                    (new SendPushNotification)->sendPushToUser($user->id, $Push->message);
+                }
+
+                $Providers = Provider::all();
+                foreach ($Providers as $key => $provider) {
+                    (new SendPushNotification)->sendPushToProvider($provider->id, $Push->message);
+                }
+
             }
-
-
         }
 
         catch (Exception $e) {

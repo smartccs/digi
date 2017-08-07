@@ -38,7 +38,7 @@
 								<option value="ACTIVE">who were active for </option>
 								<option value="LOCATION"> who are in </option>
 								<option value="RIDES">who most used our service more than </option>
-								<option value="AMOUNT"> who spent more than </option>
+								<!-- <option value="AMOUNT"> who spent more than </option> -->
 							</select>
 						</div>
 						<div class="col-xs-5" id="user_active" style="display: none;">
@@ -74,7 +74,7 @@
 								<option value="ACTIVE">who were active for </option>
 								<option value="LOCATION"> who are in </option>
 								<option value="RIDES">who most serviced more than </option>
-								<option value="AMOUNT">  who earned more than </option>
+								<!-- <option value="AMOUNT">  who earned more than </option> -->
 							</select>
 						</div>
 						<div class="col-xs-5" id="provider_active" style="display: none;">
