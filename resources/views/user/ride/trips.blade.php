@@ -96,7 +96,28 @@
                                                 @if($trip->payment)
                                                     {{currency($trip->payment->fixed)}}
                                                 @endif
+
                                                 </span></h5>
+                                                <h5>@lang('user.ride.distance_price') <span>
+                                                @if($trip->payment)
+                                                    {{currency($trip->payment->distance)}}
+                                                @endif
+                                                
+                                                </span></h5>
+                                                 @if($trip->payment)
+                                                    @if($trip->payment->wallet)
+                                                        <h5>@lang('user.ride.wallet_deduction') <span>
+                                                            {{currency($trip->payment->wallet)}}
+                                                        </span></h5>
+                                                    @endif
+                                                @endif
+                                                @if($trip->payment)
+                                                    @if($trip->payment->discount)
+                                                        <h5>@lang('user.ride.promotion_applied') <span>
+                                                            {{currency($trip->payment->discount)}}
+                                                        </span></h5>
+                                                    @endif
+                                                @endif
                                                 <h5><strong>@lang('user.ride.tax_price') </strong><span><strong>
                                                 @if($trip->payment)
                                                 {{currency($trip->payment->tax)}}

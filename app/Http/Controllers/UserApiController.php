@@ -1113,4 +1113,26 @@ class UserApiController extends Controller
         }
     }
 
+
+    /**
+     * Show the email availability.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function verify(Request $request)
+    {
+        $this->validate($request, [
+                'email' => 'required|email|max:255|unique:users',
+            ]);
+
+        try{
+            
+            return response()->json(['message' => trans('api.email_available')]);
+
+        } catch (Exception $e) {
+             return response()->json(['error' => trans('api.something_went_wrong')], 500);
+        }
+    }
+
 }

@@ -539,7 +539,6 @@ class TripController extends Controller
                         
                         $Payment->payment_id = 'WALLET';
                         $Payment->payment_mode = $UserRequest->payment_mode;
-                        $Payment->paid = 1;
 
                         $UserRequest->paid = 1;
                         $UserRequest->status = 'COMPLETED';

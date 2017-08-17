@@ -13,6 +13,7 @@
 
 Route::post('/signup' , 'UserApiController@signup');
 Route::post('/logout' , 'UserApiController@logout');
+Route::post('/verify' , 'UserApiController@verify');
 
 Route::post('/auth/facebook', 'Auth\SocialLoginController@facebookViaAPI');
 Route::post('/auth/google', 'Auth\SocialLoginController@googleViaAPI');

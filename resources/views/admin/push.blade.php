@@ -26,7 +26,7 @@
 					<div class="form-group row">
 						<label for="message" class="col-xs-2 col-form-label">Message</label>
 						<div class="col-xs-10">
-							<textarea class="form-control" rows="3" name="message" required id="message" placeholder="Enter Message" maxlength="200"></textarea>
+							<textarea maxlength="200" class="form-control" rows="3" name="message" required id="message" placeholder="Enter Message" ></textarea>
 							<div id="characterLeftDesc"></div>
 						</div>
 					</div>

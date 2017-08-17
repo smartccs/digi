@@ -494,7 +494,7 @@ class TripComponent extends React.Component {
             url: '/provider/request/'+this.props.request.id,
             dataType: 'json',
             data: this.form,
-            headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken },
+            headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken, 'X-Requested-With' : 'XMLHttpRequest' },
             type: 'POST',
             success: function(data) {
                 console.log('Updated', data);

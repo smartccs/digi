@@ -23,10 +23,11 @@ return array (
 	],
 	'something_went_wrong' => 'Something Went Wrong',
 	'logout_success' => 'Logged out Successfully',
+	'email_available' => 'Email Available',
 	'services_not_found' => 'Services Not Found',
 	'promocode_applied' => 'Promocode Applied',
 	'promocode_expired' => 'Promocode Expired',
-	'promocode_already_in_user' => 'Promocode Already in Use',
+	'promocode_already_in_use' => 'Promocode Already in Use',
 	'paid' => 'Paid',
 	'added_to_your_wallet' => 'Added to your Wallet',
 	'push' => [

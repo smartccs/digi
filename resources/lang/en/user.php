@@ -64,6 +64,7 @@ return array (
     'request_inprogress' => 'Ride Already in Progress',
     'request_scheduled' => 'Ride Already Scheduled on this time',
     'cancel_reason' => 'Cancel Reason',
+    'wallet_deduction' => 'Wallet Deduction',
   ),
   'dashboard' => 'Dashboard',
   'payment' => 'Payment',
