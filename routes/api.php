@@ -26,11 +26,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 	// user profile
 
 	Route::post('/change/password' , 'UserApiController@change_password');
-
 	Route::post('/update/location' , 'UserApiController@update_location');
-
 	Route::get('/details' , 'UserApiController@details');
-
 	Route::post('/update/profile' , 'UserApiController@update_profile');
 
 	// services
@@ -44,9 +41,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 	// request
 
 	Route::post('/send/request' , 'UserApiController@send_request');
-
 	Route::post('/cancel/request' , 'UserApiController@cancel_request');
-	
 	Route::get('/request/check' , 'UserApiController@request_status_check');
 	Route::get('/show/providers' , 'UserApiController@show_providers');
 
@@ -54,14 +49,12 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 	Route::get('/trips' , 'UserApiController@trips');
 	Route::get('upcoming/trips' , 'UserApiController@upcoming_trips');
-	
 	Route::get('/trip/details' , 'UserApiController@trip_details');
 	Route::get('upcoming/trip/details' , 'UserApiController@upcoming_trip_details');
 
 	// payment
 
 	Route::post('/payment' , 'PaymentController@payment');
-
 	Route::post('/add/money' , 'PaymentController@add_money');
 
 	// estimated
@@ -75,7 +68,6 @@ Route::group(['middleware' => ['auth:api']], function () {
 	// promocode
 
 	Route::get('/promocodes' , 'UserApiController@promocodes');
-
 	Route::post('/promocode/add' , 'UserApiController@add_promocode');
 
 	// card payment

@@ -74,7 +74,6 @@ Route::get('/send/push', 'AdminController@push')->name('push');
 Route::post('/send/push', 'AdminController@send_push')->name('send.push');
 Route::get('/privacy', 'AdminController@privacy')->name('privacy');
 Route::post('/pages', 'AdminController@pages')->name('pages.update');
-
 Route::resource('requests', 'Resource\TripResource');
 Route::get('scheduled', 'Resource\TripResource@scheduled')->name('requests.scheduled');
 

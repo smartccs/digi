@@ -131,8 +131,8 @@ class UserRequests extends Model
 
     public function scopeUserTrips($query, $user_id)
     {
-        return $query->where('user_requests.user_id', '=', $user_id)
-                    ->where('user_requests.status', '=', 'COMPLETED')
+        return $query->where('user_requests.user_id', $user_id)
+                    ->where('user_requests.status','COMPLETED')
                     ->orderBy('user_requests.created_at','desc')
                     ->select('user_requests.*')
                     ->with('payment','service_type');
@@ -140,8 +140,8 @@ class UserRequests extends Model
 
     public function scopeUserUpcomingTrips($query, $user_id)
     {
-        return $query->where('user_requests.user_id', '=', $user_id)
-                    ->where('user_requests.status', '=', 'SCHEDULED')
+        return $query->where('user_requests.user_id', $user_id)
+                    ->where('user_requests.status', 'SCHEDULED')
                     ->orderBy('user_requests.created_at','desc')
                     ->select('user_requests.*')
                     ->with('service_type','provider');
@@ -149,26 +149,26 @@ class UserRequests extends Model
 
     public function scopeProviderUpcomingRequest($query, $user_id)
     {
-        return $query->where('user_requests.provider_id', '=', $user_id)
-                    ->where('user_requests.status', '=', 'SCHEDULED')
+        return $query->where('user_requests.provider_id', $user_id)
+                    ->where('user_requests.status', 'SCHEDULED')
                     ->select('user_requests.*')
                     ->with('service_type','user','provider');
     }
 
     public function scopeUserTripDetails($query, $user_id, $request_id)
     {
-        return $query->where('user_requests.user_id', '=', $user_id)
-                    ->where('user_requests.id', '=', $request_id)
-                    ->where('user_requests.status', '=', 'COMPLETED')
+        return $query->where('user_requests.user_id', $user_id)
+                    ->where('user_requests.id', $request_id)
+                    ->where('user_requests.status', 'COMPLETED')
                     ->select('user_requests.*')
                     ->with('payment','service_type','user','provider','rating');
     }
 
     public function scopeUserUpcomingTripDetails($query, $user_id, $request_id)
     {
-        return $query->where('user_requests.user_id', '=', $user_id)
-                    ->where('user_requests.id', '=', $request_id)
-                    ->where('user_requests.status', '=', 'SCHEDULED')
+        return $query->where('user_requests.user_id', $user_id)
+                    ->where('user_requests.id', $request_id)
+                    ->where('user_requests.status', 'SCHEDULED')
                     ->select('user_requests.*')
                     ->with('service_type','user','provider');
     }

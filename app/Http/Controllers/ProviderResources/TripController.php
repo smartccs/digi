@@ -231,6 +231,7 @@ class TripController extends Controller
         if($request->ajax()) {
 
             $Jobs = UserRequests::where('provider_id', Auth::user()->id)
+                    ->where('status', 'COMPLETED')
                     ->orderBy('created_at','desc')
                     ->with('payment')
                     ->get();
