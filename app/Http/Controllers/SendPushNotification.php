@@ -169,13 +169,13 @@ class SendPushNotification extends Controller
 
     	try{
 
-	    	$provider = ProviderDevice::where('provider_id',$provider_id)->first();
+	    	$provider = ProviderDevice::where('provider_id',$provider_id)->with('provider')->first();
 
             if($provider->token != ""){
+                
+                \Log::info('sending push for provider : '. $provider->provider->first_name);
 
             	if($provider->type == 'ios'){
-
-                \Log::info('sending push for provider : '. $provider->first_name);
 
             		return \PushNotification::app('IOSProvider')
         	            ->to($provider->token)

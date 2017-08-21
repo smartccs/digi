@@ -22,6 +22,7 @@ use App\UserRequests;
 use App\ProviderService;
 use App\UserRequestRating;
 use App\UserRequestPayment;
+use App\CustomPush;
 
 class AdminController extends Controller
 {
@@ -627,7 +628,8 @@ class AdminController extends Controller
     public function push(){
 
         try{
-            return view('admin.push');
+            $Pushes = CustomPush::orderBy('id','desc')->get();
+            return view('admin.push',compact('Pushes'));
         }
 
         catch (Exception $e) {
@@ -649,27 +651,199 @@ class AdminController extends Controller
         }
 
         $this->validate($request, [
-                'segment' => 'required|in:users,providers',
+                'send_to' => 'required|in:ALL,USERS,PROVIDERS',
+                'user_condition' => ['required_if:send_to,USERS','in:ACTIVE,LOCATION,RIDES,AMOUNT'],
+                'provider_condition' => ['required_if:send_to,PROVIDERS','in:ACTIVE,LOCATION,RIDES,AMOUNT'],
+                'user_active' => ['required_if:user_condition,ACTIVE','in:HOUR,WEEK,MONTH'],
+                'user_rides' => 'required_if:user_condition,RIDES',
+                'user_location' => 'required_if:user_condition,LOCATION',
+                'user_amount' => 'required_if:user_condition,AMOUNT',
+                'provider_active' => ['required_if:provider_condition,ACTIVE','in:HOUR,WEEK,MONTH'],
+                'provider_rides' => 'required_if:provider_condition,RIDES',
+                'provider_location' => 'required_if:provider_condition,LOCATION',
+                'provider_amount' => 'required_if:provider_condition,AMOUNT',
                 'message' => 'required|max:100',
             ]);
 
         try{
 
-            if($request->segment == 'users'){
+            $CustomPush = new CustomPush;
+            $CustomPush->send_to = $request->send_to;
+            $CustomPush->message = $request->message;
 
-                $Users = User::all();
-                foreach ($Users as $key => $user) {
-                    (new SendPushNotification)->sendPushToUser($user->id, $request->message);
+            if($request->send_to == 'USERS'){
+
+                $CustomPush->condition = $request->user_condition;
+
+                if($request->user_condition == 'ACTIVE'){
+                    $CustomPush->condition_data = $request->user_active;
+                }elseif($request->user_condition == 'LOCATION'){
+                    $CustomPush->condition_data = $request->user_location;
+                }elseif($request->user_condition == 'RIDES'){
+                    $CustomPush->condition_data = $request->user_rides;
+                }elseif($request->user_condition == 'AMOUNT'){
+                    $CustomPush->condition_data = $request->user_amount;
                 }
 
-            }elseif($request->segment == 'providers'){
-                $Providers = Provider::all();
-                foreach ($Providers as $key => $provider) {
-                    (new SendPushNotification)->sendPushToProvider($provider->id, $request->message);
+            }elseif($request->send_to == 'PROVIDERS'){
+
+                $CustomPush->condition = $request->provider_condition;
+
+                if($request->provider_condition == 'ACTIVE'){
+                    $CustomPush->condition_data = $request->provider_active;
+                }elseif($request->provider_condition == 'LOCATION'){
+                    $CustomPush->condition_data = $request->provider_location;
+                }elseif($request->provider_condition == 'RIDES'){
+                    $CustomPush->condition_data = $request->provider_rides;
+                }elseif($request->provider_condition == 'AMOUNT'){
+                    $CustomPush->condition_data = $request->provider_amount;
                 }
             }
 
+            if($request->has('schedule_date') && $request->has('schedule_time')){
+                $CustomPush->schedule_at = date("Y-m-d H:i:s",strtotime("$request->schedule_date $request->schedule_time"));
+            }
+
+            $CustomPush->save();
+
+            if($CustomPush->schedule_at != ''){
+                $this->SendCustomPush($CustomPush->id);
+            }
+
             return back()->with('flash_success', 'Message Sent to all '.$request->segment);
+        }
+
+        catch (Exception $e) {
+             return back()->with('flash_error','Something Went Wrong!');
+        }
+    }
+
+
+    public function SendCustomPush($CustomPush){
+
+        try{
+
+            $Push = CustomPush::findOrFail($CustomPush);
+
+            if($Push->send_to == 'USERS'){
+
+                $Users = [];
+
+                if($Push->condition == 'ACTIVE'){
+
+                    if($Push->condition_data == 'HOUR'){
+
+                        $Users = User::whereHas('trips', function($query) {
+                            $query->where('created_at','>=',Carbon::now()->subHour());
+                        })->get();
+                        
+                    }elseif($Push->condition_data == 'WEEK'){
+
+                        $Users = User::whereHas('trips', function($query){
+                            $query->where('created_at','>=',Carbon::now()->subWeek());
+                        })->get();
+
+                    }elseif($Push->condition_data == 'MONTH'){
+
+                        $Users = User::whereHas('trips', function($query){
+                            $query->where('created_at','>=',Carbon::now()->subMonth());
+                        })->get();
+
+                    }
+
+                }elseif($Push->condition == 'RIDES'){
+
+                    $Users = User::whereHas('trips', function($query) use ($Push){
+                                $query->where('status','COMPLETED');
+                                $query->groupBy('id');
+                                $query->havingRaw('COUNT(*) >= '.$Push->condition_data);
+                            })->get();
+
+
+                }elseif($Push->condition == 'LOCATION'){
+
+                    $Location = explode(',', $Push->condition_data);
+
+                    $distance = Setting::get('provider_search_radius', '10');
+                    $latitude = $Location[0];
+                    $longitude = $Location[1];
+
+                    $Users = User::whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
+                            ->get();
+
+                }
+
+
+                foreach ($Users as $key => $user) {
+                    (new SendPushNotification)->sendPushToUser($user->id, $Push->message);
+                }
+
+            }elseif($Push->send_to == 'PROVIDERS'){
+
+
+                $Providers = [];
+
+                if($Push->condition == 'ACTIVE'){
+
+                    if($Push->condition_data == 'HOUR'){
+
+                        $Providers = Provider::whereHas('trips', function($query){
+                            $query->where('created_at','>=',Carbon::now()->subHour());
+                        })->get();
+                        
+                    }elseif($Push->condition_data == 'WEEK'){
+
+                        $Providers = Provider::whereHas('trips', function($query){
+                            $query->where('created_at','>=',Carbon::now()->subWeek());
+                        })->get();
+
+                    }elseif($Push->condition_data == 'MONTH'){
+
+                        $Providers = Provider::whereHas('trips', function($query){
+                            $query->where('created_at','>=',Carbon::now()->subMonth());
+                        })->get();
+
+                    }
+
+                }elseif($Push->condition == 'RIDES'){
+
+                    $Providers = Provider::whereHas('trips', function($query) use ($Push){
+                               $query->where('status','COMPLETED');
+                                $query->groupBy('id');
+                                $query->havingRaw('COUNT(*) >= '.$Push->condition_data);
+                            })->get();
+
+                }elseif($Push->condition == 'LOCATION'){
+
+                    $Location = explode(',', $Push->condition_data);
+
+                    $distance = Setting::get('provider_search_radius', '10');
+                    $latitude = $Location[0];
+                    $longitude = $Location[1];
+
+                    $Providers = Provider::whereRaw("(1.609344 * 3956 * acos( cos( radians('$latitude') ) * cos( radians(latitude) ) * cos( radians(longitude) - radians('$longitude') ) + sin( radians('$latitude') ) * sin( radians(latitude) ) ) ) <= $distance")
+                            ->get();
+
+                }
+
+
+                foreach ($Providers as $key => $provider) {
+                    (new SendPushNotification)->sendPushToProvider($provider->id, $Push->message);
+                }
+
+            }elseif($Push->send_to == 'ALL'){
+
+                $Users = User::all();
+                foreach ($Users as $key => $user) {
+                    (new SendPushNotification)->sendPushToUser($user->id, $Push->message);
+                }
+
+                $Providers = Provider::all();
+                foreach ($Providers as $key => $provider) {
+                    (new SendPushNotification)->sendPushToProvider($provider->id, $Push->message);
+                }
+
+            }
         }
 
         catch (Exception $e) {

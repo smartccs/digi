@@ -27,4 +27,14 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token', 'created_at', 'updated_at'
     ];
+
+
+    /**
+     * The services that belong to the user.
+     */
+    public function trips()
+    {
+        return $this->hasMany('App\UserRequests','user_id','id');
+    }
+
 }

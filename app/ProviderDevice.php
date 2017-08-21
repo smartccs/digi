@@ -26,4 +26,12 @@ class ProviderDevice extends Model
     protected $hidden = [
         'created_at', 'updated_at'
     ];
+
+    /**
+     * The provider assigned to the request.
+     */
+    public function provider()
+    {
+        return $this->belongsTo('App\Provider');
+    }
 }
