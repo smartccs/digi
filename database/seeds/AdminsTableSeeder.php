@@ -16,6 +16,10 @@ class AdminsTableSeeder extends Seeder
             'name' => 'Tranxit',
             'email' => 'admin@tranxit.com',
             'password' => bcrypt('123456'),
+        ],[
+            'name' => 'Tranxit',
+            'email' => 'admin@demo.com',
+            'password' => bcrypt('123456'),
         ]);
     }
 }

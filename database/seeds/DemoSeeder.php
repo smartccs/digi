@@ -27,6 +27,15 @@ class DemoSeeder extends Seeder
         DB::table('users')->insert([[
             'first_name' => 'Appoets',
             'last_name' => 'Demo',
+            'email' => 'demo@demo.com',
+            'password' => bcrypt('123456'),
+            'mobile' => '9258632148',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+            'picture' => 'http://lorempixel.com/512/512/business/Tranxit',
+        ],[
+            'first_name' => 'Appoets',
+            'last_name' => 'Demo',
             'email' => 'demo@appoets.com',
             'password' => bcrypt('123456'),
             'mobile' => '9258632148',
@@ -1018,6 +1027,18 @@ class DemoSeeder extends Seeder
 
         DB::table('providers')->truncate();
         DB::table('providers')->insert([[
+            'first_name' => 'Appoets',
+            'last_name' => 'Demo',
+            'email' => 'demo@demo.com',
+            'password' => bcrypt('123456'),
+            'mobile' => '8465562222',
+            'status' => 'approved',
+            'latitude' => '13.00',
+            'longitude' => '80.00',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+            'avatar' => 'http://lorempixel.com/512/512/business/Tranxit',
+        ],[
             'first_name' => 'Appoets',
             'last_name' => 'Demo',
             'email' => 'demo@appoets.com',
@@ -3206,6 +3227,14 @@ class DemoSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ],[
             'provider_id' => 109,
+            'service_type_id' => 1,
+            'status' => 'active',
+            'service_number' => '4ppo3ts',
+            'service_model' => 'Audi R8',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ],[
+            'provider_id' => 110,
             'service_type_id' => 1,
             'status' => 'active',
             'service_number' => '4ppo3ts',
