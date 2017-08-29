@@ -9,6 +9,7 @@ use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Controllers\Controller;
 use Exception;
+use Storage;
 use Setting;
 
 class UserResource extends Controller

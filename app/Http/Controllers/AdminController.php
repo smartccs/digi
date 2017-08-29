@@ -261,7 +261,7 @@ class AdminController extends Controller
 
         $this->validate($request,[
             'name' => 'required|max:255',
-            'email' => 'required|digits_between:6,13',
+            'email' => 'required|max:255|email|unique:admins',
             'picture' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
         ]);
 
@@ -269,6 +269,7 @@ class AdminController extends Controller
             $admin = Auth::guard('admin')->user();
             $admin->name = $request->name;
             $admin->email = $request->email;
+            
             if($request->hasFile('picture')){
                 $admin->picture = $request->picture->store('admin/profile');  
             }
@@ -418,12 +419,12 @@ class AdminController extends Controller
      */
     public function push_index()
     {
-        $data = PushNotification::app('IOSUser')
-            ->to('163e4c0ca9fe084aabeb89372cf3f664790ffc660c8b97260004478aec61212c')
-            ->send('Hello World, i`m a push message');
+        $data = \PushNotification::app('AndroidProvider')
+            ->to('ftIkLOsL6X0:APA91bFcwKiQvbv7QtB8HyTBVs95nDBnKYcFEg-BN9Nser3Aw8VJVTmlJ_cmuKBcrqeSBEZkNJeBXjujZ-L-vhNGvProWwU7Dm2129iA2VqsPeCFfFkrBDvrxoR9IMwU4iLf-znJ4xYb')
+            ->send('OK Google!');
         dd($data);
 
-        $data = PushNotification::app('IOSProvider')
+        $data = \PushNotification::app('IOSProvider')
             ->to('a9b9a16c5984afc0ea5b681cc51ada13fc5ce9a8c895d14751de1a2dba7994e7')
             ->send('Hello World, i`m a push message');
         dd($data);
@@ -706,7 +707,7 @@ class AdminController extends Controller
 
             $CustomPush->save();
 
-            if($CustomPush->schedule_at != ''){
+            if($CustomPush->schedule_at == ''){
                 $this->SendCustomPush($CustomPush->id);
             }
 
@@ -722,6 +723,8 @@ class AdminController extends Controller
     public function SendCustomPush($CustomPush){
 
         try{
+
+            \Log::notice("Starting Custom Push");
 
             $Push = CustomPush::findOrFail($CustomPush);
 

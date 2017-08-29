@@ -38,16 +38,16 @@
 					</a>
 					<div class="dropdown-menu dropdown-menu-right animated fadeInUp">
 						<a class="dropdown-item" href="{{route('admin.profile')}}">
-							<i class="ti-user mr-0-5"></i> Profile
+							<i class="ti-user mr-0-5"></i> @lang('admin.include.profile')
 						</a>
 						<a class="dropdown-item" href="{{route('admin.password')}}">
-							<i class="ti-settings mr-0-5"></i> Change Password
+							<i class="ti-settings mr-0-5"></i> @lang('admin.account.change_password')
 						</a>
 						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="{{route('admin.help')}}"><i class="ti-help mr-0-5"></i> Help</a>
+						<a class="dropdown-item" href="{{route('admin.help')}}"><i class="ti-help mr-0-5"></i> @lang('admin.help')</a>
 						<a class="dropdown-item" href="{{ url('/admin/logout') }}"
                             onclick="event.preventDefault();
-                                     document.getElementById('logout-form').submit();"><i class="ti-power-off mr-0-5"></i> Sign out</a>
+                                     document.getElementById('logout-form').submit();"><i class="ti-power-off mr-0-5"></i> @lang('admin.include.sign_out')</a>
 					</div>
 				</li>
 			</ul>

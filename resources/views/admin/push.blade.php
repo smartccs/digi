@@ -12,14 +12,14 @@
     <div class="content-area py-1">
         <div class="container-fluid">
             <div class="box box-block bg-white">
-            	<h5 style="margin-bottom: 2em;">Push Notification</h5>
+            	<h5 style="margin-bottom: 2em;">@lang('admin.push.Push_Notification')</h5>
 
 	            <form class="form-horizontal" action="{{route('admin.send.push')}}" method="POST" role="form" id="create_push">
 	            
 	            	{{csrf_field()}}
 
 	            	<div class="form-group row">
-						<label class="col-xs-2 col-form-label">Sent to</label>
+						<label class="col-xs-2 col-form-label">@lang('admin.push.Sent_to')</label>
 						<div class="col-xs-10">
 							<select class="form-control" name="send_to" onchange="switch_send(this.value)">
 								<option value="ALL">All Users and Drivers</option>
@@ -101,7 +101,7 @@
 
 
 					<div class="form-group row">
-						<label for="message" class="col-xs-2 col-form-label">Message</label>
+						<label for="message" class="col-xs-2 col-form-label">@lang('admin.push.message')</label>
 						<div class="col-xs-10">
 							<textarea maxlength="200" class="form-control" rows="3" name="message" required id="message" placeholder="Enter Message" ></textarea>
 							<div id="characterLeftDesc"></div>
@@ -111,24 +111,24 @@
 					<div class="form-group row">
 						<label for="zipcode" class="col-xs-2 col-form-label"></label>
 						<div class="col-xs-10">
-							<button type="submit" class="btn btn-primary">Push Now</button>
+							<button type="submit" class="btn btn-primary">@lang('admin.push.Push_Now')</button>
 							&nbsp;
-							<button data-toggle="modal" data-target="#schedule_modal" type="button" class="btn btn-success">Schedule Push</button>
+							<button data-toggle="modal" data-target="#schedule_modal" type="button" class="btn btn-success">@lang('admin.push.Schedule_Push')</button>
 						</div>
 					</div>
 				</form>
             </div>
 
 	        <div class="box box-block bg-white">
-	            <h5 class="mb-1">Notification History</h5>
+	            <h5 class="mb-1">@lang('admin.push.Notification_History')</h5>
 	            <table class="table table-striped table-bordered dataTable" id="table-2">
 	                <thead>
 	                    <tr>
-	                        <th>ID</th>
-	                        <th>Sent To</th>
-	                        <th>Message</th>
-	                        <th>Condition</th>
-	                        <th>Sent on</th>
+	                        <th>@lang('admin.id')</th>
+	                        <th>@lang('admin.push.Sent_to')</th>
+	                        <th>@lang('admin.message')</th>
+	                        <th>@lang('admin.push.Condition')</th>
+	                        <th>@lang('admin.push.Sent_on')</th>
 	                    </tr>
 	                </thead>
 	                <tbody>
@@ -150,11 +150,11 @@
 	                </tbody>
 	                <tfoot>
 	                      <tr>
-	                        <th>ID</th>
-	                        <th>Sent To</th>
-	                        <th>Message</th>
-	                        <th>Condition</th>
-	                        <th>Sent on</th>
+	                        <th>@lang('admin.id')</th>
+	                        <th>@lang('admin.push.Sent_to')</th>
+	                        <th>@lang('admin.message')</th>
+	                        <th>@lang('admin.push.Condition')</th>
+	                        <th>@lang('admin.push.Sent_on')</th>
 	                    </tr>
 	                </tfoot>
 	            </table>

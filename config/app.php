@@ -182,7 +182,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
     ],
 
     /*
@@ -235,6 +234,5 @@ return [
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
         'PushNotification' => Davibennun\LaravelPushNotification\Facades\PushNotification::class,
-        'Debugbar' => Barryvdh\Debugbar\Facade::class,
     ],
 ];

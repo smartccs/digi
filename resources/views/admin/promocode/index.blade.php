@@ -8,19 +8,19 @@
         <div class="container-fluid">
             
             <div class="box box-block bg-white">
-                <h5 class="mb-1">Promocodes</h5>
-                <a href="{{ route('admin.promocode.create') }}" style="margin-left: 1em;" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Add New Promocode</a>
+                <h5 class="mb-1">@lang('admin.promocode.promocodes')</h5>
+                <a href="{{ route('admin.promocode.create') }}" style="margin-left: 1em;" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> @lang('admin.promocode.add_promocode')</a>
 
                 <table class="table table-striped table-bordered dataTable" id="table-2">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Promocode </th>
-                            <th>Discount </th>
-                            <th>Expiration</th>
-                            <th>Status</th>
-                            <th>Used Count</th>
-                            <th>Action</th>
+                            <th>@lang('admin.id')</th>
+                            <th>@lang('admin.promocode.promocode') </th>
+                            <th>@lang('admin.promocode.discount') </th>
+                            <th>@lang('admin.promocode.expiration')</th>
+                            <th>@lang('admin.status')</th>
+                            <th>@lang('admin.promocode.used_count')</th>
+                            <th>@lang('admin.action')</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,13 +55,13 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>ID</th>
-                            <th>Promocode </th>
-                            <th>Discount </th>
-                            <th>Expiration</th>
-                            <th>Status</th>
-                            <th>Used Count</th>
-                            <th>Action</th>
+                            <th>@lang('admin.id')</th>
+                            <th>@lang('admin.promocode.promocode') </th>
+                            <th>@lang('admin.promocode.discount') </th>
+                            <th>@lang('admin.promocode.expiration')</th>
+                            <th>@lang('admin.status')</th>
+                            <th>@lang('admin.promocode.used_count')</th>
+                            <th>@lang('admin.action')</th>
                         </tr>
                     </tfoot>
                 </table>

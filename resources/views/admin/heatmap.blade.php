@@ -13,7 +13,7 @@
 <div class="container-fluid">
 		<div class="box box-block bg-white">
 				<div class="clearfix mb-1">
-					<h5 class="float-xs-left">Ride Heatmap</h5>
+					<h5 class="float-xs-left">@lang('admin.heatmap.Ride_Heatmap')</h5>
 					<div class="float-xs-right">
 					</div>
 				</div>

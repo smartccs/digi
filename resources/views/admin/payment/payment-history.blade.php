@@ -7,17 +7,17 @@
     <div class="content-area py-1">
         <div class="container-fluid">
             <div class="box box-block bg-white">
-                <h5 class="mb-1">Payment History</h5>
+                <h5 class="mb-1">@lang('admin.payment.payment_history')</h5>
                 <table class="table table-striped table-bordered dataTable" id="table-2">
                     <thead>
                         <tr>
-                            <th>Request ID</th>
-                            <th>Transaction ID</th>
-                            <th>From</th>
-                            <th>To</th>
-                            <th>Total Amount</th>
-                            <th>Payment Mode</th>
-                            <th>Payment Status</th>
+                            <th>@lang('admin.payment.request_id')</th>
+                            <th>@lang('admin.payment.transaction_id')</th>
+                            <th>@lang('admin.payment.from')</th>
+                            <th>@lang('admin.payment.to')</th>
+                            <th>@lang('admin.payment.total_amount')</th>
+                            <th>@lang('admin.payment.payment_mode')</th>
+                            <th>@lang('admin.payment.payment_status')</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,13 +41,13 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>Request ID</th>
-                            <th>Transaction ID</th>
-                            <th>From</th>
-                            <th>To</th>
-                            <th>Total Amount</th>
-                            <th>Payment Mode</th>
-                            <th>Payment Status</th>
+                            <th>@lang('admin.payment.request_id')</th>
+                            <th>@lang('admin.payment.transaction_id')</th>
+                            <th>@lang('admin.payment.from')</th>
+                            <th>@lang('admin.payment.to')</th>
+                            <th>@lang('admin.payment.total_amount')</th>
+                            <th>@lang('admin.payment.payment_mode')</th>
+                            <th>@lang('admin.payment.payment_status')</th>
                         </tr>
                     </tfoot>
                 </table>

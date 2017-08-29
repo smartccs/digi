@@ -13,15 +13,15 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Booking ID</th>
-                        <th>User Name</th>
-                        <th>Provider Name</th>
-                        <th>Date &amp; Time</th>
-                        <th>Status</th>
-                        <th>Amount</th>
-                        <th>Payment Mode</th>
-                        <th>Payment Status</th>
-                        <th>Action</th>
+                        <th>@lang('admin.request.Booking_ID')</th>
+                        <th>@lang('admin.request.User_Name')</th>
+                        <th>@lang('admin.request.Provider_Name')</th>
+                        <th>@lang('admin.request.Date_Time')</th>
+                        <th>@lang('admin.status')</th>
+                        <th>@lang('admin.amount')</th>
+                        <th>@lang('admin.request.Payment_Mode')</th>
+                        <th>@lang('admin.request.Payment_Status')</th>
+                        <th>@lang('admin.action')</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -90,16 +90,16 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                         <th>#</th>
-                        <th>Booking ID</th>
-                        <th>User Name</th>
-                        <th>Provider Name</th>
-                        <th>Date &amp; Time</th>
-                        <th>Status</th>
-                        <th>Amount</th>
-                        <th>Payment Mode</th>
-                        <th>Payment Status</th>
-                        <th>Action</th>
+                        <th>#</th>
+                        <th>@lang('admin.request.Booking_ID')</th>
+                        <th>@lang('admin.request.User_Name')</th>
+                        <th>@lang('admin.request.Provider_Name')</th>
+                        <th>@lang('admin.request.Date_Time')</th>
+                        <th>@lang('admin.status')</th>
+                        <th>@lang('admin.amount')</th>
+                        <th>@lang('admin.request.Payment_Mode')</th>
+                        <th>@lang('admin.request.Payment_Status')</th>
+                        <th>@lang('admin.action')</th>
                     </tr>
                 </tfoot>
             </table>

@@ -9,14 +9,14 @@
         <div class="box box-block bg-white">
             <form action="{{route('admin.settings.payment.store')}}" method="POST">
                 {{csrf_field()}}
-                <h5>Payment Modes</h5>
+                <h5>@lang('admin.payment.payment_modes')</h5>
                 <div class="card card-block card-inverse card-primary">
                     <blockquote class="card-blockquote">
                         <i class="fa fa-3x fa-cc-stripe pull-right"></i>
                         <div class="form-group row">
                             <div class="col-xs-4">
                                 <label for="stripe_secret_key" class="col-form-label">
-                                    Stripe (Card Payments)
+                                    @lang('admin.payment.card_payments')
                                 </label>
                             </div>
                             <div class="col-xs-6">
@@ -25,13 +25,13 @@
                         </div>
                         <div id="card_field" @if(Setting::get('CARD') == 0) style="display: none;" @endif>
                             <div class="form-group row">
-                                <label for="stripe_secret_key" class="col-xs-4 col-form-label">Stripe Secret key</label>
+                                <label for="stripe_secret_key" class="col-xs-4 col-form-label">@lang('admin.payment.stripe_secret_key')</label>
                                 <div class="col-xs-8">
                                     <input class="form-control" type="text" value="{{Setting::get('stripe_secret_key', '') }}" name="stripe_secret_key" id="stripe_secret_key"  placeholder="Stripe Secret key">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="stripe_publishable_key" class="col-xs-4 col-form-label">Stripe Publishable key</label>
+                                <label for="stripe_publishable_key" class="col-xs-4 col-form-label">@lang('admin.payment.stripe_publishable_key')</label>
                                 <div class="col-xs-8">
                                     <input class="form-control" type="text" value="{{Setting::get('stripe_publishable_key', '') }}" name="stripe_publishable_key" id="stripe_publishable_key"  placeholder="Stripe Publishable key">
                                 </div>
@@ -46,7 +46,7 @@
                         <div class="form-group row">
                             <div class="col-xs-4">
                                 <label for="cash-payments" class="col-form-label">
-                                    Cash Payments
+                                   @lang('admin.payment.cash_payments') 
                                 </label>
                             </div>
                             <div class="col-xs-6">
@@ -55,12 +55,12 @@
                         </div>
                     </blockquote>
                 </div>
-                <h5>Payment Settings</h5>
+                <h5>@lang('admin.payment.payment_settings')</h5>
 
                 <div class="card card-block card-inverse card-info">
                     <blockquote class="card-blockquote">
                         <div class="form-group row">
-                            <label for="daily_target" class="col-xs-4 col-form-label">Daily Target</label>
+                            <label for="daily_target" class="col-xs-4 col-form-label">@lang('admin.payment.daily_target')</label>
                             <div class="col-xs-8">
                                 <input class="form-control" 
                                     type="number"
@@ -74,7 +74,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="tax_percentage" class="col-xs-4 col-form-label">Tax percentage(%)</label>
+                            <label for="tax_percentage" class="col-xs-4 col-form-label">@lang('admin.payment.tax_percentage')</label>
                             <div class="col-xs-8">
                                 <input class="form-control"
                                     type="number"
@@ -88,7 +88,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="surge_trigger" class="col-xs-4 col-form-label">Surge Trigger Point</label>
+                            <label for="surge_trigger" class="col-xs-4 col-form-label">@lang('admin.payment.surge_trigger_point')</label>
                             <div class="col-xs-8">
                                 <input class="form-control"
                                     type="number"
@@ -102,7 +102,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="surge_percentage" class="col-xs-4 col-form-label">Surge percentage(%)</label>
+                            <label for="surge_percentage" class="col-xs-4 col-form-label">@lang('admin.payment.surge_percentage')</label>
                             <div class="col-xs-8">
                                 <input class="form-control"
                                     type="number"
@@ -116,7 +116,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="commission_percentage" class="col-xs-4 col-form-label">Commission percentage(%)</label>
+                            <label for="commission_percentage" class="col-xs-4 col-form-label">@lang('admin.payment.commission_percentage')</label>
                             <div class="col-xs-8">
                                 <input class="form-control"
                                     type="number"
@@ -130,7 +130,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="booking_prefix" class="col-xs-4 col-form-label">Booking ID Prefix</label>
+                            <label for="booking_prefix" class="col-xs-4 col-form-label">@lang('admin.payment.booking_id_prefix')</label>
                             <div class="col-xs-8">
                                 <input class="form-control"
                                     type="text"
@@ -144,8 +144,8 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="base_price" class="col-xs-4 col-form-label">
-                                Currency ( <strong>{{ Setting::get('currency', '$')  }} </strong>)
+                            <label for="base_price" class="col-xs-4 col-form-label">@lang('admin.payment.currency')
+                                 ( <strong>{{ Setting::get('currency', '$')  }} </strong>)
                             </label>
                             <div class="col-xs-8">
                                 <select name="currency" class="form-control" required>
@@ -169,10 +169,10 @@
 
                 <div class="form-group row">
                     <div class="col-xs-4">
-                        <a href="{{ route('admin.index') }}" class="btn btn-warning btn-block">Back</a>
+                        <a href="{{ route('admin.index') }}" class="btn btn-warning btn-block">@lang('admin.back')</a>
                     </div>
                     <div class="offset-xs-4 col-xs-4">
-                        <button type="submit" class="btn btn-primary btn-block">Update Site Settings</button>
+                        <button type="submit" class="btn btn-primary btn-block">@lang('admin.payment.update_site_settings')</button>
                     </div>
                 </div>
             </form>

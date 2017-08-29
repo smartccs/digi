@@ -8,17 +8,17 @@
         <div class="container-fluid">
             
             <div class="box box-block bg-white">
-                <h5 class="mb-1">User Reviews</h5>
+                <h5 class="mb-1">@lang('admin.review.User_Reviews')</h5>
                 <table class="table table-striped table-bordered dataTable" id="table-2">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Request ID</th>
-                            <th>User Name</th>
-                            <th>Provider Name</th>
-                            <th>Rating</th>
-                            <th>Date & Time</th>
-                            <th>Comments</th>
+                            <th>@lang('admin.id')</th>
+                            <th>@lang('admin.review.Request_ID')</th>
+                            <th>@lang('admin.request.User_Name')</th>
+                            <th>@lang('admin.request.Provider_Name')</th>
+                            <th>@lang('admin.review.Rating')</th>
+                            <th>@lang('admin.request.Date_Time')</th>
+                            <th>@lang('admin.review.Comments')</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,13 +41,13 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>ID</th>
-                            <th>Request ID</th>
-                            <th>User Name</th>
-                            <th>Provider Name</th>
-                            <th>Rating</th>
-                            <th>Date & Time</th>
-                            <th>Comments</th>
+                            <th>@lang('admin.id')</th>
+                            <th>@lang('admin.review.Request_ID')</th>
+                            <th>@lang('admin.request.User_Name')</th>
+                            <th>@lang('admin.request.Provider_Name')</th>
+                            <th>@lang('admin.review.Rating')</th>
+                            <th>@lang('admin.request.Date_Time')</th>
+                            <th>@lang('admin.review.Comments')</th>
                         </tr>
                     </tfoot>
                 </table>

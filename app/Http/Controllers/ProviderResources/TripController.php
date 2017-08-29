@@ -100,6 +100,7 @@ class TripController extends Controller
         $this->validate($request, [
             'cancel_reason'=> 'max:255',
         ]);
+        
         try{
 
             $UserRequest = UserRequests::findOrFail($request->id);
@@ -481,7 +482,8 @@ class TripController extends Controller
                 $Distance = ($kilometer * $service_type->price);
             }
 
-            if($PromocodeUsage = PromocodeUsage::where('user_id',$UserRequest->user_id)->where('status','ADDED')->first()){
+            if($PromocodeUsage = PromocodeUsage::where('user_id',$UserRequest->user_id)->where('status','ADDED')->first())
+            {
                 if($Promocode = Promocode::find($PromocodeUsage->promocode_id)){
                     $Discount = $Promocode->discount;
                     $PromocodeUsage->status ='USED';
@@ -512,6 +514,10 @@ class TripController extends Controller
                 $Payment->promocode_id = $PromocodeUsage->promocode_id;
             }
             $Payment->discount = $Discount;
+
+            if($Discount  == ($Fixed + $Distance + $Tax)){
+                $UserRequest->paid = 1;
+            }
 
             if($UserRequest->use_wallet == 1 && $Total > 0){
 

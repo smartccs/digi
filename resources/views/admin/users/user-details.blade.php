@@ -7,7 +7,7 @@
     <div class="content-area py-1">
         <div class="container-fluid">
             <div class="box box-block bg-white">
-            	<h4>User Details</h4>
+            	<h4>@lang('admin.users.User_Details')</h4>
             	<div class="row">
             		<div class="col-md-12">
 						<div class="box bg-white user-1">
@@ -19,10 +19,10 @@
 									<i class="status bg-success bottom right"></i>
 								</div>
 								<h5><a class="text-black" href="#">{{$user->first_name}} {{$user->last_name}}</a></h5>
-								<p class="text-muted">Email : {{$user->email}}</p>
-								<p class="text-muted">Mobile : {{$user->mobile}}</p>
-								<p class="text-muted">Gender : {{$user->gender}}</p>
-								<p class="text-muted">Wallet Balance : {{currency($user->wallet_balance)}}</p>
+								<p class="text-muted">@lang('admin.email') : {{$user->email}}</p>
+								<p class="text-muted">@lang('admin.mobile') : {{$user->mobile}}</p>
+								<p class="text-muted">@lang('admin.gender') : {{$user->gender}}</p>
+								<p class="text-muted">@lang('admin.users.Wallet_Balance') : {{currency($user->wallet_balance)}}</p>
 							</div>
 						</div>
 					</div>

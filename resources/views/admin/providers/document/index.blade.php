@@ -6,7 +6,7 @@
 <div class="content-area py-1">
     <div class="container-fluid">
         <div class="box box-block bg-white">
-            <h5 class="mb-1">Provider Service Type Allocation</h5>
+            <h5 class="mb-1">@lang('admin.provides.type_allocation')</h5>
             <div class="row">
                 <div class="col-xs-12">
                     @if($ProviderService->count() > 0)
@@ -14,10 +14,10 @@
                     <table class="table table-striped table-bordered dataTable">
                         <thead>
                             <tr>
-                                <th>Service Name</th>
-                                <th>Service Number</th>
-                                <th>Service Model</th>
-                                <th>Action</th>
+                                <th>@lang('admin.provides.service_name')</th>
+                                <th>@lang('admin.provides.service_number')</th>
+                                <th>@lang('admin.provides.service_model')</th>
+                                <th>@lang('admin.action')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -38,10 +38,10 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>Service Name</th>
-                                <th>Service Number</th>
-                                <th>Service Model</th>
-                                <th>Action</th>
+                                <th>@lang('admin.provides.service_name')</th>
+                                <th>@lang('admin.provides.service_number')</th>
+                                <th>@lang('admin.provides.service_model')</th>
+                                <th>@lang('admin.action')</th>
                             </tr>
                         </tfoot>
                     </table>
@@ -73,14 +73,14 @@
         </div>
 
         <div class="box box-block bg-white">
-            <h5 class="mb-1">Provider Documents</h5>
+            <h5 class="mb-1">@lang('admin.provides.provider_documents')</h5>
             <table class="table table-striped table-bordered dataTable" id="table-2">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Document Type</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <th>@lang('admin.provides.document_type')</th>
+                        <th>@lang('admin.status')</th>
+                        <th>@lang('admin.action')</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -105,9 +105,9 @@
                 <tfoot>
                     <tr>
                         <th>#</th>
-                        <th>Document Type</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <th>@lang('admin.provides.document_type')</th>
+                        <th>@lang('admin.status')</th>
+                        <th>@lang('admin.action')</th>
                     </tr>
                 </tfoot>
             </table>

@@ -7,7 +7,7 @@
     <div class="content-area py-1">
         <div class="container-fluid">
             <div class="box box-block bg-white">
-            	<h4>Provider Details</h4>
+            	<h4>@lang('admin.provides.Provider_Details')</h4>
             	<div class="row">
             		<div class="col-md-12">
 						<div class="box bg-white user-1">
@@ -20,21 +20,21 @@
 								</div>
 								<p class="text-muted">
 									@if($provider->is_approved == 1)
-										<span class="tag tag-success">Approved</span>
+										<span class="tag tag-success">@lang('admin.provides.Approved')</span>
 									@else
-										<span class="tag tag-success">Not Approved</span>
+										<span class="tag tag-success">@lang('admin.provides.Not_Approved')</span>
 									@endif
 								</p>
 								<h5><a class="text-black" href="#">{{$provider->first_name}} {{$provider->last_name}}</a></h5>
-								<p class="text-muted">Email : {{$provider->email}}</p>
-								<p class="text-muted">Mobile : {{$provider->mobile}}</p>
-								<p class="text-muted">Gender : {{$provider->gender}}</p>
-								<p class="text-muted">Address : {{$provider->address}}</p>
+								<p class="text-muted">@lang('admin.email') : {{$provider->email}}</p>
+								<p class="text-muted">@lang('admin.mobile') : {{$provider->mobile}}</p>
+								<p class="text-muted">@lang('admin.gender') : {{$provider->gender}}</p>
+								<p class="text-muted">@lang('admin.address') : {{$provider->address}}</p>
 								<p class="text-muted">
 									@if($provider->is_activated == 1)
-										<span class="tag tag-warning">Activated</span>
+										<span class="tag tag-warning">">@lang('admin.provides.Activated')</span>
 									@else
-										<span class="tag tag-warning">Not Activated</span>
+										<span class="tag tag-warning">">@lang('admin.provides.Not_Activated')</span>
 									@endif
 								</p>
 							</div>

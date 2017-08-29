@@ -24,14 +24,14 @@
 								            <table class="table table-striped table-bordered dataTable" id="table-2">
 								                <thead>
 								                   <tr>
-														<td>Provider Name</td>
-														<td>Mobile</td>
-														<td>Status</td>
-														<td>Total Rides</td>
-														<td>Total Earning</td>
-														<td>Commission</td>
-														<td>Joined at</td>
-														<td>Details</td>
+														<td>@lang('admin.provides.provider_name')</td>
+														<td>@lang('admin.mobile')</td>
+														<td>@lang('admin.status')</td>
+														<td>@lang('admin.provides.Total_Rides')</td>
+														<td>@lang('admin.provides.Total_Earning</td>
+														<td>@lang('admin.provides.Commission')</td>
+														<td>@lang('admin.provides.Joined_at')</td>
+														<td>@lang('admin.provides.Details')</td>
 													</tr>
 								                </thead>
 								                <tbody>
@@ -90,14 +90,14 @@
 															
 								                <tfoot>
 								                    <tr>
-														<td>Provider Name</td>
-														<td>Mobile</td>
-														<td>Status</td>
-														<td>Total Rides</td>
-														<td>Total Earning</td>
-														<td>Commission</td>
-														<td>Joined at</td>
-														<td>Details</td>
+														<td>@lang('admin.provides.provider_name')</td>
+														<td>@lang('admin.mobile')</td>
+														<td>@lang('admin.status')</td>
+														<td>@lang('admin.provides.Total_Rides')</td>
+														<td>@lang('admin.provides.Total_Earning</td>
+														<td>@lang('admin.provides.Commission')</td>
+														<td>@lang('admin.provides.Joined_at')</td>
+														<td>@lang('admin.provides.Details')</td>
 													</tr>
 								                </tfoot>
 								            </table>

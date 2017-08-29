@@ -7,7 +7,6 @@
     "require": {
         "php": ">=5.6.4",
         "anlutro/l4-settings": "^0.4.9",
-        "barryvdh/laravel-debugbar": "^2.4",
         "barryvdh/laravel-translation-manager": "^0.2.7",
         "hesto/multi-auth": "^1.0",
         "laravel/framework": "5.3.*",

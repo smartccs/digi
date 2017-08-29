@@ -6,7 +6,7 @@
 <div class="content-area py-1">
     <div class="container-fluid">
         <div class="box box-block bg-white">
-            <h5>Pages</h5>
+            <h5>@lang('admin.pages.pages')</h5>
 
             <div className="row">
                 <form action="{{ route('admin.pages.update') }}" method="POST">

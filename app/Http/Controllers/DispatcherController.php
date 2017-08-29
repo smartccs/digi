@@ -44,7 +44,17 @@ class DispatcherController extends Controller
      */
     public function trips(Request $request)
     {
-        $Trips = UserRequests::with('user', 'provider')->orderBy('id','desc')->paginate(10);
+        $Trips = UserRequests::with('user', 'provider')
+                    ->orderBy('id','desc');
+
+        if($request->type == "SEARCHING"){
+            $Trips = $Trips->where('status',$request->type);
+        }else if($request->type == "CANCELLED"){
+            $Trips = $Trips->where('status',$request->type);
+        }
+        
+        $Trips =  $Trips->paginate(10);
+
         return $Trips;
     }
 
@@ -393,5 +403,80 @@ class DispatcherController extends Controller
         } catch (Exception $e) {
              return back()->with('flash_error','Something Went Wrong!');
         }
+    }
+
+
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function cancel(Request $request) {
+
+        $this->validate($request, [
+            'request_id' => 'required|numeric|exists:user_requests,id',
+        ]);
+
+        try{
+
+            $UserRequest = UserRequests::findOrFail($request->request_id);
+
+            if($UserRequest->status == 'CANCELLED')
+            {
+                if($request->ajax()) {
+                    return response()->json(['error' => trans('api.ride.already_cancelled')], 500); 
+                }else{
+                    return back()->with('flash_error', 'Request is Already Cancelled!');
+                }
+            }
+
+            if(in_array($UserRequest->status, ['SEARCHING','STARTED','ARRIVED','SCHEDULED'])) {
+
+
+                $UserRequest->status = 'CANCELLED';
+                $UserRequest->cancel_reason = "Cancelled by Admin";
+                $UserRequest->cancelled_by = 'NONE';
+                $UserRequest->save();
+
+                RequestFilter::where('request_id', $UserRequest->id)->delete();
+
+                if($UserRequest->status != 'SCHEDULED'){
+
+                    if($UserRequest->provider_id != 0){
+
+                        ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status' => 'active']);
+
+                    }
+                }
+
+                 // Send Push Notification to User
+                (new SendPushNotification)->UserCancellRide($UserRequest);
+                (new SendPushNotification)->ProviderCancellRide($UserRequest);
+
+                if($request->ajax()) {
+                    return response()->json(['message' => trans('api.ride.ride_cancelled')]); 
+                }else{
+                    return back()->with('flash_success','Request Cancelled Successfully');
+                }
+
+            } else {
+                if($request->ajax()) {
+                    return response()->json(['error' => trans('api.ride.already_onride')], 500); 
+                }else{
+                    return back()->with('flash_error', 'Service Already Started!');
+                }
+            }
+        }
+
+        catch (ModelNotFoundException $e) {
+            if($request->ajax()) {
+                return response()->json(['error' => trans('api.something_went_wrong')]);
+            }else{
+                return back()->with('flash_error', 'No Request Found!');
+            }
+        }
+
     }
 }

@@ -13,15 +13,15 @@
                 <table class="table table-striped table-bordered dataTable" id="table-2">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Request Id</th>
-                            <th>User Name</th>
-                            <th>Provider Name</th>
-                            <th>Scheduled Date & Time</th>
-                            <th>Status</th>
-                            <th>Payment Mode</th>
-                            <th>Payment Status</th>
-                            <th>Action</th>
+                            <th>@lang('admin.id')</th>
+                            <th>@lang('admin.request.Request_Id')</th>
+                            <th>@lang('admin.request.User_Name')</th>
+                            <th>@lang('admin.request.Provider_Name')</th>
+                            <th>@lang('admin.request.Scheduled_Date_Time')</th>
+                            <th>@lang('admin.status')</th>
+                            <th>@lang('admin.request.Payment_Mode')</th>
+                            <th>@lang('admin.request.Payment_Status')</th>
+                            <th>@lang('admin.action')</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -68,15 +68,15 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>ID</th>
-                            <th>Request Id</th>
-                            <th>User Name</th>
-                            <th>Provider Name</th>
-                            <th>Scheduled Date & Time</th>
-                            <th>Status</th>
-                            <th>Payment Mode</th>
-                            <th>Payment Status</th>
-                            <th>Action</th>
+                            <th>@lang('admin.id')</th>
+                            <th>@lang('admin.request.Request_Id')</th>
+                            <th>@lang('admin.request.User_Name')</th>
+                            <th>@lang('admin.request.Provider_Name')</th>
+                            <th>@lang('admin.request.Scheduled_Date_Time')</th>
+                            <th>@lang('admin.status')</th>
+                            <th>@lang('admin.request.Payment_Mode')</th>
+                            <th>@lang('admin.request.Payment_Status')</th>
+                            <th>@lang('admin.action')</th>
                         </tr>
                     </tfoot>
                 </table>
