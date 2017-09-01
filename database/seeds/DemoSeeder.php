@@ -36,7 +36,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Appoets',
             'last_name' => 'Demo',
-            'email' => 'demo@appoets.com',
+            'email' => 'demo@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9258632148',
             'created_at' => Carbon::now(),
@@ -45,7 +45,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Emilia',
             'last_name' => 'Epps',
-            'email' => 'emilia@appoets.com',
+            'email' => 'emilia@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9258632856',
             'created_at' => Carbon::now(),
@@ -54,7 +54,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Perry',
             'last_name' => 'Kingsley',
-            'email' => 'perry@appoets.com',
+            'email' => 'perry@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9258632179',
             'created_at' => Carbon::now(),
@@ -63,7 +63,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Joseph',
             'last_name' => 'Garrison',
-            'email' => 'joseph@appoets.com',
+            'email' => 'joseph@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9258635689',
             'created_at' => Carbon::now(),
@@ -72,7 +72,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Ella',
             'last_name' => 'Morrissey',
-            'email' => 'morrissey@appoets.com',
+            'email' => 'morrissey@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9258678452',
             'created_at' => Carbon::now(),
@@ -81,7 +81,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Elizabeth',
             'last_name' => 'Forshee',
-            'email' => 'elizabeth@appoets.com',
+            'email' => 'elizabeth@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9258678458',
             'created_at' => Carbon::now(),
@@ -90,7 +90,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Douglas',
             'last_name' => 'Arce',
-            'email' => 'douglas@appoets.com',
+            'email' => 'douglas@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9258924548',
             'created_at' => Carbon::now(),
@@ -99,7 +99,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Sara',
             'last_name' => 'Nixon',
-            'email' => 'sara@appoets.com',
+            'email' => 'sara@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9258256268',
             'created_at' => Carbon::now(),
@@ -108,7 +108,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Edward',
             'last_name' => 'Jett',
-            'email' => 'edward@appoets.com',
+            'email' => 'edward@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9292451648',
             'created_at' => Carbon::now(),
@@ -117,7 +117,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Marilyn',
             'last_name' => 'Bradley',
-            'email' => 'marilyn@appoets.com',
+            'email' => 'marilyn@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9253128488',
             'created_at' => Carbon::now(),
@@ -126,7 +126,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Herman',
             'last_name' => 'Thompson',
-            'email' => 'herman@appoets.com',
+            'email' => 'herman@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '7845924516',
             'created_at' => Carbon::now(),
@@ -135,7 +135,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Darrin',
             'last_name' => 'Neely',
-            'email' => 'darrin@appoets.com',
+            'email' => 'darrin@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9123456788',
             'created_at' => Carbon::now(),
@@ -144,7 +144,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Ralph',
             'last_name' => 'Vaughn',
-            'email' => 'ralph@appoets.com',
+            'email' => 'ralph@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9258944312',
             'created_at' => Carbon::now(),
@@ -153,7 +153,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Arturo',
             'last_name' => 'Gibson',
-            'email' => 'arturo@appoets.com',
+            'email' => 'arturo@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9867892848',
             'created_at' => Carbon::now(),
@@ -162,7 +162,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Kevin',
             'last_name' => 'Delacruz',
-            'email' => 'kevin@appoets.com',
+            'email' => 'kevin@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9282569656',
             'created_at' => Carbon::now(),
@@ -171,7 +171,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Catherine',
             'last_name' => 'Ferguson',
-            'email' => 'catherine@appoets.com',
+            'email' => 'catherine@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9856556871',
             'created_at' => Carbon::now(),
@@ -180,7 +180,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Gary',
             'last_name' => 'Maple',
-            'email' => 'gary@appoets.com',
+            'email' => 'gary@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8695432568',
             'created_at' => Carbon::now(),
@@ -189,7 +189,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Robert',
             'last_name' => 'Ferguson',
-            'email' => 'robert@appoets.com',
+            'email' => 'robert@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '7826954862',
             'created_at' => Carbon::now(),
@@ -198,7 +198,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Charles',
             'last_name' => 'Ferguson',
-            'email' => 'charles@appoets.com',
+            'email' => 'charles@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9278459632',
             'created_at' => Carbon::now(),
@@ -207,7 +207,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Michael',
             'last_name' => 'Ferguson',
-            'email' => 'michael@appoets.com',
+            'email' => 'michael@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9288218558',
             'created_at' => Carbon::now(),
@@ -216,7 +216,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Patrick',
             'last_name' => 'Ferguson',
-            'email' => 'patrick@appoets.com',
+            'email' => 'patrick@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285285282',
             'created_at' => Carbon::now(),
@@ -225,7 +225,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Arturo',
             'last_name' => 'Arturo',
-            'email' => 'arturon@appoets.com',
+            'email' => 'arturon@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9288554115',
             'created_at' => Carbon::now(),
@@ -234,7 +234,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Anthony',
             'last_name' => 'Ken',
-            'email' => 'ken@appoets.com',
+            'email' => 'ken@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -243,7 +243,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Anthony',
             'last_name' => 'Clinton',
-            'email' => 'clinton@appoets.com',
+            'email' => 'clinton@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -252,7 +252,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Gabriel',
             'last_name' => 'Ferguson',
-            'email' => 'gabriel@appoets.com',
+            'email' => 'gabriel@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9287941656',
             'created_at' => Carbon::now(),
@@ -261,7 +261,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Gabriel',
             'last_name' => 'Scott',
-            'email' => 'scott@appoets.com',
+            'email' => 'scott@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9289489615',
             'created_at' => Carbon::now(),
@@ -270,7 +270,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Raymon',
             'last_name' => 'Ferguson',
-            'email' => 'raymon@appoets.com',
+            'email' => 'raymon@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9894865851',
             'created_at' => Carbon::now(),
@@ -279,7 +279,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Shon',
             'last_name' => 'Ferguson',
-            'email' => 'shon@appoets.com',
+            'email' => 'shon@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9289489661',
             'created_at' => Carbon::now(),
@@ -288,7 +288,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Dennis',
             'last_name' => 'Ferguson',
-            'email' => 'dennis@appoets.com',
+            'email' => 'dennis@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8974861266',
             'created_at' => Carbon::now(),
@@ -297,7 +297,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Wayne',
             'last_name' => 'Ferguson',
-            'email' => 'wayne@appoets.com',
+            'email' => 'wayne@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9895481862',
             'created_at' => Carbon::now(),
@@ -306,7 +306,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Daniel',
             'last_name' => 'Fuller',
-            'email' => 'daniel@appoets.com',
+            'email' => 'daniel@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9289456286',
             'created_at' => Carbon::now(),
@@ -315,7 +315,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Buster',
             'last_name' => 'White',
-            'email' => 'buster@appoets.com',
+            'email' => 'buster@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9652626583',
             'created_at' => Carbon::now(),
@@ -324,7 +324,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Scott',
             'last_name' => 'Markham',
-            'email' => 'scot@appoets.com',
+            'email' => 'scot@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9446287233',
             'created_at' => Carbon::now(),
@@ -333,7 +333,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Millard ',
             'last_name' => 'Brooks',
-            'email' => 'millard@appoets.com',
+            'email' => 'millard@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8952826252',
             'created_at' => Carbon::now(),
@@ -342,7 +342,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Terry',
             'last_name' => 'Burress',
-            'email' => 'terry@appoets.com',
+            'email' => 'terry@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9222564163',
             'created_at' => Carbon::now(),
@@ -351,7 +351,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'John',
             'last_name' => 'Edwards',
-            'email' => 'john@appoets.com',
+            'email' => 'john@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9845626423',
             'created_at' => Carbon::now(),
@@ -360,7 +360,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Edwar',
             'last_name' => 'Warner',
-            'email' => 'edwar@appoets.com',
+            'email' => 'edwar@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '7845652482',
             'created_at' => Carbon::now(),
@@ -369,7 +369,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Thomas',
             'last_name' => 'Joseph',
-            'email' => 'thomas@appoets.com',
+            'email' => 'thomas@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '7845651821',
             'created_at' => Carbon::now(),
@@ -378,7 +378,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Sally',
             'last_name' => 'Skateboard',
-            'email' => 'sally@appoets.com',
+            'email' => 'sally@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '7845621825',
             'created_at' => Carbon::now(),
@@ -387,7 +387,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Dolly',
             'last_name' => 'Unicycle',
-            'email' => 'dolly@appoets.com',
+            'email' => 'dolly@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9841118646',
             'created_at' => Carbon::now(),
@@ -396,7 +396,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Peggy',
             'last_name' => 'Hoverboard',
-            'email' => 'peggy@appoets.com',
+            'email' => 'peggy@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8416384611',
             'created_at' => Carbon::now(),
@@ -405,7 +405,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Louise',
             'last_name' => 'Dazzle',
-            'email' => 'louise@appoets.com',
+            'email' => 'louise@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9255897816',
             'created_at' => Carbon::now(),
@@ -414,7 +414,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Carmella',
             'last_name' => 'Pizzazz',
-            'email' => 'carmella@appoets.com',
+            'email' => 'carmella@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9528974115',
             'created_at' => Carbon::now(),
@@ -423,7 +423,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Erin',
             'last_name' => 'Barkeep',
-            'email' => 'Erin@appoets.com',
+            'email' => 'Erin@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9289851872',
             'created_at' => Carbon::now(),
@@ -432,7 +432,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Becky',
             'last_name' => 'Nitrogen',
-            'email' => 'becky@appoets.com',
+            'email' => 'becky@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8941632325',
             'created_at' => Carbon::now(),
@@ -441,7 +441,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Allie',
             'last_name' => 'Starfeet',
-            'email' => 'allie@appoets.com',
+            'email' => 'allie@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9897261522',
             'created_at' => Carbon::now(),
@@ -450,7 +450,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Lindsay',
             'last_name' => 'Marti',
-            'email' => 'lindsay@appoets.com',
+            'email' => 'lindsay@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8974126521',
             'created_at' => Carbon::now(),
@@ -459,7 +459,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Mirandella',
             'last_name' => 'Houndstooth',
-            'email' => 'mirandella@appoets.com',
+            'email' => 'mirandella@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9894263136',
             'created_at' => Carbon::now(),
@@ -468,7 +468,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Zooey',
             'last_name' => 'Camembert',
-            'email' => 'zooey@appoets.com',
+            'email' => 'zooey@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '7845853251',
             'created_at' => Carbon::now(),
@@ -477,7 +477,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Shirley',
             'last_name' => 'Hurley',
-            'email' => 'shirley@appoets.com',
+            'email' => 'shirley@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9879413521',
             'created_at' => Carbon::now(),
@@ -486,7 +486,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Mary',
             'last_name' => 'Epps',
-            'email' => 'mary@appoets.com',
+            'email' => 'mary@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9258632856',
             'created_at' => Carbon::now(),
@@ -495,7 +495,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Patricia',
             'last_name' => 'Kingsley',
-            'email' => 'patricia@appoets.com',
+            'email' => 'patricia@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9258632179',
             'created_at' => Carbon::now(),
@@ -504,7 +504,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Linda',
             'last_name' => 'Garrison',
-            'email' => 'linda@appoets.com',
+            'email' => 'linda@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9258635689',
             'created_at' => Carbon::now(),
@@ -513,7 +513,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Barbara',
             'last_name' => 'Morrissey',
-            'email' => 'barbara@appoets.com',
+            'email' => 'barbara@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9258678452',
             'created_at' => Carbon::now(),
@@ -522,7 +522,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Jennifer',
             'last_name' => 'Arce',
-            'email' => 'jennifer@appoets.com',
+            'email' => 'jennifer@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9258924548',
             'created_at' => Carbon::now(),
@@ -531,7 +531,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Maria',
             'last_name' => 'Nixon',
-            'email' => 'maria@appoets.com',
+            'email' => 'maria@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9258256268',
             'created_at' => Carbon::now(),
@@ -540,7 +540,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Susan',
             'last_name' => 'Jett',
-            'email' => 'susan@appoets.com',
+            'email' => 'susan@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9292451648',
             'created_at' => Carbon::now(),
@@ -549,7 +549,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Margaret',
             'last_name' => 'Bradley',
-            'email' => 'margaret@appoets.com',
+            'email' => 'margaret@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9253128488',
             'created_at' => Carbon::now(),
@@ -558,7 +558,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Dorothy',
             'last_name' => 'Thompson',
-            'email' => 'dorothy@appoets.com',
+            'email' => 'dorothy@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '7845924516',
             'created_at' => Carbon::now(),
@@ -567,7 +567,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Lisa',
             'last_name' => 'Neely',
-            'email' => 'lisa@appoets.com',
+            'email' => 'lisa@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9123456788',
             'created_at' => Carbon::now(),
@@ -576,7 +576,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Nancy',
             'last_name' => 'Vaughn',
-            'email' => 'nancy@appoets.com',
+            'email' => 'nancy@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9258944312',
             'created_at' => Carbon::now(),
@@ -585,7 +585,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Karen',
             'last_name' => 'Gibson',
-            'email' => 'karen@appoets.com',
+            'email' => 'karen@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9867892848',
             'created_at' => Carbon::now(),
@@ -594,7 +594,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Betty',
             'last_name' => 'Delacruz',
-            'email' => 'betty@appoets.com',
+            'email' => 'betty@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9282569656',
             'created_at' => Carbon::now(),
@@ -603,7 +603,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Helen',
             'last_name' => 'Ferguson',
-            'email' => 'helen@appoets.com',
+            'email' => 'helen@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9856556871',
             'created_at' => Carbon::now(),
@@ -612,7 +612,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Sandra',
             'last_name' => 'Maple',
-            'email' => 'sandra@appoets.com',
+            'email' => 'sandra@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8695432568',
             'created_at' => Carbon::now(),
@@ -621,7 +621,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Donna',
             'last_name' => 'Ferguson',
-            'email' => 'donna@appoets.com',
+            'email' => 'donna@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '7826954862',
             'created_at' => Carbon::now(),
@@ -630,7 +630,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Carol',
             'last_name' => 'Ferguson',
-            'email' => 'carol@appoets.com',
+            'email' => 'carol@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9278459632',
             'created_at' => Carbon::now(),
@@ -639,7 +639,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Ruth',
             'last_name' => 'Ferguson',
-            'email' => 'ruth@appoets.com',
+            'email' => 'ruth@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9288218558',
             'created_at' => Carbon::now(),
@@ -648,7 +648,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Sharon',
             'last_name' => 'Ferguson',
-            'email' => 'sharon@appoets.com',
+            'email' => 'sharon@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285285282',
             'created_at' => Carbon::now(),
@@ -657,7 +657,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Michelle',
             'last_name' => 'Arturo',
-            'email' => 'michelle@appoets.com',
+            'email' => 'michelle@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9288554115',
             'created_at' => Carbon::now(),
@@ -666,7 +666,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Laura',
             'last_name' => 'Ken',
-            'email' => 'laura@appoets.com',
+            'email' => 'laura@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -675,7 +675,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Sarah',
             'last_name' => 'Clinton',
-            'email' => 'sarah@appoets.com',
+            'email' => 'sarah@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -684,7 +684,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'kimberly',
             'last_name' => 'Ken',
-            'email' => 'kimberly@appoets.com',
+            'email' => 'kimberly@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -693,7 +693,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Deborah',
             'last_name' => 'Clinton',
-            'email' => 'deborah@appoets.com',
+            'email' => 'deborah@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -702,7 +702,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Jessica',
             'last_name' => 'Ken',
-            'email' => 'jessica@appoets.com',
+            'email' => 'jessica@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -711,7 +711,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Cynthia',
             'last_name' => 'Ken',
-            'email' => 'cynthia@appoets.com',
+            'email' => 'cynthia@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -720,7 +720,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Angela',
             'last_name' => 'Clinton',
-            'email' => 'angela@appoets.com',
+            'email' => 'angela@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -729,7 +729,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Melissa',
             'last_name' => 'Ken',
-            'email' => 'melissa@appoets.com',
+            'email' => 'melissa@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -738,7 +738,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Brenda',
             'last_name' => 'Ferguson',
-            'email' => 'brenda@appoets.com',
+            'email' => 'brenda@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -747,7 +747,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Amy',
             'last_name' => 'Ken',
-            'email' => 'amy@appoets.com',
+            'email' => 'amy@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -756,7 +756,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Anna',
             'last_name' => 'Ferguson',
-            'email' => 'anna@appoets.com',
+            'email' => 'anna@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -765,7 +765,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Rebecca',
             'last_name' => 'Ken',
-            'email' => 'rebecca@appoets.com',
+            'email' => 'rebecca@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -774,7 +774,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'virginia',
             'last_name' => 'Clinton',
-            'email' => 'virginia@appoets.com',
+            'email' => 'virginia@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -783,7 +783,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Kathleen',
             'last_name' => 'Ken',
-            'email' => 'kathleen@appoets.com',
+            'email' => 'kathleen@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -792,7 +792,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Pamela',
             'last_name' => 'Clinton',
-            'email' => 'pamela@appoets.com',
+            'email' => 'pamela@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -801,7 +801,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Martha',
             'last_name' => 'Ken',
-            'email' => 'martha@appoets.com',
+            'email' => 'martha@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -810,7 +810,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Debra',
             'last_name' => 'Clinton',
-            'email' => 'debra@appoets.com',
+            'email' => 'debra@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -819,7 +819,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Amanda',
             'last_name' => 'Ken',
-            'email' => 'amanda@appoets.com',
+            'email' => 'amanda@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -828,7 +828,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Stephanie',
             'last_name' => 'Clinton',
-            'email' => 'stephanie@appoets.com',
+            'email' => 'stephanie@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -837,7 +837,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Carolyn',
             'last_name' => 'Ken',
-            'email' => 'carolyn@appoets.com',
+            'email' => 'carolyn@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -846,7 +846,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Christine',
             'last_name' => 'Clinton',
-            'email' => 'christine@appoets.com',
+            'email' => 'christine@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -855,7 +855,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Marie',
             'last_name' => 'Ken',
-            'email' => 'marie@appoets.com',
+            'email' => 'marie@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -864,7 +864,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Janet',
             'last_name' => 'Clinton',
-            'email' => 'janet@appoets.com',
+            'email' => 'janet@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -873,7 +873,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Frances',
             'last_name' => 'Clinton',
-            'email' => 'frances@appoets.com',
+            'email' => 'frances@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -882,7 +882,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Ann',
             'last_name' => 'Ken',
-            'email' => 'ann@appoets.com',
+            'email' => 'ann@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -891,7 +891,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Joyce',
             'last_name' => 'Ferguson',
-            'email' => 'joyce@appoets.com',
+            'email' => 'joyce@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -900,7 +900,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Diane',
             'last_name' => 'Ken',
-            'email' => 'diane@appoets.com',
+            'email' => 'diane@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -909,7 +909,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Alice',
             'last_name' => 'Clinton',
-            'email' => 'alice@appoets.com',
+            'email' => 'alice@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -918,7 +918,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Julie',
             'last_name' => 'Ken',
-            'email' => 'julie@appoets.com',
+            'email' => 'julie@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -927,7 +927,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Heather',
             'last_name' => 'Clinton',
-            'email' => 'heather@appoets.com',
+            'email' => 'heather@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -936,7 +936,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Teresa',
             'last_name' => 'Ken',
-            'email' => 'teresa@appoets.com',
+            'email' => 'teresa@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -945,7 +945,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Doris',
             'last_name' => 'Clinton',
-            'email' => 'doris@appoets.com',
+            'email' => 'doris@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -954,7 +954,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Gloria',
             'last_name' => 'Ken',
-            'email' => 'gloria@appoets.com',
+            'email' => 'gloria@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9285659551',
             'created_at' => Carbon::now(),
@@ -963,7 +963,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Evelyn',
             'last_name' => 'Ferguson',
-            'email' => 'evelyn@appoets.com',
+            'email' => 'evelyn@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -972,7 +972,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Christian',
             'last_name' => 'Ferguson',
-            'email' => 'christian@appoets.com',
+            'email' => 'christian@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -981,7 +981,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Steven',
             'last_name' => 'Ferguson',
-            'email' => 'steven@appoets.com',
+            'email' => 'steven@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -990,7 +990,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Samuel',
             'last_name' => 'Ferguson',
-            'email' => 'samuel@appoets.com',
+            'email' => 'samuel@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -999,7 +999,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Brian',
             'last_name' => 'Ferguson',
-            'email' => 'brian@appoets.com',
+            'email' => 'brian@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -1008,7 +1008,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Dylan',
             'last_name' => 'Ferguson',
-            'email' => 'dylan@appoets.com',
+            'email' => 'dylan@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -1017,7 +1017,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Timothy',
             'last_name' => 'Ferguson',
-            'email' => 'timothy@appoets.com',
+            'email' => 'timothy@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '9848522228',
             'created_at' => Carbon::now(),
@@ -1041,7 +1041,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Appoets',
             'last_name' => 'Demo',
-            'email' => 'demo@appoets.com',
+            'email' => 'demo@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1053,7 +1053,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Thomas',
             'last_name' => 'Jenkins',
-            'email' => 'thomas@appoets.com',
+            'email' => 'thomas@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1065,7 +1065,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Rachel',
             'last_name' => 'Burns',
-            'email' => 'rachel@appoets.com',
+            'email' => 'rachel@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1077,7 +1077,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Lorraine',
             'last_name' => 'Harris',
-            'email' => 'lorraine@appoets.com',
+            'email' => 'lorraine@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1089,7 +1089,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Adam',
             'last_name' => 'Wagner',
-            'email' => 'wagner@appoets.com',
+            'email' => 'wagner@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1101,7 +1101,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Christine',
             'last_name' => 'Forshee',
-            'email' => 'christine@appoets.com',
+            'email' => 'christine@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1113,7 +1113,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Logan',
             'last_name' => 'Arce',
-            'email' => 'logan@appoets.com',
+            'email' => 'logan@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1125,7 +1125,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Joe',
             'last_name' => 'Demo',
-            'email' => 'joe@appoets.com',
+            'email' => 'joe@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1137,7 +1137,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Price',
             'last_name' => 'Jett',
-            'email' => 'price@appoets.com',
+            'email' => 'price@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1149,7 +1149,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Lloyd',
             'last_name' => 'Bradley',
-            'email' => 'lloyd@appoets.com',
+            'email' => 'lloyd@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1161,7 +1161,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Evans',
             'last_name' => 'Thompson',
-            'email' => 'evans@appoets.com',
+            'email' => 'evans@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1173,7 +1173,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Jerry',
             'last_name' => 'Neely',
-            'email' => 'jerry@appoets.com',
+            'email' => 'jerry@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1185,7 +1185,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Teresa',
             'last_name' => 'Vaughn',
-            'email' => 'teresa@appoets.com',
+            'email' => 'teresa@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1197,7 +1197,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Sarah',
             'last_name' => 'Gibson',
-            'email' => 'sarah@appoets.com',
+            'email' => 'sarah@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1209,7 +1209,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Regina',
             'last_name' => 'Delacruz',
-            'email' => 'regina@appoets.com',
+            'email' => 'regina@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1221,7 +1221,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Anthony',
             'last_name' => 'Ferguson',
-            'email' => 'anthony@appoets.com',
+            'email' => 'anthony@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1233,7 +1233,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Gary',
             'last_name' => 'Maple',
-            'email' => 'rasheed@appoets.com',
+            'email' => 'rasheed@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1245,7 +1245,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Robert',
             'last_name' => 'Ferguson',
-            'email' => 'jack@appoets.com',
+            'email' => 'jack@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1257,7 +1257,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Charles',
             'last_name' => 'Ferguson',
-            'email' => 'bobby@appoets.com',
+            'email' => 'bobby@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1269,7 +1269,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Michael',
             'last_name' => 'Ferguson',
-            'email' => 'chunky@appoets.com',
+            'email' => 'chunky@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1281,7 +1281,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Patrick',
             'last_name' => 'Ferguson',
-            'email' => 'silk@appoets.com',
+            'email' => 'silk@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1293,7 +1293,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Arturo',
             'last_name' => 'Arturo',
-            'email' => 'gil@appoets.com',
+            'email' => 'gil@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1305,7 +1305,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Anthony',
             'last_name' => 'Ken',
-            'email' => 'stego@appoets.com',
+            'email' => 'stego@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1317,7 +1317,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Anthony',
             'last_name' => 'Clinton',
-            'email' => 'rodney@appoets.com',
+            'email' => 'rodney@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1329,7 +1329,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Gabriel',
             'last_name' => 'Ferguson',
-            'email' => 'spork@appoets.com',
+            'email' => 'spork@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1341,7 +1341,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Paul',
             'last_name' => 'Ferguson',
-            'email' => 'paul@appoets.com',
+            'email' => 'paul@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1353,7 +1353,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Gabriel',
             'last_name' => 'Giuseppe',
-            'email' => 'giuseppe@appoets.com',
+            'email' => 'giuseppe@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1365,7 +1365,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Pog',
             'last_name' => 'Ferguson',
-            'email' => 'pog@appoets.com',
+            'email' => 'pog@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1377,7 +1377,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Steve',
             'last_name' => 'Ferguson',
-            'email' => 'steve@appoets.com ',
+            'email' => 'steve@demo.com ',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1389,7 +1389,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Beauregard',
             'last_name' => 'Asscan',
-            'email' => 'beauregard@appoets.com',
+            'email' => 'beauregard@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1401,7 +1401,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Tex',
             'last_name' => 'Montreal',
-            'email' => 'tex@appoets.com',
+            'email' => 'tex@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1413,7 +1413,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Ambassador',
             'last_name' => 'Nikolai',
-            'email' => 'ambassador@appoets.com',
+            'email' => 'ambassador@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1425,7 +1425,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Yolo',
             'last_name' => 'Pepperoni',
-            'email' => 'yolo@appoets.com',
+            'email' => 'yolo@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1437,7 +1437,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Hank',
             'last_name' => 'Fracas',
-            'email' => 'hank@appoets.com',
+            'email' => 'hank@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1449,7 +1449,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Magellan',
             'last_name' => 'Lasagna',
-            'email' => 'lasagna@appoets.com',
+            'email' => 'lasagna@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1461,7 +1461,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Bonezone',
             'last_name' => 'VanLandingham',
-            'email' => 'vanlandingham@appoets.com',
+            'email' => 'vanlandingham@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1473,7 +1473,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Carl',
             'last_name' => 'Discotheque',
-            'email' => 'discotheque@appoets.com',
+            'email' => 'discotheque@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1485,7 +1485,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Teddy',
             'last_name' => 'Nuggets',
-            'email' => 'nuggets@appoets.com',
+            'email' => 'nuggets@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1497,7 +1497,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Kid',
             'last_name' => 'Lupus',
-            'email' => 'lupus@appoets.com',
+            'email' => 'lupus@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1509,7 +1509,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Kale',
             'last_name' => 'Arugula',
-            'email' => 'arugula@appoets.com',
+            'email' => 'arugula@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1521,7 +1521,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Luke',
             'last_name' => 'Sexgator',
-            'email' => 'sexgato@appoets.com',
+            'email' => 'sexgato@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1533,7 +1533,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Ludwig',
             'last_name' => 'Instagram',
-            'email' => 'instagram@appoets.com',
+            'email' => 'instagram@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1545,7 +1545,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Hector',
             'last_name' => 'McHector',
-            'email' => 'mchecto@appoets.com',
+            'email' => 'mchecto@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1557,7 +1557,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Max',
             'last_name' => 'Colorado',
-            'email' => 'colorado@appoets.com',
+            'email' => 'colorado@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1569,7 +1569,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Champ',
             'last_name' => 'Champagne',
-            'email' => 'champagne@appoets.com',
+            'email' => 'champagne@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1581,7 +1581,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Samuel',
             'last_name' => 'Lockjaw',
-            'email' => 'lockjaw@appoets.com',
+            'email' => 'lockjaw@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1593,7 +1593,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Jacques',
             'last_name' => 'Hollandaise',
-            'email' => 'hollandaise@appoets.com',
+            'email' => 'hollandaise@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1605,7 +1605,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Christian',
             'last_name' => 'Buddha',
-            'email' => 'buddha@appoets.com',
+            'email' => 'buddha@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1617,7 +1617,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Carlos',
             'last_name' => 'Waterslide',
-            'email' => 'waterslide@appoets.com',
+            'email' => 'waterslide@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1629,7 +1629,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Colorado',
             'last_name' => 'Hollandaise',
-            'email' => 'samve@appoets.com',
+            'email' => 'samve@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1641,7 +1641,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Edgar',
             'last_name' => 'Hollandaise',
-            'email' => 'edgar@appoets.com',
+            'email' => 'edgar@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1653,7 +1653,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Omar',
             'last_name' => 'Buddha',
-            'email' => 'omar@appoets.com',
+            'email' => 'omar@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1665,7 +1665,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Derrick',
             'last_name' => 'Hollandaise',
-            'email' => 'derrick@appoets.com',
+            'email' => 'derrick@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1677,7 +1677,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Hector',
             'last_name' => 'Hollandaise',
-            'email' => 'hector@appoets.com',
+            'email' => 'hector@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1689,7 +1689,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Douglas',
             'last_name' => 'Hollandaise',
-            'email' => 'douglas@appoets.com',
+            'email' => 'douglas@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1701,7 +1701,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Frank',
             'last_name' => 'Buddha',
-            'email' => 'frank@appoets.com',
+            'email' => 'frank@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1713,7 +1713,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Tristan',
             'last_name' => 'Hollandaise',
-            'email' => 'tristan@appoets.com',
+            'email' => 'tristan@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1725,7 +1725,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Collin',
             'last_name' => 'Ken',
-            'email' => 'collin@appoets.com',
+            'email' => 'collin@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1737,7 +1737,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Troy',
             'last_name' => 'Hollandaise',
-            'email' => 'troy@appoets.com',
+            'email' => 'troy@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1749,7 +1749,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Roberto',
             'last_name' => 'Hollandaise',
-            'email' => 'roberto@appoets.com',
+            'email' => 'roberto@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1761,7 +1761,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Jeremiah',
             'last_name' => 'Buddha',
-            'email' => 'jeremiah@appoets.com',
+            'email' => 'jeremiah@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1773,7 +1773,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Jonathon',
             'last_name' => 'Ken',
-            'email' => 'jonathon@appoets.com',
+            'email' => 'jonathon@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1785,7 +1785,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Sergio',
             'last_name' => 'Hollandaise',
-            'email' => 'sergio@appoets.com',
+            'email' => 'sergio@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1797,7 +1797,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Fernando',
             'last_name' => 'Hollandaise',
-            'email' => 'fernando@appoets.com',
+            'email' => 'fernando@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1809,7 +1809,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Philip',
             'last_name' => 'Buddha',
-            'email' => 'philip@appoets.com',
+            'email' => 'philip@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1821,7 +1821,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Andre',
             'last_name' => 'Hollandaise',
-            'email' => 'andre@appoets.com',
+            'email' => 'andre@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1833,7 +1833,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Johnny',
             'last_name' => 'Hollandaise',
-            'email' => 'johnny@appoets.com',
+            'email' => 'johnny@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1845,7 +1845,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Edwin',
             'last_name' => 'Ken',
-            'email' => 'edwin@appoets.com',
+            'email' => 'edwin@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1857,7 +1857,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Ivan',
             'last_name' => 'Hollandaise',
-            'email' => 'ivan@appoets.com',
+            'email' => 'ivan@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1869,7 +1869,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Cristian',
             'last_name' => 'Buddha',
-            'email' => 'cristian@appoets.com',
+            'email' => 'cristian@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1881,7 +1881,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Clayton',
             'last_name' => 'Ferguson',
-            'email' => 'clayton@appoets.com',
+            'email' => 'clayton@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1893,7 +1893,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Levi',
             'last_name' => 'Hollandaise',
-            'email' => 'levi@appoets.com',
+            'email' => 'levi@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1905,7 +1905,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Curtis',
             'last_name' => 'Hollandaise',
-            'email' => 'curtis@appoets.com',
+            'email' => 'curtis@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1917,7 +1917,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Gary',
             'last_name' => 'Ken',
-            'email' => 'gary@appoets.com',
+            'email' => 'gary@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1929,7 +1929,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Darius',
             'last_name' => 'Ferguson',
-            'email' => 'darius@appoets.com',
+            'email' => 'darius@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1941,7 +1941,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Nicolas',
             'last_name' => 'Buddha',
-            'email' => 'nicolas@appoets.com',
+            'email' => 'nicolas@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1953,7 +1953,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Dennis',
             'last_name' => 'Hollandaise',
-            'email' => 'dennis@appoets.com',
+            'email' => 'dennis@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1965,7 +1965,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Andres',
             'last_name' => 'Ken',
-            'email' => 'andres@appoets.com',
+            'email' => 'andres@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1977,7 +1977,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Jackson',
             'last_name' => 'Ferguson',
-            'email' => 'jackson@appoets.com',
+            'email' => 'jackson@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -1989,7 +1989,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Maxwell',
             'last_name' => 'Hollandaise',
-            'email' => 'maxwell@appoets.com',
+            'email' => 'maxwell@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2001,7 +2001,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Cesar',
             'last_name' => 'Hollandaise',
-            'email' => 'cesar@appoets.com',
+            'email' => 'cesar@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2013,7 +2013,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Drew',
             'last_name' => 'Ken',
-            'email' => 'drew@appoets.com',
+            'email' => 'drew@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2025,7 +2025,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Randy',
             'last_name' => 'Ferguson',
-            'email' => 'randy@appoets.com',
+            'email' => 'randy@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2037,7 +2037,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Pedro',
             'last_name' => 'Hollandaise',
-            'email' => 'pedro@appoets.com',
+            'email' => 'pedro@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2049,7 +2049,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Ruben',
             'last_name' => 'Ken',
-            'email' => 'ruben@appoets.com',
+            'email' => 'ruben@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2061,7 +2061,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Alexis',
             'last_name' => 'Ferguson',
-            'email' => 'alexis@appoets.com',
+            'email' => 'alexis@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2073,7 +2073,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Adam',
             'last_name' => 'Ferguson',
-            'email' => 'adam@appoets.com',
+            'email' => 'adam@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2085,7 +2085,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Nathan',
             'last_name' => 'Ferguson',
-            'email' => 'nathan@appoets.com',
+            'email' => 'nathan@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2097,7 +2097,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Richard',
             'last_name' => 'Ferguson',
-            'email' => 'richard@appoets.com',
+            'email' => 'richard@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2109,7 +2109,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Sean',
             'last_name' => 'Ferguson',
-            'email' => 'sean@appoets.com',
+            'email' => 'sean@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2121,7 +2121,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Charles',
             'last_name' => 'Ferguson',
-            'email' => 'charles@appoets.com',
+            'email' => 'charles@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2133,7 +2133,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Patrick',
             'last_name' => 'Ferguson',
-            'email' => 'patrick@appoets.com',
+            'email' => 'patrick@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2145,7 +2145,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Jason',
             'last_name' => 'Ferguson',
-            'email' => 'jason@appoets.com',
+            'email' => 'jason@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2157,7 +2157,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Luis',
             'last_name' => 'Ferguson',
-            'email' => 'luis@appoets.com',
+            'email' => 'luis@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2169,7 +2169,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Jeremy',
             'last_name' => 'Ferguson',
-            'email' => 'jeremy@appoets.com',
+            'email' => 'jeremy@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2181,7 +2181,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Stephen',
             'last_name' => 'Ferguson',
-            'email' => 'stephen@appoets.com',
+            'email' => 'stephen@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2193,7 +2193,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Mark',
             'last_name' => 'Ferguson',
-            'email' => 'mark@appoets.com',
+            'email' => 'mark@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2205,7 +2205,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Jesse',
             'last_name' => 'Ferguson',
-            'email' => 'jesse@appoets.com',
+            'email' => 'jesse@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2217,7 +2217,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Juan',
             'last_name' => 'Ferguson',
-            'email' => 'juan@appoets.com',
+            'email' => 'juan@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2229,7 +2229,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Alex',
             'last_name' => 'Ferguson',
-            'email' => 'alex@appoets.com',
+            'email' => 'alex@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2241,7 +2241,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Cameron',
             'last_name' => 'Ferguson',
-            'email' => 'cameron@appoets.com',
+            'email' => 'cameron@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2253,7 +2253,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Travis',
             'last_name' => 'Ferguson',
-            'email' => 'travis@appoets.com',
+            'email' => 'travis@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2265,7 +2265,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Jeffrey',
             'last_name' => 'Ferguson',
-            'email' => 'jeffrey@appoets.com',
+            'email' => 'jeffrey@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2277,7 +2277,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Bryan',
             'last_name' => 'Ferguson',
-            'email' => 'bryan@appoets.com',
+            'email' => 'bryan@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2289,7 +2289,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Caleb',
             'last_name' => 'Ferguson',
-            'email' => 'caleb@appoets.com',
+            'email' => 'caleb@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2301,7 +2301,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Carlos',
             'last_name' => 'Ferguson',
-            'email' => 'carlos@appoets.com',
+            'email' => 'carlos@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2313,7 +2313,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Jared',
             'last_name' => 'Ferguson',
-            'email' => 'jared@appoets.com',
+            'email' => 'jared@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2325,7 +2325,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Ethan',
             'last_name' => 'Ferguson',
-            'email' => 'ethan@appoets.com',
+            'email' => 'ethan@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2337,7 +2337,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Kenneth',
             'last_name' => 'Ferguson',
-            'email' => 'kenneth@appoets.com',
+            'email' => 'kenneth@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',
@@ -2349,7 +2349,7 @@ class DemoSeeder extends Seeder
         ],[
             'first_name' => 'Taylor',
             'last_name' => 'Ferguson',
-            'email' => 'taylor@appoets.com',
+            'email' => 'taylor@demo.com',
             'password' => bcrypt('123456'),
             'mobile' => '8465562222',
             'status' => 'approved',

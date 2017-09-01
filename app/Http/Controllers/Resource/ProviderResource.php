@@ -55,9 +55,7 @@ class ProviderResource extends Controller
      */
     public function store(Request $request)
     {
-        if(Setting::get('demo_mode', 0) == 1) {
-            return back()->with('flash_error', 'Disabled for demo purposes! Please contact us at info@appoets.com');
-        }
+        demo_mode();
 
         $this->validate($request, [
             'first_name' => 'required|max:255',
@@ -129,9 +127,7 @@ class ProviderResource extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(Setting::get('demo_mode', 0) == 1) {
-            return back()->with('flash_error', 'Disabled for demo purposes! Please contact us at info@appoets.com');
-        }
+        demo_mode();
 
         $this->validate($request, [
             'first_name' => 'required|max:255',
@@ -172,9 +168,7 @@ class ProviderResource extends Controller
      */
     public function destroy($id)
     {
-        if(Setting::get('demo_mode', 0) == 1) {
-            return back()->with('flash_error', 'Disabled for demo purposes! Please contact us at info@appoets.com');
-        }
+        demo_mode();
 
         try {
             Provider::find($id)->delete();
@@ -214,9 +208,7 @@ class ProviderResource extends Controller
      */
     public function disapprove($id)
     {
-        if(Setting::get('demo_mode', 0) == 1) {
-            return back()->with('flash_error', 'Disabled for demo purposes! Please contact us at info@appoets.com');
-        }
+        demo_mode();
         
         Provider::where('id',$id)->update(['status' => 'banned']);
         return back()->with('flash_success', "Provider Disapproved");

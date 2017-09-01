@@ -360,7 +360,13 @@ class UserApiController extends Controller
             $UserRequest = new UserRequests;
             $UserRequest->booking_id = Helper::generate_booking_id();
             $UserRequest->user_id = Auth::user()->id;
-            $UserRequest->current_provider_id = $Providers[0]->id;
+            
+            if(Setting::get('manual_request',0) == 0){
+                $UserRequest->current_provider_id = $Providers[0]->id;
+            }else{
+                $UserRequest->current_provider_id = 0;
+            }
+
             $UserRequest->service_type_id = $request->service_type;
             $UserRequest->payment_mode = $request->payment_mode;
             
@@ -393,7 +399,12 @@ class UserApiController extends Controller
 
             $UserRequest->save();
 
-            Log::info('New Request id : '. $UserRequest->id .' Assigned to provider : '. $UserRequest->current_provider_id);
+
+            if(Setting::get('manual_request',0) == 0){
+                Log::info('New Request id : '. $UserRequest->id .' Assigned to provider : '. $UserRequest->current_provider_id);
+                (new SendPushNotification)->IncomingRequest($Providers[0]->id);
+            }
+
 
 
             // update payment mode 
@@ -406,16 +417,17 @@ class UserApiController extends Controller
                 Card::where('card_id',$request->card_id)->update(['is_default' => 1]);
             }
 
-            (new SendPushNotification)->IncomingRequest($Providers[0]->id);
+            if(Setting::get('manual_request',0) == 0){
+                foreach ($Providers as $key => $Provider) {
 
-            foreach ($Providers as $key => $Provider) {
-
-                $Filter = new RequestFilter;
-                // Send push notifications to the first provider
-                // incoming request push to provider
-                $Filter->request_id = $UserRequest->id;
-                $Filter->provider_id = $Provider->id; 
-                $Filter->save();
+                    $Filter = new RequestFilter;
+                    // Send push notifications to the first provider
+                    // incoming request push to provider
+                    
+                    $Filter->request_id = $UserRequest->id;
+                    $Filter->provider_id = $Provider->id; 
+                    $Filter->save();
+                }
             }
 
             if($request->ajax()) {

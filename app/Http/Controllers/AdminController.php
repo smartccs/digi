@@ -144,9 +144,7 @@ class AdminController extends Controller
      */
     public function settings_store(Request $request)
     {
-        if(Setting::get('demo_mode', 0) == 1) {
-            return back()->with('flash_error','Disabled for demo purposes! Please contact us at info@appoets.com');
-        }
+        demo_mode();
 
         $this->validate($request,[
                 'site_title' => 'required',
@@ -179,6 +177,7 @@ class AdminController extends Controller
         Setting::set('contact_email', $request->contact_email);
         Setting::set('site_copyright', $request->site_copyright);
         Setting::set('social_login', $request->social_login);
+        Setting::set('manual_request', $request->manual_request == 'on' ? 1 : 0 );
         Setting::save();
         
         return back()->with('flash_success','Settings Updated Successfully');
@@ -203,9 +202,7 @@ class AdminController extends Controller
      */
     public function settings_payment_store(Request $request)
     {
-        if(Setting::get('demo_mode', 0) == 1) {
-            return back()->with('flash_error', 'Disabled for demo purposes! Please contact us at info@appoets.com');
-        }
+        demo_mode();
 
         $this->validate($request, [
                 'CARD' => 'in:on',
@@ -255,9 +252,7 @@ class AdminController extends Controller
      */
     public function profile_update(Request $request)
     {
-        if(Setting::get('demo_mode', 0) == 1) {
-            return back()->with('flash_error', 'Disabled for demo purposes! Please contact us at info@appoets.com');
-        }
+        demo_mode();
 
         $this->validate($request,[
             'name' => 'required|max:255',
@@ -303,9 +298,7 @@ class AdminController extends Controller
      */
     public function password_update(Request $request)
     {
-        if(Setting::get('demo_mode', 0) == 1) {
-            return back()->with('flash_error','Disabled for demo purposes! Please contact us at info@appoets.com');
-        }
+        demo_mode();
 
         $this->validate($request,[
             'old_password' => 'required',
@@ -647,9 +640,7 @@ class AdminController extends Controller
      */
     public function send_push(Request $request){
 
-        if(Setting::get('demo_mode', 0) == 1) {
-            return back()->with('flash_error', 'Disabled for demo purposes! Please contact us at info@appoets.com');
-        }
+        demo_mode();
 
         $this->validate($request, [
                 'send_to' => 'required|in:ALL,USERS,PROVIDERS',

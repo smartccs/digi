@@ -83,6 +83,13 @@
 				</div>
 
 				<div class="form-group row">
+					<label for="stripe_secret_key" class="col-xs-2 col-form-label"> Manual Assigning </label>
+					<div class="col-xs-10">
+						<div class="float-xs-left mr-1"><input @if(Setting::get('manual_request') == 1) checked  @endif  name="manual_request" type="checkbox" class="js-switch" data-color="#43b968"></div>
+					</div>
+				</div>
+
+				<div class="form-group row">
 					<label for="contact_number" class="col-xs-2 col-form-label">@lang('admin.setting.Contact_Number')</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="number" value="{{ Setting::get('contact_number', '911')  }}" name="contact_number" required id="contact_number" placeholder="Contact Number">

@@ -58,3 +58,9 @@ function get_all_service_types()
 {
 	return ServiceType::all();
 }
+
+function demo_mode(){
+	if(\Setting::get('demo_mode', 0) == 1) {
+        return back()->with('flash_error', 'Disabled for demo purposes! Please contact us at info@appdupe.com');
+    }
+}

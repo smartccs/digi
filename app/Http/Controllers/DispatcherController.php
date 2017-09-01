@@ -127,8 +127,13 @@ class DispatcherController extends Controller
             $Request = UserRequests::findOrFail($request_id);
             $Provider = Provider::findOrFail($provider_id);
 
+            $Request->provider_id = $Provider->id;
+            $Request->status = 'STARTED';
             $Request->current_provider_id = $Provider->id;
             $Request->save();
+
+            ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status' =>'riding']);
+
             (new SendPushNotification)->IncomingRequest($Request->current_provider_id);
 
             try {
@@ -139,6 +144,7 @@ class DispatcherController extends Controller
                 $Filter = new RequestFilter;
                 $Filter->request_id = $Request->id;
                 $Filter->provider_id = $Provider->id; 
+                $Filter->status = 0;
                 $Filter->save();
             }
 
@@ -337,9 +343,7 @@ class DispatcherController extends Controller
      */
     public function profile_update(Request $request)
     {
-        if(Setting::get('demo_mode', 0) == 1) {
-            return back()->with('flash_error', 'Disabled for demo purposes! Please contact us at info@appoets.com');
-        }
+        demo_mode();
 
         $this->validate($request,[
             'name' => 'required|max:255',
@@ -380,9 +384,7 @@ class DispatcherController extends Controller
      */
     public function password_update(Request $request)
     {
-        if(Setting::get('demo_mode', 0) == 1) {
-            return back()->with('flash_error','Disabled for demo purposes! Please contact us at info@appoets.com');
-        }
+        demo_mode();
 
         $this->validate($request,[
             'old_password' => 'required',

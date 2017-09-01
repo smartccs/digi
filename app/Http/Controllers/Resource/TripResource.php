@@ -94,20 +94,7 @@ class TripResource extends Controller
      */
     public function store(Request $request)
     {
-        
-        $this->validate($request, [
-                's_latitude' => 'required|numeric',
-                'd_latitude' => 'required|numeric',
-                's_longitude' => 'required|numeric',
-                'd_longitude' => 'required|numeric',
-                'service_type' => 'required|numeric|exists:service_types,id',
-                'promo_code' => 'exists:promocodes,promo_code',
-                'distance' => 'required|numeric',
-                'use_wallet' => 'numeric',
-                'payment_mode' => 'required|in:CASH,CARD,PAYPAL',
-            ]);
-
-
+        // 
     }
 
     /**
@@ -177,9 +164,7 @@ class TripResource extends Controller
      */
     public function destroy($id)
     {
-        if(Setting::get('demo_mode', 0) == 1) {
-            return back()->with('flash_error', 'Disabled for demo purposes! Please contact us at info@appoets.com');
-        }
+        demo_mode();
         
         try {
             $Request = UserRequests::findOrFail($id);
