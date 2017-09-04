@@ -52,7 +52,7 @@ class SocialLoginController extends Controller
                         $new->last_name= isset($name[1]) ? $name[1] : '';
                         $new->password=bcrypt($facebook->id);
                         $new->social_unique_id=$facebook->id;
-                        //$new->mobile=$facebook->mobile;
+                        // $new->mobile=$request->mobile;
                         $new->avatar=$facebook->avatar;
                         $new->login_by="facebook";
                         $new->save();
@@ -160,7 +160,7 @@ class SocialLoginController extends Controller
                 $AuthUser->device_type=$request->device_type;
                 $AuthUser->device_token=$request->device_token;
                 $AuthUser->device_id=$request->device_id;
-                //$new->mobile=$facebook->mobile;
+                $AuthUser->mobile=$request->mobile;
                 $AuthUser->picture=$FacebookDrive->avatar;
                 $AuthUser->login_by="facebook";
                 $AuthUser->save();
@@ -324,7 +324,7 @@ class SocialLoginController extends Controller
                 $AuthUser->device_type=$request->device_type;
                 $AuthUser->device_token=$request->device_token;
                 $AuthUser->device_id=$request->device_id;
-                //$new->mobile=$facebook->mobile;
+                $AuthUser->mobile=$request->mobile;
                 $AuthUser->picture=$GoogleDrive->avatar;
                 $AuthUser->login_by="google";
                 $AuthUser->save();

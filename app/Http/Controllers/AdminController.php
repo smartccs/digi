@@ -412,8 +412,8 @@ class AdminController extends Controller
      */
     public function push_index()
     {
-        $data = \PushNotification::app('AndroidProvider')
-            ->to('ftIkLOsL6X0:APA91bFcwKiQvbv7QtB8HyTBVs95nDBnKYcFEg-BN9Nser3Aw8VJVTmlJ_cmuKBcrqeSBEZkNJeBXjujZ-L-vhNGvProWwU7Dm2129iA2VqsPeCFfFkrBDvrxoR9IMwU4iLf-znJ4xYb')
+        $data = \PushNotification::app('AndroidUser')
+            ->to('eU5XG6dYIbg:APA91bEMgekc3ArVPxxkAfLJeQLbsK2S6poYdhDnTVMni8EZ3gZVhVFYvQ1tY_i1kh4rj9UhdC48JJ-LbDz0BHPSWIwcacC6Ynza25Swzw9AMItYRVWtG1gz5xaaav4SZs0Q0g8Ty9B_')
             ->send('OK Google!');
         dd($data);
 

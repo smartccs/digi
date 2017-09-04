@@ -18,10 +18,12 @@ use App\Promocode;
 use App\UserRequests;
 use App\RequestFilter;
 use App\PromocodeUsage;
+use App\PromocodePassbook;
 use App\ProviderService;
 use App\UserRequestRating;
 use App\UserRequestPayment;
 use App\ServiceType;
+use App\WalletPassbook;
 
 class TripController extends Controller
 {
@@ -492,6 +494,12 @@ class TripController extends Controller
                     $Discount = $Promocode->discount;
                     $PromocodeUsage->status ='USED';
                     $PromocodeUsage->save();
+
+                    PromocodePassbook::create([
+                            'user_id' => Auth::user()->id,
+                            'status' => 'USED',
+                            'promocode_id' => $PromocodeUsage->promocode_id
+                        ]);
                 }
             }
 
@@ -538,6 +546,13 @@ class TripController extends Controller
                         User::where('id',$UserRequest->user_id)->update(['wallet_balance' => 0 ]);
                         $Payment->total = abs($Payable);
 
+                        WalletPassbook::create([
+                          'user_id' => $UserRequest->user_id,
+                          'amount' => $Wallet,
+                          'status' => 'DEBITED',
+                          'via' => 'TRIP',
+                        ]);
+
                         // charged wallet money push 
                         (new SendPushNotification)->ChargedWalletMoney($UserRequest->user_id,currency($Wallet));
 
@@ -554,6 +569,13 @@ class TripController extends Controller
                         $UserRequest->paid = 1;
                         $UserRequest->status = 'COMPLETED';
                         $UserRequest->save();
+
+                        WalletPassbook::create([
+                          'user_id' => $UserRequest->user_id,
+                          'amount' => $Total,
+                          'status' => 'DEBITED',
+                          'via' => 'TRIP',
+                        ]);
 
                         // charged wallet money push 
                         (new SendPushNotification)->ChargedWalletMoney($UserRequest->user_id,currency($Total));

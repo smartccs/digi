@@ -28,6 +28,7 @@ use App\ServiceType;
 use App\UserRequests;
 use App\RequestFilter;
 use App\PromocodeUsage;
+use App\PromocodePassbook;
 use App\ProviderService;
 use App\UserRequestRating;
 use App\Http\Controllers\ProviderResources\TripController;
@@ -831,6 +832,12 @@ class UserApiController extends Controller
                     PromocodeUsage::where('promocode_id', $promo->id)
                             ->where('status','<>','USED')
                             ->update(['status' => 'ADDED']);
+
+                    PromocodePassbook::create([
+                            'user_id' => Auth::user()->id,
+                            'status' => 'ADDED',
+                            'promocode_id' => $promo->id
+                        ]);
                 }
             }
         } catch (Exception $e) {
@@ -888,6 +895,12 @@ class UserApiController extends Controller
                 $promo->user_id = Auth::user()->id;
                 $promo->status = 'ADDED';
                 $promo->save();
+
+                PromocodePassbook::create([
+                            'user_id' => Auth::user()->id,
+                            'status' => 'ADDED',
+                            'promocode_id' => $find_promo->id
+                        ]);
 
                 if($request->ajax()){
 
@@ -1143,6 +1156,43 @@ class UserApiController extends Controller
         try{
             
             return response()->json(['message' => trans('api.email_available')]);
+
+        } catch (Exception $e) {
+             return response()->json(['error' => trans('api.something_went_wrong')], 500);
+        }
+    }
+
+
+
+    /**
+     * Show the wallet usage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function wallet_passbook(Request $request)
+    {
+        try{
+            
+            return WalletPassbook::where('user_id',Auth::user()->id)->get();
+
+        } catch (Exception $e) {
+             return response()->json(['error' => trans('api.something_went_wrong')], 500);
+        }
+    }
+
+
+    /**
+     * Show the promo usage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function promo_passbook(Request $request)
+    {
+        try{
+            
+            return PromocodePassbook::where('user_id',Auth::user()->id)->with('promocode')->get();
 
         } catch (Exception $e) {
              return response()->json(['error' => trans('api.something_went_wrong')], 500);

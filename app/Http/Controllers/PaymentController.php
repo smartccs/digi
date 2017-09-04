@@ -15,6 +15,7 @@ use Exception;
 
 use App\Card;
 use App\User;
+use App\WalletPassbook;
 use App\UserRequests;
 use App\UserRequestPayment;
 
@@ -116,6 +117,13 @@ class PaymentController extends Controller
             $update_user = User::find(Auth::user()->id);
             $update_user->wallet_balance += $request->amount;
             $update_user->save();
+
+            WalletPassbook::create([
+              'user_id' => Auth::user()->id,
+              'amount' => $request->amount,
+              'status' => 'CREDITED',
+              'via' => 'CARD',
+            ]);
 
             Card::where('user_id',Auth::user()->id)->update(['is_default' => 0]);
             Card::where('card_id',$request->card_id)->update(['is_default' => 1]);

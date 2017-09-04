@@ -132,7 +132,7 @@ class DispatcherController extends Controller
             $Request->current_provider_id = $Provider->id;
             $Request->save();
 
-            ProviderService::where('provider_id',$UserRequest->provider_id)->update(['status' =>'riding']);
+            ProviderService::where('provider_id',$Request->provider_id)->update(['status' =>'riding']);
 
             (new SendPushNotification)->IncomingRequest($Request->current_provider_id);
 

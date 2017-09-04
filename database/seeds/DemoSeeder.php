@@ -34,15 +34,6 @@ class DemoSeeder extends Seeder
             'updated_at' => Carbon::now(),
             'picture' => 'http://lorempixel.com/512/512/business/Tranxit',
         ],[
-            'first_name' => 'Appoets',
-            'last_name' => 'Demo',
-            'email' => 'demo@demo.com',
-            'password' => bcrypt('123456'),
-            'mobile' => '9258632148',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-            'picture' => 'http://lorempixel.com/512/512/business/Tranxit',
-        ],[
             'first_name' => 'Emilia',
             'last_name' => 'Epps',
             'email' => 'emilia@demo.com',
@@ -1027,18 +1018,6 @@ class DemoSeeder extends Seeder
 
         DB::table('providers')->truncate();
         DB::table('providers')->insert([[
-            'first_name' => 'Appoets',
-            'last_name' => 'Demo',
-            'email' => 'demo@demo.com',
-            'password' => bcrypt('123456'),
-            'mobile' => '8465562222',
-            'status' => 'approved',
-            'latitude' => '13.00',
-            'longitude' => '80.00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-            'avatar' => 'http://lorempixel.com/512/512/business/Tranxit',
-        ],[
             'first_name' => 'Appoets',
             'last_name' => 'Demo',
             'email' => 'demo@demo.com',
