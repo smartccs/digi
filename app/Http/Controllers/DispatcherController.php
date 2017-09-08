@@ -23,6 +23,17 @@ class DispatcherController extends Controller
 {
 
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('demo', ['only' => ['profile_update', 'password_update']]);
+    }
+
+    
+    /**
      * Dispatcher Panel.
      *
      * @param  \App\Provider  $provider
@@ -343,8 +354,6 @@ class DispatcherController extends Controller
      */
     public function profile_update(Request $request)
     {
-        demo_mode();
-
         $this->validate($request,[
             'name' => 'required|max:255',
             'mobile' => 'required|digits_between:6,13',
@@ -384,8 +393,6 @@ class DispatcherController extends Controller
      */
     public function password_update(Request $request)
     {
-        demo_mode();
-
         $this->validate($request,[
             'old_password' => 'required',
             'password' => 'required|min:6|confirmed',

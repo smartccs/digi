@@ -11,6 +11,17 @@ use Setting;
 
 class DispatcherResource extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('demo', ['only' => ['update', 'destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -100,8 +111,6 @@ class DispatcherResource extends Controller
      */
     public function update(Request $request, $id)
     {
-        demo_mode();
-        
 
         $this->validate($request, [
             'name' => 'required|max:255',
@@ -131,8 +140,6 @@ class DispatcherResource extends Controller
      */
     public function destroy($id)
     {
-        demo_mode();
-        
 
         try {
             Dispatcher::find($id)->delete();

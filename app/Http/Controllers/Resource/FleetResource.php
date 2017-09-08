@@ -12,6 +12,17 @@ use Setting;
 
 class FleetResource extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('demo', ['only' => [ 'update', 'destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -105,7 +116,6 @@ class FleetResource extends Controller
      */
     public function update(Request $request, $id)
     {
-        demo_mode();
         
         $this->validate($request, [
             'name' => 'required|max:255',
@@ -144,7 +154,6 @@ class FleetResource extends Controller
      */
     public function destroy($id)
     {
-        demo_mode();
         
         try {
             Fleet::find($id)->delete();

@@ -19,6 +19,16 @@ use App\Helpers\Helper;
 class ProviderResource extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('demo', ['only' => [ 'store', 'update', 'destroy', 'disapprove']]);
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -55,7 +65,6 @@ class ProviderResource extends Controller
      */
     public function store(Request $request)
     {
-        demo_mode();
 
         $this->validate($request, [
             'first_name' => 'required|max:255',
@@ -127,7 +136,6 @@ class ProviderResource extends Controller
      */
     public function update(Request $request, $id)
     {
-        demo_mode();
 
         $this->validate($request, [
             'first_name' => 'required|max:255',
@@ -168,7 +176,6 @@ class ProviderResource extends Controller
      */
     public function destroy($id)
     {
-        demo_mode();
 
         try {
             Provider::find($id)->delete();
@@ -208,7 +215,6 @@ class ProviderResource extends Controller
      */
     public function disapprove($id)
     {
-        demo_mode();
         
         Provider::where('id',$id)->update(['status' => 'banned']);
         return back()->with('flash_success', "Provider Disapproved");

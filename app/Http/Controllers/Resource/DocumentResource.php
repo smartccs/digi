@@ -11,6 +11,18 @@ use Setting;
 
 class DocumentResource extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('demo', ['only' => ['store' ,'update', 'destroy']]);
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -40,8 +52,7 @@ class DocumentResource extends Controller
      */
     public function store(Request $request)
     {
-        demo_mode();
-        
+
         $this->validate($request, [
             'name' => 'required|max:255',
             'type' => 'required|in:VEHICLE,DRIVER',
@@ -125,7 +136,6 @@ class DocumentResource extends Controller
      */
     public function destroy($id)
     {
-         demo_mode();
         try {
             Document::find($id)->delete();
             return back()->with('message', 'Document deleted successfully');

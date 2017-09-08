@@ -34,6 +34,13 @@ class AdminController extends Controller
     public function __construct()
     {
         $this->middleware('admin');
+        $this->middleware('demo', ['only' => [
+                'settings_store', 
+                'settings_payment_store',
+                'profile_update',
+                'password_update',
+                'send_push',
+            ]]);
     }
 
 
@@ -144,8 +151,6 @@ class AdminController extends Controller
      */
     public function settings_store(Request $request)
     {
-        demo_mode();
-
         $this->validate($request,[
                 'site_title' => 'required',
                 'site_icon' => 'mimes:jpeg,jpg,bmp,png|max:5242880',
@@ -202,7 +207,6 @@ class AdminController extends Controller
      */
     public function settings_payment_store(Request $request)
     {
-        demo_mode();
 
         $this->validate($request, [
                 'CARD' => 'in:on',
@@ -252,8 +256,6 @@ class AdminController extends Controller
      */
     public function profile_update(Request $request)
     {
-        demo_mode();
-
         $this->validate($request,[
             'name' => 'required|max:255',
             'email' => 'required|max:255|email|unique:admins',
@@ -298,7 +300,6 @@ class AdminController extends Controller
      */
     public function password_update(Request $request)
     {
-        demo_mode();
 
         $this->validate($request,[
             'old_password' => 'required',
@@ -412,13 +413,9 @@ class AdminController extends Controller
      */
     public function push_index()
     {
-        $data = \PushNotification::app('AndroidUser')
-            ->to('eU5XG6dYIbg:APA91bEMgekc3ArVPxxkAfLJeQLbsK2S6poYdhDnTVMni8EZ3gZVhVFYvQ1tY_i1kh4rj9UhdC48JJ-LbDz0BHPSWIwcacC6Ynza25Swzw9AMItYRVWtG1gz5xaaav4SZs0Q0g8Ty9B_')
-            ->send('OK Google!');
-        dd($data);
 
-        $data = \PushNotification::app('IOSProvider')
-            ->to('a9b9a16c5984afc0ea5b681cc51ada13fc5ce9a8c895d14751de1a2dba7994e7')
+        $data = \PushNotification::app('IOSUser')
+            ->to('3911e9870e7c42566b032266916db1f6af3af1d78da0b52ab230e81d38541afa')
             ->send('Hello World, i`m a push message');
         dd($data);
     }
@@ -640,7 +637,6 @@ class AdminController extends Controller
      */
     public function send_push(Request $request){
 
-        demo_mode();
 
         $this->validate($request, [
                 'send_to' => 'required|in:ALL,USERS,PROVIDERS',

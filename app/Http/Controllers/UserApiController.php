@@ -28,6 +28,7 @@ use App\ServiceType;
 use App\UserRequests;
 use App\RequestFilter;
 use App\PromocodeUsage;
+use App\WalletPassbook;
 use App\PromocodePassbook;
 use App\ProviderService;
 use App\UserRequestRating;
@@ -334,7 +335,8 @@ class UserApiController extends Controller
                         $query->where('status','active');
                         $query->where('service_type_id',$service_type);
                     })
-            ->orderBy('distance')
+            ->orderBy('distance','asc')
+            ->take(10)
             ->get();
 
         // List Providers who are currently busy and add them to the filter list.

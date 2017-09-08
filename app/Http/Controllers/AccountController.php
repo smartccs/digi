@@ -32,6 +32,7 @@ class AccountController extends Controller
     public function __construct()
     {
         $this->middleware('account');
+        $this->middleware('demo', ['only' => ['profile_update', 'password_update']]);
     }
 
 
@@ -82,7 +83,6 @@ class AccountController extends Controller
      */
     public function profile_update(Request $request)
     {
-        demo_mode();
 
         $this->validate($request,[
             'name' => 'required|max:255',
@@ -123,7 +123,6 @@ class AccountController extends Controller
      */
     public function password_update(Request $request)
     {
-        demo_mode();
 
         $this->validate($request,[
             'old_password' => 'required',

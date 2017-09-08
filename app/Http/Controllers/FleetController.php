@@ -30,6 +30,7 @@ class FleetController extends Controller
     public function __construct()
     {
         $this->middleware('fleet');
+        $this->middleware('demo', ['only' => ['profile_update', 'password_update', 'destory_provider_service']]);
     }
 
 
@@ -128,8 +129,6 @@ class FleetController extends Controller
      */
     public function profile_update(Request $request)
     {
-        demo_mode();
-
         $this->validate($request,[
             'name' => 'required|max:255',
             'company' => 'required|max:255',
@@ -175,9 +174,6 @@ class FleetController extends Controller
      */
     public function password_update(Request $request)
     {
-        if(Setting::get('demo_mode', 0) == 1) {
-            return back()->with('flash_error','Disabled for demo purposes! Please contact us at info@appdupe.com');
-        }
 
         $this->validate($request,[
             'old_password' => 'required',
@@ -234,7 +230,6 @@ class FleetController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destory_provider_service($id){
-        demo_mode();
         try {
             ProviderService::find($id)->delete();
             return back()->with('message', 'Service deleted successfully');

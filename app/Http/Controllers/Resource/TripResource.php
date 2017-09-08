@@ -10,6 +10,17 @@ use Setting;
 
 class TripResource extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('demo', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -164,8 +175,6 @@ class TripResource extends Controller
      */
     public function destroy($id)
     {
-        demo_mode();
-        
         try {
             $Request = UserRequests::findOrFail($id);
             $Request->delete();
