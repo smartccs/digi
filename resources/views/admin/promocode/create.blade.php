@@ -25,6 +25,15 @@
 						<input class="form-control" type="number" value="{{ old('discount') }}" name="discount" required id="discount" placeholder="Discount">
 					</div>
 				</div>
+				<div class="form-group row">
+					<label for="discount" class="col-xs-2 col-form-label">@lang('admin.promocode.discount_type')</label>
+					<div class="col-xs-10">
+						<select class="form-control" name="discount_type" required id="discount_type">
+						<option value="percent">In Percentage Mode(%)</option>
+						<option value="amount">In Amount Mode</option>
+						</select>
+					</div>
+				</div>
 
 				<div class="form-group row">
 					<label for="expiration" class="col-xs-2 col-form-label">@lang('admin.promocode.expiration')</label>

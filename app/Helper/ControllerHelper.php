@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use File;
 use Setting;
+use Illuminate\Support\Facades\Mail;
 
 class Helper
 {
@@ -33,6 +34,21 @@ class Helper
 
     public static function generate_booking_id() {
         return Setting::get('booking_prefix').mt_rand(100000, 999999);
+    }
+
+    public static function site_sendmail($user){
+
+        $site_details=Setting::all();
+       
+
+        
+        Mail::send('emails.invoice', ['user' => $user,'site_details'=>$site_details], function ($mail) use ($user,$site_details) {
+           // $mail->from('harapriya@appoets.com', 'Your Application');
+
+            $mail->to($user->user->email, $user->user->first_name.' '.$user->user->last_name)->subject('Invoice');
+        });
+
+        return true;
     }
 
 }

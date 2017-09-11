@@ -29,6 +29,16 @@
 				</div>
 
 				<div class="form-group row">
+					<label for="discount" class="col-xs-2 col-form-label">@lang('admin.promocode.discount_type')</label>
+					<div class="col-xs-10">
+						<select class="form-control" name="discount_type" required id="discount_type">
+						<option value="percent" @if($promocode->discount_type=='percent') selected @endif >In Percentage Mode(%)</option>
+						<option value="amount" @if($promocode->discount_type=='amount') selected @endif >In Amount Mode</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group row">
 					<label for="expiration" class="col-xs-2 col-form-label">@lang('admin.promocode.expiration')</label>
 					<div class="col-xs-10">
 						<input class="form-control" type="date" value="{{ date('Y-m-d',strtotime($promocode->expiration)) }}" name="expiration" required id="expiration" placeholder="Expiration">

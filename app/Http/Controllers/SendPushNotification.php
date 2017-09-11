@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\User;
 use App\ProviderDevice;
 use Exception;
+use Log;
+use Setting;
 
 class SendPushNotification extends Controller
 {
@@ -69,6 +71,18 @@ class SendPushNotification extends Controller
     public function Arrived($request){
 
         return $this->sendPushToUser($request->user_id, trans('api.push.arrived'));
+    }
+
+     /**
+     * Driver Arrived at your location.
+     *
+     * @return void
+     */
+    public function Dropped($request){
+
+        Log::info( trans('api.push.dropped').Setting::get('currency').$request->payment->total.' by '.$request->payment_mode);
+
+        return $this->sendPushToUser($request->user_id, trans('api.push.dropped').Setting::get('currency').$request->payment->total.' by '.$request->payment_mode);
     }
 
     /**

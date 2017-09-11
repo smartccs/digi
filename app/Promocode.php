@@ -15,7 +15,7 @@ class Promocode extends Model
      * @var array
      */
     protected $fillable = [
-        'promo_code','discount','expiration'
+        'promo_code','discount','expiration','discount_type'
     ];
 
     /**

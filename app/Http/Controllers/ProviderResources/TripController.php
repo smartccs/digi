@@ -385,6 +385,10 @@ class TripController extends Controller
                 $UserRequest->save();
                 $UserRequest->with('user')->findOrFail($id);
                 $UserRequest->invoice = $this->invoice($id);
+
+                (new SendPushNotification)->Dropped($UserRequest);
+
+                Helper::site_sendmail($UserRequest);
             }
 
            

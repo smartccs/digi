@@ -108,6 +108,7 @@ class PromocodeResource extends Controller
 
             $promo->promo_code = $request->promo_code;
             $promo->discount = $request->discount;
+            $promo->discount_type = $request->discount_type;
             $promo->expiration = $request->expiration;
             $promo->save();
 

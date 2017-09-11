@@ -184,6 +184,7 @@ return [
 		'update_promocode' => 'Update Promocode',
 		'used_count' => 'Used Count',
 		'promocodes' => 'Promocodes',
+		'discount_type' => 'Promocode Use ',
 		
 	],
 	'provides' => [
