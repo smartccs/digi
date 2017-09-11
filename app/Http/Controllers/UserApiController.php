@@ -544,11 +544,12 @@ class UserApiController extends Controller
             $UserRequests = UserRequests::UserRequestStatusCheck(Auth::user()->id, $check_status)
                                         ->get()
                                         ->toArray();
+                                        
 
             $search_status = ['SEARCHING','SCHEDULED'];
             $UserRequestsFilter = UserRequests::UserRequestAssignProvider(Auth::user()->id,$search_status)->get(); 
 
-            // Log::info($UserRequestsFilter);
+             //Log::info($UserRequestsFilter);
 
             $Timeout = Setting::get('provider_select_timeout', 180);
 
@@ -877,7 +878,7 @@ class UserApiController extends Controller
                     return back()->with('flash_error', trans('api.promocode_expired'));
                 }
 
-            }elseif(PromocodeUsage::where('promocode_id',$find_promo->id)->where('user_id', Auth::user()->id)->where('status','ADDED')->count() > 0){
+            }elseif(PromocodeUsage::where('promocode_id',$find_promo->id)->where('user_id', Auth::user()->id)->whereIN('status',['ADDED','USED'])->count() > 0){
 
                 if($request->ajax()){
 

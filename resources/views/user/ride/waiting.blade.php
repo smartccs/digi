@@ -394,13 +394,28 @@
                             	</span>
                             : ''
                             }
-                            {this.props.checkState.payment.discount ?
+
+                            @if(isset($request->payment->discount))
 								<span>
-								<dt>@lang('user.ride.promotion_applied')</dt>
-                            	<dd>{this.props.currency}{this.props.checkState.payment.discount}</dd>  
+								<dt>@lang('user.ride.promotion_applied')(
+								@if($request->payment->promocode_id)
+										<?php $promo=App\Promocode::find($request->payment->promocode_id); ?>
+
+	                            	@if($promo->discount_type=='percent')
+	                            		{{$promo->discount}}%
+	                            	@else
+	                            		{this.props.currency}{{$promo->discount}}
+	                            	@endif
+                            	@else
+                            		{this.props.currency}{{$promo->discount}}
+                            	@endif
+
+								)</dt>
+                            	<dd>
+
+                            	{this.props.currency}{this.props.checkState.payment.discount}</dd>  
                             	</span>
-                            : ''
-                            }
+                           @endif
                             <dt>@lang('user.ride.total')</dt>
                             <dd>{this.props.currency}{this.props.checkState.payment.total}</dd> 
                             <dt className="big">@lang('user.ride.amount_paid')</dt>

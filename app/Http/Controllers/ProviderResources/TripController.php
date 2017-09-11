@@ -492,6 +492,9 @@ class TripController extends Controller
                 $Distance = ($kilometer * $service_type->price);
             }
 
+             $Commision = ($Distance + $Fixed) * ( $commission_percentage/100 );
+             $Tax = ($Distance + $Fixed) * ( $tax_percentage/100 );
+
             if($PromocodeUsage = PromocodeUsage::where('user_id',$UserRequest->user_id)->where('status','ADDED')->first())
             {
                 if($Promocode = Promocode::find($PromocodeUsage->promocode_id)){
@@ -505,12 +508,26 @@ class TripController extends Controller
                             'promocode_id' => $PromocodeUsage->promocode_id
                         ]);
                 }
+
+                if($PromocodeUsage->promocode->discount_type=='amount'){
+                    $Total = $Fixed + $Distance + $Tax - $Discount;
+                }else{
+
+                    $Total = ($Fixed + $Distance + $Tax)-(($Fixed + $Distance + $Tax) * ($Discount/100));
+
+                    $Discount = (($Fixed + $Distance + $Tax) * ($Discount/100));
+
+                }
+
+            }else{
+
+                
+                $Total = $Fixed + $Distance + $Tax - $Discount;
+
+
             }
 
-            $Commision = ($Distance + $Fixed) * ( $commission_percentage/100 );
-            $Tax = ($Distance + $Fixed) * ( $tax_percentage/100 );
-            $Total = $Fixed + $Distance + $Tax - $Discount;
-
+            
             if($UserRequest->surge){
                 $Surge = (Setting::get('surge_percentage')/100) * $Total;
                 $Total += $Surge;
