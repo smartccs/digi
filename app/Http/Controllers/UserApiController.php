@@ -389,6 +389,10 @@ class UserApiController extends Controller
                 $UserRequest->use_wallet = $request->use_wallet ? : 0;
             }
 
+            if(Setting::get('track_distance', 0) == 1){
+                $UserRequest->is_track = "YES";
+            }
+
             $UserRequest->assigned_at = Carbon::now();
             $UserRequest->route_key = $route_key;
 

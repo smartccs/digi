@@ -21,6 +21,7 @@ class UserRequests extends Model
         'service_type_id',
         'status',
         'cancelled_by',
+        'is_track',
         'paid',
         'distance',
         's_latitude',

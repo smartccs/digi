@@ -462,7 +462,7 @@ class TripController extends Controller
             }
 
             if($request->status == 'PICKEDUP'){
-                if(Setting::get('track_distance', 0) == 1){
+                if($UserRequest->is_track == "YES"){
                    $UserRequest->distance  = 0; 
                 }
                 $UserRequest->started_at = Carbon::now();
@@ -471,7 +471,7 @@ class TripController extends Controller
             $UserRequest->save();
 
             if($request->status == 'DROPPED') {
-                if(Setting::get('track_distance', 0) == 1){
+                if($UserRequest->is_track == "YES"){
                     $UserRequest->d_latitude = $request->latitude?:$UserRequest->d_latitude;
                     $UserRequest->d_longitude = $request->longitude?:$UserRequest->d_longitude;
                     $UserRequest->d_address =  $request->address?:$UserRequest->d_address;
