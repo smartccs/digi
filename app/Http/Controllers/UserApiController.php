@@ -364,7 +364,7 @@ class UserApiController extends Controller
             $UserRequest->booking_id = Helper::generate_booking_id();
             $UserRequest->user_id = Auth::user()->id;
             
-            if(Setting::get('manual_request',0) == 0){
+            if((Setting::get('manual_request',0) == 0) && (Setting::get('broadcast_request',0) == 0)){
                 $UserRequest->current_provider_id = $Providers[0]->id;
             }else{
                 $UserRequest->current_provider_id = 0;
@@ -400,15 +400,15 @@ class UserApiController extends Controller
                 $UserRequest->schedule_at = date("Y-m-d H:i:s",strtotime("$request->schedule_date $request->schedule_time"));
             }
 
-            $UserRequest->save();
-
-
-            if(Setting::get('manual_request',0) == 0){
+             if((Setting::get('manual_request',0) == 0) && (Setting::get('broadcast_request',0) == 0)){
                 Log::info('New Request id : '. $UserRequest->id .' Assigned to provider : '. $UserRequest->current_provider_id);
                 (new SendPushNotification)->IncomingRequest($Providers[0]->id);
             }
 
+            $UserRequest->save();
 
+
+           
 
             // update payment mode 
 
@@ -422,6 +422,10 @@ class UserApiController extends Controller
 
             if(Setting::get('manual_request',0) == 0){
                 foreach ($Providers as $key => $Provider) {
+
+                    if(Setting::get('broadcast_request',0) == 1){
+                       (new SendPushNotification)->IncomingRequest($Provider->id); 
+                    }
 
                     $Filter = new RequestFilter;
                     // Send push notifications to the first provider
@@ -631,6 +635,46 @@ class UserApiController extends Controller
                 return response()->json(['message' => trans('api.ride.provider_rated')]); 
             }else{
                 return redirect('dashboard')->with('flash_success', 'Driver Rated Successfully!');
+            }
+        } catch (Exception $e) {
+            if($request->ajax()){
+                return response()->json(['error' => trans('api.something_went_wrong')], 500);
+            }else{
+                return back()->with('flash_error', 'Something went wrong');
+            }
+        }
+
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+
+    public function modifiy_request(Request $request) {
+
+        $this->validate($request, [
+                'request_id' => 'required|integer|exists:user_requests,id,user_id,'.Auth::user()->id,
+                'latitude' => 'required|numeric',
+                'longitude' => 'required|numeric',
+                'address' => 'required'
+            ]);
+
+        try{
+
+            $UserRequest = UserRequests::findOrFail($request->request_id);
+            $UserRequest->d_latitude = $request->latitude?:$UserRequest->d_latitude;
+            $UserRequest->d_longitude = $request->longitude?:$UserRequest->d_longitude;
+            $UserRequest->d_address =  $request->address?:$UserRequest->d_address;
+            $UserRequest->save();
+
+            // Send Push Notification to Provider 
+            if($request->ajax()){
+                return response()->json(['message' => trans('api.ride.request_modify_location')]); 
+            }else{
+                return redirect('dashboard')->with('flash_success', 'User Changed Destination Address Successfully!');
             }
         } catch (Exception $e) {
             if($request->ajax()){

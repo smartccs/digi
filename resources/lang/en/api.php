@@ -20,6 +20,7 @@ return array (
 		'provider_rated' => 'Driver Rated',
 		'request_scheduled' => 'Ride Scheduled',
 		'request_already_scheduled' => 'Ride Already Scheduled',
+		'request_modify_location' => 'User Changed Destination Address',
 	],
 	'something_went_wrong' => 'Something Went Wrong',
 	'logout_success' => 'Logged out Successfully',

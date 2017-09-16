@@ -49,6 +49,7 @@ Route::post('/refresh/token' , 'ProviderAuth\TokenController@refresh_token');
         Route::post('{id}', 'ProviderResources\TripController@accept');
         Route::post('{id}/rate', 'ProviderResources\TripController@rate');
         Route::post('{id}/message' , 'ProviderResources\TripController@message');
+        Route::post('{id}/calculate','ProviderResources\TripController@calculate_distance');
 
     });
 

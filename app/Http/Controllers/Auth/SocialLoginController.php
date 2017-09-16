@@ -122,7 +122,8 @@ class SocialLoginController extends Controller
             [
                 'device_type' => 'required|in:android,ios',
                 'device_token' => 'required',
-                'accessToken'=>'required',
+                'accessToken'=> 'required',
+                'mobile' => 'required',
                 'device_id' => 'required',
                 'login_by' => 'required|in:manual,facebook,google'
             ]

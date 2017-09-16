@@ -419,7 +419,7 @@
                             <dt>@lang('user.ride.total')</dt>
                             <dd>{this.props.currency}{this.props.checkState.payment.total}</dd> 
                             <dt className="big">@lang('user.ride.amount_paid')</dt>
-                            <dd className="big">{this.props.currency}{this.props.checkState.payment.total}</dd>
+                            <dd className="big">{this.props.currency}{this.props.checkState.payment.payable}</dd>
                         </dl>
 		        </div>
 				);
@@ -487,7 +487,7 @@
                             <dt className="big">@lang('user.ride.amount_paid')</dt>
                             <dd className="big">{this.props.currency}{this.props.checkState.payment.total}</dd>
                         </dl>
-                    	<button type="submit" className="full-primary-btn fare-btn">CONTINUE TO PAY</button>   
+                    	<button type="submit" className="full-primary-btn fare-btn">CONTINUE TO PAY - {this.props.currency}{this.props.checkState.payment.payable}</button>   
                     </form>
 		        </div>
 				);

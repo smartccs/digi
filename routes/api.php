@@ -31,11 +31,13 @@ Route::group(['middleware' => ['auth:api']], function () {
 	Route::get('/services' , 'UserApiController@services');
 	// provider
 	Route::post('/rate/provider' , 'UserApiController@rate_provider');
+
 	// request
 	Route::post('/send/request' , 	'UserApiController@send_request');
 	Route::post('/cancel/request' , 'UserApiController@cancel_request');
 	Route::get('/request/check' , 	'UserApiController@request_status_check');
 	Route::get('/show/providers' , 	'UserApiController@show_providers');
+	Route::post('/update/request' , 'UserApiController@modifiy_request');
 	// history
 	Route::get('/trips' , 				'UserApiController@trips');
 	Route::get('upcoming/trips' , 		'UserApiController@upcoming_trips');

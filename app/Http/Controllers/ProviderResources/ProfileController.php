@@ -46,6 +46,7 @@ class ProfileController extends Controller
             Auth::user()->fleet = Fleet::find(Auth::user()->fleet);
             Auth::user()->currency = Setting::get('currency', '$');
             Auth::user()->sos = Setting::get('sos_number', '911');
+            Auth::user()->track_distance = Setting::get('track_distance', 0);
 
             return Auth::user();
 

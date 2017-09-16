@@ -228,6 +228,7 @@ class TokenController extends Controller
                 'device_type' => 'required|in:android,ios',
                 'device_token' => 'required',
                 'accessToken'=>'required',
+                'mobile' => 'required',
                 'device_id' => 'required',
                 'login_by' => 'required|in:manual,facebook,google'
             ]
@@ -257,6 +258,7 @@ class TokenController extends Controller
                 $AuthUser["password"]=bcrypt($FacebookDrive->id);
                 $AuthUser["social_unique_id"]=$FacebookDrive->id;
                 $AuthUser["avatar"]=$FacebookDrive->avatar;
+                $AuthUser["mobile"]=$request->mobile;
                 $AuthUser["login_by"]="facebook";
                 $AuthUser = Provider::create($AuthUser);
 

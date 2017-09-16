@@ -107,11 +107,9 @@
                                                 </td>
                                                 <td class="text-right">
                                                 @if($day->payment != "")
-                                                <?php 
-                                                $current_sum = 0;
-                                                $current_sum = $day->payment->tax + $day->payment->fixed + $day->payment->distance + $day->payment->commision;
-                                                $sum_weekly += $current_sum; ?>
-                                                	{{currency($current_sum)}}
+                                                {{currency($day->payment->provider_pay)}}
+                                                @else
+                                                {{currency(0.00)}}
                                                 @endif
                                                 </td>
                                             </tr>
@@ -130,7 +128,7 @@
                                     </div>
 
                                     <div class="pull-right trip-right">
-                                        <p class="earning-cost no-margin">{{currency($sum_weekly)}}</p>
+                                        <p class="earning-cost no-margin">{{currency($weekly_sum)}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -182,6 +180,7 @@
                                         <th>Duration</th>
                                         <th>Status</th>
                                         <th>Distance(KM)</th>
+                                        <th>Invoice Amount</th>
                                         <th>Cash Collected</th>
                                         <th>Total Earnings</th>
                                     </tr>
@@ -211,13 +210,19 @@
                                         </td>
                                         <td>{{$each->status}}</td>
                                         <td>{{$each->distance}}Kms</td>
+                                        <td> 
+                                            @if($day->payment != "")
+                                            {{currency($day->payment->total)}}
+                                            @else
+                                            {{currency(0.00)}}
+                                            @endif
+                                        </td>
                                         <td>
                                         	@if($each->payment != "")
                                         		<?php $each_sum = 0;
-                                        		$each_sum = $each->payment->tax + $each->payment->fixed + $each->payment->distance + $each->payment->commision;
+                                        		$each_sum = $each->payment->provider_pay;
                                         		$fully_sum += $each_sum;
                                         		?>
-
                                         		{{currency($each_sum)}}
                                         	@endif
                                         </td>

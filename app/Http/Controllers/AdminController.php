@@ -183,6 +183,8 @@ class AdminController extends Controller
         Setting::set('site_copyright', $request->site_copyright);
         Setting::set('social_login', $request->social_login);
         Setting::set('manual_request', $request->manual_request == 'on' ? 1 : 0 );
+        Setting::set('broadcast_request', $request->broadcast_request == 'on' ? 1 : 0 );
+        Setting::set('track_distance', $request->track_distance == 'on' ? 1 : 0 );
         Setting::save();
         
         return back()->with('flash_success','Settings Updated Successfully');
@@ -217,6 +219,7 @@ class AdminController extends Controller
                 'tax_percentage' => 'required|numeric|min:0|max:100',
                 'surge_percentage' => 'required|numeric|min:0|max:100',
                 'commission_percentage' => 'required|numeric|min:0|max:100',
+                'provider_commission_percentage' => 'required|numeric|min:0|max:100',
                 'surge_trigger' => 'required|integer|min:0',
                 'currency' => 'required'
             ]);
@@ -229,6 +232,7 @@ class AdminController extends Controller
         Setting::set('tax_percentage', $request->tax_percentage);
         Setting::set('surge_percentage', $request->surge_percentage);
         Setting::set('commission_percentage', $request->commission_percentage);
+        Setting::set('provider_commission_percentage', $request->provider_commission_percentage);
         Setting::set('surge_trigger', $request->surge_trigger);
         Setting::set('currency', $request->currency);
         Setting::set('booking_prefix', $request->booking_prefix);

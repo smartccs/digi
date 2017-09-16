@@ -14,7 +14,6 @@ class UserRequestPayment extends Model
     protected $fillable = [
         'request_id',
         'payment_mode',
-
         'fixed',
         'distance',
         'commision',
@@ -22,6 +21,9 @@ class UserRequestPayment extends Model
         'tax',
         'total',
         'wallet',
+        'payable',
+        'provider_commission',
+        'provider_pay',
         'surge'
     ];
 

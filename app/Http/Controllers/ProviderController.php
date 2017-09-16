@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\UserRequests;
+use App\UserRequestPayment;
 use App\RequestFilter;
 use App\Provider;
 use Carbon\Carbon;
@@ -102,6 +103,12 @@ class ProviderController extends Controller
                     ->where('created_at', '>=', Carbon::now()->subWeekdays(7))
                     ->get();
 
+        $weekly_sum = UserRequestPayment::whereHas('request', function($query) {
+                        $query->where('provider_id',\Auth::guard('provider')->user()->id);
+                        $query->where('created_at', '>=', Carbon::now()->subWeekdays(7));
+                    })
+                        ->sum('provider_pay');
+
         $today = UserRequests::where('provider_id',\Auth::guard('provider')->user()->id)
                     ->where('created_at', '>=', Carbon::today())
                     ->count();
@@ -110,7 +117,12 @@ class ProviderController extends Controller
                     ->with('payment','service_type')
                     ->get();
 
-        return view('provider.payment.earnings',compact('provider','weekly','fully','today'));
+        $fully_sum = UserRequestPayment::whereHas('request', function($query) {
+                        $query->where('provider_id', \Auth::guard('provider')->user()->id);
+                        })
+                        ->sum('provider_pay');
+
+        return view('provider.payment.earnings',compact('provider','weekly','fully','today','weekly_sum','fully_sum'));
     }
 
     /**

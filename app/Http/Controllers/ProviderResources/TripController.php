@@ -24,6 +24,8 @@ use App\UserRequestRating;
 use App\UserRequestPayment;
 use App\ServiceType;
 use App\WalletPassbook;
+use Location\Coordinate;
+use Location\Distance\Vincenty;
 
 class TripController extends Controller
 {
@@ -52,14 +54,24 @@ class TripController extends Controller
                         $query->where('current_provider_id', $provider);
                     });
 
-            $BeforeAssignProvider = RequestFilter::with(['request.user', 'request.payment', 'request'])
+            if(Setting::get('broadcast_request',0) == 1){
+                 $BeforeAssignProvider = RequestFilter::with(['request.user', 'request.payment', 'request'])
+                ->where('provider_id', $provider)
+                ->whereHas('request', function($query) use ($provider){
+                        $query->where('status','<>', 'CANCELLED');
+                        $query->where('status','<>', 'SCHEDULED');
+                        $query->where('current_provider_id',0);
+                    });
+            }else{
+                 $BeforeAssignProvider = RequestFilter::with(['request.user', 'request.payment', 'request'])
                 ->where('provider_id', $provider)
                 ->whereHas('request', function($query) use ($provider){
                         $query->where('status','<>', 'CANCELLED');
                         $query->where('status','<>', 'SCHEDULED');
                         $query->where('current_provider_id',$provider);
-                    });
-
+                    });    
+            }
+                
             $IncomingRequests = $BeforeAssignProvider->union($AfterAssignProvider)->get();
 
             if(!empty($request->latitude)) {
@@ -76,7 +88,11 @@ class TripController extends Controller
                         for ($i=0; $i < sizeof($IncomingRequests); $i++) {
                             $IncomingRequests[$i]->time_left_to_respond = $Timeout - (time() - strtotime($IncomingRequests[$i]->request->assigned_at));
                             if($IncomingRequests[$i]->request->status == 'SEARCHING' && $IncomingRequests[$i]->time_left_to_respond < 0) {
-                                $this->assign_next_provider($IncomingRequests[$i]->request->id);
+                                if(Setting::get('broadcast_request',0) == 1){
+                                    $this->assign_destroy($IncomingRequests[$i]->request->id);
+                                }else{
+                                    $this->assign_next_provider($IncomingRequests[$i]->request->id);
+                                }
                             }
                         }
                     }
@@ -91,6 +107,73 @@ class TripController extends Controller
                 ];
 
             return $Response;
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Something went wrong']);
+        }
+    }
+
+    /**
+     * Calculate distance between two coordinates.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+
+    public function calculate_distance(Request $request, $id){
+        $this->validate($request, [
+                'latitude' => 'required|numeric',
+                'longitude' => 'required|numeric'
+            ]);
+        try{
+
+            if($request->ajax()) {
+                $Provider = Auth::user();
+            } else {
+                $Provider = Auth::guard('provider')->user();
+            }
+
+            $UserRequest = UserRequests::where('status','PICKEDUP')
+                            ->where('provider_id',$Provider->id)
+                            ->find($id);
+
+            if($UserRequest && ($request->latitude && $request->longitude)){
+
+                Log::info("REQUEST ID:".$UserRequest->id."==SOURCE LATITUDE:".$UserRequest->track_latitude."==SOURCE LONGITUDE:".$UserRequest->track_longitude);
+            
+                if($UserRequest->track_latitude && $UserRequest->track_longitude){
+
+                    $coordinate1 = new Coordinate($UserRequest->track_latitude, $UserRequest->track_longitude); /** Set Distance Calculation Source Coordinates ****/
+                    $coordinate2 = new Coordinate($request->latitude, $request->longitude); /** Set Distance calculation Destination Coordinates ****/
+
+                    $calculator = new Vincenty();
+
+                    /***Distance between two coordinates using spherical algorithm (library as mjaschen/phpgeo) ***/ 
+
+                    $mydistance = $calculator->getDistance($coordinate1, $coordinate2); 
+
+                    $meters = round($mydistance);
+
+                    Log::info("REQUEST ID:".$UserRequest->id."==BETWEEN TWO COORDINATES DISTANCE:".$meters." (m)");
+
+                    if($meters >= 100){
+                        /*** If traveled distance riched houndred meters means to be the source coordinates ***/
+                        $traveldistance = round(($meters/1000),8);
+
+                        $calulatedistance = $UserRequest->track_distance + $traveldistance;
+
+                        $UserRequest->track_distance  = $calulatedistance;
+                        $UserRequest->distance        = $calulatedistance;
+                        $UserRequest->track_latitude  = $request->latitude;
+                        $UserRequest->track_longitude = $request->longitude;
+                        $UserRequest->save();
+                    }
+                }else if(!$UserRequest->track_latitude && !$UserRequest->track_longitude) {
+                    $UserRequest->distance             = 0;
+                    $UserRequest->track_latitude      = $request->latitude;
+                    $UserRequest->track_longitude     = $request->longitude;
+                    $UserRequest->save();
+                }
+            }
+            return $UserRequest;
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Something went wrong']);
         }
@@ -282,6 +365,10 @@ class TripController extends Controller
             
             $UserRequest->provider_id = Auth::user()->id;
 
+            if(Setting::get('broadcast_request',0) == 1){
+               $UserRequest->current_provider_id = Auth::user()->id; 
+            }
+
             if($UserRequest->schedule_at != ""){
 
                 $beforeschedule_time = strtotime($UserRequest->schedule_at."- 1 hour");
@@ -375,12 +462,20 @@ class TripController extends Controller
             }
 
             if($request->status == 'PICKEDUP'){
+                if(Setting::get('track_distance', 0) == 1){
+                   $UserRequest->distance  = 0; 
+                }
                 $UserRequest->started_at = Carbon::now();
             }
 
             $UserRequest->save();
 
             if($request->status == 'DROPPED') {
+                if(Setting::get('track_distance', 0) == 1){
+                    $UserRequest->d_latitude = $request->latitude?:$UserRequest->d_latitude;
+                    $UserRequest->d_longitude = $request->longitude?:$UserRequest->d_longitude;
+                    $UserRequest->d_address =  $request->address?:$UserRequest->d_address;
+                }
                 $UserRequest->finished_at = Carbon::now();
                 $UserRequest->save();
                 $UserRequest->with('user')->findOrFail($id);
@@ -423,6 +518,36 @@ class TripController extends Controller
             return response()->json(['error' => 'Connection Error']);
         }
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function assign_destroy($id)
+    {
+        $UserRequest = UserRequests::find($id);
+        try {
+            UserRequests::where('id', $UserRequest->id)->update(['status' => 'CANCELLED']);
+            // No longer need request specific rows from RequestMeta
+            RequestFilter::where('request_id', $UserRequest->id)->delete();
+            //  request push to user provider not available
+            (new SendPushNotification)->ProviderNotAvailable($UserRequest->user_id);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Unable to reject, Please try again later']);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Connection Error']);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
 
     public function assign_next_provider($request_id) {
 
@@ -468,6 +593,7 @@ class TripController extends Controller
             $UserRequest = UserRequests::findOrFail($request_id);
             $tax_percentage = Setting::get('tax_percentage',10);
             $commission_percentage = Setting::get('commission_percentage',10);
+            $provider_commission_percentage = Setting::get('provider_commission_percentage',10);
             $service_type = ServiceType::findOrFail($UserRequest->service_type_id);
             
             $kilometer = $UserRequest->distance;
@@ -477,6 +603,8 @@ class TripController extends Controller
             $Discount = 0; // Promo Code discounts should be added here.
             $Wallet = 0;
             $Surge = 0;
+            $ProviderCommission = 0;
+            $ProviderPay = 0;
 
             if($service_type->calculator == 'MIN') {
                 $Distance = $service_type->minute * $minutes;
@@ -494,6 +622,8 @@ class TripController extends Controller
 
              $Commision = ($Distance + $Fixed) * ( $commission_percentage/100 );
              $Tax = ($Distance + $Fixed) * ( $tax_percentage/100 );
+             $ProviderCommission = ($Distance + $Fixed) * ( $provider_commission_percentage/100 );
+             $ProviderPay = ($Distance + $Fixed) - $ProviderCommission;
 
             if($PromocodeUsage = PromocodeUsage::where('user_id',$UserRequest->user_id)->where('status','ADDED')->first())
             {
@@ -520,11 +650,8 @@ class TripController extends Controller
                 }
 
             }else{
-
                 
                 $Total = $Fixed + $Distance + $Tax - $Discount;
-
-
             }
 
             
@@ -543,6 +670,9 @@ class TripController extends Controller
             $Payment->distance = $Distance;
             $Payment->commision = $Commision;
             $Payment->surge = $Surge;
+            $Payment->total = $Total;
+            $Payment->provider_commission = $ProviderCommission;
+            $Payment->provider_pay = $ProviderPay;
             if($Discount != 0 && $PromocodeUsage){
                 $Payment->promocode_id = $PromocodeUsage->promocode_id;
             }
@@ -565,7 +695,7 @@ class TripController extends Controller
                         $Payment->wallet = $Wallet;
                         $Payable = $Total - $Wallet;
                         User::where('id',$UserRequest->user_id)->update(['wallet_balance' => 0 ]);
-                        $Payment->total = abs($Payable);
+                        $Payment->payable = abs($Payable);
 
                         WalletPassbook::create([
                           'user_id' => $UserRequest->user_id,
@@ -579,7 +709,7 @@ class TripController extends Controller
 
                     } else {
 
-                        $Payment->total = 0;
+                        $Payment->payable = 0;
                         $WalletBalance = $Wallet - $Total;
                         User::where('id',$UserRequest->user_id)->update(['wallet_balance' => $WalletBalance]);
                         $Payment->wallet = $Total;
@@ -606,6 +736,8 @@ class TripController extends Controller
 
             } else {
                 $Payment->total = abs($Total);
+                $Payment->payable = abs($Total);
+                
             }
 
             $Payment->tax = $Tax;

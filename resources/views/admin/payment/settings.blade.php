@@ -130,6 +130,20 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="provider_commission_percentage" class="col-xs-4 col-form-label">@lang('admin.payment.provider_commission_percentage')</label>
+                            <div class="col-xs-8">
+                                <input class="form-control"
+                                    type="number"
+                                    value="{{ Setting::get('provider_commission_percentage', '0') }}"
+                                    id="provider_commission_percentage"
+                                    name="provider_commission_percentage"
+                                    min="0"
+                                    max="100"
+                                    placeholder="Provider Commission Percentage">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="booking_prefix" class="col-xs-4 col-form-label">@lang('admin.payment.booking_id_prefix')</label>
                             <div class="col-xs-8">
                                 <input class="form-control"
