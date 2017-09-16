@@ -26,8 +26,8 @@
                         <tr>
                             <td>{{$index + 1}}</td>
                             <td>{{$review->request_id}}</td>
-                            <td>{{$review->user->first_name}} {{$review->user->last_name}}</td>
-                            <td>{{$review->provider->first_name}} {{$review->provider->last_name}}</td>
+                            <td>{{$review->user?$review->user->first_name:''}} {{$review->user?$review->user->last_name:''}}</td>
+                            <td>{{$review->provider?$review->provider->first_name:''}} {{$review->provider?$review->provider->last_name:''}}</td>
                             <td>
                                 <div className="rating-outer">
                                     <input type="hidden" value="{{$review->user_rating}}" name="rating" class="rating"/>

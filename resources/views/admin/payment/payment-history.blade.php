@@ -16,6 +16,7 @@
                             <th>@lang('admin.payment.from')</th>
                             <th>@lang('admin.payment.to')</th>
                             <th>@lang('admin.payment.total_amount')</th>
+                            <th>@lang('admin.payment.provider_amount')</th>
                             <th>@lang('admin.payment.payment_mode')</th>
                             <th>@lang('admin.payment.payment_status')</th>
                         </tr>
@@ -25,9 +26,10 @@
                         <tr>
                             <td>{{$payment->id}}</td>
                             <td>{{$payment->payment->payment_id}}</td>
-                            <td>{{$payment->user->first_name}} {{$payment->user->last_name}}</td>
-                            <td>{{$payment->provider->first_name}} {{$payment->provider->last_name}}</td>
+                            <td>{{$payment->user?$payment->user->first_name:''}} {{$payment->user?$payment->user->last_name:''}}</td>
+                            <td>{{$payment->provider?$payment->provider->first_name:''}} {{$payment->provider?$payment->provider->last_name:''}}</td>
                             <td>{{currency($payment->payment->total)}}</td>
+                            <td>{{currency($payment->payment->provider_pay)}}</td>
                             <td>{{$payment->payment_mode}}</td>
                             <td>
                                 @if($payment->paid)
@@ -46,6 +48,7 @@
                             <th>@lang('admin.payment.from')</th>
                             <th>@lang('admin.payment.to')</th>
                             <th>@lang('admin.payment.total_amount')</th>
+                            <th>@lang('admin.payment.provider_amount')</th>
                             <th>@lang('admin.payment.payment_mode')</th>
                             <th>@lang('admin.payment.payment_status')</th>
                         </tr>

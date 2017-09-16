@@ -261,7 +261,7 @@ class ProviderResource extends Controller
             $revenue = UserRequestPayment::whereHas('request', function($query) use($id) {
                                     $query->where('provider_id', $id );
                                 })->select(\DB::raw(
-                                   'SUM(ROUND(fixed) + ROUND(distance)) as overall, SUM(ROUND(commision)) as commission' 
+                                   'SUM(ROUND(provider_pay)) as overall, SUM(ROUND(provider_commission)) as commission' 
                                ))->get();
 
 

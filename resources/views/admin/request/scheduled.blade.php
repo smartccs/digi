@@ -30,10 +30,10 @@
                             <td>{{$index + 1}}</td>
 
                             <td>{{$request->id}}</td>
-                            <td>{{$request->user->first_name}} {{$request->user->last_name}}</td>
+                            <td>{{$request->user?$request->user->first_name:''}} {{$request->user?$request->user->last_name:''}}</td>
                             <td>
                                 @if($request->provider_id)
-                                    {{$request->provider->first_name}} {{$request->provider->last_name}}
+                                    {{$request->provider?$request->provider->first_name:''}} {{$request->provider?$request->provider->last_name:''}}
                                 @else
                                     N/A
                                 @endif

@@ -31,14 +31,14 @@
                         <td>{{ $request->booking_id }}</td>
                         <td>
                             @if($request->provider)
-                                {{ $request->user->first_name }} {{ $request->user->last_name }}
+                                {{ $request->user?$request->user->first_name:'' }} {{ $request->user?$request->user->last_name:'' }}
                             @else
                                 N/A
                             @endif
                         </td>
                         <td>
                             @if($request->provider)
-                                {{ $request->provider->first_name }} {{ $request->provider->last_name }}
+                                {{ $request->provider?$request->provider->first_name:'' }} {{ $request->provider?$request->provider->last_name:'' }}
                             @else
                                 N/A
                             @endif

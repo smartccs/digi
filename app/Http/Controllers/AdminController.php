@@ -584,7 +584,7 @@ class AdminController extends Controller
 
                 $Providers[$index]->payment = UserRequestPayment::whereIn('request_id', $Rides)
                                 ->select(\DB::raw(
-                                   'SUM(ROUND(fixed) + ROUND(distance)) as overall, SUM(ROUND(commision)) as commission' 
+                                   'SUM(ROUND(provider_pay)) as overall, SUM(ROUND(provider_commission)) as commission' 
                                 ))->get();
             }
 

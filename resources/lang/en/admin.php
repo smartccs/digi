@@ -158,6 +158,7 @@ return [
 		'from' => 'From',
 		'to' => 'To',
 		'total_amount' => 'Total Amount',
+		'provider_amount' => 'Provider Amount',
 		'payment_mode' => 'Payment Mode',
 		'payment_status' => 'Payment Status',
 		'payment_modes' => 'Payment Modes',

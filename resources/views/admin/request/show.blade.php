@@ -65,11 +65,35 @@
                         <dt class="col-sm-4">Base Price :</dt>
                         <dd class="col-sm-8">{{ currency($request->payment->fixed) }}</dd>
 
+                        <dt class="col-sm-4">Distance Price :</dt>
+                        <dd class="col-sm-8">{{ currency($request->payment->distance) }}</dd>
+
+                        <dt class="col-sm-4">Service Charges :</dt>
+                        <dd class="col-sm-8">{{ currency($request->payment->commision) }}</dd>
+
+                        <dt class="col-sm-4">Discount Price :</dt>
+                        <dd class="col-sm-8">{{ currency($request->payment->discount) }}</dd>
+
                         <dt class="col-sm-4">Tax Price :</dt>
                         <dd class="col-sm-8">{{ currency($request->payment->tax) }}</dd>
 
+                        <dt class="col-sm-4">Surge Price :</dt>
+                        <dd class="col-sm-8">{{ currency($request->payment->surge) }}</dd>
+
                         <dt class="col-sm-4">Total Amount :</dt>
                         <dd class="col-sm-8">{{ currency($request->payment->total) }}</dd>
+
+                        <dt class="col-sm-4">Wallet Deduction :</dt>
+                        <dd class="col-sm-8">{{ currency($request->payment->wallet) }}</dd>
+
+                        <dt class="col-sm-4">Paid Amount :</dt>
+                        <dd class="col-sm-8">{{ currency($request->payment->payable) }}</dd>
+
+                        <dt class="col-sm-4">Provider Earnings:</dt>
+                        <dd class="col-sm-8">{{ currency($request->payment->provider_pay) }}</dd>
+
+                        <dt class="col-sm-4">Provider Admin Commission :</dt>
+                        <dd class="col-sm-8">{{ currency($request->payment->provider_commission) }}</dd>
                         @endif
 
                         <dt class="col-sm-4">Ride Status : </dt>

@@ -102,7 +102,7 @@
 																		<span>No Details Found </span>
 																	@endif									
 																</td>
-																<td>{{currency($ride->payment['commision'])}}</td>
+																<td>{{currency($ride->payment['provider_commission'])}}</td>
 																<td>
 																	<span class="text-muted">{{date('d M Y',strtotime($ride->created_at))}}</span>
 																</td>
@@ -115,7 +115,7 @@
 																		<span class="tag tag-info">{{$ride->status}}</span>
 																	@endif
 																</td>
-																<td>{{currency($ride->payment['fixed'] + $ride->payment['distance'])}}</td>
+																<td>{{currency($ride->payment['provider_pay'])}}</td>
 
 															</tr>
 														@endforeach
