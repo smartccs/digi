@@ -123,7 +123,7 @@ class SocialLoginController extends Controller
                 'device_type' => 'required|in:android,ios',
                 'device_token' => 'required',
                 'accessToken'=> 'required',
-                'mobile' => 'required',
+                //'mobile' => 'required',
                 'device_id' => 'required',
                 'login_by' => 'required|in:manual,facebook,google'
             ]
@@ -148,6 +148,7 @@ class SocialLoginController extends Controller
             	$AuthUser->device_type=$request->device_type;
                 $AuthUser->device_token=$request->device_token;
                 $AuthUser->device_id=$request->device_id;
+                $AuthUser->mobile=$request->mobile?:'';
                 $AuthUser->login_by="facebook";
                 $AuthUser->save();  
             }else{   
@@ -161,7 +162,7 @@ class SocialLoginController extends Controller
                 $AuthUser->device_type=$request->device_type;
                 $AuthUser->device_token=$request->device_token;
                 $AuthUser->device_id=$request->device_id;
-                $AuthUser->mobile=$request->mobile;
+                $AuthUser->mobile=$request->mobile?:'';
                 $AuthUser->picture=$FacebookDrive->avatar;
                 $AuthUser->login_by="facebook";
                 $AuthUser->save();
@@ -312,6 +313,7 @@ class SocialLoginController extends Controller
               	$AuthUser->device_type=$request->device_type;
                 $AuthUser->device_token=$request->device_token;
                 $AuthUser->device_id=$request->device_id;
+                $AuthUser->mobile=$request->mobile?:'';
                 $AuthUser->login_by="google";
                 $AuthUser->save();
             }else{   
@@ -325,7 +327,7 @@ class SocialLoginController extends Controller
                 $AuthUser->device_type=$request->device_type;
                 $AuthUser->device_token=$request->device_token;
                 $AuthUser->device_id=$request->device_id;
-                $AuthUser->mobile=$request->mobile;
+                $AuthUser->mobile=$request->mobile?:'';
                 $AuthUser->picture=$GoogleDrive->avatar;
                 $AuthUser->login_by="google";
                 $AuthUser->save();

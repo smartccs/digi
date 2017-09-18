@@ -17,6 +17,7 @@ use App\ProviderProfile;
 use App\UserRequests;
 use App\ProviderService;
 use App\Fleet;
+use App\RequestFilter;
 
 class ProfileController extends Controller
 {
@@ -270,6 +271,20 @@ class ProfileController extends Controller
         $Provider = Auth::user();
         
         if($Provider->service) {
+            
+            $provider = $Provider->id;
+            $OfflineOpenRequest = RequestFilter::with(['request.provider','request'])
+                ->where('provider_id', $provider)
+                ->whereHas('request', function($query) use ($provider){
+                    $query->where('status','SEARCHING');
+                    $query->where('current_provider_id','<>',$provider);
+                    $query->orWhereNull('current_provider_id');
+                    })->pluck('id');
+
+            if(count($OfflineOpenRequest)>0) {
+                RequestFilter::whereIn('id',$OfflineOpenRequest)->delete();
+            }   
+           
             $Provider->service->update(['status' => $request->service_status]);
         } else {
             return response()->json(['error' => 'You account has not been approved for driving']);

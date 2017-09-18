@@ -20,6 +20,7 @@ use Socialite;
 use App\Provider;
 use App\ProviderDevice;
 use App\ProviderService;
+use App\RequestFilter;
 
 class TokenController extends Controller
 {
@@ -144,6 +145,20 @@ class TokenController extends Controller
         try {
             ProviderDevice::where('provider_id', $request->id)->update(['udid'=> '', 'token' => '']);
             ProviderService::where('provider_id',$request->id)->update(['status' => 'offline']);
+
+            $provider = $request->id;
+            $LogoutOpenRequest = RequestFilter::with(['request.provider','request'])
+                ->where('provider_id', $provider)
+                ->whereHas('request', function($query) use ($provider){
+                    $query->where('status','SEARCHING');
+                    $query->where('current_provider_id','<>',$provider);
+                    $query->orWhereNull('current_provider_id');
+                    })->pluck('id');
+
+            if(count($LogoutOpenRequest)>0){
+                RequestFilter::whereIn('id',$LogoutOpenRequest)->delete();
+            }    
+            
             return response()->json(['message' => trans('api.logout_success')]);
         } catch (Exception $e) {
             return response()->json(['error' => trans('api.something_went_wrong')], 500);
@@ -201,12 +216,17 @@ class TokenController extends Controller
         try{
 
             $Provider = Provider::findOrFail($request->id);
-            $Provider->password = bcrypt($request->password);
-            $Provider->save();
-
-            if($request->ajax()) {
-                return response()->json(['message' => 'Password Updated']);
-            }
+            //if(password_verify($request->password, $Provider->password)){
+                $Provider->password = bcrypt($request->password);
+                $Provider->save();
+                if($request->ajax()) {
+                    return response()->json(['message' => 'Password Updated']);
+                }
+            // }else{
+            //     if($request->ajax()) {
+            //         return response()->json(['error' => 'Previous password and reset password are same, so please try again with different password!'], 422);
+            //     }
+            // }
 
         }catch (Exception $e) {
             if($request->ajax()) {
@@ -228,7 +248,7 @@ class TokenController extends Controller
                 'device_type' => 'required|in:android,ios',
                 'device_token' => 'required',
                 'accessToken'=>'required',
-                'mobile' => 'required',
+                //'mobile' => 'required',
                 'device_id' => 'required',
                 'login_by' => 'required|in:manual,facebook,google'
             ]
@@ -249,6 +269,7 @@ class TokenController extends Controller
             if($AuthUser){ 
                 $AuthUser->social_unique_id=$FacebookDrive->id;
                 $AuthUser->login_by="facebook";
+                $AuthUser->mobile=$request->mobile?:'';
                 $AuthUser->save();  
             }else{   
                 $AuthUser["email"]=$FacebookDrive->email;
@@ -258,7 +279,7 @@ class TokenController extends Controller
                 $AuthUser["password"]=bcrypt($FacebookDrive->id);
                 $AuthUser["social_unique_id"]=$FacebookDrive->id;
                 $AuthUser["avatar"]=$FacebookDrive->avatar;
-                $AuthUser["mobile"]=$request->mobile;
+                $AuthUser["mobile"]=$request->mobile?:'';
                 $AuthUser["login_by"]="facebook";
                 $AuthUser = Provider::create($AuthUser);
 
@@ -320,6 +341,7 @@ class TokenController extends Controller
                 'device_type' => 'required|in:android,ios',
                 'device_token' => 'required',
                 'accessToken'=>'required',
+                //'mobile' => 'required',
                 'device_id' => 'required',
                 'login_by' => 'required|in:manual,facebook,google'
             ]
@@ -338,7 +360,8 @@ class TokenController extends Controller
             }
             $AuthUser = $GoogleSql->first();
             if($AuthUser){
-                $AuthUser->social_unique_id=$GoogleDrive->id;  
+                $AuthUser->social_unique_id=$GoogleDrive->id;
+                $AuthUser->mobile=$request->mobile?:'';  
                 $AuthUser->login_by="google";
                 $AuthUser->save();
             }else{   
@@ -349,6 +372,7 @@ class TokenController extends Controller
                 $AuthUser["password"]=($GoogleDrive->id);
                 $AuthUser["social_unique_id"]=$GoogleDrive->id;
                 $AuthUser["avatar"]=$GoogleDrive->avatar;
+                $AuthUser["mobile"]=$request->mobile?:''; 
                 $AuthUser["login_by"]="google";
                 $AuthUser = Provider::create($AuthUser);
 
