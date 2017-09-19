@@ -76,8 +76,16 @@
                                 @endif                        
                             </div>
 
+                            <div class="col-md-12">
+                                <label class="checkbox-inline"><input type="checkbox" name="gender" value="MALE">Male</label>
+                                <label class="checkbox-inline"><input type="checkbox" name="gender"  value="FEMALE">Female</label>
+                                @if ($errors->has('gender'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('gender') }}</strong>
+                                    </span>
+                                @endif                        
+                            </div>
 
-                            
                             <div class="col-md-12">
                                 <input type="password" class="form-control" name="password" placeholder="Password">
 
@@ -87,6 +95,7 @@
                                     </span>
                                 @endif
                             </div>
+
                             <div class="col-md-12">
                                 <input type="password" placeholder="Re-type Password" class="form-control" name="password_confirmation">
 
@@ -121,6 +130,11 @@
 
 
 @section('scripts')
+<script type="text/javascript">
+    $('.checkbox-inline').on('change', function() {
+        $('.checkbox-inline').not(this).prop('checked', false);  
+    });
+</script>
 <script src="https://sdk.accountkit.com/en_US/sdk.js"></script>
 <script>
   // initialize Account Kit with CSRF protection

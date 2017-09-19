@@ -4,6 +4,8 @@ return array (
 
 	'user' => [
 		'incorrect_password' => 'Incorrect Password',
+		'change_password' => 'Required is new password should 
+not be same as old password',
 		'password_updated' => 'Password Updated',
 		'location_updated' => 'Location Updated',
 		'profile_updated' => 'Profile Updated',

@@ -28,6 +28,7 @@ class Provider extends Authenticatable
         'longitude',
         'status',
         'avatar',
+        'gender',
         'social_unique_id',
         'fleet',
     ];
@@ -38,7 +39,7 @@ class Provider extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'updated_at'
+        'password', 'remember_token'
     ];
 
     /**

@@ -315,7 +315,7 @@ class ProfileController extends Controller
 
             return response()->json(['message' => 'Password changed successfully!']);
         } else {
-            return response()->json(['error' => 'Please enter correct password'], 422);
+            return response()->json(['error' => 'Required is new password should not be same as old password'], 422);
         }
     }
 

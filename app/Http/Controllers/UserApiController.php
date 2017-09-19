@@ -116,7 +116,11 @@ class UserApiController extends Controller
             }
 
         } else {
-            return response()->json(['error' => trans('api.user.incorrect_password')], 500);
+            if($request->ajax()) {
+                return response()->json(['error' => trans('api.user.change_password')], 500);
+            }else{
+                return back()->with('flash_error',trans('api.user.change_password'));
+            }
         }
 
     }
@@ -1148,17 +1152,23 @@ class UserApiController extends Controller
         $this->validate($request, [
                 'password' => 'required|confirmed|min:6',
                 'id' => 'required|numeric|exists:users,id'
+
             ]);
 
         try{
 
             $User = User::findOrFail($request->id);
+            // $UpdatedAt = date_create($User->updated_at);
+            // $CurrentAt = date_create(date('Y-m-d H:i:s'));
+            // $ExpiredAt = date_diff($UpdatedAt,$CurrentAt);
+            // $ExpiredMin = $ExpiredAt->i;
             $User->password = bcrypt($request->password);
             $User->save();
-
             if($request->ajax()) {
                 return response()->json(['message' => 'Password Updated']);
             }
+           
+            
 
         }catch (Exception $e) {
             if($request->ajax()) {
