@@ -13,7 +13,7 @@ class AddGenderToProvidersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('providers', function (Blueprint $table) {
             $table->enum('gender', [
                     'MALE',
                     'FEMALE'
@@ -28,7 +28,7 @@ class AddGenderToProvidersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('providers', function (Blueprint $table) {
             $table->dropColumn('gender');
         });
     }
