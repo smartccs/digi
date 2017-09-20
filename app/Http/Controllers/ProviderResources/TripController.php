@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Auth;
+use Log;
 use Setting;
 use Carbon\Carbon;
 use App\Helpers\Helper;
