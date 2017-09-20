@@ -99,11 +99,11 @@ class ProfileController extends Controller
                     if($Provider->service->service_type_id != $request->service_type) {
                         $Provider->status = 'banned';
                     }
-                    $ProviderService = ProviderService::find(Auth::user()->id);
-                    $ProviderService->service_type_id = $request->service_type;
-                    $ProviderService->service_number = $request->service_number;
-                    $ProviderService->service_model = $request->service_model;
-                    $ProviderService->save();
+                    //$ProviderService = ProviderService::where('provider_id',Auth::user()->id);
+                    $Provider->service->service_type_id = $request->service_type;
+                    $Provider->service->service_number = $request->service_number;
+                    $Provider->service->service_model = $request->service_model;
+                    $Provider->service->save();
 
                 } else {
                     ProviderService::create([
