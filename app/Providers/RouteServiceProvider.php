@@ -39,7 +39,114 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
+        $this->mapAccountRoutes();
+
+        $this->mapFleetRoutes();
+
+        $this->mapDispatcherRoutes();
+
+        $this->mapProviderRoutes();
+
+        $this->mapAdminRoutes();
+
+        $this->mapProviderApiRoutes();
+
         //
+    }
+
+    /**
+     * Define the "admin" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapAdminRoutes()
+    {
+        Route::group([
+            'middleware' => ['web', 'admin', 'auth:admin'],
+            'prefix' => 'admin',
+            'as' => 'admin.',
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require base_path('routes/admin.php');
+        });
+    }
+
+    /**
+     * Define the "provider" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapProviderRoutes()
+    {
+        Route::group([
+            'middleware' => ['web', 'provider', 'auth:provider'],
+            'prefix' => 'provider',
+            'as' => 'provider.',
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require base_path('routes/provider.php');
+        });
+    }
+
+    /**
+     * Define the "dispatcher" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapDispatcherRoutes()
+    {
+        Route::group([
+            'middleware' => ['web', 'dispatcher', 'auth:dispatcher'],
+            'prefix' => 'dispatcher',
+            'as' => 'dispatcher.',
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require base_path('routes/dispatcher.php');
+        });
+    }
+
+    /**
+     * Define the "fleet" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapFleetRoutes()
+    {
+        Route::group([
+            'middleware' => ['web', 'fleet', 'auth:fleet'],
+            'prefix' => 'fleet',
+            'as' => 'fleet.',
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require base_path('routes/fleet.php');
+        });
+    }
+
+    /**
+     * Define the "account" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapAccountRoutes()
+    {
+        Route::group([
+            'middleware' => ['web', 'account', 'auth:account'],
+            'prefix' => 'account',
+            'as' => 'account.',
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require base_path('routes/account.php');
+        });
     }
 
     /**
@@ -71,9 +178,27 @@ class RouteServiceProvider extends ServiceProvider
         Route::group([
             'middleware' => 'api',
             'namespace' => $this->namespace,
-            'prefix' => 'api',
+            'prefix' => 'api/user',
         ], function ($router) {
             require base_path('routes/api.php');
+        });
+    }
+
+
+    /**
+     * Define the "api" routes for the application.
+     *
+     * These routes are typically stateless.
+     *
+     * @return void
+     */
+    protected function mapProviderApiRoutes()
+    {
+        Route::group([
+            'namespace' => $this->namespace,
+            'prefix' => 'api/provider',
+        ], function ($router) {
+            require base_path('routes/providerapi.php');
         });
     }
 }
